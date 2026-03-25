@@ -1,10 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // Only scan shadcn-migrated components — existing SCSS components are untouched.
-  // Add more component paths here as they migrate to shadcn.
   content: [
-    './components/button/src/**/*.{ts,tsx}',
-    './packages/shadcn-primitives/src/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
@@ -48,7 +45,7 @@ module.exports = {
       borderRadius: {
         DEFAULT: 'var(--aui-radius)',
         lg:      'var(--aui-radius)',
-        md:      'calc(var(--aui-radius) + 2px)',  /* ~6px, matches shadcn rounded-md */
+        md:      'calc(var(--aui-radius) + 2px)',
         sm:      'var(--aui-radius)',
       },
       ringOffsetColor: {
