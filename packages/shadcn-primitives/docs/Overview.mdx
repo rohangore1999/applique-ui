@@ -1,0 +1,74 @@
+import '../dist/tokens.css'
+
+# ShadcnButton Component
+
+The ShadcnButton component provides a modern, accessible button with multiple visual styles (intents) and sizes using shadcn/ui design patterns.
+
+## All Intent Variants
+
+<ShadcnButton intent="default">Default</ShadcnButton>
+{' '}
+<ShadcnButton intent="secondary">Secondary</ShadcnButton>
+{' '}
+<ShadcnButton intent="outline">Outline</ShadcnButton>
+{' '}
+<ShadcnButton intent="ghost">Ghost</ShadcnButton>
+{' '}
+<ShadcnButton intent="destructive">Destructive</ShadcnButton>
+{' '}
+<ShadcnButton intent="link">Link</ShadcnButton>
+
+---
+
+## Size Variants
+
+<ShadcnButton size="sm">Small</ShadcnButton>
+{' '}
+<ShadcnButton size="md">Medium</ShadcnButton>
+{' '}
+<ShadcnButton size="lg">Large</ShadcnButton>
+{' '}
+<ShadcnButton size="icon">🔔</ShadcnButton>
+
+---
+
+## Combinations
+
+<ShadcnButton intent="secondary" size="sm">Small Secondary</ShadcnButton>
+{' '}
+<ShadcnButton intent="outline" size="lg">Large Outline</ShadcnButton>
+{' '}
+<ShadcnButton intent="destructive" size="sm">Small Destructive</ShadcnButton>
+
+---
+
+## Disabled State
+
+<ShadcnButton disabled>Disabled Default</ShadcnButton>
+{' '}
+<ShadcnButton intent="outline" disabled>Disabled Outline</ShadcnButton>
+{' '}
+<ShadcnButton intent="destructive" disabled>Disabled Destructive</ShadcnButton>
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `intent` | `'default' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive' \| 'link'` | `'default'` | Visual style of the button |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'icon'` | `'md'` | Button size |
+| `className` | `string` | - | Additional classes (merged with tailwind-merge) |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `...props` | `ButtonHTMLAttributes` | - | All standard button HTML attributes |
+
+## Design Tokens
+
+All colors use CSS custom properties from Figma Applique design tokens:
+
+- `--primary`: #5232D0 (indigo/700) - Main brand color
+- `--secondary`: #F0EEFF (indigo/50) - Secondary actions
+- `--destructive`: #BF3823 (Cherry/700) - Destructive actions
+- `--border`: #E5E7EB (gray/200) - Borders
+- `--ring`: #5232D0 - Focus ring color
+- `--radius`: 0.5rem (8px) - Border radius

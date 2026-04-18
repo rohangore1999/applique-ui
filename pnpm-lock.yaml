@@ -541,9 +541,6 @@ importers:
       '@applique-ui/loader':
         specifier: workspace:../loader
         version: link:../loader
-      '@applique-ui/shadcn-primitives':
-        specifier: workspace:../../packages/shadcn-primitives
-        version: link:../../packages/shadcn-primitives
       '@applique-ui/text':
         specifier: workspace:../text
         version: link:../text
@@ -2042,7 +2039,7 @@ importers:
         version: 7.2.3
       jscodeshift:
         specifier: ^0.14.0
-        version: 0.14.0(@babel/preset-env@7.29.2(@babel/core@7.29.0))
+        version: 0.14.0(@babel/preset-env@7.29.2(@babel/core@7.21.8))
       jsdoc-api:
         specifier: ^4.0.3
         version: 4.0.3
@@ -2159,21 +2156,27 @@ importers:
   packages/shadcn-primitives:
     dependencies:
       class-variance-authority:
-        specifier: ^0.7.0
+        specifier: ^0.7.1
         version: 0.7.1
       clsx:
-        specifier: ^2.1.0
+        specifier: ^2.1.1
         version: 2.1.1
       react:
-        specifier: '>=16.9.0'
+        specifier: ^18.0.0
         version: 18.3.1
+      react-dom:
+        specifier: ^18.0.0
+        version: 18.3.1(react@18.3.1)
       tailwind-merge:
-        specifier: ^2.3.0
+        specifier: ^2.6.1
         version: 2.6.1
     devDependencies:
       '@types/react':
         specifier: 18.x
         version: 18.3.28
+      '@types/react-dom':
+        specifier: 18.x
+        version: 18.3.7(@types/react@18.3.28)
 
   packages/stylelint-config-standard:
     dependencies:
@@ -4976,7 +4979,7 @@ packages:
     engines: {node: '>=0.10.0'}
 
   class-variance-authority@0.7.1:
-    resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
+    resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==, tarball: https://myntrapaas.jfrog.io/artifactory/api/npm/npm-registry/class-variance-authority/-/class-variance-authority-0.7.1.tgz}
 
   classnames-loader@2.1.0:
     resolution: {integrity: sha512-9gglVaBgNCzjllz4x1hmrsnkp965d+WghDOOXA6yDYu0cwCwZPt8cPzq/syOvSub9NPwNtglDJmfzseBPmQxKQ==}
@@ -5053,7 +5056,7 @@ packages:
     engines: {node: '>=0.8'}
 
   clsx@2.1.1:
-    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==, tarball: https://myntrapaas.jfrog.io/artifactory/api/npm/npm-registry/clsx/-/clsx-2.1.1.tgz}
     engines: {node: '>=6'}
 
   co@4.6.0:
@@ -9414,7 +9417,7 @@ packages:
     hasBin: true
 
   react-dom@16.14.0:
-    resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}
+    resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==, tarball: https://myntrapaas.jfrog.io/artifactory/api/npm/npm-registry/react-dom/-/react-dom-16.14.0.tgz}
     peerDependencies:
       react: ^16.14.0
 
@@ -10404,7 +10407,7 @@ packages:
       stylelint: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0
 
   stylelint@10.1.0:
-    resolution: {integrity: sha512-OmlUXrgzEMLQYj1JPTpyZPR9G4bl0StidfHnGJEMpdiQ0JyTq0MPg1xkHk1/xVJ2rTPESyJCDWjG8Kbpoo7Kuw==}
+    resolution: {integrity: sha512-OmlUXrgzEMLQYj1JPTpyZPR9G4bl0StidfHnGJEMpdiQ0JyTq0MPg1xkHk1/xVJ2rTPESyJCDWjG8Kbpoo7Kuw==, tarball: https://myntrapaas.jfrog.io/artifactory/api/npm/npm-registry/stylelint/-/stylelint-10.1.0.tgz}
     engines: {node: '>=8.7.0'}
     hasBin: true
 
@@ -10480,7 +10483,7 @@ packages:
     resolution: {integrity: sha512-y3JaeRSplks6NYQuCOj3ZFMO3j60rTwbuKCvZxsAraGYH2epusatvZ0baZYA01WsGqJBq/Dl6vOrMUJqyMj8kA==}
 
   tailwind-merge@2.6.1:
-    resolution: {integrity: sha512-Oo6tHdpZsGpkKG88HJ8RR1rg/RdnEkQEfMoEk2x1XRI3F1AxeU+ijRXpiVUF4UbLfcxxRGw6TbUINKYdWVsQTQ==}
+    resolution: {integrity: sha512-Oo6tHdpZsGpkKG88HJ8RR1rg/RdnEkQEfMoEk2x1XRI3F1AxeU+ijRXpiVUF4UbLfcxxRGw6TbUINKYdWVsQTQ==, tarball: https://myntrapaas.jfrog.io/artifactory/api/npm/npm-registry/tailwind-merge/-/tailwind-merge-2.6.1.tgz}
 
   tailwindcss@3.4.19:
     resolution: {integrity: sha512-3ofp+LL8E+pK/JuPLPggVAIaEuhvIz4qNcf3nA1Xn2o/7fb7s/TYpHhwGDv1ZU3PkBluUVaF8PyCHcm48cKLWQ==}
@@ -19890,7 +19893,7 @@ snapshots:
     dependencies:
       htmlparser2: 3.10.1
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss@8.4.23)
+      postcss-syntax: 0.36.2(postcss@7.0.39)
 
   postcss-import@15.1.0(postcss@8.5.8):
     dependencies:
@@ -19908,7 +19911,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.0
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss@8.4.23)
+      postcss-syntax: 0.36.2(postcss@7.0.39)
     transitivePeerDependencies:
       - supports-color
 
@@ -19948,7 +19951,7 @@ snapshots:
   postcss-markdown@0.36.0(postcss-syntax@0.36.2)(postcss@7.0.39):
     dependencies:
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss@8.4.23)
+      postcss-syntax: 0.36.2(postcss@7.0.39)
       remark: 10.0.1
       unist-util-find-all-after: 1.0.5
 

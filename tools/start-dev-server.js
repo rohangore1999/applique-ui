@@ -9,6 +9,7 @@ const WebpackChain = require('webpack-chain')
 const WebpackDevServer = require('webpack-dev-server')
 const {
   components,
+  packages,
   getPackageDir,
   componentsDir,
   packagesDir,
@@ -30,12 +31,18 @@ async function start(
   component,
   port = process.env.PORT ? Number(process.env.PORT) : 8082
 ) {
-  if (!component || !components.includes(component)) {
+  const allChoices = [...components, ...packages.filter(pkg => {
+    // Only include packages that have a docs folder
+    const pkgDir = getPackageDir(pkg)
+    return Fs.existsSync(Path.resolve(pkgDir, 'docs'))
+  })]
+  
+  if (!component || !allChoices.includes(component)) {
     const result = await Inquirer.prompt({
       name: 'component',
       type: 'list',
-      message: 'Select a component:',
-      choices: components,
+      message: 'Select a component or package:',
+      choices: allChoices,
     })
 
     component = result.component
@@ -73,10 +80,15 @@ function createComponentsFile(component) {
     const RE = /<([A-Z](?:[a-zA-Z0-9]+))/gm
 
     while ((match = RE.exec(source))) {
-      const [, component] = match
+      const [, componentName] = match
 
-      if (components.includes(kebabCase(component)))
-        localComponents.add(component)
+      // Check if it's a component or from the current package
+      if (components.includes(kebabCase(componentName))) {
+        localComponents.add(componentName)
+      } else if (packages.includes(component)) {
+        // For packages, also export components from the package itself
+        localComponents.add(componentName)
+      }
     }
 
     // let iconImports = findImport(root, 'uikit-icons').paths()
@@ -91,14 +103,28 @@ function createComponentsFile(component) {
     Path.resolve(__dirname, `app/uikit.${component}.js`),
     [
       ...Array.from(localComponents).map(
-        (name) =>
-          `export { default as ${name} } from '@applique-ui/${kebabCase(
-            name
-          )}'${
-            name === 'Text'
-              ? `\nexport { default as T } from '@applique-ui/text'`
-              : ''
-          }`
+        (name) => {
+          const kebabName = kebabCase(name)
+          // Check if this component is from the current package being viewed
+          // and if it's actually exported from that package
+          if (packages.includes(component)) {
+            // For the shadcn-primitives package, only export ShadcnButton from it
+            // Other components like Tabs, Documenter should come from their own packages
+            if (name === 'ShadcnButton') {
+              return `export { ${name} } from '@applique-ui/${component}'`
+            }
+          }
+          // Default: export from the kebab-cased component package
+          if (components.includes(kebabName)) {
+            return `export { default as ${name} } from '@applique-ui/${kebabName}'${
+              name === 'Text'
+                ? `\nexport { default as T } from '@applique-ui/text'`
+                : ''
+            }`
+          }
+          // If not found in components, try the current package
+          return `export { ${name} } from '@applique-ui/${component}'`
+        }
       ),
       // ...iconImports.map(
       //   (iconName) =>
@@ -147,7 +173,7 @@ function startWebpackDevServer(component, port) {
       componentsDir + '/' + name + '/src/index.ts'
     )
   )
-  ;['uikit-utils', 'uikit-context', 'uikit-can-i-use'].forEach((name) =>
+  ;['uikit-utils', 'uikit-context', 'uikit-can-i-use', 'shadcn-primitives'].forEach((name) =>
     chain.resolve.alias.set(
       `@applique-ui/${name}$`,
       packagesDir + '/' + name + '/src/index.ts'
