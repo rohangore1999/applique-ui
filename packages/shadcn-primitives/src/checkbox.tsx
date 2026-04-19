@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from './utils'
 
 const checkboxVariants = cva(
-  'appearance-none box-border grid place-content-center peer h-4 w-4 shrink-0 rounded-xxs border border-solid m-0 p-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',
+  'grid place-content-center peer h-4 w-4 shrink-0 rounded-xxs border border-solid focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',
   {
     variants: {
       variant: {
@@ -31,6 +31,7 @@ const Checkbox = React.forwardRef<
 >(({ className, variant, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
+    data-slot="checkbox"
     className={cn(checkboxVariants({ variant }), className)}
     {...props}
   >

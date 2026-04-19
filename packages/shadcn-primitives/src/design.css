@@ -3,3 +3,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * Scoped preflight.
+ * Since corePlugins.preflight is disabled (so we don't affect consumer pages),
+ * native interactive elements that WE render keep browser defaults — button
+ * padding, input border insets, system fonts, etc. This scoped reset fires
+ * only on elements tagged with `data-slot`, which every shadcn primitive sets.
+ * Result: new components get a clean baseline automatically; nothing else on
+ * the consumer page is touched.
+ */
+@layer base {
+  /*
+   * `:where(...)` wrapper forces specificity to 0,0,0 so any Tailwind utility
+   * class (e.g. `bg-primary`, `border-input`) on the element wins without
+   * needing `!important`. Without :where(), `button[data-slot]` would be
+   * 0,1,1 — higher than `.bg-primary` at 0,1,0 — and wipe component styling.
+   */
+
+  /*
+   * Baseline normalize for ALL elements tagged with `data-slot` and their
+   * descendants. Without Tailwind preflight, browser defaults leak through:
+   *   - divs get `border-width: medium` (~3px), so `border-b border-solid`
+   *     would render on all four sides instead of just the bottom.
+   *   - box-sizing defaults to `content-box`, which breaks layouts using
+   *     Tailwind's w-/h- utilities that assume `border-box`.
+   *   - `<ol>`/`<ul>` keep `list-style: decimal/disc` + padding-left, which
+   *     renders phantom bullets/numbers overlapping our content.
+   */
+  :where([data-slot], [data-slot] *, [data-slot]::before, [data-slot]::after) {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+    list-style: none;
+  }
+
+  /* Interactive native elements (button/input/textarea/select) need extra
+   * resets beyond the border/box-sizing normalize: browsers ship system
+   * fonts, padding, appearance, etc. This applies to elements that either
+   * carry `data-slot` themselves OR are rendered inside a `[data-slot]`
+   * wrapper (e.g. react-day-picker's day buttons). */
+  :where(
+    button[data-slot], input[data-slot], textarea[data-slot], select[data-slot],
+    [data-slot] button, [data-slot] input, [data-slot] textarea, [data-slot] select
+  ) {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    background-image: none;
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-transform: none;
+  }
+}

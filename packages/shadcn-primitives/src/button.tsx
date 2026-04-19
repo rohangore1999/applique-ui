@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from './utils'
 
 const buttonVariants = cva(
-  'appearance-none box-border inline-flex shrink-0 items-center justify-center gap-1.5 rounded-sm text-sm font-medium whitespace-nowrap transition-all outline-none border-0 border-solid m-0 bg-transparent focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 active:scale-[0.98] cursor-pointer',
+  'inline-flex shrink-0 items-center justify-center gap-1.5 rounded-sm text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 active:scale-[0.98] cursor-pointer',
   {
     variants: {
       intent: {
@@ -40,8 +40,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, intent, size, ...props }, ref) => {
     return (
       <button
-        className={cn(buttonVariants({ intent, size, className }))}
         ref={ref}
+        data-slot="button"
+        className={cn(buttonVariants({ intent, size, className }))}
         {...props}
       />
     )
