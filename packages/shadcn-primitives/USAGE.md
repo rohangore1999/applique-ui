@@ -27,14 +27,14 @@ pnpm add @applique-ui/shadcn-primitives
 import '@applique-ui/shadcn-primitives/dist/tokens.css'
 
 // In your component files
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
+import { Button } from '@applique-ui/shadcn-primitives'
 
 function MyComponent() {
   return (
     <div>
-      <ShadcnButton intent="default">Save</ShadcnButton>
-      <ShadcnButton intent="outline">Cancel</ShadcnButton>
-      <ShadcnButton intent="destructive" size="sm">Delete</ShadcnButton>
+      <Button intent="default">Save</Button>
+      <Button intent="outline">Cancel</Button>
+      <Button intent="destructive" size="sm">Delete</Button>
     </div>
   )
 }
@@ -72,13 +72,13 @@ If your consumer app does NOT have Tailwind CSS:
 import '@applique-ui/shadcn-primitives/dist/design.css'
 
 // In your component files
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
+import { Button } from '@applique-ui/shadcn-primitives'
 
 function MyComponent() {
   return (
     <div>
-      <ShadcnButton intent="default">Save</ShadcnButton>
-      <ShadcnButton intent="outline">Cancel</ShadcnButton>
+      <Button intent="default">Save</Button>
+      <Button intent="outline">Cancel</Button>
     </div>
   )
 }
@@ -91,27 +91,27 @@ function MyComponent() {
 ### Basic Button Usage
 
 ```tsx
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
+import { Button } from '@applique-ui/shadcn-primitives'
 
 // All button intents
-<ShadcnButton intent="default">Default</ShadcnButton>
-<ShadcnButton intent="secondary">Secondary</ShadcnButton>
-<ShadcnButton intent="outline">Outline</ShadcnButton>
-<ShadcnButton intent="ghost">Ghost</ShadcnButton>
-<ShadcnButton intent="destructive">Destructive</ShadcnButton>
-<ShadcnButton intent="link">Link</ShadcnButton>
+<Button intent="default">Default</Button>
+<Button intent="secondary">Secondary</Button>
+<Button intent="outline">Outline</Button>
+<Button intent="ghost">Ghost</Button>
+<Button intent="destructive">Destructive</Button>
+<Button intent="link">Link</Button>
 
 // All button sizes
-<ShadcnButton size="sm">Small</ShadcnButton>
-<ShadcnButton size="md">Medium (default)</ShadcnButton>
-<ShadcnButton size="lg">Large</ShadcnButton>
-<ShadcnButton size="icon">🔔</ShadcnButton>
+<Button size="sm">Small</Button>
+<Button size="md">Medium (default)</Button>
+<Button size="lg">Large</Button>
+<Button size="icon">🔔</Button>
 
 // Disabled state
-<ShadcnButton disabled>Disabled</ShadcnButton>
+<Button disabled>Disabled</Button>
 
 // Custom className (merged with tailwind-merge)
-<ShadcnButton className="rounded-full">Custom Rounded</ShadcnButton>
+<Button className="rounded-full">Custom Rounded</Button>
 ```
 
 ### Using buttonVariants with Other Elements
@@ -138,11 +138,11 @@ import { buttonVariants, cn } from '@applique-ui/shadcn-primitives'
 The `cn()` utility combines `clsx` and `tailwind-merge` for better className handling:
 
 ```tsx
-import { ShadcnButton, cn } from '@applique-ui/shadcn-primitives'
+import { Button, cn } from '@applique-ui/shadcn-primitives'
 
 function MyButton({ isActive, className }) {
   return (
-    <ShadcnButton
+    <Button
       intent="default"
       className={cn(
         'transition-all duration-200',
@@ -151,7 +151,7 @@ function MyButton({ isActive, className }) {
       )}
     >
       Click me
-    </ShadcnButton>
+    </Button>
   )
 }
 ```
@@ -161,14 +161,14 @@ function MyButton({ isActive, className }) {
 All components have full TypeScript support:
 
 ```tsx
-import { ShadcnButton, ButtonProps } from '@applique-ui/shadcn-primitives'
+import { Button, ButtonProps } from '@applique-ui/shadcn-primitives'
 
 const MyButton: React.FC<ButtonProps> = (props) => {
-  return <ShadcnButton {...props} />
+  return <Button {...props} />
 }
 
 // Type-safe props
-<ShadcnButton 
+<Button 
   intent="default"  // ✓ Autocomplete: "default" | "secondary" | "outline" | "ghost" | "destructive" | "link"
   size="md"         // ✓ Autocomplete: "sm" | "md" | "lg" | "icon"
   onClick={(e) => console.log(e)} // ✓ Full event typing
@@ -235,7 +235,7 @@ packages/shadcn-primitives/
 │   └── design.css                 # Pre-compiled Tailwind + tokens
 ├── src/
 │   ├── index.ts                   # Main exports
-│   ├── button.tsx                 # ShadcnButton component
+│   ├── button.tsx                 # Button component
 │   ├── utils.ts                   # cn() utility
 │   ├── tokens.css                 # Design tokens source
 │   └── design.css                 # Tailwind source
@@ -253,7 +253,7 @@ This package is completely standalone and can coexist with existing `@applique-u
 ```tsx
 // You can use both in the same app
 import Button from '@applique-ui/button'  // Old SCSS-based button
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'  // New Tailwind-based button
+import { Button } from '@applique-ui/shadcn-primitives'  // New Tailwind-based button
 
 function MyApp() {
   return (
@@ -262,7 +262,7 @@ function MyApp() {
       <Button type="primary" color="blue">Old Button</Button>
       
       {/* New shadcn-style component */}
-      <ShadcnButton intent="default">New Button</ShadcnButton>
+      <Button intent="default">New Button</Button>
     </div>
   )
 }
@@ -286,7 +286,7 @@ cd /path/to/your-test-app
 pnpm add file:../applique-ui/packages/shadcn-primitives
 
 # 3. Import and use
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
+import { Button } from '@applique-ui/shadcn-primitives'
 import '@applique-ui/shadcn-primitives/dist/tokens.css'
 ```
 

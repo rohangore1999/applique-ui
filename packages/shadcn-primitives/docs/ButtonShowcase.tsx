@@ -1,5 +1,5 @@
 import React from 'react'
-import { ShadcnButton } from '../src/button'
+import { Button } from '../src/button'
 import { Spinner } from '../src/spinner'
 import '../src/tokens.css'
 
@@ -68,93 +68,93 @@ export default function ButtonShowcase() {
       </div>
 
       {/* Default Size Buttons */}
-      <ShadcnButton intent="default">Button</ShadcnButton>
-      <ShadcnButton intent="default" disabled>Button</ShadcnButton>
-      <ShadcnButton intent="outline">Outline</ShadcnButton>
-      <ShadcnButton intent="ghost">Ghost</ShadcnButton>
-      <ShadcnButton intent="destructive">Destructive</ShadcnButton>
-      <ShadcnButton intent="secondary">Secondary</ShadcnButton>
-      <ShadcnButton intent="link">Link</ShadcnButton>
+      <Button intent="default">Button</Button>
+      <Button intent="default" disabled>Button</Button>
+      <Button intent="outline">Outline</Button>
+      <Button intent="ghost">Ghost</Button>
+      <Button intent="destructive">Destructive</Button>
+      <Button intent="secondary">Secondary</Button>
+      <Button intent="link">Link</Button>
 
       {/* Buttons with Icons */}
-      <ShadcnButton intent="outline">
+      <Button intent="outline">
         <CircleArrowLeft />
         Send
-      </ShadcnButton>
+      </Button>
 
-      <ShadcnButton intent="outline">
+      <Button intent="outline">
         Learn more
         <ArrowRight />
-      </ShadcnButton>
+      </Button>
 
       {/* Loading Button */}
-      <ShadcnButton intent="outline" disabled>
+      <Button intent="outline" disabled>
         <Spinner />
         Please wait
-      </ShadcnButton>
+      </Button>
 
       {/* Small Size Buttons */}
-      <ShadcnButton size="sm" intent="default">Small</ShadcnButton>
-      <ShadcnButton size="sm" intent="outline">Outline</ShadcnButton>
-      <ShadcnButton size="sm" intent="ghost">Ghost</ShadcnButton>
-      <ShadcnButton size="sm" intent="destructive">Destructive</ShadcnButton>
-      <ShadcnButton size="sm" intent="secondary">Secondary</ShadcnButton>
-      <ShadcnButton size="sm" intent="link">Link</ShadcnButton>
+      <Button size="sm" intent="default">Small</Button>
+      <Button size="sm" intent="outline">Outline</Button>
+      <Button size="sm" intent="ghost">Ghost</Button>
+      <Button size="sm" intent="destructive">Destructive</Button>
+      <Button size="sm" intent="secondary">Secondary</Button>
+      <Button size="sm" intent="link">Link</Button>
 
       {/* Small with Icons */}
-      <ShadcnButton size="sm" intent="outline">
+      <Button size="sm" intent="outline">
         <CircleArrowLeft />
         Send
-      </ShadcnButton>
+      </Button>
 
       {/* Small with Focus state */}
-      <ShadcnButton size="sm" intent="outline" className="ring-2 ring-ring ring-offset-2">
+      <Button size="sm" intent="outline" className="ring-2 ring-ring ring-offset-2">
         Learn more
         <ArrowRight />
-      </ShadcnButton>
+      </Button>
 
       {/* Small Loading */}
-      <ShadcnButton size="sm" intent="outline" disabled>
+      <Button size="sm" intent="outline" disabled>
         <Spinner />
         Please wait
-      </ShadcnButton>
+      </Button>
 
       {/* Large Size Buttons */}
-      <ShadcnButton size="lg" intent="default">Large</ShadcnButton>
-      <ShadcnButton size="lg" intent="outline">Outline</ShadcnButton>
-      <ShadcnButton size="lg" intent="ghost">Ghost</ShadcnButton>
-      <ShadcnButton size="lg" intent="destructive">Destructive</ShadcnButton>
-      <ShadcnButton size="lg" intent="secondary">Secondary</ShadcnButton>
+      <Button size="lg" intent="default">Large</Button>
+      <Button size="lg" intent="outline">Outline</Button>
+      <Button size="lg" intent="ghost">Ghost</Button>
+      <Button size="lg" intent="destructive">Destructive</Button>
+      <Button size="lg" intent="secondary">Secondary</Button>
 
       {/* Large with Icons */}
-      <ShadcnButton size="lg" intent="link">
+      <Button size="lg" intent="link">
         <CircleArrowLeft />
         Link
         <ArrowRight />
-      </ShadcnButton>
+      </Button>
 
-      <ShadcnButton size="lg" intent="outline">
+      <Button size="lg" intent="outline">
         <CircleArrowLeft />
         Send
-      </ShadcnButton>
+      </Button>
 
-      <ShadcnButton size="lg" intent="outline">
+      <Button size="lg" intent="outline">
         Learn more
         <ArrowRight />
-      </ShadcnButton>
+      </Button>
 
       {/* Large Loading */}
-      <ShadcnButton size="lg" intent="outline" disabled>
+      <Button size="lg" intent="outline" disabled>
         <Spinner />
         Please wait
-      </ShadcnButton>
+      </Button>
 
       {/* Rounded Buttons */}
       <div className="flex gap-2 items-center">
-        <ShadcnButton intent="default" className="rounded-full">Get Started</ShadcnButton>
-        <ShadcnButton intent="outline" size="icon" className="rounded-full">
+        <Button intent="default" className="rounded-full">Get Started</Button>
+        <Button intent="outline" size="icon" className="rounded-full">
           <ArrowUp />
-        </ShadcnButton>
+        </Button>
       </div>
     </div>
   )

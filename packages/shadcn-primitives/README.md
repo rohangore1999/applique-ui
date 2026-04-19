@@ -15,14 +15,14 @@ pnpm add @applique-ui/shadcn-primitives
 If your app has Tailwind configured:
 
 ```tsx
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
+import { Button } from '@applique-ui/shadcn-primitives'
 import '@applique-ui/shadcn-primitives/dist/tokens.css'
 
 function App() {
   return (
-    <ShadcnButton intent="default" size="md">
+    <Button intent="default" size="md">
       Save
-    </ShadcnButton>
+    </Button>
   )
 }
 ```
@@ -32,26 +32,26 @@ function App() {
 Use pre-compiled CSS bundle:
 
 ```tsx
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
+import { Button } from '@applique-ui/shadcn-primitives'
 import '@applique-ui/shadcn-primitives/dist/design.css'
 
 function App() {
   return (
-    <ShadcnButton intent="default" size="md">
+    <Button intent="default" size="md">
       Save
-    </ShadcnButton>
+    </Button>
   )
 }
 ```
 
 ## Components
 
-### ShadcnButton
+### Button
 
 ```tsx
-<ShadcnButton intent="default" size="md">
+<Button intent="default" size="md">
   Button
-</ShadcnButton>
+</Button>
 ```
 
 **Props:**
@@ -66,30 +66,30 @@ function App() {
 
 ```tsx
 // Default variants
-<ShadcnButton intent="default">Default</ShadcnButton>
-<ShadcnButton intent="secondary">Secondary</ShadcnButton>
-<ShadcnButton intent="outline">Outline</ShadcnButton>
-<ShadcnButton intent="ghost">Ghost</ShadcnButton>
-<ShadcnButton intent="destructive">Destructive</ShadcnButton>
-<ShadcnButton intent="link">Link</ShadcnButton>
+<Button intent="default">Default</Button>
+<Button intent="secondary">Secondary</Button>
+<Button intent="outline">Outline</Button>
+<Button intent="ghost">Ghost</Button>
+<Button intent="destructive">Destructive</Button>
+<Button intent="link">Link</Button>
 
 // Sizes
-<ShadcnButton size="sm">Small</ShadcnButton>
-<ShadcnButton size="md">Medium</ShadcnButton>
-<ShadcnButton size="lg">Large</ShadcnButton>
-<ShadcnButton size="icon">🔔</ShadcnButton>
+<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>
+<Button size="icon">🔔</Button>
 
 // With icons (using lucide-react or any icon library)
-<ShadcnButton intent="outline">
+<Button intent="outline">
   <Icon className="w-4 h-4" />
   Button with icon
-</ShadcnButton>
+</Button>
 
 // Disabled
-<ShadcnButton disabled>Disabled</ShadcnButton>
+<Button disabled>Disabled</Button>
 
 // Custom classes
-<ShadcnButton className="rounded-full">Rounded</ShadcnButton>
+<Button className="rounded-full">Rounded</Button>
 ```
 
 **Using buttonVariants directly:**
@@ -137,8 +137,8 @@ import Button from '@applique-ui/button'
 <Button type="primary" color="blue">Save</Button>
 
 // New shadcn-based button
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
-<ShadcnButton intent="default">Save</ShadcnButton>
+import { Button } from '@applique-ui/shadcn-primitives'
+<Button intent="default">Save</Button>
 ```
 
 No conflicts - they use different class naming strategies.

@@ -49,7 +49,10 @@
   --ring: 252 76% 51%;              /* #5232D0 (indigo/700) */
 
   /* ── Border radius (from Figma: radius/md) ────────────────── */
-  --radius: 0.5rem;                 /* 8px (radius/md) */
+  /* NOTE: px (not rem) so radii are immune to consumer apps that alter the
+     root font-size (e.g. legacy `html { font-size: 62.5% }` patterns). */
+  --radius: 8px;                    /* radius/md */
+  --radius-xxs: 2px;                /* for checkbox */
 
   /* ── Spacing tokens (from Figma: spacing scale) ──────────── */
   --spacing-1: 0.25rem;             /* 4px */

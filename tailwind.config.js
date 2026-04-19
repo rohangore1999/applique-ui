@@ -50,6 +50,7 @@ module.exports = {
         lg:      'var(--radius, var(--aui-radius))',
         md:      'calc(var(--radius, var(--aui-radius)) - 2px)',
         sm:      'calc(var(--radius, var(--aui-radius)) - 4px)',
+        xxs:     'var(--radius-xxs)',
       },
       boxShadow: {
         'xs': 'var(--shadow-xs)',

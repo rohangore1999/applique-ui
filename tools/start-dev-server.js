@@ -20,15 +20,16 @@ const Fs = require('fs')
 const portfinder = require('portfinder')
 const jscodeshift = require('jscodeshift/src/core')
 const component = process.argv[2]
+const subComponent = process.argv[3] // Optional: button, checkbox, etc.
 
-const entryFile = './docs/index.mdx'
-// const entryFile = './example.mdx'
+let entryFile = './docs/index.mdx'
 const localComponents = new Set()
 
-start(component).catch(console.error)
+start(component, subComponent).catch(console.error)
 
 async function start(
   component,
+  subComponent,
   port = process.env.PORT ? Number(process.env.PORT) : 8082
 ) {
   const allChoices = [...components, ...packages.filter(pkg => {
@@ -48,7 +49,21 @@ async function start(
     component = result.component
   }
 
-  console.log('Starting dev server for ' + component)
+  // If subComponent is provided (e.g., 'button', 'checkbox'), look for that MDX file
+  // Otherwise, fall back to index.mdx
+  if (subComponent) {
+    const subComponentMdx = `./docs/${subComponent}.mdx`
+    const subComponentPath = Path.resolve(getPackageDir(component), subComponentMdx)
+    if (Fs.existsSync(subComponentPath)) {
+      entryFile = subComponentMdx
+      console.log(`Starting dev server for ${component} - ${subComponent}`)
+    } else {
+      console.log(`Warning: ${subComponent}.mdx not found, falling back to index.mdx`)
+      console.log(`Starting dev server for ${component}`)
+    }
+  } else {
+    console.log('Starting dev server for ' + component)
+  }
 
   createComponentsFile(component)
   startWebpackDevServer(component, port)
