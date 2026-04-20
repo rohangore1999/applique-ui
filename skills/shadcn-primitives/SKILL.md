@@ -223,7 +223,8 @@ dist/shadcn-primitives.cjs.js (with CSS auto-import)
 
 ```bash
 # Rebuild JS bundle (ESM + CJS + .d.ts)
-FORCE=1 TARGET=shadcn-primitives node scripts/build.js
+# NOTE: package name is a POSITIONAL arg, not TARGET=... env
+FORCE=1 node scripts/build.js shadcn-primitives
 
 # Rebuild CSS bundle (from packages/shadcn-primitives/)
 npm run build:css
@@ -237,6 +238,49 @@ npm run build:post
 
 **Always run all three** after edits. The `FORCE=1` env wipes `dist/` to avoid
 stale artifacts.
+
+### Publishing to npm
+
+Publishes to `@rohangore1999` scope on **public npm** (`registry.npmjs.org`).
+Requires that `npm whoami --registry=https://registry.npmjs.org/` returns
+`rohangore1999` (or a user with publish access to that scope).
+
+```bash
+# 1. bump the version in packages/shadcn-primitives/package.json
+#    (semver: minor for new components, patch for fixes — we're in 0.x so
+#    minor bumps may include breaking changes)
+
+# 2. wipe dist and rebuild JS for shadcn-primitives only
+cd <applique-ui-root>
+rm -rf packages/shadcn-primitives/dist/
+FORCE=1 node scripts/build.js shadcn-primitives
+
+# 3. build CSS + inject side-effect import into the JS bundles
+cd packages/shadcn-primitives
+npm run build:post
+
+# 4. verify dist has all three shipped artifacts
+ls dist/ | grep -E "esm\.js$|cjs\.js$|styles\.css$"
+# expected: shadcn-primitives.cjs.js, shadcn-primitives.esm.js, styles.css
+head -1 dist/shadcn-primitives.esm.js
+# expected: import './styles.css';
+
+# 5. dry-run to review what will be packed
+npm publish --access public --registry https://registry.npmjs.org/ --dry-run
+
+# 6. publish for real
+npm publish --access public --registry https://registry.npmjs.org/
+```
+
+**Why each step matters:**
+- Step 2 alone ships a package **without `styles.css`** — consumers get no visual output.
+- Step 3 alone ships a package that **requires manual CSS import** — breaks the "one import" contract documented in CONSUMER_SETUP.md §3.
+- Skipping step 5 risks shipping stale dist or unintended files. Always dry-run.
+
+**After a successful publish:**
+- Commit the `version:` bump in `package.json`.
+- Tag the release in git: `git tag shadcn-primitives-v0.X.Y && git push --tags`.
+- Optionally verify on the registry: `npm view @rohangore1999/shadcn-primitives@0.X.Y`.
 
 ---
 
