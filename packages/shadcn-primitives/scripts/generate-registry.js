@@ -123,6 +123,7 @@ write('button.json', {
       path: 'components/ui/button.jsx',
       content: buttonContent,
       type: 'registry:ui',
+      target: 'components/ui/button.jsx',
     },
   ],
 })
