@@ -16,12 +16,13 @@
   "scripts": {
     "build:css": "tailwindcss -i src/design.css -o dist/styles.css --config tailwind.config.js --minify",
     "build:inject-css": "node scripts/inject-css-import.js",
-    "build:post": "npm run build:css && npm run build:inject-css"
+    "build:registry": "node scripts/generate-registry.js",
+    "build:post": "npm run build:css && npm run build:inject-css && npm run build:registry"
   },
   "author": "Myntra",
   "license": "MIT",
   "repository": "https://github.com/myntra/applique-ui/tree/release/packages/shadcn-primitives",
-  "files": ["src/", "dist/"],
+  "files": ["src/", "dist/", "registry/"],
   "sideEffects": ["*.css"],
   "peerDependencies": {
     "react": "^18.0.0",
