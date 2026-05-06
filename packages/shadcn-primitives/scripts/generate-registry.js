@@ -85,12 +85,29 @@ write('utils.json', {
 
 // ─── 3. button.json ──────────────────────────────────────────────────────────
 
-// Rewrite package-relative imports to the consumer's alias paths
-// e.g. './utils' → '@/lib/utils' (matches shadcn's components.json alias convention)
-const buttonContent = read('button.tsx').replace(
-  /from ['"]\.\/utils['"]/g,
-  "from '@/lib/utils'"
-)
+/*
+ * Converts TSX source to JSX for consumers with tsx:false in components.json.
+ * Without this the shadcn CLI falls back to its own vanilla button when it
+ * sees a .tsx file but the project is configured for .jsx.
+ */
+function tsxToJsx(content) {
+  return content
+    // rewrite package-relative import to consumer alias
+    .replace(/from ['"]\.\/utils['"]/g, "from '@/lib/utils'")
+    // remove TS-only import specifiers: `import { cva, type VariantProps }` → `import { cva }`
+    .replace(/,\s*type\s+\w+/g, '')
+    // remove `export interface ...` blocks (multi-line, ends at closing `}`)
+    .replace(/^export interface[\s\S]*?^\}/m, '')
+    // remove generic type params from forwardRef: `forwardRef<A, B>(` → `forwardRef(`
+    .replace(/forwardRef<[^>]+>\(/g, 'forwardRef(')
+    // remove inline TS types from destructured params: `{ className, intent, size, ...props }: ButtonProps`
+    .replace(/\}\s*:\s*\w+Props\b/g, '}')
+    // collapse multiple blank lines left behind by removed blocks
+    .replace(/\n{3,}/g, '\n\n')
+    .trim() + '\n'
+}
+
+const buttonContent = tsxToJsx(read('button.tsx'))
 
 write('button.json', {
   $schema: 'https://ui.shadcn.com/schema/registry-item.json',
@@ -103,7 +120,7 @@ write('button.json', {
   ],
   files: [
     {
-      path: 'components/ui/button.tsx',
+      path: 'components/ui/button.jsx',
       content: buttonContent,
       type: 'registry:ui',
     },
