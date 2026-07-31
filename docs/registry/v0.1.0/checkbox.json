@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "type": "registry:ui",
+  "title": "Checkbox",
+  "description": "A themed checkbox primitive with Applique states and variants.",
+  "dependencies": [
+    "@radix-ui/react-checkbox@1.3.3",
+    "class-variance-authority@0.7.1",
+    "lucide-react@0.460.0"
+  ],
+  "categories": [
+    "primitive",
+    "form"
+  ],
+  "registryDependencies": [
+    "https://applique.myntra.com/registry/v0.1.0/applique-theme.json",
+    "https://applique.myntra.com/registry/v0.1.0/utils.json"
+  ],
+  "files": [
+    {
+      "path": "ui/checkbox.tsx",
+      "content": "import * as React from 'react'\nimport * as CheckboxPrimitive from '@radix-ui/react-checkbox'\nimport { Check, Minus } from 'lucide-react'\nimport { cva, type VariantProps } from 'class-variance-authority'\nimport { cn } from '@/lib/utils'\n\nconst checkboxVariants = cva(\n  'grid place-content-center peer h-4 w-4 shrink-0 rounded-xxs border border-solid outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',\n  {\n    variants: {\n      variant: {\n        default:\n          'border-input bg-background data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:text-primary-foreground',\n        destructive:\n          'border-input bg-background data-[state=checked]:bg-destructive data-[state=checked]:border-destructive data-[state=checked]:text-destructive-foreground data-[state=indeterminate]:bg-destructive data-[state=indeterminate]:border-destructive data-[state=indeterminate]:text-destructive-foreground',\n      },\n    },\n    defaultVariants: {\n      variant: 'default',\n    },\n  }\n)\n\nexport interface CheckboxProps\n  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,\n    VariantProps<typeof checkboxVariants> {}\n\nconst Checkbox = React.forwardRef<\n  React.ElementRef<typeof CheckboxPrimitive.Root>,\n  CheckboxProps\n>(({ className, variant, ...props }, ref) => (\n  <CheckboxPrimitive.Root\n    ref={ref}\n    data-slot=\"checkbox\"\n    className={cn(checkboxVariants({ variant }), className)}\n    {...props}\n  >\n    <CheckboxPrimitive.Indicator\n      data-slot=\"checkbox-indicator\"\n      className={cn('group grid place-content-center text-current')}\n    >\n      <Check className=\"h-4 w-4 group-data-[state=indeterminate]:hidden\" />\n      <Minus className=\"hidden h-4 w-4 group-data-[state=indeterminate]:block\" />\n    </CheckboxPrimitive.Indicator>\n  </CheckboxPrimitive.Root>\n))\nCheckbox.displayName = CheckboxPrimitive.Root.displayName\n\nexport { Checkbox, checkboxVariants }\n",
+      "type": "registry:ui",
+      "target": "@ui/checkbox.tsx"
+    }
+  ],
+  "meta": {
+    "status": "experimental",
+    "registryVersion": "0.1.0"
+  }
+}

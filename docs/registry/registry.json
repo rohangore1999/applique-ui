@@ -1,0 +1,395 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "applique",
+  "homepage": "https://applique.myntra.com",
+  "meta": {
+    "registryVersion": "0.1.0",
+    "registryBaseUrl": "https://applique.myntra.com/registry"
+  },
+  "items": [
+    {
+      "name": "applique-theme",
+      "type": "registry:theme",
+      "title": "Applique Theme",
+      "description": "Applique semantic design tokens for shadcn components.",
+      "tailwind": {
+        "config": {
+          "theme": {
+            "spacing": {
+              "0": "0px",
+              "1": "4px",
+              "2": "8px",
+              "3": "12px",
+              "4": "16px",
+              "5": "20px",
+              "6": "24px",
+              "7": "28px",
+              "8": "32px",
+              "9": "36px",
+              "10": "40px",
+              "11": "44px",
+              "12": "48px",
+              "14": "56px",
+              "16": "64px",
+              "20": "80px",
+              "24": "96px",
+              "28": "112px",
+              "32": "128px",
+              "36": "144px",
+              "40": "160px",
+              "44": "176px",
+              "48": "192px",
+              "52": "208px",
+              "56": "224px",
+              "60": "240px",
+              "64": "256px",
+              "72": "288px",
+              "80": "320px",
+              "96": "384px",
+              "px": "1px",
+              "0.5": "2px",
+              "1.5": "6px",
+              "2.5": "10px",
+              "3.5": "14px"
+            },
+            "fontSize": {
+              "xs": [
+                "12px",
+                "16px"
+              ],
+              "sm": [
+                "14px",
+                "20px"
+              ],
+              "base": [
+                "16px",
+                "24px"
+              ],
+              "lg": [
+                "18px",
+                "28px"
+              ],
+              "xl": [
+                "20px",
+                "28px"
+              ],
+              "2xl": [
+                "24px",
+                "32px"
+              ],
+              "3xl": [
+                "30px",
+                "36px"
+              ],
+              "4xl": [
+                "36px",
+                "40px"
+              ],
+              "5xl": [
+                "48px",
+                "1"
+              ],
+              "6xl": [
+                "60px",
+                "1"
+              ],
+              "7xl": [
+                "72px",
+                "1"
+              ],
+              "8xl": [
+                "96px",
+                "1"
+              ],
+              "9xl": [
+                "128px",
+                "1"
+              ]
+            },
+            "extend": {
+              "colors": {
+                "border": "hsl(var(--border) / <alpha-value>)",
+                "input": "hsl(var(--input) / <alpha-value>)",
+                "ring": "hsl(var(--ring) / <alpha-value>)",
+                "background": "hsl(var(--background) / <alpha-value>)",
+                "foreground": "hsl(var(--foreground) / <alpha-value>)",
+                "primary": {
+                  "DEFAULT": "hsl(var(--primary) / <alpha-value>)",
+                  "foreground": "hsl(var(--primary-foreground) / <alpha-value>)"
+                },
+                "secondary": {
+                  "DEFAULT": "hsl(var(--secondary) / <alpha-value>)",
+                  "foreground": "hsl(var(--secondary-foreground) / <alpha-value>)"
+                },
+                "destructive": {
+                  "DEFAULT": "hsl(var(--destructive) / <alpha-value>)",
+                  "foreground": "hsl(var(--destructive-foreground) / <alpha-value>)"
+                },
+                "muted": {
+                  "DEFAULT": "hsl(var(--muted) / <alpha-value>)",
+                  "foreground": "hsl(var(--muted-foreground) / <alpha-value>)"
+                },
+                "accent": {
+                  "DEFAULT": "hsl(var(--accent) / <alpha-value>)",
+                  "foreground": "hsl(var(--accent-foreground) / <alpha-value>)"
+                },
+                "card": {
+                  "DEFAULT": "hsl(var(--card) / <alpha-value>)",
+                  "foreground": "hsl(var(--card-foreground) / <alpha-value>)"
+                },
+                "popover": {
+                  "DEFAULT": "hsl(var(--popover) / <alpha-value>)",
+                  "foreground": "hsl(var(--popover-foreground) / <alpha-value>)"
+                },
+                "outline-border": "hsl(var(--outline-border) / <alpha-value>)",
+                "outline-foreground": "hsl(var(--outline-foreground) / <alpha-value>)",
+                "sidebar": {
+                  "DEFAULT": "hsl(var(--sidebar) / <alpha-value>)",
+                  "foreground": "hsl(var(--sidebar-foreground) / <alpha-value>)",
+                  "primary": "hsl(var(--sidebar-primary) / <alpha-value>)",
+                  "primary-foreground": "hsl(var(--sidebar-primary-foreground) / <alpha-value>)",
+                  "accent": "hsl(var(--sidebar-accent) / <alpha-value>)",
+                  "accent-foreground": "hsl(var(--sidebar-accent-foreground) / <alpha-value>)",
+                  "border": "hsl(var(--sidebar-border) / <alpha-value>)",
+                  "ring": "hsl(var(--sidebar-ring) / <alpha-value>)"
+                },
+                "chart": {
+                  "1": "hsl(var(--chart-1) / <alpha-value>)",
+                  "2": "hsl(var(--chart-2) / <alpha-value>)",
+                  "3": "hsl(var(--chart-3) / <alpha-value>)",
+                  "4": "hsl(var(--chart-4) / <alpha-value>)",
+                  "5": "hsl(var(--chart-5) / <alpha-value>)"
+                }
+              },
+              "borderRadius": {
+                "xxs": "var(--radius-xxs)",
+                "xs": "var(--radius-xs)",
+                "sm": "var(--radius-sm)",
+                "md": "var(--radius-md)",
+                "DEFAULT": "var(--radius)",
+                "lg": "var(--radius-lg)",
+                "xl": "var(--radius-xl)",
+                "2xl": "var(--radius-2xl)",
+                "3xl": "var(--radius-3xl)",
+                "4xl": "var(--radius-4xl)"
+              },
+              "boxShadow": {
+                "2xs": "var(--shadow-2xs)",
+                "xs": "var(--shadow-xs)",
+                "sm": "var(--shadow-sm)",
+                "md": "var(--shadow-md)",
+                "lg": "var(--shadow-lg)",
+                "xl": "var(--shadow-xl)",
+                "2xl": "var(--shadow-2xl)"
+              },
+              "fontFamily": {
+                "sans": "var(--font-sans)",
+                "serif": "var(--font-serif)",
+                "mono": "var(--font-mono)"
+              },
+              "fontWeight": {
+                "thin": "var(--font-weight-thin)",
+                "extralight": "var(--font-weight-extralight)",
+                "light": "var(--font-weight-light)",
+                "normal": "var(--font-weight-normal)",
+                "medium": "var(--font-weight-medium)",
+                "semibold": "var(--font-weight-semibold)",
+                "bold": "var(--font-weight-bold)",
+                "extrabold": "var(--font-weight-extrabold)",
+                "black": "var(--font-weight-black)"
+              }
+            }
+          }
+        }
+      },
+      "categories": [
+        "foundation",
+        "theme"
+      ],
+      "cssVars": {
+        "theme": {
+          "color-outline-border": "hsl(var(--outline-border))",
+          "color-outline-foreground": "hsl(var(--outline-foreground))",
+          "radius-xxs": "2px"
+        },
+        "light": {
+          "background": "0 0% 100%",
+          "foreground": "222 47% 11%",
+          "card": "0 0% 100%",
+          "card-foreground": "222 47% 11%",
+          "popover": "0 0% 100%",
+          "popover-foreground": "222 47% 11%",
+          "primary": "252 76% 51%",
+          "primary-foreground": "0 0% 100%",
+          "secondary": "247 100% 97%",
+          "secondary-foreground": "252 76% 51%",
+          "muted": "220 14% 96%",
+          "muted-foreground": "220 9% 46%",
+          "accent": "247 100% 97%",
+          "accent-foreground": "222 47% 11%",
+          "destructive": "8 69% 45%",
+          "destructive-foreground": "6 90% 97%",
+          "border": "220 13% 91%",
+          "input": "220 13% 91%",
+          "outline-border": "252 76% 51%",
+          "outline-foreground": "252 76% 51%",
+          "ring": "252 76% 51%",
+          "sidebar": "0 0% 98%",
+          "sidebar-foreground": "0 0% 4%",
+          "sidebar-primary": "0 0% 9%",
+          "sidebar-primary-foreground": "0 0% 98%",
+          "sidebar-accent": "0 0% 96%",
+          "sidebar-accent-foreground": "0 0% 9%",
+          "sidebar-border": "0 0% 90%",
+          "sidebar-ring": "0 0% 64%",
+          "chart-1": "21 90% 48%",
+          "chart-2": "175 84% 32%",
+          "chart-3": "196 64% 24%",
+          "chart-4": "43 96% 56%",
+          "chart-5": "38 92% 50%",
+          "radius-xxs": "2px",
+          "radius-xs": "4px",
+          "radius-sm": "6px",
+          "radius": "8px",
+          "radius-md": "8px",
+          "radius-lg": "10px",
+          "radius-xl": "14px",
+          "radius-2xl": "18px",
+          "radius-3xl": "22px",
+          "radius-4xl": "26px",
+          "font-sans": "'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          "font-serif": "Georgia, 'Times New Roman', serif",
+          "font-mono": "'Geist Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace",
+          "font-weight-thin": "100",
+          "font-weight-extralight": "200",
+          "font-weight-light": "300",
+          "font-weight-normal": "400",
+          "font-weight-medium": "500",
+          "font-weight-semibold": "600",
+          "font-weight-bold": "700",
+          "font-weight-extrabold": "800",
+          "font-weight-black": "900",
+          "spacing-1": "0.25rem",
+          "spacing-1-5": "0.375rem",
+          "spacing-2": "0.5rem",
+          "spacing-2-5": "0.625rem",
+          "spacing-3": "0.75rem",
+          "spacing-4": "1rem",
+          "spacing-5": "1.25rem",
+          "spacing-6": "1.5rem",
+          "spacing-8": "2rem",
+          "spacing-10": "2.5rem",
+          "spacing-12": "3rem",
+          "spacing-16": "4rem",
+          "spacing-32": "8rem",
+          "shadow-2xs": "0px 1px 0px 0px rgba(0, 0, 0, 0.05)",
+          "shadow-xs": "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+          "shadow-sm": "0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.1)",
+          "shadow-md": "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1)",
+          "shadow-lg": "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -4px rgba(0, 0, 0, 0.1)",
+          "shadow-xl": "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
+          "shadow-2xl": "0px 25px 50px -12px rgba(0, 0, 0, 0.25)"
+        }
+      },
+      "meta": {
+        "status": "foundation",
+        "registryVersion": "0.1.0",
+        "registryUrl": "https://applique.myntra.com/registry/applique-theme.json",
+        "versionedRegistryUrl": "https://applique.myntra.com/registry/v0.1.0/applique-theme.json"
+      }
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Applique Utilities",
+      "description": "Shared class-name merging utility used by Applique registry components.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@2.6.1"
+      ],
+      "categories": [
+        "foundation",
+        "utility"
+      ],
+      "files": [
+        {
+          "path": "lib/utils.ts",
+          "content": "import { clsx, type ClassValue } from 'clsx'\nimport { twMerge } from 'tailwind-merge'\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs))\n}\n",
+          "type": "registry:lib",
+          "target": "@lib/utils.ts"
+        }
+      ],
+      "meta": {
+        "status": "foundation",
+        "registryVersion": "0.1.0",
+        "registryUrl": "https://applique.myntra.com/registry/utils.json",
+        "versionedRegistryUrl": "https://applique.myntra.com/registry/v0.1.0/utils.json"
+      }
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "A themed button primitive with Applique intent and size variants.",
+      "dependencies": [
+        "@radix-ui/react-slot@1.2.4",
+        "class-variance-authority@0.7.1"
+      ],
+      "categories": [
+        "primitive",
+        "action"
+      ],
+      "registryDependencies": [
+        "https://applique.myntra.com/registry/v0.1.0/applique-theme.json",
+        "https://applique.myntra.com/registry/v0.1.0/utils.json"
+      ],
+      "files": [
+        {
+          "path": "ui/button.tsx",
+          "content": "import * as React from 'react'\nimport { Slot } from '@radix-ui/react-slot'\nimport { cva, type VariantProps } from 'class-variance-authority'\nimport { cn } from '@/lib/utils'\n\nconst buttonVariants = cva(\n  'inline-flex shrink-0 items-center justify-center gap-1.5 rounded-sm text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\\'size-\\'])]:size-4 active:scale-[0.98] cursor-pointer',\n  {\n    variants: {\n      intent: {\n        default: 'bg-primary text-primary-foreground hover:bg-primary/90',\n        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',\n        outline:\n          'border border-outline-border bg-background text-outline-foreground shadow-sm hover:bg-accent hover:text-accent-foreground',\n        ghost: 'hover:bg-accent hover:text-accent-foreground',\n        destructive:\n          'bg-destructive text-destructive-foreground hover:bg-destructive/90',\n        link: 'text-primary underline-offset-4 hover:underline',\n      },\n      size: {\n        sm: 'h-8 px-3 py-1.5 text-xs',\n        md: 'h-9 px-2.5 py-2',\n        lg: 'h-10 px-8 py-2',\n        icon: 'h-9 w-9',\n      },\n    },\n    defaultVariants: {\n      intent: 'default',\n      size: 'md',\n    },\n  }\n)\n\nexport interface ButtonProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement>,\n    VariantProps<typeof buttonVariants> {\n  asChild?: boolean\n}\n\nconst Button = React.forwardRef<HTMLButtonElement, ButtonProps>(\n  ({ asChild = false, className, intent, size, ...props }, ref) => {\n    const Comp = asChild ? Slot : 'button'\n\n    return (\n      <Comp\n        ref={ref}\n        data-slot=\"button\"\n        className={cn(buttonVariants({ intent, size, className }))}\n        {...props}\n      />\n    )\n  }\n)\nButton.displayName = 'Button'\n\nexport { Button, buttonVariants }\n",
+          "type": "registry:ui",
+          "target": "@ui/button.tsx"
+        }
+      ],
+      "meta": {
+        "status": "experimental",
+        "registryVersion": "0.1.0",
+        "registryUrl": "https://applique.myntra.com/registry/button.json",
+        "versionedRegistryUrl": "https://applique.myntra.com/registry/v0.1.0/button.json"
+      }
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "A themed checkbox primitive with Applique states and variants.",
+      "dependencies": [
+        "@radix-ui/react-checkbox@1.3.3",
+        "class-variance-authority@0.7.1",
+        "lucide-react@0.460.0"
+      ],
+      "categories": [
+        "primitive",
+        "form"
+      ],
+      "registryDependencies": [
+        "https://applique.myntra.com/registry/v0.1.0/applique-theme.json",
+        "https://applique.myntra.com/registry/v0.1.0/utils.json"
+      ],
+      "files": [
+        {
+          "path": "ui/checkbox.tsx",
+          "content": "import * as React from 'react'\nimport * as CheckboxPrimitive from '@radix-ui/react-checkbox'\nimport { Check, Minus } from 'lucide-react'\nimport { cva, type VariantProps } from 'class-variance-authority'\nimport { cn } from '@/lib/utils'\n\nconst checkboxVariants = cva(\n  'grid place-content-center peer h-4 w-4 shrink-0 rounded-xxs border border-solid outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',\n  {\n    variants: {\n      variant: {\n        default:\n          'border-input bg-background data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:text-primary-foreground',\n        destructive:\n          'border-input bg-background data-[state=checked]:bg-destructive data-[state=checked]:border-destructive data-[state=checked]:text-destructive-foreground data-[state=indeterminate]:bg-destructive data-[state=indeterminate]:border-destructive data-[state=indeterminate]:text-destructive-foreground',\n      },\n    },\n    defaultVariants: {\n      variant: 'default',\n    },\n  }\n)\n\nexport interface CheckboxProps\n  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,\n    VariantProps<typeof checkboxVariants> {}\n\nconst Checkbox = React.forwardRef<\n  React.ElementRef<typeof CheckboxPrimitive.Root>,\n  CheckboxProps\n>(({ className, variant, ...props }, ref) => (\n  <CheckboxPrimitive.Root\n    ref={ref}\n    data-slot=\"checkbox\"\n    className={cn(checkboxVariants({ variant }), className)}\n    {...props}\n  >\n    <CheckboxPrimitive.Indicator\n      data-slot=\"checkbox-indicator\"\n      className={cn('group grid place-content-center text-current')}\n    >\n      <Check className=\"h-4 w-4 group-data-[state=indeterminate]:hidden\" />\n      <Minus className=\"hidden h-4 w-4 group-data-[state=indeterminate]:block\" />\n    </CheckboxPrimitive.Indicator>\n  </CheckboxPrimitive.Root>\n))\nCheckbox.displayName = CheckboxPrimitive.Root.displayName\n\nexport { Checkbox, checkboxVariants }\n",
+          "type": "registry:ui",
+          "target": "@ui/checkbox.tsx"
+        }
+      ],
+      "meta": {
+        "status": "experimental",
+        "registryVersion": "0.1.0",
+        "registryUrl": "https://applique.myntra.com/registry/checkbox.json",
+        "versionedRegistryUrl": "https://applique.myntra.com/registry/v0.1.0/checkbox.json"
+      }
+    }
+  ]
+}

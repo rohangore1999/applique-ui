@@ -114,40 +114,21 @@ function createComponentsFile(component) {
     // : []
   })
 
+  const exports = packages.includes(component)
+    ? [`export * from '@applique-ui/${component}'`]
+    : Array.from(localComponents).map((name) => {
+        const kebabName = kebabCase(name)
+
+        return `export { default as ${name} } from '@applique-ui/${kebabName}'${
+          name === 'Text'
+            ? `\nexport { default as T } from '@applique-ui/text'`
+            : ''
+        }`
+      })
+
   Fs.writeFileSync(
     Path.resolve(__dirname, `app/uikit.${component}.js`),
-    [
-      ...Array.from(localComponents).map(
-        (name) => {
-          const kebabName = kebabCase(name)
-          // Check if this component is from the current package being viewed
-          // and if it's actually exported from that package
-          if (packages.includes(component)) {
-            // For the shadcn-primitives package, only export ShadcnButton from it
-            // Other components like Tabs, Documenter should come from their own packages
-            if (name === 'ShadcnButton') {
-              return `export { ${name} } from '@applique-ui/${component}'`
-            }
-          }
-          // Default: export from the kebab-cased component package
-          if (components.includes(kebabName)) {
-            return `export { default as ${name} } from '@applique-ui/${kebabName}'${
-              name === 'Text'
-                ? `\nexport { default as T } from '@applique-ui/text'`
-                : ''
-            }`
-          }
-          // If not found in components, try the current package
-          return `export { ${name} } from '@applique-ui/${component}'`
-        }
-      ),
-      // ...iconImports.map(
-      //   (iconName) =>
-      //     `
-      //   export { default as ${iconName} } from '@applique-ui/uikit-icons/svgs/${iconName}'
-      //   `
-      // ),
-    ].join('\n')
+    exports.join('\n')
   )
 }
 
@@ -203,6 +184,13 @@ function startWebpackDevServer(component, port) {
   chain.stats({
     loggingDebug: ['sass-loader'],
   })
+
+  chain.set('ignoreWarnings', [
+    {
+      module: /@babel[\\/]standalone[\\/]babel\.js$/,
+      message: /Critical dependency: the request of a dependency is an expression/,
+    },
+  ])
 
   chain.resolve.extensions
     .add('.ts')
