@@ -766,7 +766,7 @@ function MigrationGuide() {
             onClick={() => setActiveKind('all')}
             type="button"
           >
-            All <span>{migrationRows.length}</span>
+            All mappings <span>{migrationRows.length}</span>
           </button>
           {mappingKindOrder.map((kind) => (
             <button
