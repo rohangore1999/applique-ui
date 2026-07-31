@@ -1,44 +1,52 @@
 # Registry catalogue
 
-The catalogue is a static React page for visually inspecting registry
-components. Component previews are imported at build time; registry JSON is
-linked for discovery but is never executed in the browser.
+The catalogue is a static React page for inspecting the pinned shadcn
+Base/Nova registry through Applique semantic tokens. It lists all 62 upstream
+component entries:
 
-Build from the repository root:
+- 61 installable entries have lazy-loaded live previews and source-derived API
+  metadata.
+- `Form` is retained as a deprecated discovery entry and points consumers to
+  `Field`; no install command is advertised for it.
 
-```sh
-node packages/shadcn-primitives/catalog/build.js
-```
+Most previews are vendored from the pinned upstream commit. `Direction`,
+`Message`, and `Message Scroller` use local minimal previews because Direction
+has no upstream example and the two message examples depend on private shadcn
+docs helpers. Registry JSON is fetched only when someone asks to view source.
 
-The isolated build output is written to `docs/catalog`. Existing files under
-`docs/registry` are not changed.
+## Build and inspect
 
-Type-check the catalogue:
+From the repository root:
 
 ```sh
 pnpm exec tsc --project packages/shadcn-primitives/catalog/tsconfig.json
-```
-
-To inspect the same paths used by GitHub Pages:
-
-```sh
+node packages/shadcn-primitives/catalog/build.js
 pnpm exec serve docs
 ```
 
-Then open `/catalog/#/components/button`.
+Open `/catalog/#/components/button`. The isolated build is written to
+`docs/catalog`; it does not rewrite `docs/registry`.
 
-## Component page standard
+## Refresh generated catalogue files
 
-A component remains `planned` until its catalogue page:
+Regenerate API metadata and preview-loader mappings from the checked-in source
+and pinned lock:
 
-- renders the real checked-in component source;
-- demonstrates every supported visual variant and size;
-- demonstrates relevant disabled, loading, invalid, selected, and focus states;
-- demonstrates important icon, link, composition, and directionality behavior;
-- documents the complete current primitive prop surface;
-- separates planned Applique facade props from props that work today; and
-- passes the isolated catalogue type-check and production build.
+```sh
+node packages/shadcn-primitives/scripts/generate-catalog-metadata.js --metadata-only
+```
 
-Examples should reflect capabilities that are actually present in the registry
-source. Related compositions, such as Button Group, stay separate until their
-own registry items are ready.
+To refresh the vendored official examples from a prepared snapshot directory:
+
+```sh
+node packages/shadcn-primitives/scripts/generate-catalog-metadata.js \
+  --examples-dir /private/tmp/shadcn-examples-base
+```
+
+Add `--fetch-missing` only when intentionally refreshing missing files from the
+pinned upstream commit. Normal type-checks and builds never require network
+access.
+
+API metadata describes exact checked-in exports, locally declared props, and
+the inherited or forwarded type surfaces. It does not pretend to flatten
+third-party primitive types into Applique-owned props.

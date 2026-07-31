@@ -17,6 +17,8 @@ if (!process.env.TARGET) {
 const TARGET = process.env.TARGET
 const dir = getPackageDir(TARGET)
 const pkg = require(`${dir}/package.json`)
+const usesAutomaticJsxRuntime =
+  pkg.name === '@rohangore1999/shadcn-primitives'
 
 function get(file) {
   return path.resolve(dir, file)
@@ -28,6 +30,22 @@ const configs = (module.exports = [])
 const config = {
   input: get('src/index.ts'),
   external(name) {
+    if (usesAutomaticJsxRuntime) {
+      const declaredDependencies = [
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.peerDependencies || {}),
+        ...Object.keys(pkg.optionalDependencies || {}),
+      ]
+
+      if (
+        declaredDependencies.some(
+          (dependency) =>
+            name === dependency || name.startsWith(`${dependency}/`)
+        )
+      )
+        return true
+    }
+
     if (isTheme(TARGET)) {
       if (
         name === '@applique-ui/uikit' ||
@@ -80,20 +98,33 @@ const config = {
       check: !isTheme(TARGET),
       abortOnError: !isTheme(TARGET),
       objectHashIgnoreUnknownHack: true,
-      tsconfig: 'tsconfig.build.json',
+      tsconfig: usesAutomaticJsxRuntime
+        ? get('tsconfig.json')
+        : 'tsconfig.build.json',
       tsconfigOverride: {
         include: [get('src'), path.resolve(__dirname, '@types')],
         compilerOptions: {
-          moduleResolution: 'node',
+          moduleResolution: usesAutomaticJsxRuntime ? 'bundler' : 'node',
           target: 'esnext',
           module: 'esnext',
-          jsx: 'react',
+          jsx: usesAutomaticJsxRuntime ? 'react-jsx' : 'react',
           lib: ['dom', 'esnext'],
           esModuleInterop: true,
           allowSyntheticDefaultImports: true,
           declaration: !isTheme(TARGET),
           rootDir: get('src'),
-          baseUrl: get('src'),
+          baseUrl: usesAutomaticJsxRuntime ? dir : get('src'),
+          ...(usesAutomaticJsxRuntime
+            ? {
+                paths: {
+                  react: ['node_modules/@types/react/index.d.ts'],
+                  'react/*': ['node_modules/@types/react/*'],
+                  '@shadcn/react/message-scroller': [
+                    'node_modules/@shadcn/react/dist/message-scroller/index.d.ts',
+                  ],
+                },
+              }
+            : {}),
         },
       },
     }),

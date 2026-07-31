@@ -1,0 +1,34 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "label",
+  "type": "registry:ui",
+  "title": "Label",
+  "description": "Official shadcn base-nova component with Applique theme tokens.",
+  "dependencies": [],
+  "categories": [
+    "primitive",
+    "base-ui"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
+  ],
+  "files": [
+    {
+      "path": "ui/label.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nfunction Label({ className, ...props }: React.ComponentProps<\"label\">) {\n  return (\n    <label\n      data-slot=\"label\"\n      className={cn(\n        \"flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nexport { Label }\n",
+      "type": "registry:ui",
+      "target": "@ui/label.tsx"
+    }
+  ],
+  "meta": {
+    "status": "experimental",
+    "upstream": {
+      "cliVersion": "4.16.0",
+      "sourceSha256": "055f0a067e7b228820992cc1ebc4136b135749bbb790dfc92dc6f33b40d47c81",
+      "style": "base-nova",
+      "upstreamSha256": "e2f2e12654873b352d423de9f8af6c2c1ad98d028ecf2bcd15db6ec36665e939"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

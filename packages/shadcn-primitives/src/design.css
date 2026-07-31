@@ -1,36 +1,89 @@
-@import './tokens.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import '@fontsource-variable/hanken-grotesk';
 
 /*
- * Scoped preflight.
- * Since corePlugins.preflight is disabled (so we don't affect consumer pages),
- * native interactive elements that WE render keep browser defaults — button
- * padding, input border insets, system fonts, etc. This scoped reset fires
- * only on elements tagged with `data-slot`, which every shadcn primitive sets.
- * Result: new components get a clean baseline automatically; nothing else on
- * the consumer page is touched.
+ * Tailwind 4 is intentionally isolated to this package. Import the theme and
+ * utility layers separately so Tailwind's global preflight is not emitted into
+ * consumer dashboards.
+ */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import './tokens.css';
+
+@source "./**/*.{ts,tsx}";
+@source "../catalog/**/*.{ts,tsx}";
+
+/*
+ * Applique currently publishes light tokens only. This package-specific
+ * selector prevents a dashboard's `.dark` class or OS preference from
+ * accidentally activating Base Nova dark utilities against light tokens.
+ * Do not set this attribute until a real dark token set is available.
+ */
+@custom-variant dark (
+  &:where(
+    [data-applique-color-scheme="dark"],
+    [data-applique-color-scheme="dark"] *
+  )
+);
+
+@custom-variant applique-dark (
+  &:where(
+    [data-applique-color-scheme="dark"],
+    [data-applique-color-scheme="dark"] *
+  )
+);
+
+/*
+ * Base Nova uses shadcn's semantic color names. `inline` keeps the generated
+ * utilities connected to the runtime Applique variables, including opacity
+ * modifiers such as `bg-primary/80`.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-outline-border: var(--outline-border);
+  --color-outline-foreground: var(--outline-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+/*
+ * Scoped preflight. Base Nova components consistently expose `data-slot`, so
+ * they receive the browser-normalization they need without resetting the host
+ * dashboard.
  */
 @layer base {
-  /*
-   * `:where(...)` wrapper forces specificity to 0,0,0 so any Tailwind utility
-   * class (e.g. `bg-primary`, `border-input`) on the element wins without
-   * needing `!important`. Without :where(), `button[data-slot]` would be
-   * 0,1,1 — higher than `.bg-primary` at 0,1,0 — and wipe component styling.
-   */
-
-  /*
-   * Baseline normalize for ALL elements tagged with `data-slot` and their
-   * descendants. Without Tailwind preflight, browser defaults leak through:
-   *   - divs get `border-width: medium` (~3px), so `border-b border-solid`
-   *     would render on all four sides instead of just the bottom.
-   *   - box-sizing defaults to `content-box`, which breaks layouts using
-   *     Tailwind's w-/h- utilities that assume `border-box`.
-   *   - `<ol>`/`<ul>` keep `list-style: decimal/disc` + padding-left, which
-   *     renders phantom bullets/numbers overlapping our content.
-   */
   :where([data-slot], [data-slot] *, [data-slot]::before, [data-slot]::after) {
     box-sizing: border-box;
     border-width: 0;
@@ -39,15 +92,8 @@
     list-style: none;
   }
 
-  /* Interactive native elements (button/input/textarea/select) need extra
-   * resets beyond the border/box-sizing normalize: browsers ship system
-   * fonts, padding, appearance, etc. This applies to elements that either
-   * carry `data-slot` themselves OR are rendered inside a `[data-slot]`
-   * wrapper (e.g. react-day-picker's day buttons). */
-  :where(
-    button[data-slot], input[data-slot], textarea[data-slot], select[data-slot],
-    [data-slot] button, [data-slot] input, [data-slot] textarea, [data-slot] select
-  ) {
+  :where(button[data-slot], input[data-slot], textarea[data-slot], select[data-slot], [data-slot]
+      button, [data-slot] input, [data-slot] textarea, [data-slot] select) {
     appearance: none;
     -webkit-appearance: none;
     margin: 0;

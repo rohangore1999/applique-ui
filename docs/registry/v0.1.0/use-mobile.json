@@ -1,0 +1,31 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-mobile",
+  "type": "registry:hook",
+  "title": "Use Mobile",
+  "description": "Support hook required by the Applique-themed Sidebar.",
+  "dependencies": [],
+  "categories": [
+    "foundation",
+    "hook"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "hooks/use-mobile.ts",
+      "content": "import * as React from \"react\"\n\nconst MOBILE_BREAKPOINT = 768\n\nexport function useIsMobile() {\n  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)\n\n  React.useEffect(() => {\n    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)\n    const onChange = () => {\n      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)\n    }\n    mql.addEventListener(\"change\", onChange)\n    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)\n    return () => mql.removeEventListener(\"change\", onChange)\n  }, [])\n\n  return !!isMobile\n}\n",
+      "type": "registry:hook",
+      "target": "@hooks/use-mobile.ts"
+    }
+  ],
+  "meta": {
+    "status": "foundation",
+    "upstream": {
+      "cliVersion": "4.16.0",
+      "sourceSha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b",
+      "style": "base-nova",
+      "upstreamSha256": "91d2704e992322d60209198c6ee0186bb03cff8db52ad1a48e4c774aa54cc8c6"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

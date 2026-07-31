@@ -1,144 +1,92 @@
-# @applique-ui/shadcn-primitives
+# Applique shadcn primitives
 
-shadcn/ui-style primitive components for Applique design system using Tailwind CSS and Figma design tokens.
+This workspace package builds the Applique custom shadcn registry and its
+static component catalogue. The supported client delivery model is the
+registry: the shadcn CLI copies TypeScript source and Applique tokens into the
+consumer application.
 
-## Installation
+It is not necessary for a dashboard to import this package at runtime.
 
-```bash
-pnpm add @applique-ui/shadcn-primitives
+## Release baseline
+
+- Registry version: `v0.1.0`
+- shadcn CLI: `4.16.0`
+- Style: `base-nova`
+- React: 19
+- Tailwind CSS: 4
+- Node.js: `>=20.18.1`
+- Coverage: all 62 official UI entries, with 61 sourced and installable
+
+The upstream Form entry is fileless and deprecated; use Field.
+
+## Install from the registry
+
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json
 ```
 
-## Usage
-
-### With Tailwind CSS (Recommended)
-
-If your app has Tailwind configured:
+The CLI installs the component source, exact npm dependencies, local registry
+dependencies, the Applique theme, and the pinned Hanken Grotesk variable font.
+Client code then imports its local copy:
 
 ```tsx
-import { Button } from '@applique-ui/shadcn-primitives'
-import '@applique-ui/shadcn-primitives/dist/tokens.css'
+import { Button } from '@/components/ui/button'
 
-function App() {
-  return (
-    <Button intent="default" size="md">
-      Save
-    </Button>
-  )
+export function SaveButton() {
+  return <Button variant="default">Save</Button>
 }
 ```
 
-### Without Tailwind CSS
+See [USAGE.md](./USAGE.md) for consumer setup and update behavior.
 
-Use pre-compiled CSS bundle:
+## Develop the registry
 
-```tsx
-import { Button } from '@applique-ui/shadcn-primitives'
-import '@applique-ui/shadcn-primitives/dist/design.css'
+From this directory:
 
-function App() {
-  return (
-    <Button intent="default" size="md">
-      Save
-    </Button>
-  )
-}
+```sh
+pnpm run build:pages
+pnpm run validate:registry
+pnpm run smoke:registry
 ```
 
-## Components
+Inspect the generated catalogue locally:
 
-### Button
-
-```tsx
-<Button intent="default" size="md">
-  Button
-</Button>
+```sh
+pnpm run serve:catalog
 ```
 
-**Props:**
+Then open:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `intent` | `'default' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive' \| 'link'` | `'default'` | Visual style |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'icon'` | `'md'` | Button size |
-| `className` | `string` | - | Additional classes (merged with tailwind-merge) |
-
-**All button variants:**
-
-```tsx
-// Default variants
-<Button intent="default">Default</Button>
-<Button intent="secondary">Secondary</Button>
-<Button intent="outline">Outline</Button>
-<Button intent="ghost">Ghost</Button>
-<Button intent="destructive">Destructive</Button>
-<Button intent="link">Link</Button>
-
-// Sizes
-<Button size="sm">Small</Button>
-<Button size="md">Medium</Button>
-<Button size="lg">Large</Button>
-<Button size="icon">🔔</Button>
-
-// With icons (using lucide-react or any icon library)
-<Button intent="outline">
-  <Icon className="w-4 h-4" />
-  Button with icon
-</Button>
-
-// Disabled
-<Button disabled>Disabled</Button>
-
-// Custom classes
-<Button className="rounded-full">Rounded</Button>
+```text
+http://localhost:4173/catalog/
 ```
 
-**Using buttonVariants directly:**
+An upstream refresh is separate from a normal build:
 
-```tsx
-import { buttonVariants, cn } from '@applique-ui/shadcn-primitives'
-
-<a href="/home" className={cn(buttonVariants({ intent: 'outline' }))}>
-  Link Button
-</a>
+```sh
+pnpm run sync:shadcn -- --allow-network
 ```
 
-## Design Tokens
+The network flag is intentionally explicit because the upstream registry
+endpoint is mutable. Verify the stable CLI version and upstream commit first.
+The refresh rewrites the checked-in Base/Nova snapshot, normalized sources,
+manifest, exports, and SHA-256 lock data. Review all diffs before accepting it.
 
-All colors use CSS custom properties from Figma Applique design tokens:
-- `--primary`: #5232D0 (indigo/700)
-- `--secondary`: #F0EEFF (indigo/50)
-- `--destructive`: #BF3823 (Cherry/700)
-- `--border`: #E5E7EB (gray/200)
-- `--ring`: #5232D0 (indigo/700)
+## Important paths
 
-See the Applique.tokens.json file for full token reference.
+| Path                           | Purpose                                      |
+| ------------------------------ | -------------------------------------------- |
+| `registry.json`                | Registry source manifest and release version |
+| `src/tokens.css`               | Figma-backed Applique light tokens           |
+| `src/<registry-name>.tsx`      | Normalized Base/Nova registry source         |
+| `upstream/base-nova/`          | Checked-in official item JSON                |
+| `shadcn-base-nova.lock.json`   | Exact dependency and content hashes          |
+| `scripts/sync-shadcn.js`       | Intentional upstream refresh                 |
+| `scripts/generate-registry.js` | Static registry generation                   |
+| `catalog/`                     | Static component catalogue                   |
+| `../../docs/registry/`         | Generated Pages registry                     |
+| `../../docs/catalog/`          | Generated Pages catalogue                    |
 
-## Utilities
-
-### cn()
-
-Merges class names using `clsx` and `tailwind-merge`:
-
-```tsx
-import { cn } from '@applique-ui/shadcn-primitives'
-
-<button className={cn('base-class', someCondition && 'conditional-class', className)}>
-  Button
-</button>
-```
-
-## Coexistence with Legacy Components
-
-This package is completely separate from existing `@applique-ui/button`. Both can be used in the same app:
-
-```tsx
-// Old SCSS-based button
-import Button from '@applique-ui/button'
-<Button type="primary" color="blue">Save</Button>
-
-// New shadcn-based button
-import { Button } from '@applique-ui/shadcn-primitives'
-<Button intent="default">Save</Button>
-```
-
-No conflicts - they use different class naming strategies.
+See [REGISTRY.md](./REGISTRY.md) for release, validation, versioning, and manual
+GitHub Pages instructions.

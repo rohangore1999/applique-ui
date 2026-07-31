@@ -1,91 +1,56 @@
-# Component Coverage
+# Component coverage
 
-This file is the source of truth for "what's shipped" in
-`@rohangore1999/shadcn-primitives`. All **49 shadcn/ui components** are
-covered. The two marked "pattern" are compositions, not standalone files —
-shadcn itself does not ship them as separate components either.
+Registry `v0.1.0` mirrors all 62 official `registry:ui` entries in the
+shadcn `4.16.0` Base UI `base-nova` index.
 
-## Full coverage table
+## Installable source entries (61)
 
-| # | Component | Shipped as | Batch |
-|---|---|---|---|
-| 1 | Accordion | `src/accordion.tsx` | 2 |
-| 2 | Alert | `src/alert.tsx` | 5 |
-| 3 | AlertDialog | `src/alert-dialog.tsx` | 3 |
-| 4 | AspectRatio | `src/aspect-ratio.tsx` | 2 |
-| 5 | Avatar | `src/avatar.tsx` | 5 |
-| 6 | Badge | `src/badge.tsx` | 5 |
-| 7 | Breadcrumb | `src/breadcrumb.tsx` | 5 |
-| 8 | Button | `src/button.tsx` | 1 |
-| 9 | Calendar | `src/calendar.tsx` | 4 |
-| 10 | Card | `src/card.tsx` | 2 |
-| 11 | Carousel | `src/carousel.tsx` | 6 |
-| 12 | Chart | `src/chart.tsx` | 6 |
-| 13 | Checkbox | `src/checkbox.tsx` | 1 |
-| 14 | Collapsible | `src/collapsible.tsx` | 2 |
-| 15 | Combobox | pattern: `Popover` + `Command` | 3 |
-| 16 | Command | `src/command.tsx` | 3 |
-| 17 | ContextMenu | `src/context-menu.tsx` | 3 |
-| 18 | DataTable | `src/data-table.tsx` | 6 |
-| 19 | DatePicker | pattern: `Popover` + `Calendar` | 4 |
-| 20 | Dialog | `src/dialog.tsx` | 3 |
-| 21 | Drawer | `src/drawer.tsx` | 6 |
-| 22 | DropdownMenu | `src/dropdown-menu.tsx` | 3 |
-| 23 | Form | `src/form.tsx` | 4 |
-| 24 | HoverCard | `src/hover-card.tsx` | 3 |
-| 25 | Input | `src/input.tsx` | 1 |
-| 26 | InputOTP | `src/input-otp.tsx` | 4 |
-| 27 | Label | `src/label.tsx` | 1 |
-| 28 | Menubar | `src/menubar.tsx` | 3 |
-| 29 | NavigationMenu | `src/navigation-menu.tsx` | 6 |
-| 30 | Pagination | `src/pagination.tsx` | 5 |
-| 31 | Popover | `src/popover.tsx` | 3 |
-| 32 | Progress | `src/progress.tsx` | 5 |
-| 33 | RadioGroup | `src/radio-group.tsx` | 1 |
-| 34 | Resizable | `src/resizable.tsx` | 6 |
-| 35 | ScrollArea | `src/scroll-area.tsx` | 2 |
-| 36 | Select | `src/select.tsx` | 4 |
-| 37 | Separator | `src/separator.tsx` | 2 |
-| 38 | Sheet | `src/sheet.tsx` | 3 |
-| 39 | Sidebar | `src/sidebar.tsx` | 6 |
-| 40 | Skeleton | `src/skeleton.tsx` | 5 |
-| 41 | Slider | `src/slider.tsx` | 1 |
-| 42 | Sonner (Toaster / toast) | `src/sonner.tsx` | 5 |
-| 43 | Switch | `src/switch.tsx` | 1 |
-| 44 | Table | `src/table.tsx` | 6 |
-| 45 | Tabs | `src/tabs.tsx` | 2 |
-| 46 | Textarea | `src/textarea.tsx` | 1 |
-| 47 | Toggle | `src/toggle.tsx` | 5 |
-| 48 | ToggleGroup | `src/toggle-group.tsx` | 5 |
-| 49 | Tooltip | `src/tooltip.tsx` | 3 |
+Accordion, Alert, Alert Dialog, Aspect Ratio, Attachment, Avatar, Badge,
+Breadcrumb, Bubble, Button, Button Group, Calendar, Card, Carousel, Chart,
+Checkbox, Collapsible, Combobox, Command, Context Menu, Dialog, Direction,
+Drawer, Dropdown Menu, Empty, Field, Hover Card, Input, Input Group, Input
+OTP, Item, Kbd, Label, Marker, Menubar, Message, Message Scroller, Native
+Select, Navigation Menu, Pagination, Popover, Progress, Radio Group,
+Resizable, Scroll Area, Select, Separator, Sheet, Sidebar, Skeleton, Slider,
+Sonner, Spinner, Switch, Table, Tabs, Textarea, Toast, Toggle, Toggle Group,
+and Tooltip.
 
-**Applique additions beyond shadcn:**
+Every entry has:
 
-| Component | Shipped as | Notes |
-|---|---|---|
-| Spinner | `src/spinner.tsx` | Small custom loader primitive |
+- a checked-in upstream JSON snapshot;
+- transformed TypeScript source, except Form;
+- exact dependency pins;
+- root and `v0.1.0` registry item JSON;
+- a catalogue entry and lazy preview.
 
-## Not shipped, and why
+## Fileless official entry (1)
 
-| Upstream name | Reason |
-|---|---|
-| **Toast** | Deprecated upstream in favor of **Sonner**. We ship Sonner (`Toaster` + `toast`). |
-| **Typography** | Not a component — shadcn just documents Tailwind utilities like `text-4xl font-bold`. Nothing to ship. |
+`Form` is present in the official index but contains no source in this Base UI
+snapshot. It is published as deprecated metadata and points to `Field`.
 
-## Rollout batches (historical)
+## Supporting entry
 
-| Batch | Components | Theme |
-|---|---|---|
-| 1 | Button, Checkbox, Label, Input, Textarea, Switch, RadioGroup, Slider, Spinner | Primitives |
-| 2 | Card, Separator, Accordion, Collapsible, Tabs, ScrollArea, AspectRatio | Layout / surface |
-| 3 | Popover, Tooltip, HoverCard, Dialog, AlertDialog, Sheet, DropdownMenu, ContextMenu, Menubar, Command | Overlays |
-| 4 | Select, Calendar, InputOTP, Form (+ Combobox/DatePicker patterns) | Data entry |
-| 5 | Alert, Badge, Avatar, Skeleton, Progress, Sonner, Toggle, ToggleGroup, Breadcrumb, Pagination | Feedback / display |
-| 6 | NavigationMenu, Table, DataTable, Carousel, Resizable, Drawer, Sidebar, Chart | Nav / advanced |
+`use-mobile` is a `registry:hook` used by Sidebar. It is installed through the
+dependency graph and is not shown as a component in the catalogue.
 
-## How to confirm coverage yourself
+## Outside this official primitive scope
+
+Date Picker and Data Table are documented shadcn compositions rather than
+official UI source entries in this index. Build them from Calendar/Popover and
+Table primitives, or publish separate reviewed Applique compositions later.
+The retained package-only `src/data-table.tsx` is not part of this registry
+release.
+
+The manifest is the machine-readable source of truth:
 
 ```bash
-# list all component exports in the built bundle
-grep -oE '^export \{[^}]*\}' packages/shadcn-primitives/dist/shadcn-primitives.esm.js
+node -e '
+const r = require("./packages/shadcn-primitives/registry.json")
+const ui = r.items.filter((item) => item.type === "registry:ui")
+console.log({
+  official: ui.length,
+  installable: ui.filter((item) => item.files?.length).length,
+  fileless: ui.filter((item) => !item.files?.length).map((item) => item.name),
+})
+'
 ```

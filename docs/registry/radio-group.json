@@ -1,0 +1,36 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "radio-group",
+  "type": "registry:ui",
+  "title": "Radio Group",
+  "description": "Official shadcn base-nova component with Applique theme tokens.",
+  "dependencies": [
+    "@base-ui/react@1.6.0"
+  ],
+  "categories": [
+    "primitive",
+    "base-ui"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
+  ],
+  "files": [
+    {
+      "path": "ui/radio-group.tsx",
+      "content": "\"use client\"\n\nimport { Radio as RadioPrimitive } from \"@base-ui/react/radio\"\nimport { RadioGroup as RadioGroupPrimitive } from \"@base-ui/react/radio-group\"\n\nimport { cn } from \"@/lib/utils\"\n\nfunction RadioGroup({ className, ...props }: RadioGroupPrimitive.Props) {\n  return (\n    <RadioGroupPrimitive\n      data-slot=\"radio-group\"\n      className={cn(\"grid w-full gap-2\", className)}\n      {...props}\n    />\n  )\n}\n\nfunction RadioGroupItem({ className, ...props }: RadioPrimitive.Root.Props) {\n  return (\n    <RadioPrimitive.Root\n      data-slot=\"radio-group-item\"\n      className={cn(\n        \"group/radio-group-item peer relative flex aspect-square size-4 shrink-0 rounded-full border border-input outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary applique-dark:bg-input/30 applique-dark:aria-invalid:border-destructive/50 applique-dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground applique-dark:data-checked:bg-primary\",\n        className\n      )}\n      {...props}\n    >\n      <RadioPrimitive.Indicator\n        data-slot=\"radio-group-indicator\"\n        className=\"flex size-4 items-center justify-center\"\n      >\n        <span className=\"absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-foreground\" />\n      </RadioPrimitive.Indicator>\n    </RadioPrimitive.Root>\n  )\n}\n\nexport { RadioGroup, RadioGroupItem }\n",
+      "type": "registry:ui",
+      "target": "@ui/radio-group.tsx"
+    }
+  ],
+  "meta": {
+    "status": "experimental",
+    "upstream": {
+      "cliVersion": "4.16.0",
+      "sourceSha256": "6f9436a812125751fc83ed6ab630f828c5caa59df4e9e575e8b106d5b8dabddf",
+      "style": "base-nova",
+      "upstreamSha256": "3fb7f535e9cafa209272943e6c290bec3869883070c35e290f1cb56e76cd629e"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

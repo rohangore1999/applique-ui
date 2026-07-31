@@ -1,202 +1,238 @@
-# Applique x shadcn — Registry Strategy
+# Applique x shadcn registry strategy
 
-## Background
+## Decision
 
-Applique is Myntra's enterprise design system, publishing ~50 React components as npm packages under `@applique-ui`. Teams consume components by installing the package and importing from it.
+Applique distributes the new shadcn primitives through a custom registry.
+Applications receive local component source while Applique supplies the common
+starting point: a reviewed shadcn snapshot, exact dependencies, and the
+Applique design tokens.
 
-As shadcn/ui gained adoption across the org, teams started requesting to use shadcn directly. The primary reason: **shadcn gives you the source code** in your own project — full ownership, no black box, no upgrade dependency.
+This balances the two requirements:
 
-This created a tension:
+| Concern            | Registry result                                               |
+| ------------------ | ------------------------------------------------------------- |
+| UI consistency     | Every component starts with the same Applique semantic tokens |
+| Team control       | The generated TypeScript lives in the client repository       |
+| Runtime coupling   | No shared Applique component runtime is required              |
+| Updates            | Clients choose when to reinstall and merge source changes     |
+| Upstream stability | shadcn, Base UI, and other dependencies are exactly pinned    |
 
-| | Applique package model | shadcn direct |
-|---|---|---|
-| Component source | Applique owns | Team owns |
-| Tokens / theming | Managed | Each team defines their own |
-| Consistency | High | Fragmented over time |
-| Flexibility | Low | High |
+The registry does not make client source centrally managed. Once installed,
+the client owns its copy; consistency comes from a governed baseline and an
+explicit update process.
 
-The risk with teams using shadcn directly: **token drift**. Each team initializes shadcn with their own CSS variables, maintains them independently, and gradually diverges from the Applique design language.
+## Current release
 
----
+The current release is `v0.1.0` and is based on:
 
-## Decision: Registry-Based Approach
+- `shadcn@4.16.0`
+- the official `base-nova` registry style
+- React 19
+- Tailwind CSS 4
+- Node.js `>=20.18.1`
 
-Instead of forcing teams to choose between Applique packages or vanilla shadcn, we use **shadcn's custom registry** feature.
+It represents all 62 official UI entries in the pinned Base/Nova index:
 
-A custom registry is a set of JSON files hosted at a public URL. Teams run one command:
+- 61 entries contain installable TypeScript source.
+- Form is the one fileless upstream entry. It is deprecated and points to
+  Field.
 
-```bash
-npx shadcn add https://rohangore1999.github.io/applique-ui/registry/button.json
+The version remains `v0.1.0` while there are no consumers. This lets the team
+complete the initial baseline without creating meaningless pre-adoption
+versions. After the first consumer adopts `v0.1.0`, its versioned URLs must be
+immutable and subsequent changes must use a new registry version.
+
+## What a client receives
+
+Installing Button illustrates the dependency chain:
+
+```text
+button.json
+  + applique-theme.json  -> Applique CSS variables
+  + utils.json           -> local cn() helper
+  + exact npm packages   -> Base UI and CVA
+  + button.tsx           -> local component source
 ```
 
-They get:
-- The component **source code** in their project (shadcn model, team owns it)
-- The component starts from **Applique's baseline** — correct tokens, Myntra conventions, Applique prop names
-- **Design tokens are written automatically** into their CSS — no separate import needed
+The CLI resolves registry dependencies first, writes files using the aliases in
+the client's `components.json`, and merges theme variables into the configured
+global CSS.
 
-This gives teams source ownership without fragmenting the design language.
+Typical generated files are:
 
----
-
-## How It Works
-
-### Registry JSON files
-
-Each component is a JSON file with three things:
-
-```
-name        → component identifier
-files       → source code to copy into the consumer's project
-cssVars     → design tokens to write into consumer's CSS (via applique-theme.json)
-registryDependencies → other registry items to install first
+```text
+src/components/ui/button.tsx
+src/lib/utils.ts
 ```
 
-### The dependency chain
+Client code imports the local component:
 
-Every component depends on two base items:
+```tsx
+import { Button } from '@/components/ui/button'
 
-```
-npx shadcn add registry/button.json
-        │
-        ├── registryDependencies
-        │       ├── registry/applique-theme.json  → writes all 76 tokens into consumer's CSS
-        │       └── registry/utils.json           → writes lib/utils.js (cn() helper)
-        │
-        └── files
-                └── components/ui/button.jsx      → Applique button with intent prop
-```
-
-One command installs everything. The consumer does not import tokens separately.
-
----
-
-## Token Strategy
-
-All design tokens live in one source of truth: `packages/shadcn-primitives/src/tokens.css`.
-
-This file is the Figma-sourced token set — colors, spacing, radius, shadows, typography — all as CSS custom properties in HSL format.
-
-```
-tokens.css  →  generate-registry.js  →  applique-theme.json (cssVars)
-                                              ↓
-                              shadcn CLI writes into consumer's CSS
-```
-
-When a consumer runs `npx shadcn add` for any Applique component, the CLI automatically writes all token vars into their configured CSS file under `@layer base`.
-
-**Updating tokens:** change `tokens.css` → run `generate-registry.js` → push to `deploy` → GitHub Pages updates → consumers re-run `npx shadcn add` to pick up the new tokens.
-
----
-
-## Component Conventions
-
-Applique's shadcn components differ from vanilla shadcn in key ways:
-
-| | Vanilla shadcn | Applique registry |
-|---|---|---|
-| Button variant prop | `variant` | `intent` |
-| Sizes | `default`, `sm`, `lg`, `icon` | `md`, `sm`, `lg`, `icon` |
-| Focus ring | `ring-offset` pattern | `focus-visible:ring-[3px] focus-visible:ring-ring/50` |
-| Press animation | None | `active:scale-[0.98]` |
-| Slot / asChild | Yes (`@radix-ui/react-slot`) | No (simple button element) |
-| data-slot attribute | No | `data-slot="button"` (scoped preflight hook) |
-
-These conventions come from `packages/shadcn-primitives/src/` which is the master source. Registry files are always generated from this source — never hand-edited.
-
----
-
-## Current Implementation
-
-### What's built
-
-| File | Purpose |
-|---|---|
-| `packages/shadcn-primitives/src/tokens.css` | Single source of truth for all design tokens |
-| `packages/shadcn-primitives/scripts/generate-registry.js` | Generates registry JSON from source files |
-| `docs/registry/applique-theme.json` | All 76 tokens as registry:theme item |
-| `docs/registry/utils.json` | `cn()` utility as registry:lib item |
-| `docs/registry/button.json` | Applique button as registry:ui item |
-
-### Registry hosting
-
-Hosted on GitHub Pages from the `deploy` branch, `/docs` folder.
-
-**Base URL:** `https://rohangore1999.github.io/applique-ui/registry/`
-
-No CI/CD needed. Update flow:
-1. Change source files in `packages/shadcn-primitives/src/`
-2. Run `node packages/shadcn-primitives/scripts/generate-registry.js`
-3. Commit `docs/registry/` changes and push to `deploy`
-4. GitHub Pages serves updated files within ~1 min
-
-### Consumer onboarding
-
-**One-time setup** (needed before using any registry component):
-
-```js
-// tailwind.config.js — extend with Applique's token mapping
-module.exports = {
-  presets: [require('@applique-ui/tailwind-preset')],  // TODO: publish this package
-  content: ['./components/**/*.{js,jsx}', './apps/**/*.{js,jsx}'],
+export function SaveAction() {
+  return <Button variant="default">Save</Button>
 }
 ```
 
-**Per component** (as many times as needed):
+These primitives retain the pinned shadcn Base/Nova API. Applique-specific
+facade or legacy prop mappings are not silently applied to the primitive
+surface.
 
-```bash
-npx shadcn add https://rohangore1999.github.io/applique-ui/registry/button.json
+## Design-token governance
+
+`packages/shadcn-primitives/src/tokens.css` is the source of truth for the
+light-mode Applique semantic tokens. Registry generation turns it into the
+`applique-theme` item, and every installable UI item depends on that theme.
+
+The theme currently publishes 76 light token values and 76 corresponding
+Tailwind theme mappings. It covers semantic colors, typography, spacing,
+radius, shadows, sidebar colors, and chart colors. It also installs the pinned
+Hanken Grotesk variable font, so typography does not depend on an unstated
+consumer asset.
+
+This provides a consistent default without removing client ownership. Teams can
+edit local source or override tokens for a valid product need, but that
+divergence is visible in their repository and must be reconciled when they
+update.
+
+Dark mode is not inferred from the light palette. Upstream `dark:` branches are
+published as the `applique-dark:` custom variant, scoped to
+`data-applique-color-scheme="dark"`, so a dashboard's `.dark` class cannot
+activate them accidentally. The theme also scopes Tailwind's built-in `dark`
+variant to that attribute so shadcn plugin utilities cannot fall back to the
+operating-system preference. Do not set that attribute until a reviewed
+Figma-backed dark token set exists.
+
+## Consumer installation
+
+The complete baseline expects Node.js `>=20.18.1`, React 19, Tailwind CSS 4, and
+a TypeScript shadcn configuration using `style: "base-nova"`.
+
+Install the current Button:
+
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/button.json
 ```
 
----
+Pin both the CLI and registry release for reproducibility:
 
-## Technical Notes
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json
+```
 
-### Why `target` field is required
+Install multiple components in one operation:
 
-shadcn CLI v4 resolves file content from its own official registry for any component whose `name` matches a known shadcn component (`button`, `input`, `checkbox`, etc.). This means our custom `content` field gets ignored and the vanilla shadcn component gets installed instead.
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/checkbox.json
+```
 
-Adding `"target": "components/ui/button.jsx"` to the file entry forces the CLI to write our content to that exact path, bypassing the official registry lookup.
+Do not install Form; use:
 
-All Applique registry components must include the `target` field.
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/field.json
+```
 
-### Why JSX not TSX in the registry
+## Update model
 
-The consumer app has `"tsx": false` in `components.json`. Without the JSX conversion, the CLI falls back to fetching the official shadcn JSX version. The `generate-registry.js` script strips TypeScript type annotations from source files before writing them to the registry JSON.
+Registry components do not update when Applique publishes new JSON. A client
+updates deliberately:
 
----
+1. Select the target registry version.
+2. Run the same `shadcn@4.16.0 add` command for that version.
+3. Inspect the source diff.
+4. Keep the upstream change, retain the local customization, or merge both.
+5. Run the client's tests and visual checks.
 
-## Roadmap
+This source diff and acceptance step is the control that the registry model
+gives to clients. It also means Applique cannot guarantee that an application
+which never updates remains visually identical forever.
 
-### Phase 1 — Foundation (done)
-- [x] `tokens.css` as single source of truth
-- [x] `generate-registry.js` script
-- [x] `applique-theme.json` registry item (all 76 tokens)
-- [x] `utils.json` registry item
-- [x] `button.json` registry item (Applique conventions)
-- [x] GitHub Pages hosting
+## Upstream snapshot and integrity
 
-### Phase 2 — Expand component coverage
-- [ ] Add remaining `packages/shadcn-primitives/src/` components to registry
-- [ ] Add TSX→JSX conversion for each component in the generate script
-- [ ] Publish `@applique-ui/tailwind-preset` package (eliminates the one-time manual Tailwind setup)
+The official item JSON is checked in under
+`packages/shadcn-primitives/upstream/base-nova`. The normalized source is
+checked in under `packages/shadcn-primitives/src`.
 
-### Phase 3 — Token governance
-- [ ] Remove hardcoded token blocks from consumer apps (replace with Applique registry tokens)
-- [ ] Establish token review process: Figma → `tokens.css` → registry
+`scripts/sync-shadcn.js` performs an intentional upstream refresh. Network
+access requires `--allow-network` because the official registry endpoint is
+mutable. It handles private upstream aliases and icon placeholders, scopes
+dark utilities, pins all external dependencies to exact versions, and
+regenerates the source manifest and exports. The reviewed upstream commit is
+stored with the snapshot provenance.
 
-### Phase 4 — Registry discoverability
-- [ ] Registry index page (`registry/index.json`) listing all available components
-- [ ] Documentation page at `uikit.myntra.com/registry`
+`shadcn-base-nova.lock.json` records SHA-256 hashes for:
 
----
+- every upstream item JSON;
+- every normalized local source file;
+- the `use-mobile` support hook;
+- the fileless Form record.
 
-## Links
+Normal registry and catalogue builds are offline. Validation compares the
+checked-in upstream JSON and local source to these hashes, so unexpected source
+drift fails before publishing.
 
-| Resource | URL |
-|---|---|
-| Registry base URL | `https://rohangore1999.github.io/applique-ui/registry/` |
-| Button JSON | `https://rohangore1999.github.io/applique-ui/registry/button.json` |
-| Theme JSON | `https://rohangore1999.github.io/applique-ui/registry/applique-theme.json` |
-| Source repo | `https://github.com/rohangore1999/applique-ui` |
-| shadcn-primitives source | `packages/shadcn-primitives/src/` |
-| Generate script | `packages/shadcn-primitives/scripts/generate-registry.js` |
+## Catalogue
+
+The static catalogue is published at:
+
+```text
+https://rohangore1999.github.io/applique-ui/catalog/
+```
+
+It has left-side navigation for all 62 official entries and an active component
+page with:
+
+- a lazy-loaded live preview for every sourced entry;
+- source-derived exports and prop information;
+- the install command and registry status;
+- on-demand access to the raw registry JSON.
+
+Form appears as deprecated and unavailable rather than advertising an empty
+install.
+
+## Manual GitHub Pages release
+
+GitHub Pages is deployed manually from the `shadcn-components-integration`
+branch and `/docs`; no workflow is required.
+
+Build with the final public URL so generated dependency links do not point to a
+different host:
+
+```sh
+cd packages/shadcn-primitives
+APPLIQUE_REGISTRY_BASE_URL=https://rohangore1999.github.io/applique-ui/registry \
+  pnpm run build:pages
+pnpm run validate:registry
+pnpm run smoke:registry
+```
+
+Commit the package snapshot and generated `docs` output, push the branch, and
+select that branch plus `/docs` in GitHub **Settings -> Pages**.
+
+Verify:
+
+```text
+https://rohangore1999.github.io/applique-ui/
+https://rohangore1999.github.io/applique-ui/catalog/
+https://rohangore1999.github.io/applique-ui/registry/registry.json
+https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json
+```
+
+## Source locations
+
+| Resource                 | Location                                                  |
+| ------------------------ | --------------------------------------------------------- |
+| Registry manifest        | `packages/shadcn-primitives/registry.json`                |
+| Applique token source    | `packages/shadcn-primitives/src/tokens.css`               |
+| Pinned upstream JSON     | `packages/shadcn-primitives/upstream/base-nova/`          |
+| Snapshot lock and hashes | `packages/shadcn-primitives/shadcn-base-nova.lock.json`   |
+| Upstream sync            | `packages/shadcn-primitives/scripts/sync-shadcn.js`       |
+| Registry generator       | `packages/shadcn-primitives/scripts/generate-registry.js` |
+| Generated registry       | `docs/registry/`                                          |
+| Generated catalogue      | `docs/catalog/`                                           |

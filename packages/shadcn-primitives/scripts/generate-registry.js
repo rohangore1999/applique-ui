@@ -36,6 +36,42 @@ const ITEM_TYPES = new Set([
   'registry:font',
   'registry:item',
 ])
+const APPLIQUE_SEMANTIC_COLOR_VARS = [
+  'background',
+  'foreground',
+  'card',
+  'card-foreground',
+  'popover',
+  'popover-foreground',
+  'primary',
+  'primary-foreground',
+  'secondary',
+  'secondary-foreground',
+  'muted',
+  'muted-foreground',
+  'accent',
+  'accent-foreground',
+  'destructive',
+  'destructive-foreground',
+  'border',
+  'input',
+  'outline-border',
+  'outline-foreground',
+  'ring',
+  'sidebar',
+  'sidebar-foreground',
+  'sidebar-primary',
+  'sidebar-primary-foreground',
+  'sidebar-accent',
+  'sidebar-accent-foreground',
+  'sidebar-border',
+  'sidebar-ring',
+  'chart-1',
+  'chart-2',
+  'chart-3',
+  'chart-4',
+  'chart-5',
+]
 
 const packageDir = path.resolve(__dirname, '..')
 const repoDir = path.resolve(packageDir, '..', '..')
@@ -109,6 +145,16 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message)
   }
+}
+
+function isFilelessDeprecatedItem(item) {
+  return Boolean(
+    item &&
+      item.meta &&
+      item.meta.status === 'deprecated' &&
+      item.meta.upstream &&
+      item.meta.upstream.fileless === true
+  )
 }
 
 function normalizeBaseUrl(value) {
@@ -213,9 +259,10 @@ function validateManifest(manifest) {
       ITEM_TYPES.has(item.type),
       `${item.name} has an invalid type: ${item.type}`
     )
+    assert(Array.isArray(item.files), `${item.name} must declare a files array`)
     assert(
-      Array.isArray(item.files) && item.files.length > 0,
-      `${item.name} must declare at least one source file`
+      item.files.length > 0 || isFilelessDeprecatedItem(item),
+      `${item.name} must declare source files unless it is an explicitly fileless deprecated upstream item`
     )
 
     for (const file of item.files) {
@@ -230,7 +277,33 @@ function validateManifest(manifest) {
         `${item.name} can only use cssVarsFrom for a registry:theme item`
       )
       resolveSourcePath(build.cssVarsFrom)
+
+      if (build.themeVarsFromLight !== undefined) {
+        assert(
+          Array.isArray(build.themeVarsFromLight),
+          `${item.name} themeVarsFromLight must be an array`
+        )
+
+        const themeVariableNames = new Set()
+        for (const variableName of build.themeVarsFromLight) {
+          assert(
+            typeof variableName === 'string' &&
+              /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(variableName),
+            `${item.name} has an invalid themeVarsFromLight entry: ${variableName}`
+          )
+          assert(
+            !themeVariableNames.has(variableName),
+            `${item.name} has a duplicate themeVarsFromLight entry: ${variableName}`
+          )
+          themeVariableNames.add(variableName)
+        }
+      }
     } else {
+      assert(
+        !build || build.themeVarsFromLight === undefined,
+        `${item.name} can only use themeVarsFromLight with cssVarsFrom`
+      )
+
       for (const file of item.files) {
         assert(
           typeof file.target === 'string' && file.target.length > 0,
@@ -493,14 +566,29 @@ function buildRegistryItem(item, context) {
   if (build.cssVarsFrom) {
     const css = fs.readFileSync(resolveSourcePath(build.cssVarsFrom), 'utf8')
     const configuredCssVars = item.cssVars || {}
+    const lightCssVars = {
+      ...(configuredCssVars.light || {}),
+      ...parseCssVariables(css, build.selector || ':root'),
+    }
+    const themeVarsFromLight = {}
+
+    for (const variableName of build.themeVarsFromLight || []) {
+      assert(
+        Object.prototype.hasOwnProperty.call(lightCssVars, variableName),
+        `${item.name} cannot promote missing light variable "${variableName}" into cssVars.theme`
+      )
+      themeVarsFromLight[variableName] = lightCssVars[variableName]
+    }
+
     generated.cssVars = {
       ...configuredCssVars,
-      light: {
-        ...(configuredCssVars.light || {}),
-        ...parseCssVariables(css, build.selector || ':root'),
+      theme: {
+        ...themeVarsFromLight,
+        ...(configuredCssVars.theme || {}),
       },
+      light: lightCssVars,
     }
-  } else {
+  } else if (item.files.length > 0) {
     generated.files = item.files.map((file) => {
       const source = fs.readFileSync(resolveSourcePath(file.path), 'utf8')
       const content = applyImportMap(source, build.importMap, item.name)
@@ -541,7 +629,58 @@ function validateGeneratedItem(item) {
         Object.keys(item.cssVars.light).length > 0,
       `${item.name} must contain light cssVars`
     )
-  } else {
+
+    if (item.name === 'applique-theme') {
+      assert(
+        item.tailwind === undefined,
+        'applique-theme must use Tailwind 4 cssVars.theme instead of tailwind.config'
+      )
+      assert(
+        item.cssVars.theme && Object.keys(item.cssVars.theme).length > 0,
+        'applique-theme must contain Tailwind 4 cssVars.theme mappings'
+      )
+
+      for (const variableName of APPLIQUE_SEMANTIC_COLOR_VARS) {
+        assert(
+          item.cssVars.light[variableName] !== undefined,
+          `applique-theme is missing exact light token "${variableName}"`
+        )
+        assert(
+          item.cssVars.theme[`color-${variableName}`] ===
+            `var(--${variableName})`,
+          `applique-theme must map color-${variableName} to var(--${variableName})`
+        )
+      }
+
+      for (const [variableName, value] of Object.entries(item.cssVars.light)) {
+        if (APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName)) {
+          assert(
+            /^#[0-9a-f]{6}$/i.test(value),
+            `applique-theme light token "${variableName}" must remain an exact hex color`
+          )
+          continue
+        }
+
+        assert(
+          item.cssVars.theme[variableName] === value,
+          `applique-theme must promote "${variableName}" into cssVars.theme with its exact value`
+        )
+      }
+
+      for (const [variableName, value] of Object.entries(item.cssVars.theme)) {
+        assert(
+          !/hsl\s*\(\s*var\s*\(/i.test(value),
+          `applique-theme cssVars.theme "${variableName}" contains an obsolete hsl(var(...)) wrapper`
+        )
+
+        const variableReference = value.match(/^var\(\s*--([a-z0-9-]+)\s*\)$/i)
+        assert(
+          !variableReference || variableReference[1] !== variableName,
+          `applique-theme cssVars.theme "${variableName}" cannot reference itself`
+        )
+      }
+    }
+  } else if (!isFilelessDeprecatedItem(item)) {
     assert(
       Array.isArray(item.files) && item.files.length > 0,
       `${item.name} must contain generated files`

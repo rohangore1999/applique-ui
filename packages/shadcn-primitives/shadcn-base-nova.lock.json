@@ -1,0 +1,1068 @@
+{
+  "cliVersion": "4.16.0",
+  "dependencyPins": {
+    "@base-ui/react": "1.6.0",
+    "@shadcn/react": "0.2.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "cmdk": "1.1.1",
+    "date-fns": "4.4.0",
+    "embla-carousel-react": "8.6.0",
+    "input-otp": "1.4.2",
+    "lucide-react": "1.28.0",
+    "next-themes": "0.4.6",
+    "react-day-picker": "10.0.1",
+    "react-resizable-panels": "4.12.2",
+    "recharts": "3.8.0",
+    "sonner": "2.0.7",
+    "tailwind-merge": "3.6.0"
+  },
+  "itemCount": 62,
+  "items": [
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "accordion",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/accordion.tsx",
+      "sourceSha256": "9051b6bb2f4623fc9e63b621397f2452e6c3894e7d2ea10018bfc667f8a77eb3",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/accordion.json",
+      "upstreamSha256": "80e5aabba1845a152f533c003d61777e5516c845dd4c666d689c15e21dee9cf7"
+    },
+    {
+      "dependencies": [
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "alert",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/alert.tsx",
+      "sourceSha256": "789c2728f477e4b7635c1afa9e1d9286e85ce2cf3a545d0b5004d38023dd4f93",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/alert.json",
+      "upstreamSha256": "49e006f420df16e77a99b149e38b48331dbe67a118d4492b753639eeac098ef7"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "alert-dialog",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/alert-dialog.tsx",
+      "sourceSha256": "aff7c3195349d876dc1f976482469be9d1cf679414fd3fb76ba0e75c27655c99",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/alert-dialog.json",
+      "upstreamSha256": "d77caec80971d3dfd9cf8374a94efe39d41a1d76858b16076b15792d1885c260"
+    },
+    {
+      "dependencies": [],
+      "name": "aspect-ratio",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/aspect-ratio.tsx",
+      "sourceSha256": "a57801b367527b57ccfae72c1490d51f0f05ed7ef8753a085eefd541176079f6",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/aspect-ratio.json",
+      "upstreamSha256": "6fea2cf3c5693da36e912d7f4da80e1f12c6992d4f6b0fb3b9ca1675b3d17545"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "attachment",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/attachment.tsx",
+      "sourceSha256": "a67e7c11769de77de11aa1ee0078a6c320f495f2fb0f7c48c55ad08e35225ca8",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/attachment.json",
+      "upstreamSha256": "cd5709368a86b923957c0c0c609e9cfd89f57701e65fd4287c6ef2bce9bd6116"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "avatar",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/avatar.tsx",
+      "sourceSha256": "fe527effa05eae2c10851ad0127db9ce75fd10d473b7de8d1eec720cadfbb1d3",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/avatar.json",
+      "upstreamSha256": "11a8c54f7402e9a2f61512d2a59daccf43dbf4cd7661e76e204903589cd10aee"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "badge",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/badge.tsx",
+      "sourceSha256": "7551cf4d02ba95fb5db9ba0e2c242ba0903479aad6a67f4584cd82fac70b290d",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/badge.json",
+      "upstreamSha256": "30d746fd399d053e7443f9c69ebe48790f881f1a445bc83c8608db5f3f15b5f6"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "breadcrumb",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/breadcrumb.tsx",
+      "sourceSha256": "ef1970e98e26891328231e5a6ab640ae7368334d08a4a3371df852ceb9b220e4",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/breadcrumb.json",
+      "upstreamSha256": "0ae8e282a738b5810507be48557b3109c24a7cbe89dc1defffd287ed09cb8879"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "bubble",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/bubble.tsx",
+      "sourceSha256": "d407a7bcca5e557c14c4b9c9fe88878f960619aa9ddd2fd64e482f42c3dd89c9",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/bubble.json",
+      "upstreamSha256": "c41a37925a0dc31171ae18bdb487497b55f35a773c358018da85ae71adbb6b1b"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "button",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/button.tsx",
+      "sourceSha256": "6c6c98e9ff6c121841adb05d284ffd112b74f333bde20be3a877325df521eb30",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/button.json",
+      "upstreamSha256": "70010dfba20416cd3f644833bc57f0589f1a7b8fc5ddff29af1138a9b5a1cd37"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "button-group",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "separator"
+      ],
+      "sourcePath": "src/button-group.tsx",
+      "sourceSha256": "4b4a2d52d93559f9d0e77f8c2902ba1a134267009121ad182f4d05b7324009f0",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/button-group.json",
+      "upstreamSha256": "bdf1184f2493cd8080bf9f0a889839f2790cb22c3febde576d3bf1fff79163cd"
+    },
+    {
+      "dependencies": [
+        "date-fns@4.4.0",
+        "lucide-react@1.28.0",
+        "react-day-picker@10.0.1"
+      ],
+      "name": "calendar",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/calendar.tsx",
+      "sourceSha256": "cdc98745bf1dff71c116bfe9bb9add68281aafdf0024e62a32a6f425b6d3abb3",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/calendar.json",
+      "upstreamSha256": "7a15cdad39c24993ef6e810b3f5b20d588ae5b13c35ce8798b9aba11149c4a99"
+    },
+    {
+      "dependencies": [],
+      "name": "card",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/card.tsx",
+      "sourceSha256": "a1bcd55f06782a64be7a0668ac213646e9e9b1c6bb75e24bdfb8192f1a107a8d",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/card.json",
+      "upstreamSha256": "e55e50f35875e81db48385aedf171b3d60c9abce9533f6a01b740caf9cbfb622"
+    },
+    {
+      "dependencies": [
+        "embla-carousel-react@8.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "carousel",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/carousel.tsx",
+      "sourceSha256": "122624f7d906202f73ec24c0a1b5b80bf39d26a7558ca9c29bdfafc99491d904",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/carousel.json",
+      "upstreamSha256": "10132b462543f0894734b654bfbc89b9d15cde402aeaa5c3e0ae5f80c522bb25"
+    },
+    {
+      "dependencies": [
+        "recharts@3.8.0"
+      ],
+      "name": "chart",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "card"
+      ],
+      "sourcePath": "src/chart.tsx",
+      "sourceSha256": "0fa5ae7ac6bc0063f28e02aff99eccbfb8080fc710751f2376306d60a0346ca1",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/chart.json",
+      "upstreamSha256": "ec7add4cecb80338cf338e1067785523fe560ff952af5af4adc30f36e99646ae"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "checkbox",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/checkbox.tsx",
+      "sourceSha256": "1e711f9dbce6fc5296b688f752ba40444fb8645fea5a7a2b50bb892a14115c0a",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/checkbox.json",
+      "upstreamSha256": "0ca179e7cc4c969b27565679a90fa15567afcd91d4e136b25ab4380f22e2d4a3"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "collapsible",
+      "registryDependencies": [
+        "applique-theme"
+      ],
+      "sourcePath": "src/collapsible.tsx",
+      "sourceSha256": "ead4349ff7b01d696ef89294a81d18ee1d3f732321398896462c834ab9b9e065",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/collapsible.json",
+      "upstreamSha256": "c3b7c2a72b7c7a0734f04098fd686b8c8ff8aae208edc7263752d624492f7def"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "combobox",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button",
+        "input-group"
+      ],
+      "sourcePath": "src/combobox.tsx",
+      "sourceSha256": "77106246982475aa59ee2d6c682d226d45b0d64a040fec8ed56dbb7f58044c96",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/combobox.json",
+      "upstreamSha256": "6b3372fd0aa75a62f7f785afadf13bdaa8480f16528cdbe2de8287a93fcb9c41"
+    },
+    {
+      "dependencies": [
+        "cmdk@1.1.1",
+        "lucide-react@1.28.0"
+      ],
+      "name": "command",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "dialog",
+        "input-group"
+      ],
+      "sourcePath": "src/command.tsx",
+      "sourceSha256": "0980221cc636c99f0f85ec78705ecc5bd52b820543e5ddbfd1efe658703832f0",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/command.json",
+      "upstreamSha256": "52bc7b7a39b0fba03df58e3c9e5e964855a5cc15ebc4ac7edc287fad10e22075"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "context-menu",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/context-menu.tsx",
+      "sourceSha256": "1629cfe08ab0cc15eeeb794fa4e40559468ea823f45e7d71467fcd81747ebfcf",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/context-menu.json",
+      "upstreamSha256": "291d9549be688c9be0663147573a1dabded95eebb399dac848b5dc9e102bffbf"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "dialog",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/dialog.tsx",
+      "sourceSha256": "21cbb38b7f40ed2f19b7db1eb289891b99dd4bed3c6b696da309bd28c94c8da4",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/dialog.json",
+      "upstreamSha256": "2f0f2055dc045d5c64fa6e34de0fe504d1a694de8de147750a86ffe77af3664f"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "direction",
+      "registryDependencies": [
+        "applique-theme"
+      ],
+      "sourcePath": "src/direction.tsx",
+      "sourceSha256": "661ff5b9c0dc26edde1226bfedc0ab50976d84f8bae42ca83a38dc3b478fd4d4",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/direction.json",
+      "upstreamSha256": "95e514b2ac94a7d0f0778b5c9e05cd012f79a8a129a99cab9706a8b64eff06b2"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "drawer",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/drawer.tsx",
+      "sourceSha256": "e3c4c6057365cff89f86d9e7edf7135a153e771edc01d31d3a7af923ce125728",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/drawer.json",
+      "upstreamSha256": "22f1eac0b45a338878cdf533de07f35bbe6797611d584ee037e5cf94ab56c1a5"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "dropdown-menu",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/dropdown-menu.tsx",
+      "sourceSha256": "4bc18fc029a87c2606467e64182fbdbd98a1f42a3055c3e8a20d8850008ef79b",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/dropdown-menu.json",
+      "upstreamSha256": "6e391a7878d89c2baa782b7b634936d7ea00eb934d44d273d8c74ef95d576a08"
+    },
+    {
+      "dependencies": [
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "empty",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/empty.tsx",
+      "sourceSha256": "6e4023718933795f74e15b5aa913fbbeb1a784fae81fe4ff6720a1688b9a1257",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/empty.json",
+      "upstreamSha256": "947a6b5ae1bf60f95348d6bed4d6862e64f01eb11fefbcbdd9edfe48332eeb67"
+    },
+    {
+      "dependencies": [
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "field",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "label",
+        "separator"
+      ],
+      "sourcePath": "src/field.tsx",
+      "sourceSha256": "9ba6747048a4ad08158f519a719e9ba949bad351534c18054231afb59e5a4250",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/field.json",
+      "upstreamSha256": "ae2b48de07758cbca1a4370914166bcaf684af65968b1f0732dc631d6562a1ba"
+    },
+    {
+      "dependencies": [],
+      "name": "form",
+      "registryDependencies": [],
+      "sourcePath": null,
+      "sourceSha256": null,
+      "status": "deprecated",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/form.json",
+      "upstreamSha256": "303462d1e6104f1163fa645da02ce174ddca5bedd8b54a93fdf25a8f425eaa06"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "hover-card",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/hover-card.tsx",
+      "sourceSha256": "caff01c5cc0871e1ea939133d670ad03aa10c98d2d3317cdb7c607a08dff974c",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/hover-card.json",
+      "upstreamSha256": "b4094099883e32aacd6de37b2a6c4f7d815ea81cd9e58b4e70aecfe546b39b67"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "input",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/input.tsx",
+      "sourceSha256": "2e27b95123c5f23b4a06be2d989104a188d042c1d1dd95d29dd67da255bfc767",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/input.json",
+      "upstreamSha256": "d3175ee13d7c40a8486ea80798449f314cef64e0b0e978c8267248af18983615"
+    },
+    {
+      "dependencies": [
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "input-group",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button",
+        "input",
+        "textarea"
+      ],
+      "sourcePath": "src/input-group.tsx",
+      "sourceSha256": "3d35c4ea17f56e9c1f405d56f94f83f25bac13cc33b594b24e46d54fa21fd759",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/input-group.json",
+      "upstreamSha256": "b1ba4ffa1fdb634dccf37b3cbbed678ba2cdc2f30fcc3fbb2918e8ba025a6782"
+    },
+    {
+      "dependencies": [
+        "input-otp@1.4.2",
+        "lucide-react@1.28.0"
+      ],
+      "name": "input-otp",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/input-otp.tsx",
+      "sourceSha256": "f401888f6bccd52cc0d9659de4aa8652711c00e139322d1ab4017b07ce72a2c6",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/input-otp.json",
+      "upstreamSha256": "16bd9a9f36da29e7e8278a5f4e8a500e6286d0ee808e3bd35a75e2ed8a515dfe"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "item",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "separator"
+      ],
+      "sourcePath": "src/item.tsx",
+      "sourceSha256": "672c31850764f4a224b9f99cdc7c92d14ac5b047d5ecf390a24d0407c4dc10cd",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/item.json",
+      "upstreamSha256": "4a818abe17f05cc7552157941a04be14e072ff95eb03fd59067f883244c597d0"
+    },
+    {
+      "dependencies": [],
+      "name": "kbd",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/kbd.tsx",
+      "sourceSha256": "553e8fcbe6224f78b24742348f757e83d579e3360dabe35122dc2cbea8906cb1",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/kbd.json",
+      "upstreamSha256": "cc1db53b36b03ad2d2dedd3368b506953f63c210d3e72f7725117dd7481f734e"
+    },
+    {
+      "dependencies": [],
+      "name": "label",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/label.tsx",
+      "sourceSha256": "055f0a067e7b228820992cc1ebc4136b135749bbb790dfc92dc6f33b40d47c81",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/label.json",
+      "upstreamSha256": "e2f2e12654873b352d423de9f8af6c2c1ad98d028ecf2bcd15db6ec36665e939"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "marker",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/marker.tsx",
+      "sourceSha256": "4de63dbcce0e7bbddfb06ce515c902b65b5de0474520f255c1e42ee439b519bb",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/marker.json",
+      "upstreamSha256": "82fea6c21698cd06279e4f986cae3402e99fbfac454ba4a6c886453363d42e41"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "menubar",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "dropdown-menu"
+      ],
+      "sourcePath": "src/menubar.tsx",
+      "sourceSha256": "1355d58c9da60af8df68354a92f179430c0b65981416766db0f0a0dec679e6ce",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/menubar.json",
+      "upstreamSha256": "81660bce97f442f81abaad160757c59f26e8a7c54b9974bbc146981238b0efbb"
+    },
+    {
+      "dependencies": [],
+      "name": "message",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/message.tsx",
+      "sourceSha256": "ddc51f28f93932197e1481b3f1a0cde610a7905f2fa7030c2d25abe99683ad01",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/message.json",
+      "upstreamSha256": "dc0988b904c4b670ceb955ff3ade97f14bc07c56dd9906a2b69d7d5aab63c27b"
+    },
+    {
+      "dependencies": [
+        "@shadcn/react@0.2.1",
+        "lucide-react@1.28.0"
+      ],
+      "name": "message-scroller",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/message-scroller.tsx",
+      "sourceSha256": "86c53fe8bbe7c2de60dc0f898273fdef4ef79fdbf0c2439028a8d441acb95476",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/message-scroller.json",
+      "upstreamSha256": "c46a75d56dce7b6dc9f8a1f122dff235222bf7f8f8286484328393adeeab847b"
+    },
+    {
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "name": "native-select",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/native-select.tsx",
+      "sourceSha256": "b1943b391b932135c1a72b1171568c1644ab0e6754ff3215d053f3fc0c3bf09d",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/native-select.json",
+      "upstreamSha256": "125047c8e65d07b915fc3eba2110f24289493d419bdaa91457a58dced72169ac"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1",
+        "lucide-react@1.28.0"
+      ],
+      "name": "navigation-menu",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/navigation-menu.tsx",
+      "sourceSha256": "dd4263b7eaec096b82c7bcc45e78e7cd4b2d966b2806a26b31ad266224fe9211",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/navigation-menu.json",
+      "upstreamSha256": "3256d88d8687dfba15c9285849782ae3265bb096449948ad6fe7c3231aa90e90"
+    },
+    {
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "name": "pagination",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/pagination.tsx",
+      "sourceSha256": "9502792c8a079050c4a749e98830062fe25645cfa825f138d258ae0780292f46",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/pagination.json",
+      "upstreamSha256": "3b8a09d90422c681b67a321a79937b37841dd4546ffd97af8dda09291929ebc4"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "popover",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/popover.tsx",
+      "sourceSha256": "aa9b7842265ffc97ca976bf2f32a4c186a5c0a48a64b4e5de5b6151241d956ee",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/popover.json",
+      "upstreamSha256": "046313dc2df0ac75fab65e8312da1cbfb56a0b342729dd36cdfaf333f5fb2e6f"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "progress",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/progress.tsx",
+      "sourceSha256": "318a736acfa2e2f25416da0a330a234e436437322d84973141d0448f8a418c6d",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/progress.json",
+      "upstreamSha256": "59f28fa2852e4e1260e11dcda31bed1ded6233d1f6496cc9cc4e1c061ed353b0"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "radio-group",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/radio-group.tsx",
+      "sourceSha256": "6f9436a812125751fc83ed6ab630f828c5caa59df4e9e575e8b106d5b8dabddf",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/radio-group.json",
+      "upstreamSha256": "3fb7f535e9cafa209272943e6c290bec3869883070c35e290f1cb56e76cd629e"
+    },
+    {
+      "dependencies": [
+        "react-resizable-panels@4.12.2"
+      ],
+      "name": "resizable",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/resizable.tsx",
+      "sourceSha256": "7c0bafa6804c65a153dd9d049031db637257bcb625ce969954fa5a75e0f2de33",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/resizable.json",
+      "upstreamSha256": "46b4080ad4fe92e3529537e738f9477822ec72926c8513d89dcc7c2944c16e2c"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "scroll-area",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/scroll-area.tsx",
+      "sourceSha256": "d42f239db1219526460fa56aae28dad249293ebe134729b54fed80f50ee4bbe4",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/scroll-area.json",
+      "upstreamSha256": "4ccb01c5147c3f0f6766adb967ec05456bc4bb07b00727badf015ddcdbe1ade6"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "select",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/select.tsx",
+      "sourceSha256": "f71edceaa4a75790b1d430e7ef0a0063316fe72316fbc52c0b6e89e076325743",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/select.json",
+      "upstreamSha256": "3ecc7045d536b007ec1f6e7085ad4a51c8a9a5d043e30ece8f1440ea97b81de7"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "separator",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/separator.tsx",
+      "sourceSha256": "de0d51b3d040a07416282f4ca22ffa3daa20b4443ec37660be5a11a22432c0e6",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/separator.json",
+      "upstreamSha256": "e1cb6f338a98f097769e4ba31b481d906a8ecdd96905ca28b98815616bffc274"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "sheet",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/sheet.tsx",
+      "sourceSha256": "a5870349d2f04d58883ae70d6375fea4decc62bab2c8861fdcc782f0cbd8556b",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/sheet.json",
+      "upstreamSha256": "4b4dc40c5336463af14003fbb12bcf8ded84529291ecda999b37a5a139c2f0a6"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1",
+        "lucide-react@1.28.0"
+      ],
+      "name": "sidebar",
+      "registryDependencies": [
+        "applique-theme",
+        "use-mobile",
+        "utils",
+        "button",
+        "input",
+        "separator",
+        "sheet",
+        "skeleton",
+        "tooltip"
+      ],
+      "sourcePath": "src/sidebar.tsx",
+      "sourceSha256": "eeafe0111568f9025971c74d5cd21a16f1b8b562053a5e79a8e326580992f027",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/sidebar.json",
+      "upstreamSha256": "f807c2da8b0963c56f7713ffa610f61775caeb3d5c67b3cc95b456c6223918a1"
+    },
+    {
+      "dependencies": [],
+      "name": "skeleton",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/skeleton.tsx",
+      "sourceSha256": "7b2f5fa461939185d2931f8345a50f5758e262cb5a4ec632a2d210a3faa42afb",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/skeleton.json",
+      "upstreamSha256": "28c0dcddd167ab534876d76ac3336f89b9bd5dda1f24f21ce2a0b8528ad44f21"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "slider",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/slider.tsx",
+      "sourceSha256": "751fce3bda800b3ee3fa8bcd1e0906e13664f4bd0b80763a0de57143775bef60",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/slider.json",
+      "upstreamSha256": "878d28f7a88e25254cca7b37d8faa73e23db15a26a150ef3a9315b950964e4e6"
+    },
+    {
+      "dependencies": [
+        "lucide-react@1.28.0",
+        "next-themes@0.4.6",
+        "sonner@2.0.7"
+      ],
+      "name": "sonner",
+      "registryDependencies": [
+        "applique-theme"
+      ],
+      "sourcePath": "src/sonner.tsx",
+      "sourceSha256": "ca9326feb6f46ca8727fe1993d237ba15f476e54ea2283a5ee4ec2fe0a7cfb2c",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/sonner.json",
+      "upstreamSha256": "990d76f313e20ec3cdba3c837ebe0deecb6a443f35d7d1327429276651b507bb"
+    },
+    {
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "name": "spinner",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/spinner.tsx",
+      "sourceSha256": "7a099939c868aef23d3f220b12cd550d9080607a303086d4ae96f0a4517b23ca",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/spinner.json",
+      "upstreamSha256": "8d32261934ec6e05511d742341bd4d01a2b0b121d27cede9bfbfd3c8ec221f86"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "switch",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/switch.tsx",
+      "sourceSha256": "91c6a59675869875ea96f877eb4b53c3634699b05e8081d2ca3a5f7c49c4fb29",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/switch.json",
+      "upstreamSha256": "f3b1857a20a41eb49edeb2b22586bcae762e0e8fdbc7e7d621140a59ac63c2b3"
+    },
+    {
+      "dependencies": [],
+      "name": "table",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/table.tsx",
+      "sourceSha256": "2cd1ebd432699b316d777cce31f088d45e6e54da61ee6ce80cea74754e9ed6cc",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/table.json",
+      "upstreamSha256": "57d0e14c749de6f7f58566d49fa8fdc15e385de5f724a84f1ab18ce37cc6e89f"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "tabs",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/tabs.tsx",
+      "sourceSha256": "efbfd0258de51f2e219142f28b8e8c422471bc4b9f27983a1e42f070684fa321",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/tabs.json",
+      "upstreamSha256": "2deafafe79ce5005128d9a3050174b6ac005c9960541a5f3c9e9666b116f661d"
+    },
+    {
+      "dependencies": [],
+      "name": "textarea",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/textarea.tsx",
+      "sourceSha256": "10a057ef60ce8e3d9e388d1cd89354881d5492d77bb02f51d31b0e9b68faa176",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/textarea.json",
+      "upstreamSha256": "9c8d023180c474a17a2bde043de961a6b091bf9e7d865b47efb4eef89e61097b"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "lucide-react@1.28.0"
+      ],
+      "name": "toast",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "button"
+      ],
+      "sourcePath": "src/toast.tsx",
+      "sourceSha256": "4a47d453002d27ab2b870f9f44b2096e883005577f042528d2a684550807dcd7",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/toast.json",
+      "upstreamSha256": "206b760f29354475dc85fcf7ba9374c6068b074511e8ead28bce5ff0e281bde6"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "toggle",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/toggle.tsx",
+      "sourceSha256": "ffa7d859a8ccf1004fa97b5d60e1bfaad33232c2691629fc491e717a456e472f",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/toggle.json",
+      "upstreamSha256": "3ef7e64fc7de90af7c240950c3b25361f9e7ddf44f77c8e8dd4780483372db6a"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "name": "toggle-group",
+      "registryDependencies": [
+        "applique-theme",
+        "utils",
+        "toggle"
+      ],
+      "sourcePath": "src/toggle-group.tsx",
+      "sourceSha256": "7bca49e169ccbeec20fef05a01be29ad0338edee3ec7bffedda9b83bd8e1f8b2",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/toggle-group.json",
+      "upstreamSha256": "9a9800e9e59fdcdab72ea82f43bd5b1a06a9add155c17f4886e124c6c845aaac"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react@1.6.0"
+      ],
+      "name": "tooltip",
+      "registryDependencies": [
+        "applique-theme",
+        "utils"
+      ],
+      "sourcePath": "src/tooltip.tsx",
+      "sourceSha256": "c966edeecb77d1434ab842b55313eca28844320611f98c9f42e039e7298bd449",
+      "status": "installable",
+      "type": "registry:ui",
+      "upstreamPath": "upstream/base-nova/tooltip.json",
+      "upstreamSha256": "1b1e2c0eec2b4fe1c1690d7e0395d4cb482b554fb8dfc7af30e43e22f32850e6"
+    },
+    {
+      "dependencies": [],
+      "name": "use-mobile",
+      "registryDependencies": [],
+      "sourcePath": "src/use-mobile.ts",
+      "sourceSha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b",
+      "status": "installable",
+      "type": "registry:hook",
+      "upstreamPath": "upstream/base-nova/use-mobile.json",
+      "upstreamSha256": "91d2704e992322d60209198c6ee0186bb03cff8db52ad1a48e4c774aa54cc8c6"
+    }
+  ],
+  "sourceBaseUrl": "https://ui.shadcn.com/r/styles/base-nova",
+  "style": "base-nova",
+  "upstreamCommit": "705ce5961080264830471ddd885c01b907706068"
+}

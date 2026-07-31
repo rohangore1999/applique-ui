@@ -1,13 +1,22 @@
 /* eslint-disable node/no-unpublished-require */
 
+const Fs = require('fs')
 const Path = require('path')
-const Autoprefixer = require('autoprefixer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const Tailwindcss = require('tailwindcss')
+const Tailwindcss = require('@tailwindcss/postcss')
 
 const packageDir = Path.resolve(__dirname, '..')
 const outputDir = Path.resolve(packageDir, '../../docs/catalog')
-const tailwindConfig = require('../tailwind.config')
+const compatAliases = [
+  ['next/image$', Path.resolve(__dirname, 'compat/next-image.tsx')],
+  ['next/link$', Path.resolve(__dirname, 'compat/next-link.tsx')],
+].reduce((aliases, [request, target]) => {
+  if (Fs.existsSync(target)) {
+    aliases[request] = target
+  }
+
+  return aliases
+}, {})
 
 module.exports = {
   mode: 'production',
@@ -20,6 +29,7 @@ module.exports = {
     publicPath: './',
   },
   resolve: {
+    alias: compatAliases,
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   module: {
@@ -31,6 +41,9 @@ module.exports = {
           loader: require.resolve('ts-loader'),
           options: {
             configFile: Path.resolve(packageDir, '../../tsconfig.json'),
+            compilerOptions: {
+              jsx: 'react-jsx',
+            },
             transpileOnly: true,
           },
         },
@@ -52,13 +65,8 @@ module.exports = {
                 config: false,
                 plugins: [
                   Tailwindcss({
-                    ...tailwindConfig,
-                    content: [
-                      Path.resolve(packageDir, 'src/**/*.{ts,tsx}'),
-                      Path.resolve(__dirname, '**/*.{ts,tsx}'),
-                    ],
+                    base: packageDir,
                   }),
-                  Autoprefixer(),
                 ],
               },
             },

@@ -3,30 +3,35 @@
   "name": "checkbox",
   "type": "registry:ui",
   "title": "Checkbox",
-  "description": "A themed checkbox primitive with Applique states and variants.",
+  "description": "Official shadcn base-nova component with Applique theme tokens.",
   "dependencies": [
-    "@radix-ui/react-checkbox@1.3.3",
-    "class-variance-authority@0.7.1",
-    "lucide-react@0.460.0"
+    "@base-ui/react@1.6.0",
+    "lucide-react@1.28.0"
   ],
   "categories": [
     "primitive",
-    "form"
+    "base-ui"
   ],
   "registryDependencies": [
-    "https://applique.myntra.com/registry/v0.1.0/applique-theme.json",
-    "https://applique.myntra.com/registry/v0.1.0/utils.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
   ],
   "files": [
     {
       "path": "ui/checkbox.tsx",
-      "content": "import * as React from 'react'\nimport * as CheckboxPrimitive from '@radix-ui/react-checkbox'\nimport { Check, Minus } from 'lucide-react'\nimport { cva, type VariantProps } from 'class-variance-authority'\nimport { cn } from '@/lib/utils'\n\nconst checkboxVariants = cva(\n  'grid place-content-center peer h-4 w-4 shrink-0 rounded-xxs border border-solid outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',\n  {\n    variants: {\n      variant: {\n        default:\n          'border-input bg-background data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:text-primary-foreground',\n        destructive:\n          'border-input bg-background data-[state=checked]:bg-destructive data-[state=checked]:border-destructive data-[state=checked]:text-destructive-foreground data-[state=indeterminate]:bg-destructive data-[state=indeterminate]:border-destructive data-[state=indeterminate]:text-destructive-foreground',\n      },\n    },\n    defaultVariants: {\n      variant: 'default',\n    },\n  }\n)\n\nexport interface CheckboxProps\n  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,\n    VariantProps<typeof checkboxVariants> {}\n\nconst Checkbox = React.forwardRef<\n  React.ElementRef<typeof CheckboxPrimitive.Root>,\n  CheckboxProps\n>(({ className, variant, ...props }, ref) => (\n  <CheckboxPrimitive.Root\n    ref={ref}\n    data-slot=\"checkbox\"\n    className={cn(checkboxVariants({ variant }), className)}\n    {...props}\n  >\n    <CheckboxPrimitive.Indicator\n      data-slot=\"checkbox-indicator\"\n      className={cn('group grid place-content-center text-current')}\n    >\n      <Check className=\"h-4 w-4 group-data-[state=indeterminate]:hidden\" />\n      <Minus className=\"hidden h-4 w-4 group-data-[state=indeterminate]:block\" />\n    </CheckboxPrimitive.Indicator>\n  </CheckboxPrimitive.Root>\n))\nCheckbox.displayName = CheckboxPrimitive.Root.displayName\n\nexport { Checkbox, checkboxVariants }\n",
+      "content": "\"use client\"\n\nimport { CheckIcon } from \"lucide-react\"\nimport { Checkbox as CheckboxPrimitive } from \"@base-ui/react/checkbox\"\n\nimport { cn } from \"@/lib/utils\"\nfunction Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {\n  return (\n    <CheckboxPrimitive.Root\n      data-slot=\"checkbox\"\n      className={cn(\n        \"peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input transition-colors outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary applique-dark:bg-input/30 applique-dark:aria-invalid:border-destructive/50 applique-dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground applique-dark:data-checked:bg-primary\",\n        className\n      )}\n      {...props}\n    >\n      <CheckboxPrimitive.Indicator\n        data-slot=\"checkbox-indicator\"\n        className=\"grid place-content-center text-current transition-none [&>svg]:size-3.5\"\n      >\n        <CheckIcon\n         />\n      </CheckboxPrimitive.Indicator>\n    </CheckboxPrimitive.Root>\n  )\n}\n\nexport { Checkbox }\n",
       "type": "registry:ui",
       "target": "@ui/checkbox.tsx"
     }
   ],
   "meta": {
     "status": "experimental",
+    "upstream": {
+      "cliVersion": "4.16.0",
+      "sourceSha256": "1e711f9dbce6fc5296b688f752ba40444fb8645fea5a7a2b50bb892a14115c0a",
+      "style": "base-nova",
+      "upstreamSha256": "0ca179e7cc4c969b27565679a90fa15567afcd91d4e136b25ab4380f22e2d4a3"
+    },
     "registryVersion": "0.1.0"
   }
 }

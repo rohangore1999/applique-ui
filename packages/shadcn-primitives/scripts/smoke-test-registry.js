@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 /*
- * Installs the generated registry into an isolated Tailwind 3 + TypeScript
- * consumer using the real, pinned shadcn CLI. The fixture is created under the
- * operating system temporary directory and removed after the test.
+ * Installs every source-bearing UI item from the generated registry into an
+ * isolated React 19 + Tailwind 4 consumer using the pinned shadcn CLI.
+ *
+ * This catches missing registry dependencies, stale import aliases, incomplete
+ * npm dependency metadata, TypeScript incompatibilities, and token/CSS issues
+ * before the static registry is published.
  */
 
 const fs = require('fs')
@@ -13,11 +16,22 @@ const path = require('path')
 const { spawn } = require('child_process')
 
 const SHADCN_CLI_VERSION = '4.16.0'
+const REACT_VERSION = '19.2.8'
+const REACT_TYPES_VERSION = '19.2.18'
+const REACT_DOM_TYPES_VERSION = '19.2.4'
+const TAILWIND_VERSION = '4.3.3'
+const TYPESCRIPT_VERSION = '5.9.2'
+
 const packageDir = path.resolve(__dirname, '..')
+const manifestPath = path.join(packageDir, 'registry.json')
 const generatorPath = path.join(__dirname, 'generate-registry.js')
 
 function assert(condition, message) {
   if (!condition) throw new Error(message)
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'))
 }
 
 function writeJson(filePath, value) {
@@ -130,36 +144,75 @@ function close(server) {
   })
 }
 
-function createConsumer(consumerDirectory) {
+function sourceItems(manifest) {
+  return manifest.items.filter(
+    (item) =>
+      item.type === 'registry:ui' &&
+      Array.isArray(item.files) &&
+      item.files.length > 0
+  )
+}
+
+function consumerPathForTarget(target) {
+  const aliases = {
+    '@hooks/': 'src/hooks/',
+    '@lib/': 'src/lib/',
+    '@ui/': 'src/components/ui/',
+  }
+
+  for (const [alias, replacement] of Object.entries(aliases)) {
+    if (target.startsWith(alias)) {
+      return `${replacement}${target.slice(alias.length)}`
+    }
+  }
+
+  throw new Error(`Smoke test does not understand registry target ${target}`)
+}
+
+function importPathForTarget(target) {
+  if (target.startsWith('@ui/')) {
+    return `@/components/ui/${target
+      .slice('@ui/'.length)
+      .replace(/\.tsx?$/, '')}`
+  }
+  if (target.startsWith('@hooks/')) {
+    return `@/hooks/${target.slice('@hooks/'.length).replace(/\.tsx?$/, '')}`
+  }
+  if (target.startsWith('@lib/')) {
+    return `@/lib/${target.slice('@lib/'.length).replace(/\.tsx?$/, '')}`
+  }
+
+  throw new Error(`Smoke test does not understand registry target ${target}`)
+}
+
+function createConsumer(consumerDirectory, manifest) {
   writeJson(path.join(consumerDirectory, 'package.json'), {
     name: 'applique-registry-smoke',
     private: true,
     version: '0.0.0',
     type: 'module',
     dependencies: {
-      react: '18.3.1',
-      'react-dom': '18.3.1',
+      react: REACT_VERSION,
+      'react-dom': REACT_VERSION,
     },
     devDependencies: {
-      '@types/react': '18.3.3',
-      '@types/react-dom': '18.3.0',
-      autoprefixer: '10.4.20',
-      postcss: '8.4.41',
-      tailwindcss: '3.4.17',
-      typescript: '5.6.3',
-      vite: '5.4.8',
+      '@tailwindcss/cli': TAILWIND_VERSION,
+      '@types/react': REACT_TYPES_VERSION,
+      '@types/react-dom': REACT_DOM_TYPES_VERSION,
+      tailwindcss: TAILWIND_VERSION,
+      typescript: TYPESCRIPT_VERSION,
     },
   })
 
   writeJson(path.join(consumerDirectory, 'components.json'), {
     $schema: 'https://ui.shadcn.com/schema.json',
-    style: 'new-york',
+    style: 'base-nova',
     rsc: false,
     tsx: true,
     tailwind: {
-      config: 'tailwind.config.cjs',
+      config: '',
       css: 'src/index.css',
-      baseColor: 'slate',
+      baseColor: 'neutral',
       cssVariables: true,
       prefix: '',
     },
@@ -175,10 +228,9 @@ function createConsumer(consumerDirectory) {
 
   writeJson(path.join(consumerDirectory, 'tsconfig.json'), {
     compilerOptions: {
-      target: 'ES2020',
-      useDefineForClassFields: true,
-      lib: ['ES2020', 'DOM', 'DOM.Iterable'],
-      skipLibCheck: true,
+      target: 'ES2022',
+      lib: ['ES2022', 'DOM', 'DOM.Iterable'],
+      skipLibCheck: false,
       esModuleInterop: true,
       allowSyntheticDefaultImports: true,
       strict: true,
@@ -198,90 +250,181 @@ function createConsumer(consumerDirectory) {
   })
 
   writeText(
-    path.join(consumerDirectory, 'tailwind.config.cjs'),
-    `/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-`
+    path.join(consumerDirectory, 'src/index.css'),
+    '@import "tailwindcss";\n'
   )
 
-  writeText(
-    path.join(consumerDirectory, 'src/index.css'),
-    `@tailwind base;
-@tailwind components;
-@tailwind utilities;
-`
-  )
+  const imports = []
+  const moduleNames = []
+
+  for (const item of sourceItems(manifest)) {
+    for (const [fileIndex, file] of item.files.entries()) {
+      const moduleName = `${item.name.replace(/-([a-z])/g, (_, letter) =>
+        letter.toUpperCase()
+      )}Module${fileIndex}`
+      imports.push(
+        `import * as ${moduleName} from '${importPathForTarget(file.target)}'`
+      )
+      moduleNames.push(moduleName)
+    }
+  }
 
   writeText(
     path.join(consumerDirectory, 'src/smoke.tsx'),
-    `import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+    `${imports.join('\n')}
 
-export function RegistrySmoke() {
-  return (
-    <div>
-      <Button intent="outline">Registry button</Button>
-      <Button asChild intent="link">
-        <a href="/">Registry link</a>
-      </Button>
-      <Checkbox aria-label="Registry checkbox" defaultChecked />
-    </div>
-  )
-}
+export const registryModules = [
+  ${moduleNames.join(',\n  ')},
+]
 `
   )
 }
 
-function assertInstalledConsumer(consumerDirectory) {
-  for (const relativePath of [
-    'src/lib/utils.ts',
-    'src/components/ui/button.tsx',
-    'src/components/ui/checkbox.tsx',
-  ]) {
+function assertInstalledConsumer(consumerDirectory, manifest) {
+  const expectedPaths = new Set(['src/lib/utils.ts'])
+
+  for (const item of sourceItems(manifest)) {
+    for (const file of item.files) {
+      expectedPaths.add(consumerPathForTarget(file.target))
+    }
+  }
+
+  const hook = manifest.items.find((item) => item.name === 'use-mobile')
+  for (const file of hook?.files || []) {
+    expectedPaths.add(consumerPathForTarget(file.target))
+  }
+
+  for (const relativePath of expectedPaths) {
+    const absolutePath = path.join(consumerDirectory, relativePath)
     assert(
-      fs.existsSync(path.join(consumerDirectory, relativePath)),
+      fs.existsSync(absolutePath),
       `shadcn did not install ${relativePath}`
+    )
+
+    if (!absolutePath.endsWith('.ts') && !absolutePath.endsWith('.tsx')) {
+      continue
+    }
+
+    const source = fs.readFileSync(absolutePath, 'utf8')
+    for (const forbiddenImport of [
+      'IconPlaceholder',
+      '@/app/(create)',
+      '@/registry/',
+    ]) {
+      assert(
+        !source.includes(forbiddenImport),
+        `${relativePath} contains unresolved upstream source ${forbiddenImport}`
+      )
+    }
+    assert(
+      !/(^|[^a-z-])dark:(?=\S)/m.test(source),
+      `${relativePath} contains an unscoped dark: utility`
+    )
+    assert(
+      !source.includes('dark: ".dark"') && !source.includes("dark: '.dark'"),
+      `${relativePath} contains an unscoped .dark selector`
     )
   }
 
-  const buttonSource = fs.readFileSync(
-    path.join(consumerDirectory, 'src/components/ui/button.tsx'),
+  const installedCss = fs.readFileSync(
+    path.join(consumerDirectory, 'src/index.css'),
     'utf8'
   )
+
   assert(
-    buttonSource.includes('intent: {'),
-    'installed Button is not the Applique registry source'
+    /@theme\s+inline\s*\{/.test(installedCss),
+    'shadcn did not install an inline Tailwind 4 theme'
+  )
+  for (const [themeVariable, semanticVariable] of [
+    ['color-primary', 'primary'],
+    ['color-primary-foreground', 'primary-foreground'],
+    ['color-outline-border', 'outline-border'],
+    ['color-sidebar-ring', 'sidebar-ring'],
+  ]) {
+    const mappingPattern = new RegExp(
+      `--${themeVariable}\\s*:\\s*var\\(\\s*--${semanticVariable}\\s*\\)`,
+      'i'
+    )
+    assert(
+      mappingPattern.test(installedCss),
+      `installed CSS is missing --${themeVariable}: var(--${semanticVariable})`
+    )
+  }
+  assert(
+    /--primary\s*:\s*#5232d0\b/i.test(installedCss),
+    'installed CSS does not contain the exact Applique primary token'
   )
   assert(
-    buttonSource.includes("import { Slot } from '@radix-ui/react-slot'"),
-    'installed Button does not implement asChild composition'
+    /--radius-md\s*:\s*8px\b/i.test(installedCss),
+    'installed CSS does not contain the exact Applique radius-md token'
+  )
+  assert(
+    installedCss.includes('@import "@fontsource-variable/hanken-grotesk"'),
+    'installed CSS does not import the pinned Hanken Grotesk font'
+  )
+  assert(
+    installedCss.includes(
+      '@custom-variant dark (&:where([data-applique-color-scheme="dark"], [data-applique-color-scheme="dark"] *))'
+    ),
+    'installed CSS does not override the global dark variant'
+  )
+  assert(
+    installedCss.includes(
+      '@custom-variant applique-dark (&:where([data-applique-color-scheme="dark"], [data-applique-color-scheme="dark"] *))'
+    ),
+    'installed CSS does not contain the scoped applique-dark variant'
+  )
+  assert(
+    fs.existsSync(
+      path.join(
+        consumerDirectory,
+        'node_modules/@fontsource-variable/hanken-grotesk/package.json'
+      )
+    ),
+    'shadcn did not install the pinned Hanken Grotesk package'
+  )
+  assert(
+    !/hsl\s*\(\s*var\s*\(/i.test(installedCss),
+    'installed CSS contains an obsolete hsl(var(...)) wrapper'
+  )
+  assert(
+    !/--([a-z0-9-]+)\s*:\s*var\(\s*--\1\s*\)/i.test(installedCss),
+    'installed CSS contains a circular Tailwind theme variable'
   )
 
   const compiledCss = fs.readFileSync(
     path.join(consumerDirectory, 'dist.css'),
     'utf8'
   )
-  for (const utility of [
-    '.border-outline-border',
-    '.text-outline-foreground',
-    '.rounded-xxs',
-    '.h-9',
-    '.px-2\\.5',
+
+  for (const expectedCss of [
+    '--primary:#5232d0',
+    '.bg-primary',
+    '.text-primary-foreground',
+    '.rounded-lg',
+    'Hanken Grotesk Variable',
+    '[data-applique-color-scheme=dark]',
   ]) {
     assert(
-      compiledCss.includes(utility),
-      `Tailwind did not emit expected utility ${utility}`
+      compiledCss.includes(expectedCss),
+      `Tailwind did not emit expected Applique CSS ${expectedCss}`
     )
   }
+  assert(
+    !/@media\s*\(\s*prefers-color-scheme\s*:\s*dark\s*\)/i.test(compiledCss),
+    'Tailwind emitted an OS-controlled dark-mode media query'
+  )
 }
 
 async function main() {
+  const manifest = readJson(manifestPath)
+  const components = sourceItems(manifest)
+
+  assert(
+    components.length >= 61,
+    `Expected at least 61 source-bearing UI items, found ${components.length}`
+  )
+
   const temporaryRoot = fs.mkdtempSync(
     path.join(os.tmpdir(), 'applique-registry-smoke-')
   )
@@ -309,7 +452,11 @@ async function main() {
       registryDirectory,
     ])
 
-    createConsumer(consumerDirectory)
+    createConsumer(consumerDirectory, manifest)
+
+    const itemUrls = components.map(
+      (item) => `${registryBaseUrl}/${encodeURIComponent(item.name)}.json`
+    )
 
     await run(
       'pnpm',
@@ -317,9 +464,9 @@ async function main() {
         'dlx',
         `shadcn@${SHADCN_CLI_VERSION}`,
         'add',
-        `${registryBaseUrl}/button.json`,
-        `${registryBaseUrl}/checkbox.json`,
+        ...itemUrls,
         '--yes',
+        '--overwrite',
         '--cwd',
         consumerDirectory,
       ],
@@ -340,16 +487,14 @@ async function main() {
         'src/index.css',
         '-o',
         'dist.css',
-        '--config',
-        'tailwind.config.cjs',
         '--minify',
       ],
       { cwd: consumerDirectory }
     )
 
-    assertInstalledConsumer(consumerDirectory)
+    assertInstalledConsumer(consumerDirectory, manifest)
     console.log(
-      `[registry] smoke test passed with shadcn@${SHADCN_CLI_VERSION}`
+      `[registry] smoke test passed for ${components.length} components with shadcn@${SHADCN_CLI_VERSION}`
     )
   } finally {
     if (server.listening) await close(server)

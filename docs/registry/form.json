@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "form",
+  "type": "registry:ui",
+  "title": "Form",
+  "description": "Deprecated upstream placeholder. Base UI uses Field instead of the former Form wrapper.",
+  "categories": [
+    "deprecated"
+  ],
+  "meta": {
+    "replacement": "field",
+    "status": "deprecated",
+    "upstream": {
+      "cliVersion": "4.16.0",
+      "sourceSha256": null,
+      "style": "base-nova",
+      "upstreamSha256": "303462d1e6104f1163fa645da02ce174ddca5bedd8b54a93fdf25a8f425eaa06",
+      "fileless": true
+    },
+    "registryVersion": "0.1.0"
+  }
+}

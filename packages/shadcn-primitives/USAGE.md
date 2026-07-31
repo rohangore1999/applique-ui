@@ -1,328 +1,217 @@
-# @applique-ui/shadcn-primitives Usage Examples
+# Applique registry consumer guide
 
-## Installation
+The Applique registry uses the shadcn source-distribution model. Installing an
+item copies its TypeScript into your application and applies the shared
+Applique token baseline.
 
-```bash
-# From npm (after publishing)
-pnpm add @applique-ui/shadcn-primitives
+## Requirements
 
-# For local development (from monorepo)
-# The package is automatically linked via pnpm workspace
-```
+The complete `v0.1.0` component set targets:
 
-## Approach 1: With Tailwind CSS (Recommended)
+- Node.js `>=20.18.1`
+- React 19
+- Tailwind CSS 4
+- TypeScript component output
+- `shadcn@4.16.0`
+- the `base-nova` style
 
-If your consumer app already has Tailwind CSS configured:
+## Configure shadcn
 
-### 1. Install the package
+Use a `components.json` compatible with the registry:
 
-```bash
-pnpm add @applique-ui/shadcn-primitives
-```
-
-### 2. Import tokens.css and components
-
-```tsx
-// In your main App.tsx or entry file
-import '@applique-ui/shadcn-primitives/dist/tokens.css'
-
-// In your component files
-import { Button } from '@applique-ui/shadcn-primitives'
-
-function MyComponent() {
-  return (
-    <div>
-      <Button intent="default">Save</Button>
-      <Button intent="outline">Cancel</Button>
-      <Button intent="destructive" size="sm">Delete</Button>
-    </div>
-  )
-}
-```
-
-### 3. Configure Tailwind (optional)
-
-If you want to extend the design tokens in your app's `tailwind.config.js`:
-
-```javascript
-module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './node_modules/@applique-ui/shadcn-primitives/dist/**/*.js',
-  ],
-  theme: {
-    extend: {
-      colors: {
-        // These are already defined via CSS custom properties in tokens.css
-        // You can override them here if needed
-      },
-    },
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-nova",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
   },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  }
 }
 ```
 
-## Approach 2: Without Tailwind CSS (Standalone)
+The path aliases must also resolve in the application's TypeScript and bundler
+configuration. A typical `tsconfig.json` mapping is:
 
-If your consumer app does NOT have Tailwind CSS:
-
-### 1. Import design.css instead
-
-```tsx
-// In your main App.tsx or entry file
-import '@applique-ui/shadcn-primitives/dist/design.css'
-
-// In your component files
-import { Button } from '@applique-ui/shadcn-primitives'
-
-function MyComponent() {
-  return (
-    <div>
-      <Button intent="default">Save</Button>
-      <Button intent="outline">Cancel</Button>
-    </div>
-  )
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
 }
 ```
 
-**Note:** `design.css` includes all necessary Tailwind utilities pre-compiled. Your app doesn't need Tailwind CSS installed.
-
-## Complete Component Examples
-
-### Basic Button Usage
-
-```tsx
-import { Button } from '@applique-ui/shadcn-primitives'
-
-// All button intents
-<Button intent="default">Default</Button>
-<Button intent="secondary">Secondary</Button>
-<Button intent="outline">Outline</Button>
-<Button intent="ghost">Ghost</Button>
-<Button intent="destructive">Destructive</Button>
-<Button intent="link">Link</Button>
-
-// All button sizes
-<Button size="sm">Small</Button>
-<Button size="md">Medium (default)</Button>
-<Button size="lg">Large</Button>
-<Button size="icon">🔔</Button>
-
-// Disabled state
-<Button disabled>Disabled</Button>
-
-// Custom className (merged with tailwind-merge)
-<Button className="rounded-full">Custom Rounded</Button>
-```
-
-### Using buttonVariants with Other Elements
-
-You can use `buttonVariants` to style non-button elements like links:
-
-```tsx
-import { buttonVariants, cn } from '@applique-ui/shadcn-primitives'
-
-<a 
-  href="/home" 
-  className={cn(buttonVariants({ intent: 'outline', size: 'sm' }))}
->
-  Link styled as Button
-</a>
-
-<div className={cn(buttonVariants({ intent: 'ghost' }))}>
-  Div styled as Button
-</div>
-```
-
-### Using cn() Utility
-
-The `cn()` utility combines `clsx` and `tailwind-merge` for better className handling:
-
-```tsx
-import { Button, cn } from '@applique-ui/shadcn-primitives'
-
-function MyButton({ isActive, className }) {
-  return (
-    <Button
-      intent="default"
-      className={cn(
-        'transition-all duration-200',
-        isActive && 'ring-2 ring-offset-2',
-        className
-      )}
-    >
-      Click me
-    </Button>
-  )
-}
-```
-
-### TypeScript Support
-
-All components have full TypeScript support:
-
-```tsx
-import { Button, ButtonProps } from '@applique-ui/shadcn-primitives'
-
-const MyButton: React.FC<ButtonProps> = (props) => {
-  return <Button {...props} />
-}
-
-// Type-safe props
-<Button 
-  intent="default"  // ✓ Autocomplete: "default" | "secondary" | "outline" | "ghost" | "destructive" | "link"
-  size="md"         // ✓ Autocomplete: "sm" | "md" | "lg" | "icon"
-  onClick={(e) => console.log(e)} // ✓ Full event typing
-/>
-```
-
-## Customizing Design Tokens
-
-The design tokens are defined as CSS custom properties in `tokens.css`. You can override them:
+Your Tailwind entry file must load Tailwind 4:
 
 ```css
-/* In your app's global CSS */
-:root {
-  /* Override primary color from Applique indigo/700 to your brand color */
-  --primary: 220 90% 56%; /* New HSL value */
-  --primary-foreground: 0 0% 100%;
-  
-  /* Override border radius */
-  --radius: 0.25rem; /* 4px instead of default 8px */
-}
+@import 'tailwindcss';
 ```
 
-**Available design tokens:**
+## Install a component
 
-- `--background`, `--foreground`
-- `--primary`, `--primary-foreground`
-- `--secondary`, `--secondary-foreground`
-- `--destructive`, `--destructive-foreground`
-- `--muted`, `--muted-foreground`
-- `--accent`, `--accent-foreground`
-- `--border`, `--input`
-- `--outline-border`, `--outline-foreground`
-- `--ring`
-- `--radius`
+Use both the pinned CLI and immutable registry URL:
 
-All color values use HSL format (e.g., `252 76% 51%`) to support Tailwind's opacity modifiers like `bg-primary/90`.
-
-## Building from Source
-
-If you're developing the package:
-
-```bash
-# From repo root
-cd /path/to/applique-ui
-
-# Build shadcn-primitives package
-TARGET=shadcn-primitives npm run build
-
-# Build all packages
-npm run build
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json
 ```
 
-## Package Structure
+The root URL is an alias for the current release and is useful while exploring:
 
-```
-packages/shadcn-primitives/
-├── dist/
-│   ├── shadcn-primitives.esm.js   # ES module
-│   ├── shadcn-primitives.cjs.js   # CommonJS
-│   ├── index.d.ts                 # TypeScript declarations
-│   ├── button.d.ts                # Button types
-│   ├── utils.d.ts                 # Utility types
-│   ├── tokens.css                 # Design tokens (CSS custom properties)
-│   └── design.css                 # Pre-compiled Tailwind + tokens
-├── src/
-│   ├── index.ts                   # Main exports
-│   ├── button.tsx                 # Button component
-│   ├── utils.ts                   # cn() utility
-│   ├── tokens.css                 # Design tokens source
-│   └── design.css                 # Tailwind source
-├── package.json
-├── README.md
-├── tsconfig.json
-├── postcss.config.js
-└── tailwind.config.js
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/button.json
 ```
 
-## Coexistence with Legacy Components
+Multiple components can be installed together:
 
-This package is completely standalone and can coexist with existing `@applique-ui` components:
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/checkbox.json \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/dialog.json
+```
+
+The CLI follows each item's dependency graph. For Button, it also installs:
+
+- `applique-theme`, which merges the Applique variables into the configured CSS;
+- `utils`, which writes the local `cn()` helper;
+- `@fontsource-variable/hanken-grotesk@5.3.0`, which loads the tokenized
+  variable font;
+- the exact reviewed Base UI and CVA npm versions.
+
+There is no separate Applique Tailwind preset or token package to install.
+Upstream dark utility branches use the Applique-scoped `applique-dark:`
+variant, so a host application's `.dark` class cannot apply them to the
+light-only token set.
+
+## Import the installed source
+
+With the aliases above:
 
 ```tsx
-// You can use both in the same app
-import Button from '@applique-ui/button'  // Old SCSS-based button
-import { Button } from '@applique-ui/shadcn-primitives'  // New Tailwind-based button
+import { Button } from '@/components/ui/button'
 
-function MyApp() {
+export function Actions() {
   return (
-    <div>
-      {/* Legacy component */}
-      <Button type="primary" color="blue">Old Button</Button>
-      
-      {/* New shadcn-style component */}
-      <Button intent="default">New Button</Button>
+    <div className="flex gap-2">
+      <Button variant="default">Save</Button>
+      <Button variant="outline">Cancel</Button>
     </div>
   )
 }
 ```
 
-No conflicts because:
-- Legacy components use SCSS modules with `aui-*` prefixed classes
-- shadcn-primitives uses Tailwind utility classes or pre-compiled CSS
-
-## Testing
-
-To test the package locally before publishing:
-
-```bash
-# 1. Build the package
-cd /path/to/applique-ui
-TARGET=shadcn-primitives npm run build
-
-# 2. In your test app, install via file reference
-cd /path/to/your-test-app
-pnpm add file:../applique-ui/packages/shadcn-primitives
-
-# 3. Import and use
-import { Button } from '@applique-ui/shadcn-primitives'
-import '@applique-ui/shadcn-primitives/dist/tokens.css'
-```
-
-## Next Steps
-
-To add more shadcn-style components:
-
-1. Create new component file (e.g., `src/card.tsx`)
-2. Use `cva` for variants and `cn` for className merging
-3. Export from `src/index.ts`
-4. Update README with usage examples
-5. Rebuild with `TARGET=shadcn-primitives npm run build`
-
-Example for adding a Card component:
+Button exposes the pinned Base/Nova variants:
 
 ```tsx
-// src/card.tsx
-import * as React from 'react'
-import { cn } from './utils'
-
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
-      {...props}
-    />
-  )
-)
-Card.displayName = 'Card'
-
-export { Card }
+<Button variant="default">Default</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="destructive">Destructive</Button>
+<Button variant="link">Link</Button>
 ```
 
-Then export in `src/index.ts`:
+Its sizes are:
 
-```typescript
-export { Card } from './card'
+```tsx
+<Button size="xs">Extra small</Button>
+<Button size="sm">Small</Button>
+<Button size="default">Default</Button>
+<Button size="lg">Large</Button>
+<Button size="icon" aria-label="Save">{/* icon */}</Button>
+<Button size="icon-xs" aria-label="Save">{/* icon */}</Button>
+<Button size="icon-sm" aria-label="Save">{/* icon */}</Button>
+<Button size="icon-lg" aria-label="Save">{/* icon */}</Button>
 ```
+
+Use the live catalogue for the exact exports, local prop declarations, inherited
+primitive surfaces, and examples for every component:
+
+```text
+https://rohangore1999.github.io/applique-ui/catalog/
+```
+
+## Form and Field
+
+The official Base/Nova Form registry entry is fileless and deprecated. It has
+no install command. Use Field:
+
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/field.json
+```
+
+## Customize locally
+
+The files written under `src/components/ui`, `src/lib`, and `src/hooks` belong
+to the consuming application. Teams may compose them, edit them, or add
+application-specific variants.
+
+Keep semantic token names and accessible behavior intact unless a reviewed
+product requirement calls for a change. Local edits create an intentional fork
+that must be considered during future registry updates.
+
+## Update an installed component
+
+An installed component does not change automatically when the registry changes.
+
+1. Choose the target versioned item URL.
+2. Run `shadcn add` again for that item.
+3. Inspect the Git diff before accepting an overwrite.
+4. Merge registry changes with any local changes.
+5. Run type checks, tests, and visual checks in the application.
+
+For example, when a future version exists:
+
+```sh
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.2.0/button.json
+```
+
+The source diff is the update mechanism. There is no package version whose
+installation silently changes all dashboards.
+
+## Troubleshooting
+
+### The CLI asks about an existing file
+
+That file is client-owned. Compare it with the registry source and decide
+whether to keep, replace, or merge it. Do not use overwrite without reviewing
+local customizations.
+
+### An `@/` import does not resolve
+
+Keep `components.json`, TypeScript paths, and bundler aliases aligned. The
+examples above map `@/*` to `src/*`.
+
+### A component is missing styling
+
+Confirm that:
+
+- `components.json` points to the CSS file actually loaded by the app;
+- that CSS imports Tailwind 4;
+- the Applique variables were merged when the component was installed;
+- the app is scanning its local component source.
+
+### A JavaScript-only project cannot install the source
+
+This release publishes reviewed TypeScript source only. A JavaScript-only
+consumer needs a separate compiler-backed conversion path.

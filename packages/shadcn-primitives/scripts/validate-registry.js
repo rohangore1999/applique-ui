@@ -13,9 +13,12 @@
  *   node scripts/validate-registry.js ../../../docs/registry
  */
 
+const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
 
+const PACKAGE_DIR = path.resolve(__dirname, '..')
+const SNAPSHOT_LOCK_PATH = path.join(PACKAGE_DIR, 'shadcn-base-nova.lock.json')
 const DEFAULT_REGISTRY_DIR = path.resolve(
   __dirname,
   '..',
@@ -29,6 +32,42 @@ const REGISTRY_SCHEMA = 'https://ui.shadcn.com/schema/registry.json'
 const REGISTRY_ITEM_SCHEMA = 'https://ui.shadcn.com/schema/registry-item.json'
 const NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const TYPE_PATTERN = /^registry:[a-z][a-z0-9-]*$/
+const APPLIQUE_SEMANTIC_COLOR_VARS = [
+  'background',
+  'foreground',
+  'card',
+  'card-foreground',
+  'popover',
+  'popover-foreground',
+  'primary',
+  'primary-foreground',
+  'secondary',
+  'secondary-foreground',
+  'muted',
+  'muted-foreground',
+  'accent',
+  'accent-foreground',
+  'destructive',
+  'destructive-foreground',
+  'border',
+  'input',
+  'outline-border',
+  'outline-foreground',
+  'ring',
+  'sidebar',
+  'sidebar-foreground',
+  'sidebar-primary',
+  'sidebar-primary-foreground',
+  'sidebar-accent',
+  'sidebar-accent-foreground',
+  'sidebar-border',
+  'sidebar-ring',
+  'chart-1',
+  'chart-2',
+  'chart-3',
+  'chart-4',
+  'chart-5',
+]
 
 function assert(condition, message) {
   if (!condition) throw new Error(message)
@@ -63,6 +102,16 @@ function assertSafeRelativePath(value, label) {
   assert(
     !segments.includes(''),
     `${label} must not contain empty path segments`
+  )
+}
+
+function isFilelessDeprecatedItem(item) {
+  return Boolean(
+    item &&
+      item.meta &&
+      item.meta.status === 'deprecated' &&
+      item.meta.upstream &&
+      item.meta.upstream.fileless === true
   )
 }
 
@@ -141,6 +190,87 @@ function validateFile(file, label, requireContent) {
   }
 }
 
+function validateAppliqueTheme(item, label) {
+  assert(
+    item.type === 'registry:theme',
+    `${label} must be a registry:theme item`
+  )
+  assert(
+    item.tailwind === undefined,
+    `${label} must not contain obsolete Tailwind 3 configuration`
+  )
+  assert(
+    item.cssVars &&
+      item.cssVars.theme &&
+      item.cssVars.light &&
+      typeof item.cssVars.theme === 'object' &&
+      typeof item.cssVars.light === 'object' &&
+      !Array.isArray(item.cssVars.theme) &&
+      !Array.isArray(item.cssVars.light),
+    `${label} must contain cssVars.theme and cssVars.light`
+  )
+  assert(
+    item.cssVars.dark === undefined,
+    `${label} must remain light-only until Applique defines dark tokens`
+  )
+  assert(
+    Array.isArray(item.dependencies) &&
+      item.dependencies.includes('@fontsource-variable/hanken-grotesk@5.3.0'),
+    `${label} must install the pinned Hanken Grotesk variable font`
+  )
+  assert(
+    item.css &&
+      item.css['@import "@fontsource-variable/hanken-grotesk"'] &&
+      item.css[
+        '@custom-variant dark (&:where([data-applique-color-scheme="dark"], [data-applique-color-scheme="dark"] *))'
+      ] &&
+      item.css[
+        '@custom-variant applique-dark (&:where([data-applique-color-scheme="dark"], [data-applique-color-scheme="dark"] *))'
+      ],
+    `${label} must install the font import and scoped dark variants`
+  )
+
+  for (const variableName of APPLIQUE_SEMANTIC_COLOR_VARS) {
+    const lightValue = item.cssVars.light[variableName]
+    assert(
+      /^#[0-9a-f]{6}$/i.test(lightValue || ''),
+      `${label}.cssVars.light.${variableName} must be an exact hex color`
+    )
+    assert(
+      item.cssVars.theme[`color-${variableName}`] === `var(--${variableName})`,
+      `${label}.cssVars.theme.color-${variableName} must map to var(--${variableName})`
+    )
+  }
+
+  assert(
+    item.cssVars.light.primary.toLowerCase() === '#5232d0',
+    `${label}.cssVars.light.primary must match the Applique Figma token #5232d0`
+  )
+
+  for (const [variableName, lightValue] of Object.entries(item.cssVars.light)) {
+    if (APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName)) continue
+
+    assert(
+      item.cssVars.theme[variableName] === lightValue,
+      `${label}.cssVars.theme.${variableName} must preserve the exact light token value`
+    )
+  }
+
+  for (const [variableName, themeValue] of Object.entries(item.cssVars.theme)) {
+    assertString(themeValue, `${label}.cssVars.theme.${variableName}`)
+    assert(
+      !/hsl\s*\(\s*var\s*\(/i.test(themeValue),
+      `${label}.cssVars.theme.${variableName} contains an obsolete hsl(var(...)) wrapper`
+    )
+
+    const variableReference = themeValue.match(/^var\(\s*--([a-z0-9-]+)\s*\)$/i)
+    assert(
+      !variableReference || variableReference[1] !== variableName,
+      `${label}.cssVars.theme.${variableName} cannot reference itself`
+    )
+  }
+}
+
 function validateItem(item, label, options = {}) {
   const { requireContent = false, requireSchema = false } = options
 
@@ -194,8 +324,8 @@ function validateItem(item, label, options = {}) {
     (item.css !== undefined || item.cssVars !== undefined)
 
   assert(
-    hasFiles || hasThemePayload,
-    `${label} must contain files or a theme payload`
+    hasFiles || hasThemePayload || isFilelessDeprecatedItem(item),
+    `${label} must contain files, a theme payload, or explicit fileless deprecated metadata`
   )
 
   if (item.cssVars !== undefined) {
@@ -209,6 +339,10 @@ function validateItem(item, label, options = {}) {
       Object.keys(item.cssVars).length > 0,
       `${label}.cssVars must not be empty`
     )
+  }
+
+  if (item.name === 'applique-theme') {
+    validateAppliqueTheme(item, label)
   }
 }
 
@@ -270,6 +404,89 @@ function readJson(filePath) {
   } catch (error) {
     throw new Error(`${filePath} is not valid JSON: ${error.message}`)
   }
+}
+
+function sha256(value) {
+  return crypto
+    .createHash('sha256')
+    .update(value)
+    .digest('hex')
+}
+
+function validatePinnedSnapshot() {
+  assert(
+    fs.existsSync(SNAPSHOT_LOCK_PATH),
+    `missing shadcn snapshot lock: ${SNAPSHOT_LOCK_PATH}`
+  )
+  const lock = readJson(SNAPSHOT_LOCK_PATH)
+  assert(lock.cliVersion === '4.16.0', 'snapshot must pin shadcn CLI 4.16.0')
+  assert(lock.style === 'base-nova', 'snapshot must use base-nova')
+  assert(lock.itemCount === 62, 'snapshot must index exactly 62 UI items')
+  assert(Array.isArray(lock.items), 'snapshot lock must contain an items array')
+
+  const names = new Set()
+  let deprecatedItems = 0
+  let installableItems = 0
+  for (const item of lock.items) {
+    assertString(item.name, 'snapshot item.name')
+    assert(!names.has(item.name), `duplicate snapshot item ${item.name}`)
+    names.add(item.name)
+    assertSafeRelativePath(item.upstreamPath, `${item.name}.upstreamPath`)
+    assertString(item.upstreamSha256, `${item.name}.upstreamSha256`)
+    const upstreamPath = path.resolve(PACKAGE_DIR, item.upstreamPath)
+    const upstreamRelative = path.relative(PACKAGE_DIR, upstreamPath)
+    assert(
+      upstreamRelative &&
+        !upstreamRelative.startsWith(`..${path.sep}`) &&
+        !path.isAbsolute(upstreamRelative),
+      `${item.name}.upstreamPath escapes the package`
+    )
+    assert(fs.existsSync(upstreamPath), `${item.name} upstream JSON is missing`)
+    assert(
+      sha256(JSON.stringify(readJson(upstreamPath))) === item.upstreamSha256,
+      `${item.name} upstream JSON does not match the pinned snapshot hash`
+    )
+
+    if (item.status === 'deprecated') {
+      deprecatedItems += 1
+      assert(
+        item.name === 'form',
+        'only Form may be a deprecated snapshot item'
+      )
+      assert(item.sourcePath === null, 'deprecated Form must remain fileless')
+      assert(
+        item.sourceSha256 === null,
+        'deprecated Form must not claim a source hash'
+      )
+      continue
+    }
+
+    assert(item.status === 'installable', `${item.name} has invalid status`)
+    assertSafeRelativePath(item.sourcePath, `${item.name}.sourcePath`)
+    assertString(item.sourceSha256, `${item.name}.sourceSha256`)
+    const sourcePath = path.resolve(PACKAGE_DIR, item.sourcePath)
+    const relativeToPackage = path.relative(PACKAGE_DIR, sourcePath)
+    assert(
+      relativeToPackage &&
+        !relativeToPackage.startsWith(`..${path.sep}`) &&
+        !path.isAbsolute(relativeToPackage),
+      `${item.name}.sourcePath escapes the package`
+    )
+    assert(fs.existsSync(sourcePath), `${item.name} source is missing`)
+    assert(
+      sha256(fs.readFileSync(sourcePath, 'utf8')) === item.sourceSha256,
+      `${item.name} source does not match the pinned snapshot hash`
+    )
+    installableItems += 1
+  }
+
+  assert(names.has('use-mobile'), 'snapshot must include use-mobile')
+  assert(deprecatedItems === 1, 'snapshot must contain one deprecated item')
+  assert(
+    installableItems === 62,
+    `snapshot must contain 62 installable source items, got ${installableItems}`
+  )
+  return { entries: lock.items.length, installableItems }
 }
 
 function validateRegistryDirectory(directory) {
@@ -334,11 +551,12 @@ function validateRegistryDirectory(directory) {
 
 if (require.main === module) {
   try {
+    const snapshot = validatePinnedSnapshot()
     const result = validateRegistryDirectory(
       process.argv[2] || DEFAULT_REGISTRY_DIR
     )
     console.log(
-      `[registry] valid: ${result.items} items in ${result.catalogs} catalogs (${result.files} JSON files)`
+      `[registry] valid: ${result.items} items in ${result.catalogs} catalogs (${result.files} JSON files); ${snapshot.installableItems}/${snapshot.entries} pinned sources installable`
     )
   } catch (error) {
     console.error(`[registry] validation failed: ${error.message}`)
@@ -350,4 +568,5 @@ module.exports = {
   validateRegistryDirectory,
   validateCatalog,
   validateItem,
+  validatePinnedSnapshot,
 }

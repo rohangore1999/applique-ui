@@ -1,100 +1,75 @@
-# Applique UI — shadcn Integration
+# Applique shadcn registry
 
-## Overview
+Applique distributes its shadcn layer as source through a registry, not as a
+component runtime package. A client installs a versioned registry item, owns
+the resulting source, and imports it from its normal local aliases.
 
-Applique UI has been modernised internally across three dimensions:
+## Release baseline
 
-- **React 16 → 18** and **TypeScript 3.9 → 5.4** — required baseline for modern tooling
-- **Tailwind CSS 3.x** added as a styling layer alongside the existing SCSS + CSS Modules system
-- **`packages/shadcn-primitives`** created — an internal package holding `cva`-based variant definitions and the `cn()` utility
+- Registry: `v0.1.0`
+- shadcn CLI: `4.16.0`
+- Style: `base-nova` (Base UI)
+- React: `19.2.8`
+- Tailwind CSS: `4.3.3`
+- Coverage: all 62 official shadcn UI entries
+- Installable source: 61 entries
+- Exception: upstream `Form` is fileless/deprecated; use `Field`
 
-Two approaches are supported in parallel. There is no forced migration — existing screens continue to work without any changes.
+The release also installs the Applique semantic theme, exact Figma-backed
+tokens, and the pinned Hanken Grotesk variable font. Applique currently
+publishes light tokens only. Upstream dark utilities are renamed to the
+Applique-scoped `applique-dark:` variant, and Tailwind's built-in `dark`
+variant is scoped to the same explicit data attribute. A client application's
+`.dark` class or OS preference therefore cannot activate them accidentally.
 
----
+## Install in a client
 
-## Approach 1 — Applique contract (existing screens)
-
-Use this for existing screens or when you don't want to change anything.
-
-The public API is identical to before. Internally, props are normalised and passed through `cva` + Tailwind — but this is invisible to consumers.
-
-```tsx
-import Button from '@applique-ui/button'
-
-// Nothing changes — same props, same behaviour
-<Button type="primary" color="blue" size="medium">
-  Save
-</Button>
-```
-
-All 50+ components are available. No Tailwind setup required in the consumer app.
-
----
-
-## Approach 2 — shadcn contract (new screens)
-
-Use this for new screens. Import directly from `@applique-ui/shadcn-primitives` and use the new prop API (`intent`, `tone`, `size`).
-
-### Installation
+The client needs a valid shadcn `components.json` with Tailwind 4 and local
+aliases. Install a component from the immutable version:
 
 ```bash
-pnpm add @applique-ui/shadcn-primitives
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json
 ```
 
-### Option A — With Tailwind (recommended)
-
-If your consumer app already has Tailwind set up, import the tokens and use the component:
+The CLI writes the component and its dependencies into the client repository.
+The client then imports its local copy:
 
 ```tsx
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
-import '@applique-ui/shadcn-primitives/dist/tokens.css'
+import { Button } from '@/components/ui/button'
 
-<ShadcnButton intent="primary" tone="blue" size="md">
-  Save
-</ShadcnButton>
+export function SaveAction() {
+  return <Button>Save</Button>
+}
 ```
 
-### Option B — Without Tailwind
+Install several entries in one command when useful:
 
-If your app does not use Tailwind, import the pre-generated CSS bundle instead. No PostCSS or Tailwind config needed.
-
-```tsx
-import { ShadcnButton } from '@applique-ui/shadcn-primitives'
-import '@applique-ui/shadcn-primitives/dist/design.css'
-
-<ShadcnButton intent="primary" tone="blue" size="md">
-  Save
-</ShadcnButton>
+```bash
+npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/dialog.json
 ```
 
-### Prop API
+## Updates and ownership
 
-| Prop | Values | Description |
-|---|---|---|
-| `intent` | `primary` `secondary` `tertiary` `text` | Visual style |
-| `tone` | `blue` `red` `yellow` `green` `gray` `pink` | Colour |
-| `size` | `sm` `md` `lg` | Size |
-| `className` | any | Appended last — overrides defaults via `tailwind-merge` |
+Registry installation is a source merge, not an automatic runtime upgrade.
+When Applique publishes a later registry version, the client reruns `shadcn add` with the new versioned URL, reviews the source diff, resolves local
+customizations, and accepts the change. Never mutate an already-adopted
+version directory.
 
-### Using `buttonVariants` directly
+An Applique facade for legacy prop mapping can be added later as local registry
+source. It is intentionally separate from the primitive rollout; the current
+release preserves the official shadcn API.
 
-If you need the class string without the component (e.g. for a custom element):
+## Source and operations
 
-```tsx
-import { buttonVariants, cn } from '@applique-ui/shadcn-primitives'
+- Manifest: `packages/shadcn-primitives/registry.json`
+- Checked-in sources: `packages/shadcn-primitives/src`
+- Upstream snapshots: `packages/shadcn-primitives/upstream/base-nova`
+- Snapshot lock: `packages/shadcn-primitives/shadcn-base-nova.lock.json`
+- Generated Pages output: `docs/registry` and `docs/catalog`
+- Detailed guide: `docs/REGISTRY.md`
 
-<a
-  href="/somewhere"
-  className={cn(buttonVariants({ intent: 'primary', tone: 'blue' }), 'my-custom-class')}
->
-  Go
-</a>
-```
-
-### Available components
-
-Currently available in `@applique-ui/shadcn-primitives`:
-
-- `ShadcnButton` — Button
-
-More components will be added progressively.
+Do not edit generated registry JSON by hand. Update the manifest, token source,
+or pinned component source and rebuild the Pages output.

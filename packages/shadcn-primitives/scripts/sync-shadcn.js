@@ -1,0 +1,672 @@
+#!/usr/bin/env node
+
+/*
+ * Explicitly snapshots the official shadcn Base UI registry into this package.
+ * Normal registry builds stay offline and consume the checked-in result.
+ *
+ * Usage:
+ *   node scripts/sync-shadcn.js --from /path/to/downloaded/items
+ *   node scripts/sync-shadcn.js --from /path/to/downloaded/items --check
+ *   node scripts/sync-shadcn.js --allow-network
+ */
+
+const crypto = require('crypto')
+const fs = require('fs')
+const https = require('https')
+const path = require('path')
+
+const CLI_VERSION = '4.16.0'
+const STYLE = 'base-nova'
+const UPSTREAM_COMMIT = '705ce5961080264830471ddd885c01b907706068'
+const SOURCE_BASE_URL = `https://ui.shadcn.com/r/styles/${STYLE}`
+const UI_ITEMS = [
+  'accordion',
+  'alert',
+  'alert-dialog',
+  'aspect-ratio',
+  'attachment',
+  'avatar',
+  'badge',
+  'breadcrumb',
+  'bubble',
+  'button',
+  'button-group',
+  'calendar',
+  'card',
+  'carousel',
+  'chart',
+  'checkbox',
+  'collapsible',
+  'combobox',
+  'command',
+  'context-menu',
+  'dialog',
+  'direction',
+  'drawer',
+  'dropdown-menu',
+  'empty',
+  'field',
+  'form',
+  'hover-card',
+  'input',
+  'input-group',
+  'input-otp',
+  'item',
+  'kbd',
+  'label',
+  'marker',
+  'menubar',
+  'message',
+  'message-scroller',
+  'native-select',
+  'navigation-menu',
+  'pagination',
+  'popover',
+  'progress',
+  'radio-group',
+  'resizable',
+  'scroll-area',
+  'select',
+  'separator',
+  'sheet',
+  'sidebar',
+  'skeleton',
+  'slider',
+  'sonner',
+  'spinner',
+  'switch',
+  'table',
+  'tabs',
+  'textarea',
+  'toast',
+  'toggle',
+  'toggle-group',
+  'tooltip',
+]
+const SUPPORT_ITEMS = ['use-mobile']
+
+// Exact versions are reviewed together with an upstream snapshot. Registry
+// generation never resolves "latest" or a semver range.
+const DEPENDENCY_PINS = {
+  '@base-ui/react': '1.6.0',
+  '@shadcn/react': '0.2.1',
+  'class-variance-authority': '0.7.1',
+  clsx: '2.1.1',
+  cmdk: '1.1.1',
+  'date-fns': '4.4.0',
+  'embla-carousel-react': '8.6.0',
+  'input-otp': '1.4.2',
+  'lucide-react': '1.28.0',
+  'next-themes': '0.4.6',
+  'react-day-picker': '10.0.1',
+  'react-resizable-panels': '4.12.2',
+  recharts: '3.8.0',
+  sonner: '2.0.7',
+  'tailwind-merge': '3.6.0',
+}
+
+const packageDir = path.resolve(__dirname, '..')
+const sourceDir = path.join(packageDir, 'src')
+const manifestPath = path.join(packageDir, 'registry.json')
+const lockPath = path.join(packageDir, 'shadcn-base-nova.lock.json')
+const indexPath = path.join(sourceDir, 'index.ts')
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message)
+}
+
+function parseArguments(argv) {
+  const options = { allowNetwork: false, check: false, from: null }
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index]
+    if (argument === '--') {
+      continue
+    } else if (argument === '--check') {
+      options.check = true
+    } else if (argument === '--allow-network') {
+      options.allowNetwork = true
+    } else if (argument === '--help' || argument === '-h') {
+      options.help = true
+    } else if (argument === '--from') {
+      const value = argv[index + 1]
+      assert(value && !value.startsWith('--'), '--from requires a directory')
+      options.from = path.resolve(value)
+      index += 1
+    } else {
+      throw new Error(`Unknown option: ${argument}`)
+    }
+  }
+  return options
+}
+
+function printHelp() {
+  console.log(`Snapshot official shadcn ${STYLE} source.
+
+Options:
+  --from <directory>  Read downloaded <item>.json files instead of the network.
+  --allow-network     Explicitly refresh from the mutable official endpoint.
+  --check             Compare without writing files.
+  --help              Show this help.
+`)
+}
+
+function sha256(value) {
+  return crypto
+    .createHash('sha256')
+    .update(value)
+    .digest('hex')
+}
+
+function serialize(value) {
+  return `${JSON.stringify(value, null, 2)}\n`
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+}
+
+function fetchText(url) {
+  return new Promise((resolve, reject) => {
+    const request = https.get(
+      url,
+      {
+        headers: {
+          Accept: 'application/json',
+          'User-Agent': `applique-shadcn-sync/${CLI_VERSION}`,
+        },
+      },
+      (response) => {
+        if (
+          response.statusCode &&
+          response.statusCode >= 300 &&
+          response.statusCode < 400 &&
+          response.headers.location
+        ) {
+          response.resume()
+          fetchText(new URL(response.headers.location, url).toString()).then(
+            resolve,
+            reject
+          )
+          return
+        }
+        if (response.statusCode !== 200) {
+          response.resume()
+          reject(
+            new Error(
+              `Could not download ${url}: HTTP ${response.statusCode ||
+                'unknown'}`
+            )
+          )
+          return
+        }
+        let body = ''
+        response.setEncoding('utf8')
+        response.on('data', (chunk) => {
+          body += chunk
+        })
+        response.on('end', () => resolve(body))
+      }
+    )
+    request.on('error', reject)
+  })
+}
+
+async function loadItem(name, fromDirectory) {
+  if (fromDirectory) {
+    const filePath = path.join(fromDirectory, `${name}.json`)
+    assert(fs.existsSync(filePath), `Downloaded item is missing: ${filePath}`)
+    return readJson(filePath)
+  }
+  const source = await fetchText(`${SOURCE_BASE_URL}/${name}.json`)
+  try {
+    return JSON.parse(source)
+  } catch (error) {
+    throw new Error(`Invalid upstream JSON for ${name}: ${error.message}`)
+  }
+}
+
+function packageNameFromSpecifier(specifier) {
+  return specifier.startsWith('@')
+    ? specifier
+        .split('/')
+        .slice(0, 2)
+        .join('/')
+    : specifier.split('/')[0]
+}
+
+function packageNameFromDependency(dependency) {
+  if (dependency.startsWith('@')) {
+    const slash = dependency.indexOf('/')
+    const versionSeparator = dependency.indexOf('@', slash)
+    return versionSeparator === -1
+      ? dependency
+      : dependency.slice(0, versionSeparator)
+  }
+  const versionSeparator = dependency.lastIndexOf('@')
+  return versionSeparator > 0
+    ? dependency.slice(0, versionSeparator)
+    : dependency
+}
+
+function exactDependency(dependency) {
+  const packageName = packageNameFromDependency(dependency)
+  const pinnedVersion = DEPENDENCY_PINS[packageName]
+  assert(pinnedVersion, `No exact dependency pin for ${packageName}`)
+  return `${packageName}@${pinnedVersion}`
+}
+
+function collectModuleSpecifiers(content) {
+  const specifiers = []
+  const pattern = /(?:from\s+|import\s*\(\s*)["'`]([^"'`]+)["'`](?:\s*\))?/g
+  for (const match of content.matchAll(pattern)) specifiers.push(match[1])
+  return [...new Set(specifiers)]
+}
+
+function transformIconPlaceholders(content, itemName) {
+  const importPattern = /^import\s+\{\s*IconPlaceholder\s*\}\s+from\s+["']@\/app\/\(create\)\/components\/icon-placeholder["'];?\s*\n/m
+  const hasImport = importPattern.test(content)
+  const icons = new Set()
+  let transformed = content.replace(importPattern, '')
+
+  transformed = transformed.replace(
+    /<IconPlaceholder\b([\s\S]*?)\/>/g,
+    (_source, attributes) => {
+      const lucide = attributes.match(/\blucide="([A-Za-z0-9]+)"/)
+      assert(
+        lucide,
+        `${itemName} has IconPlaceholder without a static lucide choice`
+      )
+      icons.add(lucide[1])
+      let retained = attributes
+      for (const property of [
+        'lucide',
+        'tabler',
+        'hugeicons',
+        'phosphor',
+        'remixicon',
+      ]) {
+        retained = retained.replace(
+          new RegExp(`\\s+${property}="[A-Za-z0-9]+"`, 'g'),
+          ''
+        )
+      }
+      return `<${lucide[1]}${retained} />`
+    }
+  )
+
+  assert(
+    hasImport === icons.size > 0,
+    `${itemName} IconPlaceholder import and usage mismatch`
+  )
+  if (icons.size > 0) {
+    const iconImport = `import { ${[...icons]
+      .sort()
+      .join(', ')} } from "lucide-react"\n`
+    const clientDirective = /^("use client"|'use client');?\s*\n+/
+    const directive = transformed.match(clientDirective)
+    transformed = directive
+      ? `${directive[0]}${iconImport}${transformed.slice(directive[0].length)}`
+      : `${iconImport}${transformed}`
+  }
+  return transformed
+}
+
+function transformSource(content, itemName) {
+  let transformed = content.replace(/\r\n?/g, '\n')
+  transformed = transformIconPlaceholders(transformed, itemName)
+    .replaceAll('@/registry/base-nova/lib/utils', './utils')
+    .replaceAll('@/registry/base-nova/hooks/use-mobile', './use-mobile')
+    .replace(
+      /@\/registry\/base-nova\/ui\/([a-z0-9-]+)/g,
+      (_match, componentName) => `./${componentName}`
+    )
+    .replace(
+      /(^|[\s"'`])dark:(?=\S)/gm,
+      (_match, boundary) => `${boundary}applique-dark:`
+    )
+
+  if (itemName === 'chart') {
+    transformed = transformed.replace(
+      'const THEMES = { light: "", dark: ".dark" } as const',
+      `const THEMES = { light: "", dark: '[data-applique-color-scheme="dark"]' } as const`
+    )
+  }
+
+  assert(
+    !transformed.includes('@/registry/'),
+    `${itemName} still contains a private registry alias`
+  )
+  assert(
+    !transformed.includes('@/app/'),
+    `${itemName} still contains a private application alias`
+  )
+  assert(
+    !transformed.includes('dark:".dark"') &&
+      !transformed.includes('dark: ".dark"'),
+    `${itemName} still contains an unscoped dark selector`
+  )
+  return transformed.endsWith('\n') ? transformed : `${transformed}\n`
+}
+
+function localDependencyFromSpecifier(specifier) {
+  if (specifier === './utils') return 'utils'
+  if (specifier === './use-mobile') return 'use-mobile'
+  return /^\.\/[a-z0-9-]+$/.test(specifier) ? specifier.slice(2) : null
+}
+
+function consumerImportForLocalDependency(dependency) {
+  if (dependency === 'utils') return '@/lib/utils'
+  if (dependency === 'use-mobile') return '@/hooks/use-mobile'
+  return `@/components/ui/${dependency}`
+}
+
+function buildItemDependencies(upstreamItem, transformedSource) {
+  const packageNames = new Set(
+    (upstreamItem.dependencies || []).map(packageNameFromDependency)
+  )
+  for (const specifier of collectModuleSpecifiers(transformedSource)) {
+    if (
+      specifier === 'react' ||
+      specifier === 'react-dom' ||
+      specifier.startsWith('.') ||
+      specifier.startsWith('@/') ||
+      specifier.startsWith('node:')
+    ) {
+      continue
+    }
+    packageNames.add(packageNameFromSpecifier(specifier))
+  }
+  return [...packageNames].sort().map(exactDependency)
+}
+
+function buildRegistryDependencies(upstreamItem, transformedSource) {
+  const dependencies = new Set(['applique-theme'])
+  for (const specifier of collectModuleSpecifiers(transformedSource)) {
+    const dependency = localDependencyFromSpecifier(specifier)
+    if (dependency) dependencies.add(dependency)
+  }
+  for (const dependency of upstreamItem.registryDependencies || []) {
+    dependencies.add(dependency)
+  }
+  return [...dependencies]
+}
+
+function buildImportMap(transformedSource) {
+  const importMap = {}
+  for (const specifier of collectModuleSpecifiers(transformedSource)) {
+    const dependency = localDependencyFromSpecifier(specifier)
+    if (dependency) {
+      importMap[specifier] = consumerImportForLocalDependency(dependency)
+    }
+  }
+  return importMap
+}
+
+function titleFromName(name) {
+  return name
+    .split('-')
+    .map((word) =>
+      word === 'otp' ? 'OTP' : `${word[0].toUpperCase()}${word.slice(1)}`
+    )
+    .join(' ')
+}
+
+function createManifestItem(snapshot) {
+  const upstream = {
+    cliVersion: CLI_VERSION,
+    sourceSha256: snapshot.sourceSha256,
+    style: STYLE,
+    upstreamSha256: snapshot.upstreamSha256,
+  }
+
+  if (snapshot.status === 'deprecated') {
+    return {
+      name: snapshot.name,
+      type: snapshot.type,
+      title: titleFromName(snapshot.name),
+      description:
+        'Deprecated upstream placeholder. Base UI uses Field instead of the former Form wrapper.',
+      categories: ['deprecated'],
+      files: [],
+      meta: {
+        replacement: 'field',
+        status: 'deprecated',
+        upstream: { ...upstream, fileless: true },
+      },
+    }
+  }
+
+  const target =
+    snapshot.type === 'registry:hook'
+      ? `@hooks/${snapshot.name}.ts`
+      : `@ui/${snapshot.name}.tsx`
+  const item = {
+    name: snapshot.name,
+    type: snapshot.type,
+    title: titleFromName(snapshot.name),
+    description:
+      snapshot.type === 'registry:hook'
+        ? 'Support hook required by the Applique-themed Sidebar.'
+        : `Official shadcn ${STYLE} component with Applique theme tokens.`,
+    categories:
+      snapshot.type === 'registry:hook'
+        ? ['foundation', 'hook']
+        : ['primitive', 'base-ui'],
+    dependencies: snapshot.dependencies,
+    registryDependencies: snapshot.registryDependencies,
+    files: [
+      {
+        path: snapshot.sourcePath,
+        type: snapshot.type,
+        target,
+      },
+    ],
+    meta: {
+      status: snapshot.type === 'registry:hook' ? 'foundation' : 'experimental',
+      upstream,
+    },
+  }
+  if (Object.keys(snapshot.importMap).length > 0) {
+    item.meta.build = { importMap: snapshot.importMap }
+  }
+  return item
+}
+
+function createIndex(snapshots) {
+  const lines = ['/* This file is generated by scripts/sync-shadcn.js. */', '']
+  for (const snapshot of snapshots) {
+    if (snapshot.type !== 'registry:ui' || snapshot.status !== 'installable') {
+      continue
+    }
+    lines.push(
+      snapshot.name === 'sonner'
+        ? `export { Toaster as SonnerToaster } from './sonner'`
+        : `export * from './${snapshot.name}'`
+    )
+  }
+  lines.push(`export { useIsMobile } from './use-mobile'`)
+  lines.push(`export { cn } from './utils'`, '')
+  return lines.join('\n')
+}
+
+function stageFile(files, filePath, content) {
+  files.set(path.resolve(filePath), content)
+}
+
+function applyFiles(files, check) {
+  const differences = []
+  for (const [filePath, expected] of files) {
+    const exists = fs.existsSync(filePath)
+    const actual = exists ? fs.readFileSync(filePath, 'utf8') : null
+    if (actual === expected) continue
+    if (check) {
+      differences.push(
+        `${path.relative(packageDir, filePath)} is ${
+          exists ? 'stale' : 'missing'
+        }`
+      )
+      continue
+    }
+    fs.mkdirSync(path.dirname(filePath), { recursive: true })
+    const temporaryPath = `${filePath}.${process.pid}.tmp`
+    fs.writeFileSync(temporaryPath, expected)
+    fs.renameSync(temporaryPath, filePath)
+    console.log(`[shadcn-sync] wrote ${path.relative(packageDir, filePath)}`)
+  }
+  assert(
+    differences.length === 0,
+    `Checked-in shadcn snapshot is not current:\n- ${differences.join('\n- ')}`
+  )
+}
+
+async function main() {
+  const options = parseArguments(process.argv.slice(2))
+  if (options.help) return printHelp()
+  assert(
+    options.from || options.allowNetwork,
+    `Network sync is intentionally explicit because ${SOURCE_BASE_URL} is mutable. Use --from for an audited download or --allow-network after reviewing shadcn@${CLI_VERSION} and upstream commit ${UPSTREAM_COMMIT}.`
+  )
+  if (options.from) {
+    assert(
+      fs.existsSync(options.from) && fs.statSync(options.from).isDirectory(),
+      `--from is not a directory: ${options.from}`
+    )
+  }
+  assert(UI_ITEMS.length === 62, `Expected 62 UI items, got ${UI_ITEMS.length}`)
+
+  const itemNames = [...UI_ITEMS, ...SUPPORT_ITEMS]
+  const upstreamItems = new Map()
+  for (const name of itemNames) {
+    const item = await loadItem(name, options.from)
+    assert(item.name === name, `${name}.json contains item "${item.name}"`)
+    upstreamItems.set(name, item)
+  }
+
+  const snapshots = []
+  const stagedFiles = new Map()
+  for (const name of [...itemNames].sort()) {
+    const upstreamItem = upstreamItems.get(name)
+    const upstreamPath = `upstream/${STYLE}/${name}.json`
+    stageFile(
+      stagedFiles,
+      path.join(packageDir, upstreamPath),
+      serialize(upstreamItem)
+    )
+    const type = name === 'use-mobile' ? 'registry:hook' : 'registry:ui'
+    assert(upstreamItem.type === type, `${name} has type ${upstreamItem.type}`)
+    const files = upstreamItem.files || []
+
+    if (name === 'form') {
+      assert(files.length === 0, 'Base UI Form unexpectedly gained source')
+      snapshots.push({
+        dependencies: [],
+        importMap: {},
+        name,
+        registryDependencies: [],
+        sourcePath: null,
+        sourceSha256: null,
+        status: 'deprecated',
+        type,
+        upstreamPath,
+        upstreamSha256: sha256(JSON.stringify(upstreamItem)),
+      })
+      continue
+    }
+
+    assert(files.length === 1, `${name} must contain exactly one source file`)
+    const transformedSource = transformSource(files[0].content, name)
+    const extension = type === 'registry:hook' ? 'ts' : 'tsx'
+    const sourcePath = `src/${name}.${extension}`
+    const snapshot = {
+      dependencies: buildItemDependencies(upstreamItem, transformedSource),
+      importMap: buildImportMap(transformedSource),
+      name,
+      registryDependencies:
+        type === 'registry:hook'
+          ? []
+          : buildRegistryDependencies(upstreamItem, transformedSource),
+      sourcePath,
+      sourceSha256: sha256(transformedSource),
+      status: 'installable',
+      type,
+      upstreamPath,
+      upstreamSha256: sha256(JSON.stringify(upstreamItem)),
+    }
+    snapshots.push(snapshot)
+    stageFile(stagedFiles, path.join(packageDir, sourcePath), transformedSource)
+  }
+  snapshots.sort((left, right) => left.name.localeCompare(right.name))
+
+  const currentManifest = readJson(manifestPath)
+  const foundationItems = currentManifest.items.filter((item) =>
+    ['applique-theme', 'utils'].includes(item.name)
+  )
+  assert(
+    foundationItems.length === 2,
+    'registry.json must contain applique-theme and utils'
+  )
+  foundationItems.find((item) => item.name === 'utils').dependencies = [
+    exactDependency('clsx'),
+    exactDependency('tailwind-merge'),
+  ]
+
+  const manifest = {
+    ...currentManifest,
+    meta: {
+      ...(currentManifest.meta || {}),
+      upstream: {
+        cliVersion: CLI_VERSION,
+        commit: UPSTREAM_COMMIT,
+        itemCount: UI_ITEMS.length,
+        style: STYLE,
+      },
+    },
+    items: [
+      ...foundationItems,
+      ...snapshots
+        .filter((snapshot) => snapshot.type === 'registry:hook')
+        .map(createManifestItem),
+      ...snapshots
+        .filter((snapshot) => snapshot.type === 'registry:ui')
+        .map(createManifestItem),
+    ],
+  }
+  const lock = {
+    cliVersion: CLI_VERSION,
+    dependencyPins: Object.fromEntries(
+      Object.entries(DEPENDENCY_PINS).sort(([left], [right]) =>
+        left.localeCompare(right)
+      )
+    ),
+    itemCount: UI_ITEMS.length,
+    items: snapshots.map((snapshot) => ({
+      dependencies: snapshot.dependencies,
+      name: snapshot.name,
+      registryDependencies: snapshot.registryDependencies,
+      sourcePath: snapshot.sourcePath,
+      sourceSha256: snapshot.sourceSha256,
+      status: snapshot.status,
+      type: snapshot.type,
+      upstreamPath: snapshot.upstreamPath,
+      upstreamSha256: snapshot.upstreamSha256,
+    })),
+    sourceBaseUrl: SOURCE_BASE_URL,
+    style: STYLE,
+    upstreamCommit: UPSTREAM_COMMIT,
+  }
+
+  stageFile(stagedFiles, manifestPath, serialize(manifest))
+  stageFile(stagedFiles, lockPath, serialize(lock))
+  stageFile(stagedFiles, indexPath, createIndex(snapshots))
+  applyFiles(stagedFiles, options.check)
+  console.log(
+    `[shadcn-sync] ${options.check ? 'validated' : 'snapshotted'} ${
+      UI_ITEMS.length
+    } ${STYLE} items + ${SUPPORT_ITEMS.length} support item`
+  )
+}
+
+main().catch((error) => {
+  console.error(`[shadcn-sync] ${error.message}`)
+  process.exitCode = 1
+})

@@ -4,195 +4,13 @@
   "type": "registry:theme",
   "title": "Applique Theme",
   "description": "Applique semantic design tokens for shadcn components.",
-  "tailwind": {
-    "config": {
-      "theme": {
-        "spacing": {
-          "0": "0px",
-          "1": "4px",
-          "2": "8px",
-          "3": "12px",
-          "4": "16px",
-          "5": "20px",
-          "6": "24px",
-          "7": "28px",
-          "8": "32px",
-          "9": "36px",
-          "10": "40px",
-          "11": "44px",
-          "12": "48px",
-          "14": "56px",
-          "16": "64px",
-          "20": "80px",
-          "24": "96px",
-          "28": "112px",
-          "32": "128px",
-          "36": "144px",
-          "40": "160px",
-          "44": "176px",
-          "48": "192px",
-          "52": "208px",
-          "56": "224px",
-          "60": "240px",
-          "64": "256px",
-          "72": "288px",
-          "80": "320px",
-          "96": "384px",
-          "px": "1px",
-          "0.5": "2px",
-          "1.5": "6px",
-          "2.5": "10px",
-          "3.5": "14px"
-        },
-        "fontSize": {
-          "xs": [
-            "12px",
-            "16px"
-          ],
-          "sm": [
-            "14px",
-            "20px"
-          ],
-          "base": [
-            "16px",
-            "24px"
-          ],
-          "lg": [
-            "18px",
-            "28px"
-          ],
-          "xl": [
-            "20px",
-            "28px"
-          ],
-          "2xl": [
-            "24px",
-            "32px"
-          ],
-          "3xl": [
-            "30px",
-            "36px"
-          ],
-          "4xl": [
-            "36px",
-            "40px"
-          ],
-          "5xl": [
-            "48px",
-            "1"
-          ],
-          "6xl": [
-            "60px",
-            "1"
-          ],
-          "7xl": [
-            "72px",
-            "1"
-          ],
-          "8xl": [
-            "96px",
-            "1"
-          ],
-          "9xl": [
-            "128px",
-            "1"
-          ]
-        },
-        "extend": {
-          "colors": {
-            "border": "hsl(var(--border) / <alpha-value>)",
-            "input": "hsl(var(--input) / <alpha-value>)",
-            "ring": "hsl(var(--ring) / <alpha-value>)",
-            "background": "hsl(var(--background) / <alpha-value>)",
-            "foreground": "hsl(var(--foreground) / <alpha-value>)",
-            "primary": {
-              "DEFAULT": "hsl(var(--primary) / <alpha-value>)",
-              "foreground": "hsl(var(--primary-foreground) / <alpha-value>)"
-            },
-            "secondary": {
-              "DEFAULT": "hsl(var(--secondary) / <alpha-value>)",
-              "foreground": "hsl(var(--secondary-foreground) / <alpha-value>)"
-            },
-            "destructive": {
-              "DEFAULT": "hsl(var(--destructive) / <alpha-value>)",
-              "foreground": "hsl(var(--destructive-foreground) / <alpha-value>)"
-            },
-            "muted": {
-              "DEFAULT": "hsl(var(--muted) / <alpha-value>)",
-              "foreground": "hsl(var(--muted-foreground) / <alpha-value>)"
-            },
-            "accent": {
-              "DEFAULT": "hsl(var(--accent) / <alpha-value>)",
-              "foreground": "hsl(var(--accent-foreground) / <alpha-value>)"
-            },
-            "card": {
-              "DEFAULT": "hsl(var(--card) / <alpha-value>)",
-              "foreground": "hsl(var(--card-foreground) / <alpha-value>)"
-            },
-            "popover": {
-              "DEFAULT": "hsl(var(--popover) / <alpha-value>)",
-              "foreground": "hsl(var(--popover-foreground) / <alpha-value>)"
-            },
-            "outline-border": "hsl(var(--outline-border) / <alpha-value>)",
-            "outline-foreground": "hsl(var(--outline-foreground) / <alpha-value>)",
-            "sidebar": {
-              "DEFAULT": "hsl(var(--sidebar) / <alpha-value>)",
-              "foreground": "hsl(var(--sidebar-foreground) / <alpha-value>)",
-              "primary": "hsl(var(--sidebar-primary) / <alpha-value>)",
-              "primary-foreground": "hsl(var(--sidebar-primary-foreground) / <alpha-value>)",
-              "accent": "hsl(var(--sidebar-accent) / <alpha-value>)",
-              "accent-foreground": "hsl(var(--sidebar-accent-foreground) / <alpha-value>)",
-              "border": "hsl(var(--sidebar-border) / <alpha-value>)",
-              "ring": "hsl(var(--sidebar-ring) / <alpha-value>)"
-            },
-            "chart": {
-              "1": "hsl(var(--chart-1) / <alpha-value>)",
-              "2": "hsl(var(--chart-2) / <alpha-value>)",
-              "3": "hsl(var(--chart-3) / <alpha-value>)",
-              "4": "hsl(var(--chart-4) / <alpha-value>)",
-              "5": "hsl(var(--chart-5) / <alpha-value>)"
-            }
-          },
-          "borderRadius": {
-            "xxs": "var(--radius-xxs)",
-            "xs": "var(--radius-xs)",
-            "sm": "var(--radius-sm)",
-            "md": "var(--radius-md)",
-            "DEFAULT": "var(--radius)",
-            "lg": "var(--radius-lg)",
-            "xl": "var(--radius-xl)",
-            "2xl": "var(--radius-2xl)",
-            "3xl": "var(--radius-3xl)",
-            "4xl": "var(--radius-4xl)"
-          },
-          "boxShadow": {
-            "2xs": "var(--shadow-2xs)",
-            "xs": "var(--shadow-xs)",
-            "sm": "var(--shadow-sm)",
-            "md": "var(--shadow-md)",
-            "lg": "var(--shadow-lg)",
-            "xl": "var(--shadow-xl)",
-            "2xl": "var(--shadow-2xl)"
-          },
-          "fontFamily": {
-            "sans": "var(--font-sans)",
-            "serif": "var(--font-serif)",
-            "mono": "var(--font-mono)"
-          },
-          "fontWeight": {
-            "thin": "var(--font-weight-thin)",
-            "extralight": "var(--font-weight-extralight)",
-            "light": "var(--font-weight-light)",
-            "normal": "var(--font-weight-normal)",
-            "medium": "var(--font-weight-medium)",
-            "semibold": "var(--font-weight-semibold)",
-            "bold": "var(--font-weight-bold)",
-            "extrabold": "var(--font-weight-extrabold)",
-            "black": "var(--font-weight-black)"
-          }
-        }
-      }
-    }
+  "dependencies": [
+    "@fontsource-variable/hanken-grotesk@5.3.0"
+  ],
+  "css": {
+    "@import \"@fontsource-variable/hanken-grotesk\"": {},
+    "@custom-variant dark (&:where([data-applique-color-scheme=\"dark\"], [data-applique-color-scheme=\"dark\"] *))": {},
+    "@custom-variant applique-dark (&:where([data-applique-color-scheme=\"dark\"], [data-applique-color-scheme=\"dark\"] *))": {}
   },
   "categories": [
     "foundation",
@@ -200,45 +18,6 @@
   ],
   "cssVars": {
     "theme": {
-      "color-outline-border": "hsl(var(--outline-border))",
-      "color-outline-foreground": "hsl(var(--outline-foreground))",
-      "radius-xxs": "2px"
-    },
-    "light": {
-      "background": "0 0% 100%",
-      "foreground": "222 47% 11%",
-      "card": "0 0% 100%",
-      "card-foreground": "222 47% 11%",
-      "popover": "0 0% 100%",
-      "popover-foreground": "222 47% 11%",
-      "primary": "252 76% 51%",
-      "primary-foreground": "0 0% 100%",
-      "secondary": "247 100% 97%",
-      "secondary-foreground": "252 76% 51%",
-      "muted": "220 14% 96%",
-      "muted-foreground": "220 9% 46%",
-      "accent": "247 100% 97%",
-      "accent-foreground": "222 47% 11%",
-      "destructive": "8 69% 45%",
-      "destructive-foreground": "6 90% 97%",
-      "border": "220 13% 91%",
-      "input": "220 13% 91%",
-      "outline-border": "252 76% 51%",
-      "outline-foreground": "252 76% 51%",
-      "ring": "252 76% 51%",
-      "sidebar": "0 0% 98%",
-      "sidebar-foreground": "0 0% 4%",
-      "sidebar-primary": "0 0% 9%",
-      "sidebar-primary-foreground": "0 0% 98%",
-      "sidebar-accent": "0 0% 96%",
-      "sidebar-accent-foreground": "0 0% 9%",
-      "sidebar-border": "0 0% 90%",
-      "sidebar-ring": "0 0% 64%",
-      "chart-1": "21 90% 48%",
-      "chart-2": "175 84% 32%",
-      "chart-3": "196 64% 24%",
-      "chart-4": "43 96% 56%",
-      "chart-5": "38 92% 50%",
       "radius-xxs": "2px",
       "radius-xs": "4px",
       "radius-sm": "6px",
@@ -249,7 +28,119 @@
       "radius-2xl": "18px",
       "radius-3xl": "22px",
       "radius-4xl": "26px",
-      "font-sans": "'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "font-sans": "'Hanken Grotesk Variable', 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "font-serif": "Georgia, 'Times New Roman', serif",
+      "font-mono": "'Geist Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace",
+      "font-weight-thin": "100",
+      "font-weight-extralight": "200",
+      "font-weight-light": "300",
+      "font-weight-normal": "400",
+      "font-weight-medium": "500",
+      "font-weight-semibold": "600",
+      "font-weight-bold": "700",
+      "font-weight-extrabold": "800",
+      "font-weight-black": "900",
+      "spacing-1": "0.25rem",
+      "spacing-1-5": "0.375rem",
+      "spacing-2": "0.5rem",
+      "spacing-2-5": "0.625rem",
+      "spacing-3": "0.75rem",
+      "spacing-4": "1rem",
+      "spacing-5": "1.25rem",
+      "spacing-6": "1.5rem",
+      "spacing-8": "2rem",
+      "spacing-10": "2.5rem",
+      "spacing-12": "3rem",
+      "spacing-16": "4rem",
+      "spacing-32": "8rem",
+      "shadow-2xs": "0px 1px 0px 0px rgba(0, 0, 0, 0.05)",
+      "shadow-xs": "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+      "shadow-sm": "0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.1)",
+      "shadow-md": "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1)",
+      "shadow-lg": "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -4px rgba(0, 0, 0, 0.1)",
+      "shadow-xl": "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
+      "shadow-2xl": "0px 25px 50px -12px rgba(0, 0, 0, 0.25)",
+      "color-background": "var(--background)",
+      "color-foreground": "var(--foreground)",
+      "color-card": "var(--card)",
+      "color-card-foreground": "var(--card-foreground)",
+      "color-popover": "var(--popover)",
+      "color-popover-foreground": "var(--popover-foreground)",
+      "color-primary": "var(--primary)",
+      "color-primary-foreground": "var(--primary-foreground)",
+      "color-secondary": "var(--secondary)",
+      "color-secondary-foreground": "var(--secondary-foreground)",
+      "color-muted": "var(--muted)",
+      "color-muted-foreground": "var(--muted-foreground)",
+      "color-accent": "var(--accent)",
+      "color-accent-foreground": "var(--accent-foreground)",
+      "color-destructive": "var(--destructive)",
+      "color-destructive-foreground": "var(--destructive-foreground)",
+      "color-border": "var(--border)",
+      "color-input": "var(--input)",
+      "color-outline-border": "var(--outline-border)",
+      "color-outline-foreground": "var(--outline-foreground)",
+      "color-ring": "var(--ring)",
+      "color-sidebar": "var(--sidebar)",
+      "color-sidebar-foreground": "var(--sidebar-foreground)",
+      "color-sidebar-primary": "var(--sidebar-primary)",
+      "color-sidebar-primary-foreground": "var(--sidebar-primary-foreground)",
+      "color-sidebar-accent": "var(--sidebar-accent)",
+      "color-sidebar-accent-foreground": "var(--sidebar-accent-foreground)",
+      "color-sidebar-border": "var(--sidebar-border)",
+      "color-sidebar-ring": "var(--sidebar-ring)",
+      "color-chart-1": "var(--chart-1)",
+      "color-chart-2": "var(--chart-2)",
+      "color-chart-3": "var(--chart-3)",
+      "color-chart-4": "var(--chart-4)",
+      "color-chart-5": "var(--chart-5)"
+    },
+    "light": {
+      "background": "#ffffff",
+      "foreground": "#111827",
+      "card": "#ffffff",
+      "card-foreground": "#111827",
+      "popover": "#ffffff",
+      "popover-foreground": "#111827",
+      "primary": "#5232d0",
+      "primary-foreground": "#ffffff",
+      "secondary": "#f0eeff",
+      "secondary-foreground": "#5232d0",
+      "muted": "#f3f4f6",
+      "muted-foreground": "#6b7280",
+      "accent": "#f0eeff",
+      "accent-foreground": "#111827",
+      "destructive": "#bf3823",
+      "destructive-foreground": "#fef3f2",
+      "border": "#e5e7eb",
+      "input": "#e5e7eb",
+      "outline-border": "#5232d0",
+      "outline-foreground": "#5232d0",
+      "ring": "#5232d0",
+      "sidebar": "#fafafa",
+      "sidebar-foreground": "#0a0a0a",
+      "sidebar-primary": "#171717",
+      "sidebar-primary-foreground": "#fafafa",
+      "sidebar-accent": "#f5f5f5",
+      "sidebar-accent-foreground": "#171717",
+      "sidebar-border": "#e5e5e5",
+      "sidebar-ring": "#a3a3a3",
+      "chart-1": "#ea580c",
+      "chart-2": "#0d9488",
+      "chart-3": "#164e63",
+      "chart-4": "#fbbf24",
+      "chart-5": "#f59e0b",
+      "radius-xxs": "2px",
+      "radius-xs": "4px",
+      "radius-sm": "6px",
+      "radius": "8px",
+      "radius-md": "8px",
+      "radius-lg": "10px",
+      "radius-xl": "14px",
+      "radius-2xl": "18px",
+      "radius-3xl": "22px",
+      "radius-4xl": "26px",
+      "font-sans": "'Hanken Grotesk Variable', 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       "font-serif": "Georgia, 'Times New Roman', serif",
       "font-mono": "'Geist Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace",
       "font-weight-thin": "100",
