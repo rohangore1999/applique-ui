@@ -5,7 +5,7 @@ import {
 } from './generated/components.generated'
 
 export type RegistryStatus = 'ready' | 'unavailable'
-export type ComponentAvailability = 'registry' | 'deprecated'
+export type ComponentAvailability = 'registry' | 'deprecated' | 'incompatible'
 export type ApiExportKind = 'component' | 'hook' | 'type' | 'utility'
 export type MappingKind =
   | 'direct'

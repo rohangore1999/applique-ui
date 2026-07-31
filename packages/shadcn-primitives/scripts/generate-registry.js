@@ -147,13 +147,18 @@ function assert(condition, message) {
   }
 }
 
-function isFilelessDeprecatedItem(item) {
+function isExplicitFilelessItem(item) {
   return Boolean(
     item &&
       item.meta &&
-      item.meta.status === 'deprecated' &&
-      item.meta.upstream &&
-      item.meta.upstream.fileless === true
+      ((item.meta.status === 'deprecated' &&
+        item.meta.upstream &&
+        item.meta.upstream.fileless === true) ||
+        (item.meta.status === 'unsupported' &&
+          item.meta.compatibility &&
+          item.meta.compatibility.requiredReact === '>=19' &&
+          item.meta.upstream &&
+          item.meta.upstream.excluded === true))
   )
 }
 
@@ -261,8 +266,8 @@ function validateManifest(manifest) {
     )
     assert(Array.isArray(item.files), `${item.name} must declare a files array`)
     assert(
-      item.files.length > 0 || isFilelessDeprecatedItem(item),
-      `${item.name} must declare source files unless it is an explicitly fileless deprecated upstream item`
+      item.files.length > 0 || isExplicitFilelessItem(item),
+      `${item.name} must declare source files unless it is an explicitly fileless registry entry`
     )
 
     for (const file of item.files) {
@@ -680,7 +685,7 @@ function validateGeneratedItem(item) {
         )
       }
     }
-  } else if (!isFilelessDeprecatedItem(item)) {
+  } else if (!isExplicitFilelessItem(item)) {
     assert(
       Array.isArray(item.files) && item.files.length > 0,
       `${item.name} must contain generated files`

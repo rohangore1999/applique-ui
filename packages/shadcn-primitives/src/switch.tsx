@@ -3,8 +3,9 @@
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Switch({
+function SwitchImpl({
   className,
   size = "default",
   ...props
@@ -28,5 +29,7 @@ function Switch({
     </SwitchPrimitive.Root>
   )
 }
+
+const Switch = withReact18Ref(SwitchImpl)
 
 export { Switch }

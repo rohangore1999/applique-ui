@@ -4,16 +4,17 @@ import * as React from "react"
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Popover({ ...props }: PopoverPrimitive.Root.Props) {
+function PopoverImpl({ ...props }: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
-function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
+function PopoverTriggerImpl({ ...props }: PopoverPrimitive.Trigger.Props) {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
-function PopoverContent({
+function PopoverContentImpl({
   className,
   align = "center",
   alignOffset = 0,
@@ -47,7 +48,7 @@ function PopoverContent({
   )
 }
 
-function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
+function PopoverHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="popover-header"
@@ -57,7 +58,7 @@ function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function PopoverTitle({ className, ...props }: PopoverPrimitive.Title.Props) {
+function PopoverTitleImpl({ className, ...props }: PopoverPrimitive.Title.Props) {
   return (
     <PopoverPrimitive.Title
       data-slot="popover-title"
@@ -67,7 +68,7 @@ function PopoverTitle({ className, ...props }: PopoverPrimitive.Title.Props) {
   )
 }
 
-function PopoverDescription({
+function PopoverDescriptionImpl({
   className,
   ...props
 }: PopoverPrimitive.Description.Props) {
@@ -79,6 +80,13 @@ function PopoverDescription({
     />
   )
 }
+
+const Popover = withReact18Ref(PopoverImpl)
+const PopoverTrigger = withReact18Ref(PopoverTriggerImpl)
+const PopoverContent = withReact18Ref(PopoverContentImpl)
+const PopoverHeader = withReact18Ref(PopoverHeaderImpl)
+const PopoverTitle = withReact18Ref(PopoverTitleImpl)
+const PopoverDescription = withReact18Ref(PopoverDescriptionImpl)
 
 export {
   Popover,

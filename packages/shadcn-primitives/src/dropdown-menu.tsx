@@ -5,19 +5,20 @@ import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 
 import { cn } from "./utils"
-function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
+import { withReact18Ref } from "./applique-react18-compat"
+function DropdownMenuImpl({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
 }
 
-function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
+function DropdownMenuPortalImpl({ ...props }: MenuPrimitive.Portal.Props) {
   return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
 }
 
-function DropdownMenuTrigger({ ...props }: MenuPrimitive.Trigger.Props) {
+function DropdownMenuTriggerImpl({ ...props }: MenuPrimitive.Trigger.Props) {
   return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />
 }
 
-function DropdownMenuContent({
+function DropdownMenuContentImpl({
   align = "start",
   alignOffset = 0,
   side = "bottom",
@@ -51,11 +52,11 @@ function DropdownMenuContent({
   )
 }
 
-function DropdownMenuGroup({ ...props }: MenuPrimitive.Group.Props) {
+function DropdownMenuGroupImpl({ ...props }: MenuPrimitive.Group.Props) {
   return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />
 }
 
-function DropdownMenuLabel({
+function DropdownMenuLabelImpl({
   className,
   inset,
   ...props
@@ -75,7 +76,7 @@ function DropdownMenuLabel({
   )
 }
 
-function DropdownMenuItem({
+function DropdownMenuItemImpl({
   className,
   inset,
   variant = "default",
@@ -98,11 +99,11 @@ function DropdownMenuItem({
   )
 }
 
-function DropdownMenuSub({ ...props }: MenuPrimitive.SubmenuRoot.Props) {
+function DropdownMenuSubImpl({ ...props }: MenuPrimitive.SubmenuRoot.Props) {
   return <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} />
 }
 
-function DropdownMenuSubTrigger({
+function DropdownMenuSubTriggerImpl({
   className,
   inset,
   children,
@@ -128,7 +129,7 @@ function DropdownMenuSubTrigger({
   )
 }
 
-function DropdownMenuSubContent({
+function DropdownMenuSubContentImpl({
   align = "start",
   alignOffset = -3,
   side = "right",
@@ -152,7 +153,7 @@ function DropdownMenuSubContent({
   )
 }
 
-function DropdownMenuCheckboxItem({
+function DropdownMenuCheckboxItemImpl({
   className,
   children,
   checked,
@@ -186,7 +187,7 @@ function DropdownMenuCheckboxItem({
   )
 }
 
-function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props) {
+function DropdownMenuRadioGroupImpl({ ...props }: MenuPrimitive.RadioGroup.Props) {
   return (
     <MenuPrimitive.RadioGroup
       data-slot="dropdown-menu-radio-group"
@@ -195,7 +196,7 @@ function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props) {
   )
 }
 
-function DropdownMenuRadioItem({
+function DropdownMenuRadioItemImpl({
   className,
   children,
   inset,
@@ -227,7 +228,7 @@ function DropdownMenuRadioItem({
   )
 }
 
-function DropdownMenuSeparator({
+function DropdownMenuSeparatorImpl({
   className,
   ...props
 }: MenuPrimitive.Separator.Props) {
@@ -240,7 +241,7 @@ function DropdownMenuSeparator({
   )
 }
 
-function DropdownMenuShortcut({
+function DropdownMenuShortcutImpl({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -255,6 +256,22 @@ function DropdownMenuShortcut({
     />
   )
 }
+
+const DropdownMenu = withReact18Ref(DropdownMenuImpl)
+const DropdownMenuPortal = withReact18Ref(DropdownMenuPortalImpl)
+const DropdownMenuTrigger = withReact18Ref(DropdownMenuTriggerImpl)
+const DropdownMenuContent = withReact18Ref(DropdownMenuContentImpl)
+const DropdownMenuGroup = withReact18Ref(DropdownMenuGroupImpl)
+const DropdownMenuLabel = withReact18Ref(DropdownMenuLabelImpl)
+const DropdownMenuItem = withReact18Ref(DropdownMenuItemImpl)
+const DropdownMenuSub = withReact18Ref(DropdownMenuSubImpl)
+const DropdownMenuSubTrigger = withReact18Ref(DropdownMenuSubTriggerImpl)
+const DropdownMenuSubContent = withReact18Ref(DropdownMenuSubContentImpl)
+const DropdownMenuCheckboxItem = withReact18Ref(DropdownMenuCheckboxItemImpl)
+const DropdownMenuRadioGroup = withReact18Ref(DropdownMenuRadioGroupImpl)
+const DropdownMenuRadioItem = withReact18Ref(DropdownMenuRadioItemImpl)
+const DropdownMenuSeparator = withReact18Ref(DropdownMenuSeparatorImpl)
+const DropdownMenuShortcut = withReact18Ref(DropdownMenuShortcutImpl)
 
 export {
   DropdownMenu,

@@ -1,6 +1,7 @@
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Kbd({ className, ...props }: React.ComponentProps<"kbd">) {
+function KbdImpl({ className, ...props }: React.ComponentProps<"kbd">) {
   return (
     <kbd
       data-slot="kbd"
@@ -13,7 +14,7 @@ function Kbd({ className, ...props }: React.ComponentProps<"kbd">) {
   )
 }
 
-function KbdGroup({ className, ...props }: React.ComponentProps<"div">) {
+function KbdGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <kbd
       data-slot="kbd-group"
@@ -22,5 +23,8 @@ function KbdGroup({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+
+const Kbd = withReact18Ref(KbdImpl)
+const KbdGroup = withReact18Ref(KbdGroupImpl)
 
 export { Kbd, KbdGroup }

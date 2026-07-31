@@ -785,12 +785,17 @@ export const generatedCatalogueComponents = [
               "name": "locale",
               "optional": true,
               "type": "Partial<Locale>"
+            },
+            {
+              "name": "ref",
+              "optional": true,
+              "type": "React.Ref<HTMLButtonElement>"
             }
           ],
           "propSources": [
             "React.ComponentProps<typeof DayButton>"
           ],
-          "signature": "function CalendarDayButton(props: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> })"
+          "signature": "function CalendarDayButton(props: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> ref?: React.Ref<HTMLButtonElement> })"
         }
       ]
     },
@@ -3132,94 +3137,17 @@ export const generatedCatalogueComponents = [
   },
   {
     "api": {
-      "exports": [
-        {
-          "kind": "component",
-          "name": "MessageScroller",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<typeof MessageScrollerPrimitive.Root>"
-          ],
-          "signature": "function MessageScroller(props: React.ComponentProps<typeof MessageScrollerPrimitive.Root>)"
-        },
-        {
-          "kind": "component",
-          "name": "MessageScrollerButton",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<typeof MessageScrollerPrimitive.Button>",
-            "Pick<React.ComponentProps<typeof Button>, \"variant\" | \"size\">"
-          ],
-          "signature": "function MessageScrollerButton(props: React.ComponentProps<typeof MessageScrollerPrimitive.Button> & Pick<React.ComponentProps<typeof Button>, \"variant\" | \"size\">)"
-        },
-        {
-          "kind": "component",
-          "name": "MessageScrollerContent",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<typeof MessageScrollerPrimitive.Content>"
-          ],
-          "signature": "function MessageScrollerContent(props: React.ComponentProps<typeof MessageScrollerPrimitive.Content>)"
-        },
-        {
-          "kind": "component",
-          "name": "MessageScrollerItem",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<typeof MessageScrollerPrimitive.Item>"
-          ],
-          "signature": "function MessageScrollerItem(props: React.ComponentProps<typeof MessageScrollerPrimitive.Item>)"
-        },
-        {
-          "kind": "component",
-          "name": "MessageScrollerProvider",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<typeof MessageScrollerPrimitive.Provider>"
-          ],
-          "signature": "function MessageScrollerProvider(props: React.ComponentProps<typeof MessageScrollerPrimitive.Provider>)"
-        },
-        {
-          "kind": "component",
-          "name": "MessageScrollerViewport",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<typeof MessageScrollerPrimitive.Viewport>"
-          ],
-          "signature": "function MessageScrollerViewport(props: React.ComponentProps<typeof MessageScrollerPrimitive.Viewport>)"
-        },
-        {
-          "kind": "hook",
-          "name": "useMessageScroller",
-          "ownedProps": [],
-          "propSources": [],
-          "signature": "export useMessageScroller"
-        },
-        {
-          "kind": "hook",
-          "name": "useMessageScrollerScrollable",
-          "ownedProps": [],
-          "propSources": [],
-          "signature": "export useMessageScrollerScrollable"
-        },
-        {
-          "kind": "hook",
-          "name": "useMessageScrollerVisibility",
-          "ownedProps": [],
-          "propSources": [],
-          "signature": "export useMessageScrollerVisibility"
-        }
-      ]
+      "exports": []
     },
-    "availability": "registry",
+    "availability": "incompatible",
     "category": "Data display",
-    "description": "Message Scroller from the pinned shadcn Base catalogue, styled through Applique semantic tokens.",
+    "description": "Unavailable in the React 18 baseline because the upstream primitive requires React 19.",
     "name": "Message Scroller",
-    "previewProvenance": "Local minimal example",
-    "registryStatus": "ready",
+    "previewProvenance": "Unavailable",
+    "registryStatus": "unavailable",
     "slug": "message-scroller",
-    "sourceAvailable": true,
-    "sourcePath": "src/message-scroller.tsx",
+    "sourceAvailable": false,
+    "sourcePath": null,
     "upstream": {
       "base": "base",
       "commit": "705ce5961080264830471ddd885c01b907706068",

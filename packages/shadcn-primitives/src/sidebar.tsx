@@ -8,6 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { useIsMobile } from "./use-mobile"
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
 import { Input } from "./input"
 import { Separator } from "./separator"
@@ -52,7 +53,7 @@ function useSidebar() {
   return context
 }
 
-function SidebarProvider({
+function SidebarProviderImpl({
   defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
@@ -148,7 +149,7 @@ function SidebarProvider({
   )
 }
 
-function Sidebar({
+function SidebarImpl({
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
@@ -250,7 +251,7 @@ function Sidebar({
   )
 }
 
-function SidebarTrigger({
+function SidebarTriggerImpl({
   className,
   onClick,
   ...props
@@ -278,7 +279,7 @@ function SidebarTrigger({
   )
 }
 
-function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
+function SidebarRailImpl({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -303,7 +304,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   )
 }
 
-function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
+function SidebarInsetImpl({ className, ...props }: React.ComponentProps<"main">) {
   return (
     <main
       data-slot="sidebar-inset"
@@ -316,7 +317,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
   )
 }
 
-function SidebarInput({
+function SidebarInputImpl({
   className,
   ...props
 }: React.ComponentProps<typeof Input>) {
@@ -330,7 +331,7 @@ function SidebarInput({
   )
 }
 
-function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
+function SidebarHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-header"
@@ -341,7 +342,7 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
+function SidebarFooterImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-footer"
@@ -352,7 +353,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function SidebarSeparator({
+function SidebarSeparatorImpl({
   className,
   ...props
 }: React.ComponentProps<typeof Separator>) {
@@ -366,7 +367,7 @@ function SidebarSeparator({
   )
 }
 
-function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
+function SidebarContentImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-content"
@@ -380,7 +381,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
+function SidebarGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-group"
@@ -391,7 +392,7 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function SidebarGroupLabel({
+function SidebarGroupLabelImpl({
   className,
   render,
   ...props
@@ -415,7 +416,7 @@ function SidebarGroupLabel({
   })
 }
 
-function SidebarGroupAction({
+function SidebarGroupActionImpl({
   className,
   render,
   ...props
@@ -439,7 +440,7 @@ function SidebarGroupAction({
   })
 }
 
-function SidebarGroupContent({
+function SidebarGroupContentImpl({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -453,7 +454,7 @@ function SidebarGroupContent({
   )
 }
 
-function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
+function SidebarMenuImpl({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="sidebar-menu"
@@ -464,7 +465,7 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
   )
 }
 
-function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
+function SidebarMenuItemImpl({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
       data-slot="sidebar-menu-item"
@@ -497,7 +498,7 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
-function SidebarMenuButton({
+function SidebarMenuButtonImpl({
   render,
   isActive = false,
   variant = "default",
@@ -551,7 +552,7 @@ function SidebarMenuButton({
   )
 }
 
-function SidebarMenuAction({
+function SidebarMenuActionImpl({
   className,
   render,
   showOnHover = false,
@@ -581,7 +582,7 @@ function SidebarMenuAction({
   })
 }
 
-function SidebarMenuBadge({
+function SidebarMenuBadgeImpl({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -598,7 +599,7 @@ function SidebarMenuBadge({
   )
 }
 
-function SidebarMenuSkeleton({
+function SidebarMenuSkeletonImpl({
   className,
   showIcon = false,
   ...props
@@ -636,7 +637,7 @@ function SidebarMenuSkeleton({
   )
 }
 
-function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
+function SidebarMenuSubImpl({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="sidebar-menu-sub"
@@ -650,7 +651,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   )
 }
 
-function SidebarMenuSubItem({
+function SidebarMenuSubItemImpl({
   className,
   ...props
 }: React.ComponentProps<"li">) {
@@ -664,7 +665,7 @@ function SidebarMenuSubItem({
   )
 }
 
-function SidebarMenuSubButton({
+function SidebarMenuSubButtonImpl({
   render,
   size = "md",
   isActive = false,
@@ -695,6 +696,30 @@ function SidebarMenuSubButton({
     },
   })
 }
+
+const SidebarProvider = withReact18Ref(SidebarProviderImpl)
+const Sidebar = withReact18Ref(SidebarImpl)
+const SidebarTrigger = withReact18Ref(SidebarTriggerImpl)
+const SidebarRail = withReact18Ref(SidebarRailImpl)
+const SidebarInset = withReact18Ref(SidebarInsetImpl)
+const SidebarInput = withReact18Ref(SidebarInputImpl)
+const SidebarHeader = withReact18Ref(SidebarHeaderImpl)
+const SidebarFooter = withReact18Ref(SidebarFooterImpl)
+const SidebarSeparator = withReact18Ref(SidebarSeparatorImpl)
+const SidebarContent = withReact18Ref(SidebarContentImpl)
+const SidebarGroup = withReact18Ref(SidebarGroupImpl)
+const SidebarGroupLabel = withReact18Ref(SidebarGroupLabelImpl)
+const SidebarGroupAction = withReact18Ref(SidebarGroupActionImpl)
+const SidebarGroupContent = withReact18Ref(SidebarGroupContentImpl)
+const SidebarMenu = withReact18Ref(SidebarMenuImpl)
+const SidebarMenuItem = withReact18Ref(SidebarMenuItemImpl)
+const SidebarMenuButton = withReact18Ref(SidebarMenuButtonImpl)
+const SidebarMenuAction = withReact18Ref(SidebarMenuActionImpl)
+const SidebarMenuBadge = withReact18Ref(SidebarMenuBadgeImpl)
+const SidebarMenuSkeleton = withReact18Ref(SidebarMenuSkeletonImpl)
+const SidebarMenuSub = withReact18Ref(SidebarMenuSubImpl)
+const SidebarMenuSubItem = withReact18Ref(SidebarMenuSubItemImpl)
+const SidebarMenuSubButton = withReact18Ref(SidebarMenuSubButtonImpl)
 
 export {
   Sidebar,

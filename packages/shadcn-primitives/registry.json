@@ -127,6 +127,27 @@
       }
     },
     {
+      "name": "applique-react18-compat",
+      "type": "registry:lib",
+      "title": "Applique React 18 Compatibility",
+      "description": "Applique-owned ref compatibility helpers for React 18 registry components.",
+      "categories": [
+        "foundation",
+        "compatibility"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "src/applique-react18-compat.ts",
+          "type": "registry:lib",
+          "target": "@lib/applique-react18-compat.ts"
+        }
+      ],
+      "meta": {
+        "status": "foundation"
+      }
+    },
+    {
       "name": "utils",
       "type": "registry:lib",
       "title": "Applique Utilities",
@@ -193,7 +214,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -206,13 +228,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "9051b6bb2f4623fc9e63b621397f2452e6c3894e7d2ea10018bfc667f8a77eb3",
+          "sourceSha256": "863532b807b5dec6fa611904101604888953049337d53fa8e23042887d3a849b",
           "style": "base-nova",
           "upstreamSha256": "80e5aabba1845a152f533c003d61777e5516c845dd4c666d689c15e21dee9cf7"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -231,7 +254,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -244,13 +268,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "789c2728f477e4b7635c1afa9e1d9286e85ce2cf3a545d0b5004d38023dd4f93",
+          "sourceSha256": "f2a20ab63c4aec6ac1b27b0699c25002f5116fad778e5a04d59ab27da3d937ea",
           "style": "base-nova",
           "upstreamSha256": "49e006f420df16e77a99b149e38b48331dbe67a118d4492b753639eeac098ef7"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -270,6 +295,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -283,13 +309,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "aff7c3195349d876dc1f976482469be9d1cf679414fd3fb76ba0e75c27655c99",
+          "sourceSha256": "01321ec2562f6081d0562c295378592db241a89d1b880a7303a14a9c9a2ecf79",
           "style": "base-nova",
           "upstreamSha256": "d77caec80971d3dfd9cf8374a94efe39d41a1d76858b16076b15792d1885c260"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -307,7 +334,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -320,13 +348,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "a57801b367527b57ccfae72c1490d51f0f05ed7ef8753a085eefd541176079f6",
+          "sourceSha256": "f317dec0c31ef5df2493f158438db903663803bf6700e9166f1a51cad6f1c070",
           "style": "base-nova",
           "upstreamSha256": "6fea2cf3c5693da36e912d7f4da80e1f12c6992d4f6b0fb3b9ca1675b3d17545"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -347,6 +376,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -360,13 +390,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "a67e7c11769de77de11aa1ee0078a6c320f495f2fb0f7c48c55ad08e35225ca8",
+          "sourceSha256": "3822403a9ff1a3179d573979adcf4b5eb1d6d8a9209c4c159151f152bd747d90",
           "style": "base-nova",
           "upstreamSha256": "cd5709368a86b923957c0c0c609e9cfd89f57701e65fd4287c6ef2bce9bd6116"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -386,7 +417,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -399,13 +431,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "fe527effa05eae2c10851ad0127db9ce75fd10d473b7de8d1eec720cadfbb1d3",
+          "sourceSha256": "2645c89a27aa55e72d6d6b2ed5c7650ff4528c64dc3000537066cee71e5ba7fa",
           "style": "base-nova",
           "upstreamSha256": "11a8c54f7402e9a2f61512d2a59daccf43dbf4cd7661e76e204903589cd10aee"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -425,7 +458,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -438,13 +472,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "7551cf4d02ba95fb5db9ba0e2c242ba0903479aad6a67f4584cd82fac70b290d",
+          "sourceSha256": "cdcc140e4093e10ffbd23ac82d15d3f5edae457bf237aadaef4b63ee4dd544c4",
           "style": "base-nova",
           "upstreamSha256": "30d746fd399d053e7443f9c69ebe48790f881f1a445bc83c8608db5f3f15b5f6"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -464,7 +499,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -477,13 +513,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "ef1970e98e26891328231e5a6ab640ae7368334d08a4a3371df852ceb9b220e4",
+          "sourceSha256": "bd4cb50b2ec829ca733e10f155a3f6e11db9af031ca4f3c55eb969c9d915a6b4",
           "style": "base-nova",
           "upstreamSha256": "0ae8e282a738b5810507be48557b3109c24a7cbe89dc1defffd287ed09cb8879"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -503,7 +540,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -516,13 +554,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "d407a7bcca5e557c14c4b9c9fe88878f960619aa9ddd2fd64e482f42c3dd89c9",
+          "sourceSha256": "cb2dae1a2a70d9e395afc7a7ff6be3e1c3417a5ee9c164f507aec1c7f9a15779",
           "style": "base-nova",
           "upstreamSha256": "c41a37925a0dc31171ae18bdb487497b55f35a773c358018da85ae71adbb6b1b"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -542,7 +581,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -555,13 +595,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "6c6c98e9ff6c121841adb05d284ffd112b74f333bde20be3a877325df521eb30",
+          "sourceSha256": "f08fc96e66cc3a504ee0f5490702991c5142a2711e1819e7ced5ec716b9d4e9d",
           "style": "base-nova",
           "upstreamSha256": "70010dfba20416cd3f644833bc57f0589f1a7b8fc5ddff29af1138a9b5a1cd37"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -582,6 +623,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "separator"
       ],
       "files": [
@@ -595,13 +637,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "4b4a2d52d93559f9d0e77f8c2902ba1a134267009121ad182f4d05b7324009f0",
+          "sourceSha256": "b3c843807568fd106385cf7dfdb41934c8b18f5f3963300b302ceb50b8c6c54e",
           "style": "base-nova",
           "upstreamSha256": "bdf1184f2493cd8080bf9f0a889839f2790cb22c3febde576d3bf1fff79163cd"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./separator": "@/components/ui/separator"
           }
         }
@@ -624,6 +667,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -637,13 +681,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "cdc98745bf1dff71c116bfe9bb9add68281aafdf0024e62a32a6f425b6d3abb3",
+          "sourceSha256": "7db7252f20df02f3513daaf7f1e9a874714ac5922a8e36c8f6e287c21e51541d",
           "style": "base-nova",
           "upstreamSha256": "7a15cdad39c24993ef6e810b3f5b20d588ae5b13c35ce8798b9aba11149c4a99"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -661,7 +706,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -674,13 +720,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "a1bcd55f06782a64be7a0668ac213646e9e9b1c6bb75e24bdfb8192f1a107a8d",
+          "sourceSha256": "e0e42a54e01bb25c57568fc5ed5ea91073426154a3bbb7c29d53d4f3509c1240",
           "style": "base-nova",
           "upstreamSha256": "e55e50f35875e81db48385aedf171b3d60c9abce9533f6a01b740caf9cbfb622"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -701,6 +748,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -714,13 +762,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "122624f7d906202f73ec24c0a1b5b80bf39d26a7558ca9c29bdfafc99491d904",
+          "sourceSha256": "d52be689356ac84113a340a7779292f5b0aab3bbb21141be490233d85aabdd0a",
           "style": "base-nova",
           "upstreamSha256": "10132b462543f0894734b654bfbc89b9d15cde402aeaa5c3e0ae5f80c522bb25"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -736,11 +785,13 @@
         "base-ui"
       ],
       "dependencies": [
+        "react-is@18.3.1",
         "recharts@3.8.0"
       ],
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "card"
       ],
       "files": [
@@ -754,13 +805,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "0fa5ae7ac6bc0063f28e02aff99eccbfb8080fc710751f2376306d60a0346ca1",
+          "sourceSha256": "827717a73f0c31f449c9c9242ade98c0f8d6887e2e2ac4c94c5bb3aea2029c85",
           "style": "base-nova",
           "upstreamSha256": "ec7add4cecb80338cf338e1067785523fe560ff952af5af4adc30f36e99646ae"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -780,7 +832,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -793,13 +846,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "1e711f9dbce6fc5296b688f752ba40444fb8645fea5a7a2b50bb892a14115c0a",
+          "sourceSha256": "86644e4e66b36e4752ddfaeb7612ed69323233b3509ecfbf87d0303df7863a0a",
           "style": "base-nova",
           "upstreamSha256": "0ca179e7cc4c969b27565679a90fa15567afcd91d4e136b25ab4380f22e2d4a3"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -817,7 +871,8 @@
         "@base-ui/react@1.6.0"
       ],
       "registryDependencies": [
-        "applique-theme"
+        "applique-theme",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -830,9 +885,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "ead4349ff7b01d696ef89294a81d18ee1d3f732321398896462c834ab9b9e065",
+          "sourceSha256": "132bf0c2c32be7eec70525696edb0a0d30226b69f743833f4f3a49506229ad90",
           "style": "base-nova",
           "upstreamSha256": "c3b7c2a72b7c7a0734f04098fd686b8c8ff8aae208edc7263752d624492f7def"
+        },
+        "build": {
+          "importMap": {
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
+          }
         }
       }
     },
@@ -852,6 +912,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button",
         "input-group"
       ],
@@ -866,13 +927,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "77106246982475aa59ee2d6c682d226d45b0d64a040fec8ed56dbb7f58044c96",
+          "sourceSha256": "d993b2f4e5be8db096cb6cb4a9010101beaa045d1391a3a7089f1bb849fdb9f4",
           "style": "base-nova",
           "upstreamSha256": "6b3372fd0aa75a62f7f785afadf13bdaa8480f16528cdbe2de8287a93fcb9c41"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button",
             "./input-group": "@/components/ui/input-group"
           }
@@ -895,6 +957,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "dialog",
         "input-group"
       ],
@@ -909,13 +972,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "0980221cc636c99f0f85ec78705ecc5bd52b820543e5ddbfd1efe658703832f0",
+          "sourceSha256": "89fbfda156cefaba9786a056a5eb8283b8e8ba609310f2477dbf881b0e701c0a",
           "style": "base-nova",
           "upstreamSha256": "52bc7b7a39b0fba03df58e3c9e5e964855a5cc15ebc4ac7edc287fad10e22075"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./dialog": "@/components/ui/dialog",
             "./input-group": "@/components/ui/input-group"
           }
@@ -937,7 +1001,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -950,13 +1015,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "1629cfe08ab0cc15eeeb794fa4e40559468ea823f45e7d71467fcd81747ebfcf",
+          "sourceSha256": "198fb1c72691eeb606cbbb6fb3b76ec3c9be35b6303f6c486360151e8f3b1b59",
           "style": "base-nova",
           "upstreamSha256": "291d9549be688c9be0663147573a1dabded95eebb399dac848b5dc9e102bffbf"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -977,6 +1043,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -990,13 +1057,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "21cbb38b7f40ed2f19b7db1eb289891b99dd4bed3c6b696da309bd28c94c8da4",
+          "sourceSha256": "6705b9634c484b82cc36f0eaf8786f08cb9291c0254882001568edace5ec6ed3",
           "style": "base-nova",
           "upstreamSha256": "2f0f2055dc045d5c64fa6e34de0fe504d1a694de8de147750a86ffe77af3664f"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -1048,7 +1116,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1061,13 +1130,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "e3c4c6057365cff89f86d9e7edf7135a153e771edc01d31d3a7af923ce125728",
+          "sourceSha256": "22cfe2cf34c67bb766fc8dca31d2e47e29acdf511b2a2702ad7ba70fee1cc4cf",
           "style": "base-nova",
           "upstreamSha256": "22f1eac0b45a338878cdf533de07f35bbe6797611d584ee037e5cf94ab56c1a5"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1087,7 +1157,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1100,13 +1171,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "4bc18fc029a87c2606467e64182fbdbd98a1f42a3055c3e8a20d8850008ef79b",
+          "sourceSha256": "53c8a051f853702a64dd8dc547bf7af46e673f4779078e0430dea9ddb2ae17e6",
           "style": "base-nova",
           "upstreamSha256": "6e391a7878d89c2baa782b7b634936d7ea00eb934d44d273d8c74ef95d576a08"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1125,7 +1197,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1138,13 +1211,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "6e4023718933795f74e15b5aa913fbbeb1a784fae81fe4ff6720a1688b9a1257",
+          "sourceSha256": "c555536404260e8df8dcb5ed0ec2112cd277d3f811f8a126e7edb8eae3ff74d2",
           "style": "base-nova",
           "upstreamSha256": "947a6b5ae1bf60f95348d6bed4d6862e64f01eb11fefbcbdd9edfe48332eeb67"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1164,6 +1238,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "label",
         "separator"
       ],
@@ -1178,13 +1253,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "9ba6747048a4ad08158f519a719e9ba949bad351534c18054231afb59e5a4250",
+          "sourceSha256": "3ffbf11361ee33a6d4de4561d00877c39340956d94a0cfa39b70928715f19b6c",
           "style": "base-nova",
           "upstreamSha256": "ae2b48de07758cbca1a4370914166bcaf684af65968b1f0732dc631d6562a1ba"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./label": "@/components/ui/label",
             "./separator": "@/components/ui/separator"
           }
@@ -1226,7 +1302,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1239,13 +1316,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "caff01c5cc0871e1ea939133d670ad03aa10c98d2d3317cdb7c607a08dff974c",
+          "sourceSha256": "34e0e851b1a3fd044b417b3043c02a1c5f95a5a3cae96dd65957537d13143d2c",
           "style": "base-nova",
           "upstreamSha256": "b4094099883e32aacd6de37b2a6c4f7d815ea81cd9e58b4e70aecfe546b39b67"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1264,7 +1342,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1277,13 +1356,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "2e27b95123c5f23b4a06be2d989104a188d042c1d1dd95d29dd67da255bfc767",
+          "sourceSha256": "8fbb788587cecb0277e3d59b6990b650d8cdb71f585c126a042d0512a7b0be5b",
           "style": "base-nova",
           "upstreamSha256": "d3175ee13d7c40a8486ea80798449f314cef64e0b0e978c8267248af18983615"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1303,6 +1383,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button",
         "input",
         "textarea"
@@ -1318,13 +1399,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "3d35c4ea17f56e9c1f405d56f94f83f25bac13cc33b594b24e46d54fa21fd759",
+          "sourceSha256": "1c86116b8f003ca4431e80ddcd534e96e81060d13d7bf65d3f4a178651dd3b26",
           "style": "base-nova",
           "upstreamSha256": "b1ba4ffa1fdb634dccf37b3cbbed678ba2cdc2f30fcc3fbb2918e8ba025a6782"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button",
             "./input": "@/components/ui/input",
             "./textarea": "@/components/ui/textarea"
@@ -1347,7 +1429,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1360,13 +1443,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "f401888f6bccd52cc0d9659de4aa8652711c00e139322d1ab4017b07ce72a2c6",
+          "sourceSha256": "b3c3a843c59fc31605d007e0bb7fc4e54154e50901bf47f55550590ca5cdc7c9",
           "style": "base-nova",
           "upstreamSha256": "16bd9a9f36da29e7e8278a5f4e8a500e6286d0ee808e3bd35a75e2ed8a515dfe"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1387,6 +1471,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "separator"
       ],
       "files": [
@@ -1400,13 +1485,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "672c31850764f4a224b9f99cdc7c92d14ac5b047d5ecf390a24d0407c4dc10cd",
+          "sourceSha256": "0bf2baf53eafe4e75cab8a1d96e39d1c04fda80dc0305cd355191f159f4586ec",
           "style": "base-nova",
           "upstreamSha256": "4a818abe17f05cc7552157941a04be14e072ff95eb03fd59067f883244c597d0"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./separator": "@/components/ui/separator"
           }
         }
@@ -1424,7 +1510,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1437,13 +1524,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "553e8fcbe6224f78b24742348f757e83d579e3360dabe35122dc2cbea8906cb1",
+          "sourceSha256": "239dbba6d2c6275b28f91351cfbe9faf64a3659d05e8bd3fe98c4ae5d047f792",
           "style": "base-nova",
           "upstreamSha256": "cc1db53b36b03ad2d2dedd3368b506953f63c210d3e72f7725117dd7481f734e"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1460,7 +1548,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1473,13 +1562,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "055f0a067e7b228820992cc1ebc4136b135749bbb790dfc92dc6f33b40d47c81",
+          "sourceSha256": "1e8412afbccfbb1fdfe3a70fb9a829a6b78894648ee23d12315be6b114bb9433",
           "style": "base-nova",
           "upstreamSha256": "e2f2e12654873b352d423de9f8af6c2c1ad98d028ecf2bcd15db6ec36665e939"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1499,7 +1589,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1512,13 +1603,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "4de63dbcce0e7bbddfb06ce515c902b65b5de0474520f255c1e42ee439b519bb",
+          "sourceSha256": "c7534600a798708eb9dae8437c7e79c3629385df04e35c1afffb5298f852cb2f",
           "style": "base-nova",
           "upstreamSha256": "82fea6c21698cd06279e4f986cae3402e99fbfac454ba4a6c886453363d42e41"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1539,6 +1631,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "dropdown-menu"
       ],
       "files": [
@@ -1552,13 +1645,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "1355d58c9da60af8df68354a92f179430c0b65981416766db0f0a0dec679e6ce",
+          "sourceSha256": "3d129184a60c28fc052f7abfd39d3c9479176e2c4eccb959e95466e5fa9d2ece",
           "style": "base-nova",
           "upstreamSha256": "81660bce97f442f81abaad160757c59f26e8a7c54b9974bbc146981238b0efbb"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./dropdown-menu": "@/components/ui/dropdown-menu"
           }
         }
@@ -1576,7 +1670,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1589,13 +1684,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "ddc51f28f93932197e1481b3f1a0cde610a7905f2fa7030c2d25abe99683ad01",
+          "sourceSha256": "9cf847a089a7908cf64d9fc4ed133e02fbd771b5a50482623eabb43de849630e",
           "style": "base-nova",
           "upstreamSha256": "dc0988b904c4b670ceb955ff3ade97f14bc07c56dd9906a2b69d7d5aab63c27b"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1604,40 +1700,26 @@
       "name": "message-scroller",
       "type": "registry:ui",
       "title": "Message Scroller",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "description": "Unavailable in the React 18 registry baseline because its upstream primitive requires React 19.",
       "categories": [
-        "primitive",
-        "base-ui"
+        "compatibility",
+        "react-19"
       ],
-      "dependencies": [
-        "@shadcn/react@0.2.1",
-        "lucide-react@1.28.0"
-      ],
-      "registryDependencies": [
-        "applique-theme",
-        "utils",
-        "button"
-      ],
-      "files": [
-        {
-          "path": "src/message-scroller.tsx",
-          "type": "registry:ui",
-          "target": "@ui/message-scroller.tsx"
-        }
-      ],
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [],
       "meta": {
-        "status": "experimental",
+        "compatibility": {
+          "requiredReact": ">=19",
+          "reason": "The upstream @shadcn/react MessageScroller primitive requires React 19 and relies on ref-as-prop behavior that React 18 does not provide."
+        },
+        "status": "unsupported",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "86c53fe8bbe7c2de60dc0f898273fdef4ef79fdbf0c2439028a8d441acb95476",
+          "sourceSha256": null,
           "style": "base-nova",
-          "upstreamSha256": "c46a75d56dce7b6dc9f8a1f122dff235222bf7f8f8286484328393adeeab847b"
-        },
-        "build": {
-          "importMap": {
-            "./utils": "@/lib/utils",
-            "./button": "@/components/ui/button"
-          }
+          "upstreamSha256": "c46a75d56dce7b6dc9f8a1f122dff235222bf7f8f8286484328393adeeab847b",
+          "excluded": true
         }
       }
     },
@@ -1655,7 +1737,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1668,13 +1751,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "b1943b391b932135c1a72b1171568c1644ab0e6754ff3215d053f3fc0c3bf09d",
+          "sourceSha256": "68c39edb87ee830e0ed185833d2a2edbb8efb8bb06c2e4ee8c9d752d7f00a107",
           "style": "base-nova",
           "upstreamSha256": "125047c8e65d07b915fc3eba2110f24289493d419bdaa91457a58dced72169ac"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1695,7 +1779,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1708,13 +1793,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "dd4263b7eaec096b82c7bcc45e78e7cd4b2d966b2806a26b31ad266224fe9211",
+          "sourceSha256": "28b3cb416278055cbe7332b55e563a45dc65b477894f75369dd1d251c132a538",
           "style": "base-nova",
           "upstreamSha256": "3256d88d8687dfba15c9285849782ae3265bb096449948ad6fe7c3231aa90e90"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1734,6 +1820,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -1747,13 +1834,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "9502792c8a079050c4a749e98830062fe25645cfa825f138d258ae0780292f46",
+          "sourceSha256": "cfce92639e9353f7559a2f0ab9c69afb23efbdde2ce65da157270067cca499bf",
           "style": "base-nova",
           "upstreamSha256": "3b8a09d90422c681b67a321a79937b37841dd4546ffd97af8dda09291929ebc4"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -1773,7 +1861,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1786,13 +1875,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "aa9b7842265ffc97ca976bf2f32a4c186a5c0a48a64b4e5de5b6151241d956ee",
+          "sourceSha256": "13d793f3adba19a48e14a71269a8a5b82e69b85d417fefaf1475fccf83207b69",
           "style": "base-nova",
           "upstreamSha256": "046313dc2df0ac75fab65e8312da1cbfb56a0b342729dd36cdfaf333f5fb2e6f"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1811,7 +1901,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1824,13 +1915,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "318a736acfa2e2f25416da0a330a234e436437322d84973141d0448f8a418c6d",
+          "sourceSha256": "327a4d00d0d52e3f4b8bf5dbebfa07c546199553257766bb7df84cdacfdce0c7",
           "style": "base-nova",
           "upstreamSha256": "59f28fa2852e4e1260e11dcda31bed1ded6233d1f6496cc9cc4e1c061ed353b0"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1849,7 +1941,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1862,13 +1955,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "6f9436a812125751fc83ed6ab630f828c5caa59df4e9e575e8b106d5b8dabddf",
+          "sourceSha256": "9bbe92709e309ba828af707702febe4c2beaaa094c201020d1448d8c99949d1b",
           "style": "base-nova",
           "upstreamSha256": "3fb7f535e9cafa209272943e6c290bec3869883070c35e290f1cb56e76cd629e"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1887,7 +1981,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1900,13 +1995,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "7c0bafa6804c65a153dd9d049031db637257bcb625ce969954fa5a75e0f2de33",
+          "sourceSha256": "1fbe28809f196bd67590f02e87ef201dce725bd4b58906ee6674ec93c26de0bc",
           "style": "base-nova",
           "upstreamSha256": "46b4080ad4fe92e3529537e738f9477822ec72926c8513d89dcc7c2944c16e2c"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1925,7 +2021,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1938,13 +2035,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "d42f239db1219526460fa56aae28dad249293ebe134729b54fed80f50ee4bbe4",
+          "sourceSha256": "7dbdbea23280103c2074665c3cd22885a6309c718c7fb398a9e62577400c081c",
           "style": "base-nova",
           "upstreamSha256": "4ccb01c5147c3f0f6766adb967ec05456bc4bb07b00727badf015ddcdbe1ade6"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -1964,7 +2062,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -1977,13 +2076,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "f71edceaa4a75790b1d430e7ef0a0063316fe72316fbc52c0b6e89e076325743",
+          "sourceSha256": "604fa88424a19e368d7d78c8fc8f99f854cbccd4a945046651d9145dac662d40",
           "style": "base-nova",
           "upstreamSha256": "3ecc7045d536b007ec1f6e7085ad4a51c8a9a5d043e30ece8f1440ea97b81de7"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2002,7 +2102,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2015,13 +2116,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "de0d51b3d040a07416282f4ca22ffa3daa20b4443ec37660be5a11a22432c0e6",
+          "sourceSha256": "479e672f10ca44782214c85cbd69e8e60665ca55a5c45374671de9ec52adb3e4",
           "style": "base-nova",
           "upstreamSha256": "e1cb6f338a98f097769e4ba31b481d906a8ecdd96905ca28b98815616bffc274"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2042,6 +2144,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -2055,13 +2158,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "a5870349d2f04d58883ae70d6375fea4decc62bab2c8861fdcc782f0cbd8556b",
+          "sourceSha256": "4fe13da3c4ab4f9c7435261730350dfed991905941a328cd906e5b952aee9d77",
           "style": "base-nova",
           "upstreamSha256": "4b4dc40c5336463af14003fbb12bcf8ded84529291ecda999b37a5a139c2f0a6"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -2085,6 +2189,7 @@
         "applique-theme",
         "use-mobile",
         "utils",
+        "applique-react18-compat",
         "button",
         "input",
         "separator",
@@ -2103,7 +2208,7 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "eeafe0111568f9025971c74d5cd21a16f1b8b562053a5e79a8e326580992f027",
+          "sourceSha256": "8f9560c90bb33be706bcb4782bca0224582fe107b25cb6787ee1cee8877d8b68",
           "style": "base-nova",
           "upstreamSha256": "f807c2da8b0963c56f7713ffa610f61775caeb3d5c67b3cc95b456c6223918a1"
         },
@@ -2111,6 +2216,7 @@
           "importMap": {
             "./use-mobile": "@/hooks/use-mobile",
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button",
             "./input": "@/components/ui/input",
             "./separator": "@/components/ui/separator",
@@ -2133,7 +2239,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2146,13 +2253,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "7b2f5fa461939185d2931f8345a50f5758e262cb5a4ec632a2d210a3faa42afb",
+          "sourceSha256": "98f5d9b2a7ee6e6522d853da5f0697d1c27e93a70bd93fd987b6f220c87a1d32",
           "style": "base-nova",
           "upstreamSha256": "28c0dcddd167ab534876d76ac3336f89b9bd5dda1f24f21ce2a0b8528ad44f21"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2171,7 +2279,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2184,13 +2293,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "751fce3bda800b3ee3fa8bcd1e0906e13664f4bd0b80763a0de57143775bef60",
+          "sourceSha256": "6fe60bf4a8d4558d6f841fd316212dbfdb836abd7a4ed6b9dc66a8bfbddd4135",
           "style": "base-nova",
           "upstreamSha256": "878d28f7a88e25254cca7b37d8faa73e23db15a26a150ef3a9315b950964e4e6"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2243,7 +2353,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2256,13 +2367,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "7a099939c868aef23d3f220b12cd550d9080607a303086d4ae96f0a4517b23ca",
+          "sourceSha256": "02f07584f599992a4c9cf232fafcb92c754044dbc6aa1bb2f7e4a563985a25ac",
           "style": "base-nova",
           "upstreamSha256": "8d32261934ec6e05511d742341bd4d01a2b0b121d27cede9bfbfd3c8ec221f86"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2281,7 +2393,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2294,13 +2407,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "91c6a59675869875ea96f877eb4b53c3634699b05e8081d2ca3a5f7c49c4fb29",
+          "sourceSha256": "9eb811d2c7719c204088475fecf39b930fec918830900e24eed07729ebf23aeb",
           "style": "base-nova",
           "upstreamSha256": "f3b1857a20a41eb49edeb2b22586bcae762e0e8fdbc7e7d621140a59ac63c2b3"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2317,7 +2431,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2330,13 +2445,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "2cd1ebd432699b316d777cce31f088d45e6e54da61ee6ce80cea74754e9ed6cc",
+          "sourceSha256": "557b01c8ec2f653ca896427afac5f4fe6f39207b0c5663f48b88eb1dfc94f1f1",
           "style": "base-nova",
           "upstreamSha256": "57d0e14c749de6f7f58566d49fa8fdc15e385de5f724a84f1ab18ce37cc6e89f"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2356,7 +2472,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2369,13 +2486,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "efbfd0258de51f2e219142f28b8e8c422471bc4b9f27983a1e42f070684fa321",
+          "sourceSha256": "8cec5b5206dbbaf52a5bb3fc29be8cfa06cc59e7d6d50a35fbffb1880ae0fe15",
           "style": "base-nova",
           "upstreamSha256": "2deafafe79ce5005128d9a3050174b6ac005c9960541a5f3c9e9666b116f661d"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2392,7 +2510,8 @@
       "dependencies": [],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2405,13 +2524,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "10a057ef60ce8e3d9e388d1cd89354881d5492d77bb02f51d31b0e9b68faa176",
+          "sourceSha256": "1497a470a5b6170c9352aab4721e505b2af5a77c3fc1c7dedc2ee845bf55aae2",
           "style": "base-nova",
           "upstreamSha256": "9c8d023180c474a17a2bde043de961a6b091bf9e7d865b47efb4eef89e61097b"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2432,6 +2552,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "files": [
@@ -2445,13 +2566,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "4a47d453002d27ab2b870f9f44b2096e883005577f042528d2a684550807dcd7",
+          "sourceSha256": "58ebfb6b7a57d75f859f446db8c1ef23a1cfd72cba13d7292da328a378a5c31f",
           "style": "base-nova",
           "upstreamSha256": "206b760f29354475dc85fcf7ba9374c6068b074511e8ead28bce5ff0e281bde6"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./button": "@/components/ui/button"
           }
         }
@@ -2472,7 +2594,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2485,13 +2608,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "ffa7d859a8ccf1004fa97b5d60e1bfaad33232c2691629fc491e717a456e472f",
+          "sourceSha256": "cc4003df30e9b8136e6e949fc882abd295e9cf1dcc59bb9593c9012af6e29bd0",
           "style": "base-nova",
           "upstreamSha256": "3ef7e64fc7de90af7c240950c3b25361f9e7ddf44f77c8e8dd4780483372db6a"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }
@@ -2512,6 +2636,7 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "toggle"
       ],
       "files": [
@@ -2525,13 +2650,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "7bca49e169ccbeec20fef05a01be29ad0338edee3ec7bffedda9b83bd8e1f8b2",
+          "sourceSha256": "a850fb3c51a55dc140ee5762de39e6335fed860ef0ef841d20fe3d44bfb0c79e",
           "style": "base-nova",
           "upstreamSha256": "9a9800e9e59fdcdab72ea82f43bd5b1a06a9add155c17f4886e124c6c845aaac"
         },
         "build": {
           "importMap": {
             "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat",
             "./toggle": "@/components/ui/toggle"
           }
         }
@@ -2551,7 +2677,8 @@
       ],
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "files": [
         {
@@ -2564,13 +2691,14 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "c966edeecb77d1434ab842b55313eca28844320611f98c9f42e039e7298bd449",
+          "sourceSha256": "ed8a4e08445dc0f0fab43ecfc311112334d5f29ef657c429610561cc0e7da253",
           "style": "base-nova",
           "upstreamSha256": "1b1e2c0eec2b4fe1c1690d7e0395d4cb482b554fb8dfc7af30e43e22f32850e6"
         },
         "build": {
           "importMap": {
-            "./utils": "@/lib/utils"
+            "./utils": "@/lib/utils",
+            "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
         }
       }

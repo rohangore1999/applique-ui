@@ -4,7 +4,8 @@ import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
 
 import { cn } from "./utils"
-function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
+import { withReact18Ref } from "./applique-react18-compat"
+function BreadcrumbImpl({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       aria-label="breadcrumb"
@@ -15,7 +16,7 @@ function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   )
 }
 
-function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
+function BreadcrumbListImpl({ className, ...props }: React.ComponentProps<"ol">) {
   return (
     <ol
       data-slot="breadcrumb-list"
@@ -28,7 +29,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   )
 }
 
-function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
+function BreadcrumbItemImpl({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
       data-slot="breadcrumb-item"
@@ -38,7 +39,7 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   )
 }
 
-function BreadcrumbLink({
+function BreadcrumbLinkImpl({
   className,
   render,
   ...props
@@ -58,7 +59,7 @@ function BreadcrumbLink({
   })
 }
 
-function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
+function BreadcrumbPageImpl({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       data-slot="breadcrumb-page"
@@ -71,7 +72,7 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
-function BreadcrumbSeparator({
+function BreadcrumbSeparatorImpl({
   children,
   className,
   ...props
@@ -93,7 +94,7 @@ function BreadcrumbSeparator({
   )
 }
 
-function BreadcrumbEllipsis({
+function BreadcrumbEllipsisImpl({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -114,6 +115,14 @@ function BreadcrumbEllipsis({
     </span>
   )
 }
+
+const Breadcrumb = withReact18Ref(BreadcrumbImpl)
+const BreadcrumbList = withReact18Ref(BreadcrumbListImpl)
+const BreadcrumbItem = withReact18Ref(BreadcrumbItemImpl)
+const BreadcrumbLink = withReact18Ref(BreadcrumbLinkImpl)
+const BreadcrumbPage = withReact18Ref(BreadcrumbPageImpl)
+const BreadcrumbSeparator = withReact18Ref(BreadcrumbSeparatorImpl)
+const BreadcrumbEllipsis = withReact18Ref(BreadcrumbEllipsisImpl)
 
 export {
   Breadcrumb,

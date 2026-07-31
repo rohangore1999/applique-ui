@@ -5,6 +5,7 @@ import * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import {
   Dialog,
   DialogContent,
@@ -16,7 +17,7 @@ import {
   InputGroup,
   InputGroupAddon,
 } from "./input-group"
-function Command({
+function CommandImpl({
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive>) {
@@ -32,7 +33,7 @@ function Command({
   )
 }
 
-function CommandDialog({
+function CommandDialogImpl({
   title = "Command Palette",
   description = "Search for a command to run...",
   children,
@@ -65,7 +66,7 @@ function CommandDialog({
   )
 }
 
-function CommandInput({
+function CommandInputImpl({
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
@@ -90,7 +91,7 @@ function CommandInput({
   )
 }
 
-function CommandList({
+function CommandListImpl({
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.List>) {
@@ -106,7 +107,7 @@ function CommandList({
   )
 }
 
-function CommandEmpty({
+function CommandEmptyImpl({
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Empty>) {
@@ -119,7 +120,7 @@ function CommandEmpty({
   )
 }
 
-function CommandGroup({
+function CommandGroupImpl({
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Group>) {
@@ -135,7 +136,7 @@ function CommandGroup({
   )
 }
 
-function CommandSeparator({
+function CommandSeparatorImpl({
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Separator>) {
@@ -148,7 +149,7 @@ function CommandSeparator({
   )
 }
 
-function CommandItem({
+function CommandItemImpl({
   className,
   children,
   ...props
@@ -170,7 +171,7 @@ function CommandItem({
   )
 }
 
-function CommandShortcut({
+function CommandShortcutImpl({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -185,6 +186,16 @@ function CommandShortcut({
     />
   )
 }
+
+const Command = withReact18Ref(CommandImpl)
+const CommandDialog = withReact18Ref(CommandDialogImpl)
+const CommandInput = withReact18Ref(CommandInputImpl)
+const CommandList = withReact18Ref(CommandListImpl)
+const CommandEmpty = withReact18Ref(CommandEmptyImpl)
+const CommandGroup = withReact18Ref(CommandGroupImpl)
+const CommandSeparator = withReact18Ref(CommandSeparatorImpl)
+const CommandItem = withReact18Ref(CommandItemImpl)
+const CommandShortcut = withReact18Ref(CommandShortcutImpl)
 
 export {
   Command,

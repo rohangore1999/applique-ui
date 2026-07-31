@@ -2,6 +2,7 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
 const alertVariants = cva(
   "group/alert relative grid w-full gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4",
@@ -19,7 +20,7 @@ const alertVariants = cva(
   }
 )
 
-function Alert({
+function AlertImpl({
   className,
   variant,
   ...props
@@ -34,7 +35,7 @@ function Alert({
   )
 }
 
-function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
+function AlertTitleImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-title"
@@ -47,7 +48,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function AlertDescription({
+function AlertDescriptionImpl({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -63,7 +64,7 @@ function AlertDescription({
   )
 }
 
-function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
+function AlertActionImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-action"
@@ -72,5 +73,10 @@ function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+
+const Alert = withReact18Ref(AlertImpl)
+const AlertTitle = withReact18Ref(AlertTitleImpl)
+const AlertDescription = withReact18Ref(AlertDescriptionImpl)
+const AlertAction = withReact18Ref(AlertActionImpl)
 
 export { Alert, AlertTitle, AlertDescription, AlertAction }

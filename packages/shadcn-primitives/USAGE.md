@@ -6,14 +6,17 @@ Applique token baseline.
 
 ## Requirements
 
-The complete `v0.1.0` component set targets:
+The complete `v0.1.0` registry flow uses:
 
-- Node.js `>=20.18.1`
-- React 19
+- Node.js `>=20.18.1` while running the installer/update CLI
+- React 18
 - Tailwind CSS 4
 - TypeScript component output
 - `shadcn@4.16.0`
 - the `base-nova` style
+
+The copied source itself adds no Node 20 runtime requirement. A client's
+ongoing development and build Node version depends on its own toolchain.
 
 ## Configure shadcn
 
@@ -42,6 +45,11 @@ Use a `components.json` compatible with the registry:
   }
 }
 ```
+
+These paths are examples. Existing applications keep their own aliases and CSS
+path; Applique does not require clients to copy this exact file. The shadcn CLI
+uses the client's normal configuration to choose where it writes registry
+files.
 
 The path aliases must also resolve in the application's TypeScript and bundler
 configuration. A typical `tsconfig.json` mapping is:
@@ -88,10 +96,18 @@ npx shadcn@4.16.0 add \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/dialog.json
 ```
 
+On a managed office network, Node may need the approved corporate root CA to
+reach shadcn's public metadata endpoint. If the CLI reports a self-signed
+certificate chain, set `NODE_EXTRA_CA_CERTS` to the PEM file supplied by the
+platform team. Do not disable TLS verification.
+
 The CLI follows each item's dependency graph. For Button, it also installs:
 
 - `applique-theme`, which merges the Applique variables into the configured CSS;
 - `utils`, which writes the local `cn()` helper;
+- `applique-react18-compat`, which writes ref helpers to the separate
+  `@/lib/applique-react18-compat` path so an existing shadcn `utils.ts` can stay
+  untouched;
 - `@fontsource-variable/hanken-grotesk@5.3.0`, which loads the tokenized
   variable font;
 - the exact reviewed Base UI and CVA npm versions.
@@ -195,7 +211,8 @@ installation silently changes all dashboards.
 
 That file is client-owned. Compare it with the registry source and decide
 whether to keep, replace, or merge it. Do not use overwrite without reviewing
-local customizations.
+local customizations. A standard `utils.ts` that already exports `cn()` can be
+kept: Applique's React 18 ref helpers install to their own file.
 
 ### An `@/` import does not resolve
 

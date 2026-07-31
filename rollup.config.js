@@ -119,9 +119,6 @@ const config = {
                 paths: {
                   react: ['node_modules/@types/react/index.d.ts'],
                   'react/*': ['node_modules/@types/react/*'],
-                  '@shadcn/react/message-scroller': [
-                    'node_modules/@shadcn/react/dist/message-scroller/index.d.ts',
-                  ],
                 },
               }
             : {}),

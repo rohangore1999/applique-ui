@@ -15,9 +15,10 @@ Current baseline:
 - shadcn CLI `4.16.0`
 - official style `base-nova`
 - upstream commit `705ce5961080264830471ddd885c01b907706068`
-- React `19.2.8`
+- React and React DOM `18.3.1`
 - Tailwind CSS `4.3.3`
-- all 62 official UI entries; 61 source-bearing plus fileless Form
+- all 62 official UI entries; 60 source-bearing and installable, fileless
+  deprecated Form, and React-19-only Message Scroller
 
 ## Sources of truth
 
@@ -48,6 +49,8 @@ catalogue bundles as source.
    token without loading it is insufficient.
 7. Preserve `data-slot` attributes and upstream accessibility behavior.
 8. Treat Form as upstream fileless/deprecated and direct clients to Field.
+9. Keep Message Scroller excluded until its upstream primitive supports the
+   React 18 baseline; do not publish its React 19 dependency transitively.
 
 ## Refreshing upstream
 
@@ -76,6 +79,7 @@ From the repository root:
 ```bash
 pnpm --filter @rohangore1999/shadcn-primitives run build:pages
 pnpm --filter @rohangore1999/shadcn-primitives run validate:registry
+pnpm --filter @rohangore1999/shadcn-primitives run smoke:react18
 pnpm --filter @rohangore1999/shadcn-primitives run smoke:registry
 pnpm --filter @rohangore1999/shadcn-primitives exec \
   tsc --noEmit -p tsconfig.json
@@ -83,9 +87,10 @@ pnpm --filter @rohangore1999/shadcn-primitives exec \
   tsc --noEmit -p catalog/tsconfig.json
 ```
 
-The smoke test must install all 61 source-bearing entries into a blank
-consumer, type-check them, compile Tailwind, and verify the theme, scoped dark
-variant, and font.
+The registry smoke test must install all 60 source-bearing UI entries into a
+blank React 18 consumer, type-check them, compile Tailwind, and verify the
+theme, scoped dark variant, and font. The React 18 runtime smoke test rebuilds
+the package and verifies representative DOM refs and Calendar focus behavior.
 
 ## Publishing
 

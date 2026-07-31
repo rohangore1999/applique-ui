@@ -4,6 +4,7 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
 
 const attachmentVariants = cva(
@@ -24,7 +25,7 @@ const attachmentVariants = cva(
   }
 )
 
-function Attachment({
+function AttachmentImpl({
   className,
   state = "done",
   size = "default",
@@ -62,7 +63,7 @@ const attachmentMediaVariants = cva(
   }
 )
 
-function AttachmentMedia({
+function AttachmentMediaImpl({
   className,
   variant = "icon",
   ...props
@@ -77,7 +78,7 @@ function AttachmentMedia({
   )
 }
 
-function AttachmentContent({
+function AttachmentContentImpl({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -93,7 +94,7 @@ function AttachmentContent({
   )
 }
 
-function AttachmentTitle({
+function AttachmentTitleImpl({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -109,7 +110,7 @@ function AttachmentTitle({
   )
 }
 
-function AttachmentDescription({
+function AttachmentDescriptionImpl({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -126,7 +127,7 @@ function AttachmentDescription({
   )
 }
 
-function AttachmentActions({
+function AttachmentActionsImpl({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -142,7 +143,7 @@ function AttachmentActions({
   )
 }
 
-function AttachmentAction({
+function AttachmentActionImpl({
   className,
   variant,
   size = "icon-xs",
@@ -159,7 +160,7 @@ function AttachmentAction({
   )
 }
 
-function AttachmentTrigger({
+function AttachmentTriggerImpl({
   className,
   render,
   type,
@@ -181,7 +182,7 @@ function AttachmentTrigger({
   })
 }
 
-function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
+function AttachmentGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="attachment-group"
@@ -193,6 +194,16 @@ function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+
+const Attachment = withReact18Ref(AttachmentImpl)
+const AttachmentMedia = withReact18Ref(AttachmentMediaImpl)
+const AttachmentContent = withReact18Ref(AttachmentContentImpl)
+const AttachmentTitle = withReact18Ref(AttachmentTitleImpl)
+const AttachmentDescription = withReact18Ref(AttachmentDescriptionImpl)
+const AttachmentActions = withReact18Ref(AttachmentActionsImpl)
+const AttachmentAction = withReact18Ref(AttachmentActionImpl)
+const AttachmentTrigger = withReact18Ref(AttachmentTriggerImpl)
+const AttachmentGroup = withReact18Ref(AttachmentGroupImpl)
 
 export {
   Attachment,

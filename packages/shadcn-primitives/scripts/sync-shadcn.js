@@ -84,12 +84,18 @@ const UI_ITEMS = [
   'tooltip',
 ]
 const SUPPORT_ITEMS = ['use-mobile']
+const REACT_18_UNSUPPORTED_ITEMS = {
+  'message-scroller': {
+    requiredReact: '>=19',
+    reason:
+      'The upstream @shadcn/react MessageScroller primitive requires React 19 and relies on ref-as-prop behavior that React 18 does not provide.',
+  },
+}
 
 // Exact versions are reviewed together with an upstream snapshot. Registry
 // generation never resolves "latest" or a semver range.
 const DEPENDENCY_PINS = {
   '@base-ui/react': '1.6.0',
-  '@shadcn/react': '0.2.1',
   'class-variance-authority': '0.7.1',
   clsx: '2.1.1',
   cmdk: '1.1.1',
@@ -99,6 +105,7 @@ const DEPENDENCY_PINS = {
   'lucide-react': '1.28.0',
   'next-themes': '0.4.6',
   'react-day-picker': '10.0.1',
+  'react-is': '18.3.1',
   'react-resizable-panels': '4.12.2',
   recharts: '3.8.0',
   sonner: '2.0.7',
@@ -311,6 +318,132 @@ function transformIconPlaceholders(content, itemName) {
   return transformed
 }
 
+function addReact18CompatibilityImport(content, itemName) {
+  const importedNames = [
+    ...(itemName === 'calendar' ? ['mergeRefs'] : []),
+    'withReact18Ref',
+  ]
+  const importStatement = `import { ${importedNames.join(
+    ', '
+  )} } from "./applique-react18-compat"`
+  const utilsImport = /^import\s+\{[^}]+\}\s+from\s+["']\.\/utils["'];?[ \t]*$/m
+
+  if (utilsImport.test(content)) {
+    return content.replace(
+      utilsImport,
+      (source) => `${source}\n${importStatement}`
+    )
+  }
+
+  const clientDirective = /^("use client"|'use client');?\s*\n+/
+  const directive = content.match(clientDirective)
+
+  return directive
+    ? `${directive[0]}${importStatement}\n\n${content.slice(
+        directive[0].length
+      )}`
+    : `${importStatement}\n\n${content}`
+}
+
+function transformReact18Refs(content, itemName) {
+  const exportStart = content.lastIndexOf('export {')
+  if (exportStart === -1) return content
+
+  const functionNames = [
+    ...content.matchAll(/^function\s+([A-Z][A-Za-z0-9_]*)\b/gm),
+  ].map((match) => match[1])
+  const exportedNames = new Set(
+    [...content.slice(exportStart).matchAll(/\b([A-Z][A-Za-z0-9_]*)\b/g)].map(
+      (match) => match[1]
+    )
+  )
+  const componentNames = functionNames.filter((name) => exportedNames.has(name))
+
+  if (componentNames.length === 0) return content
+
+  let transformed = addReact18CompatibilityImport(content, itemName)
+
+  for (const name of componentNames) {
+    transformed = transformed.replace(
+      new RegExp(`(^function\\s+)${name}\\b`, 'm'),
+      `$1${name}Impl`
+    )
+  }
+
+  if (itemName === 'calendar') {
+    const dayButtonStart = transformed.indexOf(
+      'function CalendarDayButtonImpl'
+    )
+    const dayButtonEnd = transformed.indexOf('\n}\n', dayButtonStart) + 3
+    assert(
+      dayButtonStart >= 0 && dayButtonEnd > dayButtonStart + 2,
+      'Could not locate CalendarDayButton for the React 18 ref patch'
+    )
+    const dayButton = transformed
+      .slice(dayButtonStart, dayButtonEnd)
+      .replace(
+        '  locale,\n  ...props',
+        '  locale,\n  ref: forwardedRef,\n  ...props'
+      )
+      .replace(
+        '}: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> })',
+        '}: React.ComponentProps<typeof DayButton> & {\n  locale?: Partial<Locale>\n  ref?: React.Ref<HTMLButtonElement>\n})'
+      )
+      .replace(
+        '    <Button\n      variant="ghost"',
+        '    <Button\n      ref={mergeRefs(ref, forwardedRef)}\n      variant="ghost"'
+      )
+    assert(
+      dayButton.includes('ref={mergeRefs(ref, forwardedRef)}') &&
+        dayButton.includes('ref?: React.Ref<HTMLButtonElement>'),
+      'Could not merge CalendarDayButton refs for React 18'
+    )
+    transformed = `${transformed.slice(0, dayButtonStart)}${dayButton}${transformed.slice(
+      dayButtonEnd
+    )}`
+  }
+
+  if (itemName === 'chart') {
+    transformed = transformed
+      .replace(
+        'function ChartTooltipContentImpl({\n  active,\n  payload,\n  className,',
+        'function ChartTooltipContentImpl({\n  active,\n  payload,\n  className,\n  ref,'
+      )
+      .replace(
+        '  return (\n    <div\n      className={cn(\n        "grid min-w-32',
+        '  return (\n    <div\n      ref={ref}\n      className={cn(\n        "grid min-w-32'
+      )
+      .replace(
+        'function ChartLegendContentImpl({\n  className,',
+        'function ChartLegendContentImpl({\n  className,\n  ref,'
+      )
+      .replace(
+        '  return (\n    <div\n      className={cn(\n        "flex items-center justify-center gap-4",',
+        '  return (\n    <div\n      ref={ref}\n      className={cn(\n        "flex items-center justify-center gap-4",'
+      )
+
+    assert(
+      transformed.includes(
+        'function ChartTooltipContentImpl({\n  active,\n  payload,\n  className,\n  ref,'
+      ) &&
+        transformed.includes(
+          'function ChartLegendContentImpl({\n  className,\n  ref,'
+        ) &&
+        (transformed.match(/ref=\{ref\}/g) || []).length >= 2,
+      'Could not forward Chart content refs for React 18'
+    )
+  }
+
+  const wrappers = componentNames
+    .map((name) => `const ${name} = withReact18Ref(${name}Impl)`)
+    .join('\n')
+  const transformedExportStart = transformed.lastIndexOf('export {')
+
+  return `${transformed.slice(0, transformedExportStart)}${wrappers}\n\n${transformed.slice(
+    transformedExportStart
+  )}`
+}
+
 function transformSource(content, itemName) {
   let transformed = content.replace(/\r\n?/g, '\n')
   transformed = transformIconPlaceholders(transformed, itemName)
@@ -331,6 +464,8 @@ function transformSource(content, itemName) {
       `const THEMES = { light: "", dark: '[data-applique-color-scheme="dark"]' } as const`
     )
   }
+
+  transformed = transformReact18Refs(transformed, itemName)
 
   assert(
     !transformed.includes('@/registry/'),
@@ -356,11 +491,14 @@ function localDependencyFromSpecifier(specifier) {
 
 function consumerImportForLocalDependency(dependency) {
   if (dependency === 'utils') return '@/lib/utils'
+  if (dependency === 'applique-react18-compat') {
+    return '@/lib/applique-react18-compat'
+  }
   if (dependency === 'use-mobile') return '@/hooks/use-mobile'
   return `@/components/ui/${dependency}`
 }
 
-function buildItemDependencies(upstreamItem, transformedSource) {
+function buildItemDependencies(upstreamItem, transformedSource, itemName) {
   const packageNames = new Set(
     (upstreamItem.dependencies || []).map(packageNameFromDependency)
   )
@@ -376,6 +514,7 @@ function buildItemDependencies(upstreamItem, transformedSource) {
     }
     packageNames.add(packageNameFromSpecifier(specifier))
   }
+  if (itemName === 'chart') packageNames.add('react-is')
   return [...packageNames].sort().map(exactDependency)
 }
 
@@ -432,6 +571,26 @@ function createManifestItem(snapshot) {
         replacement: 'field',
         status: 'deprecated',
         upstream: { ...upstream, fileless: true },
+      },
+    }
+  }
+
+
+  if (snapshot.status === 'unsupported') {
+    return {
+      name: snapshot.name,
+      type: snapshot.type,
+      title: titleFromName(snapshot.name),
+      description:
+        'Unavailable in the React 18 registry baseline because its upstream primitive requires React 19.',
+      categories: ['compatibility', 'react-19'],
+      dependencies: [],
+      registryDependencies: [],
+      files: [],
+      meta: {
+        compatibility: REACT_18_UNSUPPORTED_ITEMS[snapshot.name],
+        status: 'unsupported',
+        upstream: { ...upstream, excluded: true },
       },
     }
   }
@@ -497,6 +656,16 @@ function applyFiles(files, check) {
   const differences = []
   for (const [filePath, expected] of files) {
     const exists = fs.existsSync(filePath)
+    if (expected === null) {
+      if (!exists) continue
+      if (check) {
+        differences.push(`${path.relative(packageDir, filePath)} is stale`)
+        continue
+      }
+      fs.unlinkSync(filePath)
+      console.log(`[shadcn-sync] removed ${path.relative(packageDir, filePath)}`)
+      continue
+    }
     const actual = exists ? fs.readFileSync(filePath, 'utf8') : null
     if (actual === expected) continue
     if (check) {
@@ -573,12 +742,38 @@ async function main() {
       continue
     }
 
+    if (REACT_18_UNSUPPORTED_ITEMS[name]) {
+      assert(
+        files.length === 1,
+        `${name} compatibility exclusion expected exactly one upstream source file`
+      )
+      const sourcePath = `src/${name}.tsx`
+      snapshots.push({
+        dependencies: [],
+        importMap: {},
+        name,
+        registryDependencies: [],
+        sourcePath: null,
+        sourceSha256: null,
+        status: 'unsupported',
+        type,
+        upstreamPath,
+        upstreamSha256: sha256(JSON.stringify(upstreamItem)),
+      })
+      stageFile(stagedFiles, path.join(packageDir, sourcePath), null)
+      continue
+    }
+
     assert(files.length === 1, `${name} must contain exactly one source file`)
     const transformedSource = transformSource(files[0].content, name)
     const extension = type === 'registry:hook' ? 'ts' : 'tsx'
     const sourcePath = `src/${name}.${extension}`
     const snapshot = {
-      dependencies: buildItemDependencies(upstreamItem, transformedSource),
+      dependencies: buildItemDependencies(
+        upstreamItem,
+        transformedSource,
+        name
+      ),
       importMap: buildImportMap(transformedSource),
       name,
       registryDependencies:
@@ -599,11 +794,11 @@ async function main() {
 
   const currentManifest = readJson(manifestPath)
   const foundationItems = currentManifest.items.filter((item) =>
-    ['applique-theme', 'utils'].includes(item.name)
+    ['applique-theme', 'applique-react18-compat', 'utils'].includes(item.name)
   )
   assert(
-    foundationItems.length === 2,
-    'registry.json must contain applique-theme and utils'
+    foundationItems.length === 3,
+    'registry.json must contain applique-theme, applique-react18-compat, and utils'
   )
   foundationItems.find((item) => item.name === 'utils').dependencies = [
     exactDependency('clsx'),

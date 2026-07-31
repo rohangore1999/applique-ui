@@ -4,9 +4,10 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Separator } from "./separator"
 
-function ItemGroup({ className, ...props }: React.ComponentProps<"div">) {
+function ItemGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       role="list"
@@ -20,7 +21,7 @@ function ItemGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function ItemSeparator({
+function ItemSeparatorImpl({
   className,
   ...props
 }: React.ComponentProps<typeof Separator>) {
@@ -56,7 +57,7 @@ const itemVariants = cva(
   }
 )
 
-function Item({
+function ItemImpl({
   className,
   variant = "default",
   size = "default",
@@ -97,7 +98,7 @@ const itemMediaVariants = cva(
   }
 )
 
-function ItemMedia({
+function ItemMediaImpl({
   className,
   variant = "default",
   ...props
@@ -112,7 +113,7 @@ function ItemMedia({
   )
 }
 
-function ItemContent({ className, ...props }: React.ComponentProps<"div">) {
+function ItemContentImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="item-content"
@@ -125,7 +126,7 @@ function ItemContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function ItemTitle({ className, ...props }: React.ComponentProps<"div">) {
+function ItemTitleImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="item-title"
@@ -138,7 +139,7 @@ function ItemTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function ItemDescription({ className, ...props }: React.ComponentProps<"p">) {
+function ItemDescriptionImpl({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="item-description"
@@ -151,7 +152,7 @@ function ItemDescription({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
-function ItemActions({ className, ...props }: React.ComponentProps<"div">) {
+function ItemActionsImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="item-actions"
@@ -161,7 +162,7 @@ function ItemActions({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function ItemHeader({ className, ...props }: React.ComponentProps<"div">) {
+function ItemHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="item-header"
@@ -174,7 +175,7 @@ function ItemHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function ItemFooter({ className, ...props }: React.ComponentProps<"div">) {
+function ItemFooterImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="item-footer"
@@ -186,6 +187,17 @@ function ItemFooter({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+
+const ItemGroup = withReact18Ref(ItemGroupImpl)
+const ItemSeparator = withReact18Ref(ItemSeparatorImpl)
+const Item = withReact18Ref(ItemImpl)
+const ItemMedia = withReact18Ref(ItemMediaImpl)
+const ItemContent = withReact18Ref(ItemContentImpl)
+const ItemTitle = withReact18Ref(ItemTitleImpl)
+const ItemDescription = withReact18Ref(ItemDescriptionImpl)
+const ItemActions = withReact18Ref(ItemActionsImpl)
+const ItemHeader = withReact18Ref(ItemHeaderImpl)
+const ItemFooter = withReact18Ref(ItemFooterImpl)
 
 export {
   Item,

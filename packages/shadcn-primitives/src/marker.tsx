@@ -4,6 +4,7 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
 const markerVariants = cva(
   "group/marker relative flex min-h-4 w-full items-center gap-2 text-left text-sm text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground",
@@ -19,7 +20,7 @@ const markerVariants = cva(
   }
 )
 
-function Marker({
+function MarkerImpl({
   className,
   variant = "default",
   render,
@@ -41,7 +42,7 @@ function Marker({
   })
 }
 
-function MarkerIcon({ className, ...props }: React.ComponentProps<"span">) {
+function MarkerIconImpl({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       data-slot="marker-icon"
@@ -55,7 +56,7 @@ function MarkerIcon({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
-function MarkerContent({ className, ...props }: React.ComponentProps<"span">) {
+function MarkerContentImpl({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       data-slot="marker-content"
@@ -67,5 +68,9 @@ function MarkerContent({ className, ...props }: React.ComponentProps<"span">) {
     />
   )
 }
+
+const Marker = withReact18Ref(MarkerImpl)
+const MarkerIcon = withReact18Ref(MarkerIconImpl)
+const MarkerContent = withReact18Ref(MarkerContentImpl)
 
 export { Marker, MarkerIcon, MarkerContent, markerVariants }

@@ -4,8 +4,9 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Tabs({
+function TabsImpl({
   className,
   orientation = "horizontal",
   ...props
@@ -38,7 +39,7 @@ const tabsListVariants = cva(
   }
 )
 
-function TabsList({
+function TabsListImpl({
   className,
   variant = "default",
   ...props
@@ -53,7 +54,7 @@ function TabsList({
   )
 }
 
-function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
+function TabsTriggerImpl({ className, ...props }: TabsPrimitive.Tab.Props) {
   return (
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
@@ -69,7 +70,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
   )
 }
 
-function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
+function TabsContentImpl({ className, ...props }: TabsPrimitive.Panel.Props) {
   return (
     <TabsPrimitive.Panel
       data-slot="tabs-content"
@@ -78,5 +79,10 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
     />
   )
 }
+
+const Tabs = withReact18Ref(TabsImpl)
+const TabsList = withReact18Ref(TabsListImpl)
+const TabsTrigger = withReact18Ref(TabsTriggerImpl)
+const TabsContent = withReact18Ref(TabsContentImpl)
 
 export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants }

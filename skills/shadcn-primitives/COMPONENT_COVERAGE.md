@@ -3,22 +3,22 @@
 Registry `v0.1.0` mirrors all 62 official `registry:ui` entries in the
 shadcn `4.16.0` Base UI `base-nova` index.
 
-## Installable source entries (61)
+## Installable source entries (60)
 
 Accordion, Alert, Alert Dialog, Aspect Ratio, Attachment, Avatar, Badge,
 Breadcrumb, Bubble, Button, Button Group, Calendar, Card, Carousel, Chart,
 Checkbox, Collapsible, Combobox, Command, Context Menu, Dialog, Direction,
 Drawer, Dropdown Menu, Empty, Field, Hover Card, Input, Input Group, Input
-OTP, Item, Kbd, Label, Marker, Menubar, Message, Message Scroller, Native
-Select, Navigation Menu, Pagination, Popover, Progress, Radio Group,
+OTP, Item, Kbd, Label, Marker, Menubar, Message, Native Select, Navigation
+Menu, Pagination, Popover, Progress, Radio Group,
 Resizable, Scroll Area, Select, Separator, Sheet, Sidebar, Skeleton, Slider,
 Sonner, Spinner, Switch, Table, Tabs, Textarea, Toast, Toggle, Toggle Group,
 and Tooltip.
 
-Every entry has:
+Every installable entry has:
 
 - a checked-in upstream JSON snapshot;
-- transformed TypeScript source, except Form;
+- transformed React 18-compatible TypeScript source;
 - exact dependency pins;
 - root and `v0.1.0` registry item JSON;
 - a catalogue entry and lazy preview.
@@ -27,6 +27,12 @@ Every entry has:
 
 `Form` is present in the official index but contains no source in this Base UI
 snapshot. It is published as deprecated metadata and points to `Field`.
+
+## React 19-only official entry (1)
+
+`Message Scroller` is retained in the coverage metadata but excluded from the
+installable React 18 registry because its upstream `@shadcn/react` primitive
+requires React 19.
 
 ## Supporting entry
 
@@ -50,7 +56,8 @@ const ui = r.items.filter((item) => item.type === "registry:ui")
 console.log({
   official: ui.length,
   installable: ui.filter((item) => item.files?.length).length,
-  fileless: ui.filter((item) => !item.files?.length).map((item) => item.name),
+  deprecated: ui.filter((item) => item.meta?.status === "deprecated").map((item) => item.name),
+  unsupported: ui.filter((item) => item.meta?.status === "unsupported").map((item) => item.name),
 })
 '
 ```

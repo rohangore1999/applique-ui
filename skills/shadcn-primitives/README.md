@@ -11,10 +11,11 @@ These files describe the current registry-first implementation in
 Key facts:
 
 - Clients consume source from immutable `v0.1.0` URLs.
-- The baseline is shadcn `4.16.0`, Base UI `base-nova`, React 19, and
+- The baseline is shadcn `4.16.0`, Base UI `base-nova`, React 18.3.1, and
   Tailwind 4.
-- The registry covers all 62 official UI entries; 61 contain source and Form
-  is the sole upstream fileless entry.
+- The registry covers all 62 official UI entries; 60 contain installable
+  source, Form is fileless/deprecated, and Message Scroller is excluded because
+  its upstream primitive requires React 19.
 - Applique owns the baseline tokens. Clients own installed source and review
   future source merges.
 - The npm package build is not the recommended client distribution path.

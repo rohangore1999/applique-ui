@@ -3,8 +3,9 @@
 import * as ResizablePrimitive from "react-resizable-panels"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function ResizablePanelGroup({
+function ResizablePanelGroupImpl({
   className,
   ...props
 }: ResizablePrimitive.GroupProps) {
@@ -20,11 +21,11 @@ function ResizablePanelGroup({
   )
 }
 
-function ResizablePanel({ ...props }: ResizablePrimitive.PanelProps) {
+function ResizablePanelImpl({ ...props }: ResizablePrimitive.PanelProps) {
   return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />
 }
 
-function ResizableHandle({
+function ResizableHandleImpl({
   withHandle,
   className,
   ...props
@@ -46,5 +47,9 @@ function ResizableHandle({
     </ResizablePrimitive.Separator>
   )
 }
+
+const ResizablePanelGroup = withReact18Ref(ResizablePanelGroupImpl)
+const ResizablePanel = withReact18Ref(ResizablePanelImpl)
+const ResizableHandle = withReact18Ref(ResizableHandleImpl)
 
 export { ResizableHandle, ResizablePanel, ResizablePanelGroup }

@@ -2,8 +2,9 @@ import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-re
 import * as React from "react"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
-function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+function PaginationImpl({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       role="navigation"
@@ -15,7 +16,7 @@ function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   )
 }
 
-function PaginationContent({
+function PaginationContentImpl({
   className,
   ...props
 }: React.ComponentProps<"ul">) {
@@ -28,7 +29,7 @@ function PaginationContent({
   )
 }
 
-function PaginationItem({ ...props }: React.ComponentProps<"li">) {
+function PaginationItemImpl({ ...props }: React.ComponentProps<"li">) {
   return <li data-slot="pagination-item" {...props} />
 }
 
@@ -37,7 +38,7 @@ type PaginationLinkProps = {
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
   React.ComponentProps<"a">
 
-function PaginationLink({
+function PaginationLinkImpl({
   className,
   isActive,
   size = "icon",
@@ -61,7 +62,7 @@ function PaginationLink({
   )
 }
 
-function PaginationPrevious({
+function PaginationPreviousImpl({
   className,
   text = "Previous",
   ...props
@@ -82,7 +83,7 @@ function PaginationPrevious({
   )
 }
 
-function PaginationNext({
+function PaginationNextImpl({
   className,
   text = "Next",
   ...props
@@ -103,7 +104,7 @@ function PaginationNext({
   )
 }
 
-function PaginationEllipsis({
+function PaginationEllipsisImpl({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -123,6 +124,14 @@ function PaginationEllipsis({
     </span>
   )
 }
+
+const Pagination = withReact18Ref(PaginationImpl)
+const PaginationContent = withReact18Ref(PaginationContentImpl)
+const PaginationItem = withReact18Ref(PaginationItemImpl)
+const PaginationLink = withReact18Ref(PaginationLinkImpl)
+const PaginationPrevious = withReact18Ref(PaginationPreviousImpl)
+const PaginationNext = withReact18Ref(PaginationNextImpl)
+const PaginationEllipsis = withReact18Ref(PaginationEllipsisImpl)
 
 export {
   Pagination,

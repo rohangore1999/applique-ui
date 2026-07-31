@@ -2,7 +2,8 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion"
 
 import { cn } from "./utils"
-function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
+import { withReact18Ref } from "./applique-react18-compat"
+function AccordionImpl({ className, ...props }: AccordionPrimitive.Root.Props) {
   return (
     <AccordionPrimitive.Root
       data-slot="accordion"
@@ -12,7 +13,7 @@ function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
   )
 }
 
-function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
+function AccordionItemImpl({ className, ...props }: AccordionPrimitive.Item.Props) {
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
@@ -22,7 +23,7 @@ function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
   )
 }
 
-function AccordionTrigger({
+function AccordionTriggerImpl({
   className,
   children,
   ...props
@@ -51,7 +52,7 @@ function AccordionTrigger({
   )
 }
 
-function AccordionContent({
+function AccordionContentImpl({
   className,
   children,
   ...props
@@ -73,5 +74,10 @@ function AccordionContent({
     </AccordionPrimitive.Panel>
   )
 }
+
+const Accordion = withReact18Ref(AccordionImpl)
+const AccordionItem = withReact18Ref(AccordionItemImpl)
+const AccordionTrigger = withReact18Ref(AccordionTriggerImpl)
+const AccordionContent = withReact18Ref(AccordionContentImpl)
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }

@@ -5,7 +5,8 @@ import * as React from "react"
 import { OTPInput, OTPInputContext } from "input-otp"
 
 import { cn } from "./utils"
-function InputOTP({
+import { withReact18Ref } from "./applique-react18-compat"
+function InputOTPImpl({
   className,
   containerClassName,
   ...props
@@ -26,7 +27,7 @@ function InputOTP({
   )
 }
 
-function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
+function InputOTPGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="input-otp-group"
@@ -39,7 +40,7 @@ function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function InputOTPSlot({
+function InputOTPSlotImpl({
   index,
   className,
   ...props
@@ -69,7 +70,7 @@ function InputOTPSlot({
   )
 }
 
-function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
+function InputOTPSeparatorImpl({ ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="input-otp-separator"
@@ -82,5 +83,10 @@ function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
     </div>
   )
 }
+
+const InputOTP = withReact18Ref(InputOTPImpl)
+const InputOTPGroup = withReact18Ref(InputOTPGroupImpl)
+const InputOTPSlot = withReact18Ref(InputOTPSlotImpl)
+const InputOTPSeparator = withReact18Ref(InputOTPSeparatorImpl)
 
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }

@@ -2,8 +2,9 @@ import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function InputImpl({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <InputPrimitive
       type={type}
@@ -16,5 +17,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
     />
   )
 }
+
+const Input = withReact18Ref(InputImpl)
 
 export { Input }

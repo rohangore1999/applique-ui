@@ -5,24 +5,25 @@ import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
-function Dialog({ ...props }: DialogPrimitive.Root.Props) {
+function DialogImpl({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
-function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
+function DialogTriggerImpl({ ...props }: DialogPrimitive.Trigger.Props) {
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
 }
 
-function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
+function DialogPortalImpl({ ...props }: DialogPrimitive.Portal.Props) {
   return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
 }
 
-function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
+function DialogCloseImpl({ ...props }: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
-function DialogOverlay({
+function DialogOverlayImpl({
   className,
   ...props
 }: DialogPrimitive.Backdrop.Props) {
@@ -38,7 +39,7 @@ function DialogOverlay({
   )
 }
 
-function DialogContent({
+function DialogContentImpl({
   className,
   children,
   showCloseButton = true,
@@ -79,7 +80,7 @@ function DialogContent({
   )
 }
 
-function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+function DialogHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
@@ -89,7 +90,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function DialogFooter({
+function DialogFooterImpl({
   className,
   showCloseButton = false,
   children,
@@ -116,7 +117,7 @@ function DialogFooter({
   )
 }
 
-function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
+function DialogTitleImpl({ className, ...props }: DialogPrimitive.Title.Props) {
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
@@ -129,7 +130,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
   )
 }
 
-function DialogDescription({
+function DialogDescriptionImpl({
   className,
   ...props
 }: DialogPrimitive.Description.Props) {
@@ -144,6 +145,17 @@ function DialogDescription({
     />
   )
 }
+
+const Dialog = withReact18Ref(DialogImpl)
+const DialogTrigger = withReact18Ref(DialogTriggerImpl)
+const DialogPortal = withReact18Ref(DialogPortalImpl)
+const DialogClose = withReact18Ref(DialogCloseImpl)
+const DialogOverlay = withReact18Ref(DialogOverlayImpl)
+const DialogContent = withReact18Ref(DialogContentImpl)
+const DialogHeader = withReact18Ref(DialogHeaderImpl)
+const DialogFooter = withReact18Ref(DialogFooterImpl)
+const DialogTitle = withReact18Ref(DialogTitleImpl)
+const DialogDescription = withReact18Ref(DialogDescriptionImpl)
 
 export {
   Dialog,

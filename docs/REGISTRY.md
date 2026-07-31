@@ -27,15 +27,17 @@ The current release is `v0.1.0` and is based on:
 
 - `shadcn@4.16.0`
 - the official `base-nova` registry style
-- React 19
+- React 18
 - Tailwind CSS 4
 - Node.js `>=20.18.1`
 
 It represents all 62 official UI entries in the pinned Base/Nova index:
 
-- 61 entries contain installable TypeScript source.
+- 60 entries contain installable TypeScript source.
 - Form is the one fileless upstream entry. It is deprecated and points to
   Field.
+- Message Scroller is retained for discovery but is unavailable because its
+  upstream `@shadcn/react` primitive requires React 19.
 
 The version remains `v0.1.0` while there are no consumers. This lets the team
 complete the initial baseline without creating meaningless pre-adoption
@@ -50,6 +52,7 @@ Installing Button illustrates the dependency chain:
 button.json
   + applique-theme.json  -> Applique CSS variables
   + utils.json           -> local cn() helper
+  + applique-react18-compat.json -> Applique-owned React 18 ref helpers
   + exact npm packages   -> Base UI and CVA
   + button.tsx           -> local component source
 ```
@@ -62,8 +65,13 @@ Typical generated files are:
 
 ```text
 src/components/ui/button.tsx
+src/lib/applique-react18-compat.ts
 src/lib/utils.ts
 ```
+
+If `src/lib/utils.ts` already exists, shadcn leaves that client-owned file in
+place. The React 18 helpers use the separate Applique-owned path, so an existing
+standard `cn()` utility does not need to be overwritten.
 
 Client code imports the local component:
 
@@ -106,8 +114,13 @@ Figma-backed dark token set exists.
 
 ## Consumer installation
 
-The complete baseline expects Node.js `>=20.18.1`, React 19, Tailwind CSS 4, and
-a TypeScript shadcn configuration using `style: "base-nova"`.
+Running the pinned installer requires Node.js `>=20.18.1`. Installed component
+source targets React 18 and Tailwind CSS 4 with a TypeScript shadcn
+configuration using `style: "base-nova"`.
+
+Existing shadcn applications keep their own aliases and CSS path. Applique does
+not require a separate registry-specific `components.json`; the CLI uses the
+client's normal configuration to decide where to copy files.
 
 Install the current Button:
 
@@ -130,6 +143,11 @@ npx shadcn@4.16.0 add \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/checkbox.json
 ```
+
+On a managed office network, a `self-signed certificate in certificate chain`
+error means Node needs the approved corporate proxy CA for shadcn's public
+metadata endpoint. Set `NODE_EXTRA_CA_CERTS` to the platform-provided PEM file;
+do not disable TLS verification.
 
 Do not install Form; use:
 
@@ -171,7 +189,8 @@ stored with the snapshot provenance.
 - every upstream item JSON;
 - every normalized local source file;
 - the `use-mobile` support hook;
-- the fileless Form record.
+- the fileless Form record;
+- the excluded React-19-only Message Scroller record.
 
 Normal registry and catalogue builds are offline. Validation compares the
 checked-in upstream JSON and local source to these hashes, so unexpected source
@@ -194,7 +213,8 @@ page with:
 - on-demand access to the raw registry JSON.
 
 Form appears as deprecated and unavailable rather than advertising an empty
-install.
+install. Message Scroller is marked as requiring React 19 and also has no
+install command in this React 18 baseline.
 
 ## Manual GitHub Pages release
 
@@ -209,6 +229,7 @@ cd packages/shadcn-primitives
 APPLIQUE_REGISTRY_BASE_URL=https://rohangore1999.github.io/applique-ui/registry \
   pnpm run build:pages
 pnpm run validate:registry
+pnpm run smoke:react18
 pnpm run smoke:registry
 ```
 

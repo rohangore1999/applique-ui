@@ -5,18 +5,19 @@ import * as React from "react"
 import { Toast as ToastPrimitive } from "@base-ui/react/toast"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
 const toast = ToastPrimitive.createToastManager()
 
-function ToastProvider({ ...props }: ToastPrimitive.Provider.Props) {
+function ToastProviderImpl({ ...props }: ToastPrimitive.Provider.Props) {
   return <ToastPrimitive.Provider {...props} />
 }
 
-function ToastPortal({ ...props }: ToastPrimitive.Portal.Props) {
+function ToastPortalImpl({ ...props }: ToastPrimitive.Portal.Props) {
   return <ToastPrimitive.Portal data-slot="toast-portal" {...props} />
 }
 
-function ToastViewport({ className, ...props }: ToastPrimitive.Viewport.Props) {
+function ToastViewportImpl({ className, ...props }: ToastPrimitive.Viewport.Props) {
   return (
     <ToastPrimitive.Viewport
       data-slot="toast-viewport"
@@ -29,7 +30,7 @@ function ToastViewport({ className, ...props }: ToastPrimitive.Viewport.Props) {
   )
 }
 
-function Toast({ className, ...props }: ToastPrimitive.Root.Props) {
+function ToastImpl({ className, ...props }: ToastPrimitive.Root.Props) {
   return (
     <ToastPrimitive.Root
       data-slot="toast"
@@ -56,7 +57,7 @@ function Toast({ className, ...props }: ToastPrimitive.Root.Props) {
   )
 }
 
-function ToastContent({ className, ...props }: ToastPrimitive.Content.Props) {
+function ToastContentImpl({ className, ...props }: ToastPrimitive.Content.Props) {
   return (
     <ToastPrimitive.Content
       data-slot="toast-content"
@@ -69,7 +70,7 @@ function ToastContent({ className, ...props }: ToastPrimitive.Content.Props) {
   )
 }
 
-function ToastTitle({ className, ...props }: ToastPrimitive.Title.Props) {
+function ToastTitleImpl({ className, ...props }: ToastPrimitive.Title.Props) {
   return (
     <ToastPrimitive.Title
       data-slot="toast-title"
@@ -79,7 +80,7 @@ function ToastTitle({ className, ...props }: ToastPrimitive.Title.Props) {
   )
 }
 
-function ToastDescription({
+function ToastDescriptionImpl({
   className,
   ...props
 }: ToastPrimitive.Description.Props) {
@@ -92,7 +93,7 @@ function ToastDescription({
   )
 }
 
-function ToastAction({
+function ToastActionImpl({
   className,
   render = <Button variant="outline" size="sm" />,
   ...props
@@ -107,7 +108,7 @@ function ToastAction({
   )
 }
 
-function ToastClose({
+function ToastCloseImpl({
   className,
   children,
   render = <Button variant="ghost" size="icon-sm" />,
@@ -210,7 +211,7 @@ function ToastList() {
   ))
 }
 
-function Toaster({
+function ToasterImpl({
   children,
   toastManager = toast,
   ...props
@@ -229,6 +230,17 @@ function Toaster({
 
 const createToastManager = ToastPrimitive.createToastManager
 const useToastManager = ToastPrimitive.useToastManager
+
+const ToastProvider = withReact18Ref(ToastProviderImpl)
+const ToastPortal = withReact18Ref(ToastPortalImpl)
+const ToastViewport = withReact18Ref(ToastViewportImpl)
+const Toast = withReact18Ref(ToastImpl)
+const ToastContent = withReact18Ref(ToastContentImpl)
+const ToastTitle = withReact18Ref(ToastTitleImpl)
+const ToastDescription = withReact18Ref(ToastDescriptionImpl)
+const ToastAction = withReact18Ref(ToastActionImpl)
+const ToastClose = withReact18Ref(ToastCloseImpl)
+const Toaster = withReact18Ref(ToasterImpl)
 
 export {
   Toaster,

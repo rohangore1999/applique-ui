@@ -13,14 +13,15 @@ package at runtime.
 | shadcn CLI                         | `4.16.0`     |
 | shadcn style                       | `base-nova`  |
 | Node.js                            | `>=20.18.1`  |
-| React                              | `19`         |
+| React                              | `18`         |
 | Tailwind CSS                       | `4`          |
 | Official UI entries                | `62`         |
-| Sourced and installable UI entries | `61`         |
+| Sourced and installable UI entries | `60`         |
 
 The official Base/Nova `form` entry is fileless and deprecated. It remains in
 the registry and catalogue for accurate discovery, but consumers should install
-`field` instead.
+`field` instead. Message Scroller also remains visible for discovery but is not
+installable in this React 18 release because `@shadcn/react` requires React 19.
 
 The registry remains at `v0.1.0` during this pre-adoption rollout because there
 are no consumers to preserve. Once a team consumes a published version, treat
@@ -39,9 +40,10 @@ official Base/Nova item JSON
 ```
 
 Every installable component depends on `applique-theme`; component-specific
-registry dependencies such as `button`, `utils`, or `use-mobile` are installed
-automatically. `applique-theme` is generated from `src/tokens.css`, the
-Figma-backed Applique token source.
+registry dependencies such as `button`, `utils`,
+`applique-react18-compat`, or `use-mobile` are installed automatically.
+`applique-theme` is generated from `src/tokens.css`, the Figma-backed Applique
+token source.
 
 The installed TypeScript belongs to the consumer. Teams can inspect and edit
 it locally. Registry changes are not pushed into applications automatically:
@@ -53,10 +55,11 @@ not part of these primitive items.
 
 ## Consumer prerequisites
 
-A consumer using the complete registry baseline needs:
+A consumer installing components from this registry needs:
 
-- Node.js `>=20.18.1` for the pinned CLI and toolchain.
-- React 19.
+- Node.js `>=20.18.1` while running the pinned CLI. The copied source does not
+  add a Node 20 runtime requirement to the application.
+- React 18.
 - Tailwind CSS 4.
 - A shadcn `components.json` using TypeScript and the Base/Nova style.
 
@@ -85,6 +88,11 @@ A minimal compatible configuration is:
   }
 }
 ```
+
+This is an example, not an Applique-owned path contract. An existing shadcn
+application keeps its own aliases and CSS path; the CLI reads `components.json`
+only to decide where to write the copied files and theme. Once shadcn is already
+configured, the single `npx shadcn@4.16.0 add <registry-url>` command is enough.
 
 The Tailwind entry CSS must include Tailwind 4:
 
@@ -117,12 +125,22 @@ npx shadcn@4.16.0 add \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/checkbox.json
 ```
 
+On a managed office network, a `self-signed certificate in certificate chain`
+error means Node does not yet trust the corporate proxy CA used for shadcn's
+public metadata endpoint. Set `NODE_EXTRA_CA_CERTS` to the approved PEM file
+provided by the platform team; do not disable TLS verification.
+
 The CLI writes source to the aliases configured by the consumer, for example:
 
 ```text
 src/components/ui/button.tsx
+src/lib/applique-react18-compat.ts
 src/lib/utils.ts
 ```
+
+The compatibility file uses an Applique-owned path. If the application already
+has the standard shadcn `src/lib/utils.ts`, the CLI can keep it unchanged while
+installing the ref helpers separately.
 
 It also merges the Applique theme variables into the configured global CSS.
 There is no separate token package or Tailwind preset to install.
@@ -150,10 +168,14 @@ Useful focused checks are:
 
 ```sh
 pnpm run validate:registry
+pnpm run smoke:react18
 pnpm run smoke:registry
 ```
 
-`smoke:registry` installs every sourced UI item into an isolated React 19 and
+`smoke:react18` rebuilds the package and checks Button, Input, and Calendar ref
+behavior in a real React 18 DOM render.
+
+`smoke:registry` installs every sourced UI item into an isolated React 18 and
 Tailwind 4 application with `shadcn@4.16.0`, then type-checks the source and
 compiles its CSS.
 
@@ -170,9 +192,10 @@ Open:
 http://localhost:4173/catalog/#/components/button
 ```
 
-The catalogue lists all 62 official entries. The 61 sourced entries have
-lazy-loaded live previews and source-derived API information. Form is shown as
-deprecated and directs consumers to Field.
+The catalogue lists all 62 official entries. The 60 React 18-compatible sourced
+entries have lazy-loaded live previews and source-derived API information. Form
+is shown as deprecated and directs consumers to Field; Message Scroller is
+shown as requiring React 19 and has no install command.
 
 ## Refreshing the pinned shadcn snapshot
 
@@ -256,6 +279,7 @@ There is intentionally no publishing workflow at this stage.
 
    ```sh
    pnpm run validate:registry
+   pnpm run smoke:react18
    pnpm run smoke:registry
    ```
 

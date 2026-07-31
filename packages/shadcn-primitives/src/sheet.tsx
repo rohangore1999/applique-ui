@@ -5,16 +5,17 @@ import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
-function Sheet({ ...props }: SheetPrimitive.Root.Props) {
+function SheetImpl({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 
-function SheetTrigger({ ...props }: SheetPrimitive.Trigger.Props) {
+function SheetTriggerImpl({ ...props }: SheetPrimitive.Trigger.Props) {
   return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />
 }
 
-function SheetClose({ ...props }: SheetPrimitive.Close.Props) {
+function SheetCloseImpl({ ...props }: SheetPrimitive.Close.Props) {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />
 }
 
@@ -35,7 +36,7 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
   )
 }
 
-function SheetContent({
+function SheetContentImpl({
   className,
   children,
   side = "right",
@@ -79,7 +80,7 @@ function SheetContent({
   )
 }
 
-function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
+function SheetHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
@@ -89,7 +90,7 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
+function SheetFooterImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-footer"
@@ -99,7 +100,7 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function SheetTitle({ className, ...props }: SheetPrimitive.Title.Props) {
+function SheetTitleImpl({ className, ...props }: SheetPrimitive.Title.Props) {
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
@@ -112,7 +113,7 @@ function SheetTitle({ className, ...props }: SheetPrimitive.Title.Props) {
   )
 }
 
-function SheetDescription({
+function SheetDescriptionImpl({
   className,
   ...props
 }: SheetPrimitive.Description.Props) {
@@ -124,6 +125,15 @@ function SheetDescription({
     />
   )
 }
+
+const Sheet = withReact18Ref(SheetImpl)
+const SheetTrigger = withReact18Ref(SheetTriggerImpl)
+const SheetClose = withReact18Ref(SheetCloseImpl)
+const SheetContent = withReact18Ref(SheetContentImpl)
+const SheetHeader = withReact18Ref(SheetHeaderImpl)
+const SheetFooter = withReact18Ref(SheetFooterImpl)
+const SheetTitle = withReact18Ref(SheetTitleImpl)
+const SheetDescription = withReact18Ref(SheetDescriptionImpl)
 
 export {
   Sheet,

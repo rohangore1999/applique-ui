@@ -4,11 +4,12 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
 import { Input } from "./input"
 import { Textarea } from "./textarea"
 
-function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
+function InputGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="input-group"
@@ -43,7 +44,7 @@ const inputGroupAddonVariants = cva(
   }
 )
 
-function InputGroupAddon({
+function InputGroupAddonImpl({
   className,
   align = "inline-start",
   ...props
@@ -83,7 +84,7 @@ const inputGroupButtonVariants = cva(
   }
 )
 
-function InputGroupButton({
+function InputGroupButtonImpl({
   className,
   type = "button",
   variant = "ghost",
@@ -104,7 +105,7 @@ function InputGroupButton({
   )
 }
 
-function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
+function InputGroupTextImpl({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       className={cn(
@@ -116,7 +117,7 @@ function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
-function InputGroupInput({
+function InputGroupInputImpl({
   className,
   ...props
 }: React.ComponentProps<"input">) {
@@ -132,7 +133,7 @@ function InputGroupInput({
   )
 }
 
-function InputGroupTextarea({
+function InputGroupTextareaImpl({
   className,
   ...props
 }: React.ComponentProps<"textarea">) {
@@ -147,6 +148,13 @@ function InputGroupTextarea({
     />
   )
 }
+
+const InputGroup = withReact18Ref(InputGroupImpl)
+const InputGroupAddon = withReact18Ref(InputGroupAddonImpl)
+const InputGroupButton = withReact18Ref(InputGroupButtonImpl)
+const InputGroupText = withReact18Ref(InputGroupTextImpl)
+const InputGroupInput = withReact18Ref(InputGroupInputImpl)
+const InputGroupTextarea = withReact18Ref(InputGroupTextareaImpl)
 
 export {
   InputGroup,

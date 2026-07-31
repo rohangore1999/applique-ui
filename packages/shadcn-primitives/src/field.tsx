@@ -4,10 +4,11 @@ import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Label } from "./label"
 import { Separator } from "./separator"
 
-function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
+function FieldSetImpl({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
     <fieldset
       data-slot="field-set"
@@ -20,7 +21,7 @@ function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   )
 }
 
-function FieldLegend({
+function FieldLegendImpl({
   className,
   variant = "legend",
   ...props
@@ -38,7 +39,7 @@ function FieldLegend({
   )
 }
 
-function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
+function FieldGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="field-group"
@@ -69,7 +70,7 @@ const fieldVariants = cva(
   }
 )
 
-function Field({
+function FieldImpl({
   className,
   orientation = "vertical",
   ...props
@@ -85,7 +86,7 @@ function Field({
   )
 }
 
-function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
+function FieldContentImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="field-content"
@@ -98,7 +99,7 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function FieldLabel({
+function FieldLabelImpl({
   className,
   ...props
 }: React.ComponentProps<typeof Label>) {
@@ -115,7 +116,7 @@ function FieldLabel({
   )
 }
 
-function FieldTitle({ className, ...props }: React.ComponentProps<"div">) {
+function FieldTitleImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="field-label"
@@ -128,7 +129,7 @@ function FieldTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
+function FieldDescriptionImpl({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="field-description"
@@ -143,7 +144,7 @@ function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
-function FieldSeparator({
+function FieldSeparatorImpl({
   children,
   className,
   ...props
@@ -173,7 +174,7 @@ function FieldSeparator({
   )
 }
 
-function FieldError({
+function FieldErrorImpl({
   className,
   children,
   errors,
@@ -223,6 +224,17 @@ function FieldError({
     </div>
   )
 }
+
+const FieldSet = withReact18Ref(FieldSetImpl)
+const FieldLegend = withReact18Ref(FieldLegendImpl)
+const FieldGroup = withReact18Ref(FieldGroupImpl)
+const Field = withReact18Ref(FieldImpl)
+const FieldContent = withReact18Ref(FieldContentImpl)
+const FieldLabel = withReact18Ref(FieldLabelImpl)
+const FieldTitle = withReact18Ref(FieldTitleImpl)
+const FieldDescription = withReact18Ref(FieldDescriptionImpl)
+const FieldSeparator = withReact18Ref(FieldSeparatorImpl)
+const FieldError = withReact18Ref(FieldErrorImpl)
 
 export {
   Field,

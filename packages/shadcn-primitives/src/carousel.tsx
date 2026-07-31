@@ -7,6 +7,7 @@ import useEmblaCarousel, {
 } from "embla-carousel-react"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -41,7 +42,7 @@ function useCarousel() {
   return context
 }
 
-function Carousel({
+function CarouselImpl({
   orientation = "horizontal",
   opts,
   setApi,
@@ -131,7 +132,7 @@ function Carousel({
   )
 }
 
-function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
+function CarouselContentImpl({ className, ...props }: React.ComponentProps<"div">) {
   const { carouselRef, orientation } = useCarousel()
 
   return (
@@ -152,7 +153,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
+function CarouselItemImpl({ className, ...props }: React.ComponentProps<"div">) {
   const { orientation } = useCarousel()
 
   return (
@@ -170,7 +171,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CarouselPrevious({
+function CarouselPreviousImpl({
   className,
   variant = "outline",
   size = "icon-sm",
@@ -202,7 +203,7 @@ function CarouselPrevious({
   )
 }
 
-function CarouselNext({
+function CarouselNextImpl({
   className,
   variant = "outline",
   size = "icon-sm",
@@ -233,6 +234,12 @@ function CarouselNext({
     </Button>
   )
 }
+
+const Carousel = withReact18Ref(CarouselImpl)
+const CarouselContent = withReact18Ref(CarouselContentImpl)
+const CarouselItem = withReact18Ref(CarouselItemImpl)
+const CarouselPrevious = withReact18Ref(CarouselPreviousImpl)
+const CarouselNext = withReact18Ref(CarouselNextImpl)
 
 export {
   type CarouselApi,

@@ -10,8 +10,9 @@ import {
 } from "react-day-picker"
 
 import { cn } from "./utils"
+import { mergeRefs, withReact18Ref } from "./applique-react18-compat"
 import { Button, buttonVariants } from "./button"
-function Calendar({
+function CalendarImpl({
   className,
   classNames,
   showOutsideDays = true,
@@ -188,13 +189,17 @@ function Calendar({
   )
 }
 
-function CalendarDayButton({
+function CalendarDayButtonImpl({
   className,
   day,
   modifiers,
   locale,
+  ref: forwardedRef,
   ...props
-}: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> }) {
+}: React.ComponentProps<typeof DayButton> & {
+  locale?: Partial<Locale>
+  ref?: React.Ref<HTMLButtonElement>
+}) {
   const defaultClassNames = getDefaultClassNames()
 
   const ref = React.useRef<HTMLButtonElement>(null)
@@ -204,6 +209,7 @@ function CalendarDayButton({
 
   return (
     <Button
+      ref={mergeRefs(ref, forwardedRef)}
       variant="ghost"
       size="icon"
       data-day={day.date.toLocaleDateString(locale?.code)}
@@ -225,5 +231,8 @@ function CalendarDayButton({
     />
   )
 }
+
+const Calendar = withReact18Ref(CalendarImpl)
+const CalendarDayButton = withReact18Ref(CalendarDayButtonImpl)
 
 export { Calendar, CalendarDayButton }

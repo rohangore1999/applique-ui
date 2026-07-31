@@ -3,8 +3,9 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function TooltipProvider({
+function TooltipProviderImpl({
   delay = 0,
   ...props
 }: TooltipPrimitive.Provider.Props) {
@@ -17,15 +18,15 @@ function TooltipProvider({
   )
 }
 
-function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
+function TooltipImpl({ ...props }: TooltipPrimitive.Root.Props) {
   return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
 }
 
-function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
+function TooltipTriggerImpl({ ...props }: TooltipPrimitive.Trigger.Props) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
 }
 
-function TooltipContent({
+function TooltipContentImpl({
   className,
   side = "top",
   sideOffset = 4,
@@ -62,5 +63,10 @@ function TooltipContent({
     </TooltipPrimitive.Portal>
   )
 }
+
+const TooltipProvider = withReact18Ref(TooltipProviderImpl)
+const Tooltip = withReact18Ref(TooltipImpl)
+const TooltipTrigger = withReact18Ref(TooltipTriggerImpl)
+const TooltipContent = withReact18Ref(TooltipContentImpl)
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }

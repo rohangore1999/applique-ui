@@ -1,6 +1,7 @@
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function AspectRatio({
+function AspectRatioImpl({
   ratio,
   className,
   ...props
@@ -18,5 +19,7 @@ function AspectRatio({
     />
   )
 }
+
+const AspectRatio = withReact18Ref(AspectRatioImpl)
 
 export { AspectRatio }

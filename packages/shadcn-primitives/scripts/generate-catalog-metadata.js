@@ -97,13 +97,15 @@ const directExampleSlugs = [
 
 // These upstream examples depend on the shadcn docs application's AI helpers.
 // Keep the catalogue self-contained with small source-backed examples instead.
-const localBasePreviewSlugs = ['message', 'message-scroller']
+const localBasePreviewSlugs = ['message']
 const standaloneLocalPreviewSlugs = ['direction']
 const localPreviewSlugs = [
   ...localBasePreviewSlugs,
   ...standaloneLocalPreviewSlugs,
 ]
-const unavailableSlugs = ['form']
+const deprecatedSlugs = ['form']
+const incompatibleSlugs = ['message-scroller']
+const unavailableSlugs = [...deprecatedSlugs, ...incompatibleSlugs]
 const expectedComponentSlugs = [
   ...directExampleSlugs,
   ...localPreviewSlugs,
@@ -209,6 +211,8 @@ const descriptions = {
     'Provides direction context for components that support left-to-right and right-to-left layouts.',
   form:
     'Deprecated upstream entry retained for discovery only. Use Field and native form composition.',
+  'message-scroller':
+    'Unavailable in the React 18 baseline because the upstream primitive requires React 19.',
   toast:
     'Displays temporary notifications through the Base UI toast primitive.',
 }
@@ -527,6 +531,29 @@ function extractModuleApi(filePath) {
 
       const initializer = declaration.initializer
       if (
+        initializer &&
+        ts.isCallExpression(initializer) &&
+        ts.isIdentifier(initializer.expression) &&
+        initializer.expression.text === 'withReact18Ref' &&
+        initializer.arguments[0] &&
+        ts.isIdentifier(initializer.arguments[0])
+      ) {
+        const implementation = declarations.get(initializer.arguments[0].text)
+
+        if (implementation && ts.isFunctionDeclaration(implementation)) {
+          signature = functionSignature(
+            exportedName,
+            implementation,
+            sourceFile
+          )
+          props = collectTypeSurface(
+            implementation.parameters[0] &&
+              implementation.parameters[0].type,
+            sourceFile,
+            declarations
+          )
+        }
+      } else if (
         initializer &&
         ts.isCallExpression(initializer) &&
         initializer.arguments[0] &&
@@ -1003,7 +1030,11 @@ function writeGeneratedMetadata() {
       api: {
         exports: sourceAvailable ? extractModuleApi(sourcePath) : [],
       },
-      availability: unavailable ? 'deprecated' : 'registry',
+      availability: deprecatedSlugs.includes(slug)
+        ? 'deprecated'
+        : incompatibleSlugs.includes(slug)
+        ? 'incompatible'
+        : 'registry',
       category: categoryForSlug(slug),
       description: descriptionForSlug(slug),
       name: titleFromSlug(slug),

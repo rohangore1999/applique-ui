@@ -147,6 +147,8 @@ function StatusBadge({ component }: { component: CatalogueComponent }) {
   const label =
     component.availability === 'deprecated'
       ? 'Deprecated'
+      : component.availability === 'incompatible'
+      ? 'Requires React 19'
       : component.registryStatus === 'ready'
       ? 'Registry ready'
       : 'Source unavailable'
@@ -855,6 +857,26 @@ function DeprecatedPage({ component }: { component: CatalogueComponent }) {
   )
 }
 
+function IncompatiblePage({ component }: { component: CatalogueComponent }) {
+  return (
+    <>
+      <section className="panel empty-state">
+        <span className="empty-state__icon" aria-hidden="true">
+          ◌
+        </span>
+        <p className="eyebrow">React compatibility boundary</p>
+        <h2>Message Scroller requires React 19</h2>
+        <p>
+          The upstream <code>@shadcn/react</code> primitive requires React 19
+          and uses its ref-as-prop behavior. It is listed for discovery but is
+          not installable from this React 18 registry release.
+        </p>
+      </section>
+      <ApiSection component={component} />
+    </>
+  )
+}
+
 function ComponentPage({ component }: { component: CatalogueComponent }) {
   const rawUrl = registryUrl(component.slug)
   const installCommand = `npx shadcn@${SHADCN_CLI_VERSION} add ${rawUrl}`
@@ -875,6 +897,8 @@ function ComponentPage({ component }: { component: CatalogueComponent }) {
 
       {component.availability === 'deprecated' ? (
         <DeprecatedPage component={component} />
+      ) : component.availability === 'incompatible' ? (
+        <IncompatiblePage component={component} />
       ) : component.registryStatus === 'ready' ? (
         <>
           <ComponentPreview component={component} />
@@ -1003,6 +1027,8 @@ function App() {
                       ? 'Registry ready'
                       : component.availability === 'deprecated'
                       ? 'Deprecated'
+                      : component.availability === 'incompatible'
+                      ? 'Requires React 19'
                       : 'Unavailable'
                   }
                   className={`component-link__status component-link__status--${component.registryStatus}`}

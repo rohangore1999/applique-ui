@@ -5,6 +5,7 @@ import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Button } from "./button"
 import {
   InputGroup,
@@ -14,11 +15,11 @@ import {
 } from "./input-group"
 const Combobox = ComboboxPrimitive.Root
 
-function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {
+function ComboboxValueImpl({ ...props }: ComboboxPrimitive.Value.Props) {
   return <ComboboxPrimitive.Value data-slot="combobox-value" {...props} />
 }
 
-function ComboboxTrigger({
+function ComboboxTriggerImpl({
   className,
   children,
   ...props
@@ -52,7 +53,7 @@ function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
   )
 }
 
-function ComboboxInput({
+function ComboboxInputImpl({
   className,
   children,
   disabled = false,
@@ -87,7 +88,7 @@ function ComboboxInput({
   )
 }
 
-function ComboboxContent({
+function ComboboxContentImpl({
   className,
   side = "bottom",
   sideOffset = 6,
@@ -124,7 +125,7 @@ function ComboboxContent({
   )
 }
 
-function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
+function ComboboxListImpl({ className, ...props }: ComboboxPrimitive.List.Props) {
   return (
     <ComboboxPrimitive.List
       data-slot="combobox-list"
@@ -137,7 +138,7 @@ function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
   )
 }
 
-function ComboboxItem({
+function ComboboxItemImpl({
   className,
   children,
   ...props
@@ -165,7 +166,7 @@ function ComboboxItem({
   )
 }
 
-function ComboboxGroup({ className, ...props }: ComboboxPrimitive.Group.Props) {
+function ComboboxGroupImpl({ className, ...props }: ComboboxPrimitive.Group.Props) {
   return (
     <ComboboxPrimitive.Group
       data-slot="combobox-group"
@@ -175,7 +176,7 @@ function ComboboxGroup({ className, ...props }: ComboboxPrimitive.Group.Props) {
   )
 }
 
-function ComboboxLabel({
+function ComboboxLabelImpl({
   className,
   ...props
 }: ComboboxPrimitive.GroupLabel.Props) {
@@ -188,13 +189,13 @@ function ComboboxLabel({
   )
 }
 
-function ComboboxCollection({ ...props }: ComboboxPrimitive.Collection.Props) {
+function ComboboxCollectionImpl({ ...props }: ComboboxPrimitive.Collection.Props) {
   return (
     <ComboboxPrimitive.Collection data-slot="combobox-collection" {...props} />
   )
 }
 
-function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.Props) {
+function ComboboxEmptyImpl({ className, ...props }: ComboboxPrimitive.Empty.Props) {
   return (
     <ComboboxPrimitive.Empty
       data-slot="combobox-empty"
@@ -207,7 +208,7 @@ function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.Props) {
   )
 }
 
-function ComboboxSeparator({
+function ComboboxSeparatorImpl({
   className,
   ...props
 }: ComboboxPrimitive.Separator.Props) {
@@ -220,7 +221,7 @@ function ComboboxSeparator({
   )
 }
 
-function ComboboxChips({
+function ComboboxChipsImpl({
   className,
   ...props
 }: React.ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> &
@@ -237,7 +238,7 @@ function ComboboxChips({
   )
 }
 
-function ComboboxChip({
+function ComboboxChipImpl({
   className,
   children,
   showRemove = true,
@@ -270,7 +271,7 @@ function ComboboxChip({
   )
 }
 
-function ComboboxChipsInput({
+function ComboboxChipsInputImpl({
   className,
   ...props
 }: ComboboxPrimitive.Input.Props) {
@@ -286,6 +287,21 @@ function ComboboxChipsInput({
 function useComboboxAnchor() {
   return React.useRef<HTMLDivElement | null>(null)
 }
+
+const ComboboxValue = withReact18Ref(ComboboxValueImpl)
+const ComboboxTrigger = withReact18Ref(ComboboxTriggerImpl)
+const ComboboxInput = withReact18Ref(ComboboxInputImpl)
+const ComboboxContent = withReact18Ref(ComboboxContentImpl)
+const ComboboxList = withReact18Ref(ComboboxListImpl)
+const ComboboxItem = withReact18Ref(ComboboxItemImpl)
+const ComboboxGroup = withReact18Ref(ComboboxGroupImpl)
+const ComboboxLabel = withReact18Ref(ComboboxLabelImpl)
+const ComboboxCollection = withReact18Ref(ComboboxCollectionImpl)
+const ComboboxEmpty = withReact18Ref(ComboboxEmptyImpl)
+const ComboboxSeparator = withReact18Ref(ComboboxSeparatorImpl)
+const ComboboxChips = withReact18Ref(ComboboxChipsImpl)
+const ComboboxChip = withReact18Ref(ComboboxChipImpl)
+const ComboboxChipsInput = withReact18Ref(ComboboxChipsInputImpl)
 
 export {
   Combobox,

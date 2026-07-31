@@ -4,15 +4,17 @@ The catalogue is a static React page for inspecting the pinned shadcn
 Base/Nova registry through Applique semantic tokens. It lists all 62 upstream
 component entries:
 
-- 61 installable entries have lazy-loaded live previews and source-derived API
+- 60 installable entries have lazy-loaded live previews and source-derived API
   metadata.
 - `Form` is retained as a deprecated discovery entry and points consumers to
   `Field`; no install command is advertised for it.
+- `Message Scroller` is retained for discovery but is unavailable because its
+  upstream primitive requires React 19.
 
-Most previews are vendored from the pinned upstream commit. `Direction`,
-`Message`, and `Message Scroller` use local minimal previews because Direction
-has no upstream example and the two message examples depend on private shadcn
-docs helpers. Registry JSON is fetched only when someone asks to view source.
+Most previews are vendored from the pinned upstream commit. `Direction` and
+`Message` use local minimal previews because Direction has no upstream example
+and Message depends on private shadcn docs helpers. Registry JSON is fetched
+only when someone asks to view source.
 
 ## Build and inspect
 

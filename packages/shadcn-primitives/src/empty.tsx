@@ -1,8 +1,9 @@
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Empty({ className, ...props }: React.ComponentProps<"div">) {
+function EmptyImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="empty"
@@ -15,7 +16,7 @@ function Empty({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function EmptyHeader({ className, ...props }: React.ComponentProps<"div">) {
+function EmptyHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="empty-header"
@@ -40,7 +41,7 @@ const emptyMediaVariants = cva(
   }
 )
 
-function EmptyMedia({
+function EmptyMediaImpl({
   className,
   variant = "default",
   ...props
@@ -55,7 +56,7 @@ function EmptyMedia({
   )
 }
 
-function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
+function EmptyTitleImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="empty-title"
@@ -68,7 +69,7 @@ function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
+function EmptyDescriptionImpl({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <div
       data-slot="empty-description"
@@ -81,7 +82,7 @@ function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
-function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
+function EmptyContentImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="empty-content"
@@ -93,6 +94,13 @@ function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+
+const Empty = withReact18Ref(EmptyImpl)
+const EmptyHeader = withReact18Ref(EmptyHeaderImpl)
+const EmptyMedia = withReact18Ref(EmptyMediaImpl)
+const EmptyTitle = withReact18Ref(EmptyTitleImpl)
+const EmptyDescription = withReact18Ref(EmptyDescriptionImpl)
+const EmptyContent = withReact18Ref(EmptyContentImpl)
 
 export {
   Empty,

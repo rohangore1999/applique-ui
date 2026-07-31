@@ -11,12 +11,13 @@
   ],
   "registryDependencies": [
     "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json"
   ],
   "files": [
     {
       "path": "ui/textarea.tsx",
-      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nfunction Textarea({ className, ...props }: React.ComponentProps<\"textarea\">) {\n  return (\n    <textarea\n      data-slot=\"textarea\"\n      className={cn(\n        \"flex field-sizing-content min-h-16 w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm applique-dark:bg-input/30 applique-dark:disabled:bg-input/80 applique-dark:aria-invalid:border-destructive/50 applique-dark:aria-invalid:ring-destructive/40\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nexport { Textarea }\n",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nfunction TextareaImpl({ className, ...props }: React.ComponentProps<\"textarea\">) {\n  return (\n    <textarea\n      data-slot=\"textarea\"\n      className={cn(\n        \"flex field-sizing-content min-h-16 w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm applique-dark:bg-input/30 applique-dark:disabled:bg-input/80 applique-dark:aria-invalid:border-destructive/50 applique-dark:aria-invalid:ring-destructive/40\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nconst Textarea = withReact18Ref(TextareaImpl)\n\nexport { Textarea }\n",
       "type": "registry:ui",
       "target": "@ui/textarea.tsx"
     }
@@ -25,7 +26,7 @@
     "status": "experimental",
     "upstream": {
       "cliVersion": "4.16.0",
-      "sourceSha256": "10a057ef60ce8e3d9e388d1cd89354881d5492d77bb02f51d31b0e9b68faa176",
+      "sourceSha256": "1497a470a5b6170c9352aab4721e505b2af5a77c3fc1c7dedc2ee845bf55aae2",
       "style": "base-nova",
       "upstreamSha256": "9c8d023180c474a17a2bde043de961a6b091bf9e7d865b47efb4eef89e61097b"
     },

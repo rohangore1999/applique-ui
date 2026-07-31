@@ -11,12 +11,13 @@
   ],
   "registryDependencies": [
     "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json"
   ],
   "files": [
     {
       "path": "ui/kbd.tsx",
-      "content": "import { cn } from \"@/lib/utils\"\n\nfunction Kbd({ className, ...props }: React.ComponentProps<\"kbd\">) {\n  return (\n    <kbd\n      data-slot=\"kbd\"\n      className={cn(\n        \"pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-muted-foreground select-none in-data-[slot=tooltip-content]:bg-background/20 in-data-[slot=tooltip-content]:text-background applique-dark:in-data-[slot=tooltip-content]:bg-background/10 [&_svg:not([class*='size-'])]:size-3\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nfunction KbdGroup({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <kbd\n      data-slot=\"kbd-group\"\n      className={cn(\"inline-flex items-center gap-1\", className)}\n      {...props}\n    />\n  )\n}\n\nexport { Kbd, KbdGroup }\n",
+      "content": "import { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nfunction KbdImpl({ className, ...props }: React.ComponentProps<\"kbd\">) {\n  return (\n    <kbd\n      data-slot=\"kbd\"\n      className={cn(\n        \"pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-muted-foreground select-none in-data-[slot=tooltip-content]:bg-background/20 in-data-[slot=tooltip-content]:text-background applique-dark:in-data-[slot=tooltip-content]:bg-background/10 [&_svg:not([class*='size-'])]:size-3\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nfunction KbdGroupImpl({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <kbd\n      data-slot=\"kbd-group\"\n      className={cn(\"inline-flex items-center gap-1\", className)}\n      {...props}\n    />\n  )\n}\n\nconst Kbd = withReact18Ref(KbdImpl)\nconst KbdGroup = withReact18Ref(KbdGroupImpl)\n\nexport { Kbd, KbdGroup }\n",
       "type": "registry:ui",
       "target": "@ui/kbd.tsx"
     }
@@ -25,7 +26,7 @@
     "status": "experimental",
     "upstream": {
       "cliVersion": "4.16.0",
-      "sourceSha256": "553e8fcbe6224f78b24742348f757e83d579e3360dabe35122dc2cbea8906cb1",
+      "sourceSha256": "239dbba6d2c6275b28f91351cfbe9faf64a3659d05e8bd3fe98c4ae5d047f792",
       "style": "base-nova",
       "upstreamSha256": "cc1db53b36b03ad2d2dedd3368b506953f63c210d3e72f7725117dd7481f734e"
     },

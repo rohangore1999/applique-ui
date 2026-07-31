@@ -6,6 +6,7 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { Menubar as MenubarPrimitive } from "@base-ui/react/menubar"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +22,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./dropdown-menu"
-function Menubar({ className, ...props }: MenubarPrimitive.Props) {
+function MenubarImpl({ className, ...props }: MenubarPrimitive.Props) {
   return (
     <MenubarPrimitive
       data-slot="menubar"
@@ -34,23 +35,23 @@ function Menubar({ className, ...props }: MenubarPrimitive.Props) {
   )
 }
 
-function MenubarMenu({ ...props }: React.ComponentProps<typeof DropdownMenu>) {
+function MenubarMenuImpl({ ...props }: React.ComponentProps<typeof DropdownMenu>) {
   return <DropdownMenu data-slot="menubar-menu" {...props} />
 }
 
-function MenubarGroup({
+function MenubarGroupImpl({
   ...props
 }: React.ComponentProps<typeof DropdownMenuGroup>) {
   return <DropdownMenuGroup data-slot="menubar-group" {...props} />
 }
 
-function MenubarPortal({
+function MenubarPortalImpl({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPortal>) {
   return <DropdownMenuPortal data-slot="menubar-portal" {...props} />
 }
 
-function MenubarTrigger({
+function MenubarTriggerImpl({
   className,
   ...props
 }: React.ComponentProps<typeof DropdownMenuTrigger>) {
@@ -66,7 +67,7 @@ function MenubarTrigger({
   )
 }
 
-function MenubarContent({
+function MenubarContentImpl({
   className,
   align = "start",
   alignOffset = -4,
@@ -88,7 +89,7 @@ function MenubarContent({
   )
 }
 
-function MenubarItem({
+function MenubarItemImpl({
   className,
   inset,
   variant = "default",
@@ -108,7 +109,7 @@ function MenubarItem({
   )
 }
 
-function MenubarCheckboxItem({
+function MenubarCheckboxItemImpl({
   className,
   children,
   checked,
@@ -139,13 +140,13 @@ function MenubarCheckboxItem({
   )
 }
 
-function MenubarRadioGroup({
+function MenubarRadioGroupImpl({
   ...props
 }: React.ComponentProps<typeof DropdownMenuRadioGroup>) {
   return <DropdownMenuRadioGroup data-slot="menubar-radio-group" {...props} />
 }
 
-function MenubarRadioItem({
+function MenubarRadioItemImpl({
   className,
   children,
   inset,
@@ -174,7 +175,7 @@ function MenubarRadioItem({
   )
 }
 
-function MenubarLabel({
+function MenubarLabelImpl({
   className,
   inset,
   ...props
@@ -194,7 +195,7 @@ function MenubarLabel({
   )
 }
 
-function MenubarSeparator({
+function MenubarSeparatorImpl({
   className,
   ...props
 }: React.ComponentProps<typeof DropdownMenuSeparator>) {
@@ -207,7 +208,7 @@ function MenubarSeparator({
   )
 }
 
-function MenubarShortcut({
+function MenubarShortcutImpl({
   className,
   ...props
 }: React.ComponentProps<typeof DropdownMenuShortcut>) {
@@ -223,13 +224,13 @@ function MenubarShortcut({
   )
 }
 
-function MenubarSub({
+function MenubarSubImpl({
   ...props
 }: React.ComponentProps<typeof DropdownMenuSub>) {
   return <DropdownMenuSub data-slot="menubar-sub" {...props} />
 }
 
-function MenubarSubTrigger({
+function MenubarSubTriggerImpl({
   className,
   inset,
   ...props
@@ -249,7 +250,7 @@ function MenubarSubTrigger({
   )
 }
 
-function MenubarSubContent({
+function MenubarSubContentImpl({
   className,
   ...props
 }: React.ComponentProps<typeof DropdownMenuSubContent>) {
@@ -264,6 +265,23 @@ function MenubarSubContent({
     />
   )
 }
+
+const Menubar = withReact18Ref(MenubarImpl)
+const MenubarMenu = withReact18Ref(MenubarMenuImpl)
+const MenubarGroup = withReact18Ref(MenubarGroupImpl)
+const MenubarPortal = withReact18Ref(MenubarPortalImpl)
+const MenubarTrigger = withReact18Ref(MenubarTriggerImpl)
+const MenubarContent = withReact18Ref(MenubarContentImpl)
+const MenubarItem = withReact18Ref(MenubarItemImpl)
+const MenubarCheckboxItem = withReact18Ref(MenubarCheckboxItemImpl)
+const MenubarRadioGroup = withReact18Ref(MenubarRadioGroupImpl)
+const MenubarRadioItem = withReact18Ref(MenubarRadioItemImpl)
+const MenubarLabel = withReact18Ref(MenubarLabelImpl)
+const MenubarSeparator = withReact18Ref(MenubarSeparatorImpl)
+const MenubarShortcut = withReact18Ref(MenubarShortcutImpl)
+const MenubarSub = withReact18Ref(MenubarSubImpl)
+const MenubarSubTrigger = withReact18Ref(MenubarSubTriggerImpl)
+const MenubarSubContent = withReact18Ref(MenubarSubContentImpl)
 
 export {
   Menubar,

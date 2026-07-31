@@ -66,6 +66,5 @@ export const previewLoaders: Partial<
   "toggle": () => import('../previews/base/toggle'),
   "tooltip": () => import('../previews/base/tooltip'),
   "message": () => import('../previews/base/message'),
-  "message-scroller": () => import('../previews/base/message-scroller'),
   direction: () => import('../previews/direction-preview'),
 }

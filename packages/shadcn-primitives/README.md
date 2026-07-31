@@ -12,12 +12,17 @@ It is not necessary for a dashboard to import this package at runtime.
 - Registry version: `v0.1.0`
 - shadcn CLI: `4.16.0`
 - Style: `base-nova`
-- React: 19
+- React: 18
 - Tailwind CSS: 4
-- Node.js: `>=20.18.1`
-- Coverage: all 62 official UI entries, with 61 sourced and installable
+- Installer/update CLI Node.js: `>=20.18.1`
+- Coverage: all 62 official UI entries, with 60 sourced and installable
 
-The upstream Form entry is fileless and deprecated; use Field.
+The upstream Form entry is fileless and deprecated; use Field. Message
+Scroller is listed for discovery but is not published in this baseline because
+its upstream `@shadcn/react` primitive requires React 19.
+
+The copied source itself adds no Node 20 runtime requirement. A client's
+ongoing development and build Node version depends on its own toolchain.
 
 ## Install from the registry
 
@@ -47,6 +52,7 @@ From this directory:
 ```sh
 pnpm run build:pages
 pnpm run validate:registry
+pnpm run smoke:react18
 pnpm run smoke:registry
 ```
 

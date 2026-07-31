@@ -6,6 +6,7 @@ import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group
 import { type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { toggleVariants } from "./toggle"
 
 const ToggleGroupContext = React.createContext<
@@ -20,7 +21,7 @@ const ToggleGroupContext = React.createContext<
   orientation: "horizontal",
 })
 
-function ToggleGroup({
+function ToggleGroupImpl({
   className,
   variant,
   size,
@@ -56,7 +57,7 @@ function ToggleGroup({
   )
 }
 
-function ToggleGroupItem({
+function ToggleGroupItemImpl({
   className,
   children,
   variant = "default",
@@ -85,5 +86,8 @@ function ToggleGroupItem({
     </TogglePrimitive>
   )
 }
+
+const ToggleGroup = withReact18Ref(ToggleGroupImpl)
+const ToggleGroupItem = withReact18Ref(ToggleGroupItemImpl)
 
 export { ToggleGroup, ToggleGroupItem }

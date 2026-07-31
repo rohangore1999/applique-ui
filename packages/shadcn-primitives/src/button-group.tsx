@@ -3,6 +3,7 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 import { Separator } from "./separator"
 
 const buttonGroupVariants = cva(
@@ -22,7 +23,7 @@ const buttonGroupVariants = cva(
   }
 )
 
-function ButtonGroup({
+function ButtonGroupImpl({
   className,
   orientation,
   ...props
@@ -38,7 +39,7 @@ function ButtonGroup({
   )
 }
 
-function ButtonGroupText({
+function ButtonGroupTextImpl({
   className,
   render,
   ...props
@@ -61,7 +62,7 @@ function ButtonGroupText({
   })
 }
 
-function ButtonGroupSeparator({
+function ButtonGroupSeparatorImpl({
   className,
   orientation = "vertical",
   ...props
@@ -78,6 +79,10 @@ function ButtonGroupSeparator({
     />
   )
 }
+
+const ButtonGroup = withReact18Ref(ButtonGroupImpl)
+const ButtonGroupText = withReact18Ref(ButtonGroupTextImpl)
+const ButtonGroupSeparator = withReact18Ref(ButtonGroupSeparatorImpl)
 
 export {
   ButtonGroup,

@@ -2,7 +2,6 @@
   "cliVersion": "4.16.0",
   "dependencyPins": {
     "@base-ui/react": "1.6.0",
-    "@shadcn/react": "0.2.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
@@ -12,6 +11,7 @@
     "lucide-react": "1.28.0",
     "next-themes": "0.4.6",
     "react-day-picker": "10.0.1",
+    "react-is": "18.3.1",
     "react-resizable-panels": "4.12.2",
     "recharts": "3.8.0",
     "sonner": "2.0.7",
@@ -27,10 +27,11 @@
       "name": "accordion",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/accordion.tsx",
-      "sourceSha256": "9051b6bb2f4623fc9e63b621397f2452e6c3894e7d2ea10018bfc667f8a77eb3",
+      "sourceSha256": "863532b807b5dec6fa611904101604888953049337d53fa8e23042887d3a849b",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/accordion.json",
@@ -43,10 +44,11 @@
       "name": "alert",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/alert.tsx",
-      "sourceSha256": "789c2728f477e4b7635c1afa9e1d9286e85ce2cf3a545d0b5004d38023dd4f93",
+      "sourceSha256": "f2a20ab63c4aec6ac1b27b0699c25002f5116fad778e5a04d59ab27da3d937ea",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/alert.json",
@@ -60,10 +62,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/alert-dialog.tsx",
-      "sourceSha256": "aff7c3195349d876dc1f976482469be9d1cf679414fd3fb76ba0e75c27655c99",
+      "sourceSha256": "01321ec2562f6081d0562c295378592db241a89d1b880a7303a14a9c9a2ecf79",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/alert-dialog.json",
@@ -74,10 +77,11 @@
       "name": "aspect-ratio",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/aspect-ratio.tsx",
-      "sourceSha256": "a57801b367527b57ccfae72c1490d51f0f05ed7ef8753a085eefd541176079f6",
+      "sourceSha256": "f317dec0c31ef5df2493f158438db903663803bf6700e9166f1a51cad6f1c070",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/aspect-ratio.json",
@@ -92,10 +96,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/attachment.tsx",
-      "sourceSha256": "a67e7c11769de77de11aa1ee0078a6c320f495f2fb0f7c48c55ad08e35225ca8",
+      "sourceSha256": "3822403a9ff1a3179d573979adcf4b5eb1d6d8a9209c4c159151f152bd747d90",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/attachment.json",
@@ -108,10 +113,11 @@
       "name": "avatar",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/avatar.tsx",
-      "sourceSha256": "fe527effa05eae2c10851ad0127db9ce75fd10d473b7de8d1eec720cadfbb1d3",
+      "sourceSha256": "2645c89a27aa55e72d6d6b2ed5c7650ff4528c64dc3000537066cee71e5ba7fa",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/avatar.json",
@@ -125,10 +131,11 @@
       "name": "badge",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/badge.tsx",
-      "sourceSha256": "7551cf4d02ba95fb5db9ba0e2c242ba0903479aad6a67f4584cd82fac70b290d",
+      "sourceSha256": "cdcc140e4093e10ffbd23ac82d15d3f5edae457bf237aadaef4b63ee4dd544c4",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/badge.json",
@@ -142,10 +149,11 @@
       "name": "breadcrumb",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/breadcrumb.tsx",
-      "sourceSha256": "ef1970e98e26891328231e5a6ab640ae7368334d08a4a3371df852ceb9b220e4",
+      "sourceSha256": "bd4cb50b2ec829ca733e10f155a3f6e11db9af031ca4f3c55eb969c9d915a6b4",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/breadcrumb.json",
@@ -159,10 +167,11 @@
       "name": "bubble",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/bubble.tsx",
-      "sourceSha256": "d407a7bcca5e557c14c4b9c9fe88878f960619aa9ddd2fd64e482f42c3dd89c9",
+      "sourceSha256": "cb2dae1a2a70d9e395afc7a7ff6be3e1c3417a5ee9c164f507aec1c7f9a15779",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/bubble.json",
@@ -176,10 +185,11 @@
       "name": "button",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/button.tsx",
-      "sourceSha256": "6c6c98e9ff6c121841adb05d284ffd112b74f333bde20be3a877325df521eb30",
+      "sourceSha256": "f08fc96e66cc3a504ee0f5490702991c5142a2711e1819e7ced5ec716b9d4e9d",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/button.json",
@@ -194,10 +204,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "separator"
       ],
       "sourcePath": "src/button-group.tsx",
-      "sourceSha256": "4b4a2d52d93559f9d0e77f8c2902ba1a134267009121ad182f4d05b7324009f0",
+      "sourceSha256": "b3c843807568fd106385cf7dfdb41934c8b18f5f3963300b302ceb50b8c6c54e",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/button-group.json",
@@ -213,10 +224,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/calendar.tsx",
-      "sourceSha256": "cdc98745bf1dff71c116bfe9bb9add68281aafdf0024e62a32a6f425b6d3abb3",
+      "sourceSha256": "7db7252f20df02f3513daaf7f1e9a874714ac5922a8e36c8f6e287c21e51541d",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/calendar.json",
@@ -227,10 +239,11 @@
       "name": "card",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/card.tsx",
-      "sourceSha256": "a1bcd55f06782a64be7a0668ac213646e9e9b1c6bb75e24bdfb8192f1a107a8d",
+      "sourceSha256": "e0e42a54e01bb25c57568fc5ed5ea91073426154a3bbb7c29d53d4f3509c1240",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/card.json",
@@ -245,10 +258,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/carousel.tsx",
-      "sourceSha256": "122624f7d906202f73ec24c0a1b5b80bf39d26a7558ca9c29bdfafc99491d904",
+      "sourceSha256": "d52be689356ac84113a340a7779292f5b0aab3bbb21141be490233d85aabdd0a",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/carousel.json",
@@ -256,16 +270,18 @@
     },
     {
       "dependencies": [
+        "react-is@18.3.1",
         "recharts@3.8.0"
       ],
       "name": "chart",
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "card"
       ],
       "sourcePath": "src/chart.tsx",
-      "sourceSha256": "0fa5ae7ac6bc0063f28e02aff99eccbfb8080fc710751f2376306d60a0346ca1",
+      "sourceSha256": "827717a73f0c31f449c9c9242ade98c0f8d6887e2e2ac4c94c5bb3aea2029c85",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/chart.json",
@@ -279,10 +295,11 @@
       "name": "checkbox",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/checkbox.tsx",
-      "sourceSha256": "1e711f9dbce6fc5296b688f752ba40444fb8645fea5a7a2b50bb892a14115c0a",
+      "sourceSha256": "86644e4e66b36e4752ddfaeb7612ed69323233b3509ecfbf87d0303df7863a0a",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/checkbox.json",
@@ -294,10 +311,11 @@
       ],
       "name": "collapsible",
       "registryDependencies": [
-        "applique-theme"
+        "applique-theme",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/collapsible.tsx",
-      "sourceSha256": "ead4349ff7b01d696ef89294a81d18ee1d3f732321398896462c834ab9b9e065",
+      "sourceSha256": "132bf0c2c32be7eec70525696edb0a0d30226b69f743833f4f3a49506229ad90",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/collapsible.json",
@@ -312,11 +330,12 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button",
         "input-group"
       ],
       "sourcePath": "src/combobox.tsx",
-      "sourceSha256": "77106246982475aa59ee2d6c682d226d45b0d64a040fec8ed56dbb7f58044c96",
+      "sourceSha256": "d993b2f4e5be8db096cb6cb4a9010101beaa045d1391a3a7089f1bb849fdb9f4",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/combobox.json",
@@ -331,11 +350,12 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "dialog",
         "input-group"
       ],
       "sourcePath": "src/command.tsx",
-      "sourceSha256": "0980221cc636c99f0f85ec78705ecc5bd52b820543e5ddbfd1efe658703832f0",
+      "sourceSha256": "89fbfda156cefaba9786a056a5eb8283b8e8ba609310f2477dbf881b0e701c0a",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/command.json",
@@ -349,10 +369,11 @@
       "name": "context-menu",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/context-menu.tsx",
-      "sourceSha256": "1629cfe08ab0cc15eeeb794fa4e40559468ea823f45e7d71467fcd81747ebfcf",
+      "sourceSha256": "198fb1c72691eeb606cbbb6fb3b76ec3c9be35b6303f6c486360151e8f3b1b59",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/context-menu.json",
@@ -367,10 +388,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/dialog.tsx",
-      "sourceSha256": "21cbb38b7f40ed2f19b7db1eb289891b99dd4bed3c6b696da309bd28c94c8da4",
+      "sourceSha256": "6705b9634c484b82cc36f0eaf8786f08cb9291c0254882001568edace5ec6ed3",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/dialog.json",
@@ -398,10 +420,11 @@
       "name": "drawer",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/drawer.tsx",
-      "sourceSha256": "e3c4c6057365cff89f86d9e7edf7135a153e771edc01d31d3a7af923ce125728",
+      "sourceSha256": "22cfe2cf34c67bb766fc8dca31d2e47e29acdf511b2a2702ad7ba70fee1cc4cf",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/drawer.json",
@@ -415,10 +438,11 @@
       "name": "dropdown-menu",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/dropdown-menu.tsx",
-      "sourceSha256": "4bc18fc029a87c2606467e64182fbdbd98a1f42a3055c3e8a20d8850008ef79b",
+      "sourceSha256": "53c8a051f853702a64dd8dc547bf7af46e673f4779078e0430dea9ddb2ae17e6",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/dropdown-menu.json",
@@ -431,10 +455,11 @@
       "name": "empty",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/empty.tsx",
-      "sourceSha256": "6e4023718933795f74e15b5aa913fbbeb1a784fae81fe4ff6720a1688b9a1257",
+      "sourceSha256": "c555536404260e8df8dcb5ed0ec2112cd277d3f811f8a126e7edb8eae3ff74d2",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/empty.json",
@@ -448,11 +473,12 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "label",
         "separator"
       ],
       "sourcePath": "src/field.tsx",
-      "sourceSha256": "9ba6747048a4ad08158f519a719e9ba949bad351534c18054231afb59e5a4250",
+      "sourceSha256": "3ffbf11361ee33a6d4de4561d00877c39340956d94a0cfa39b70928715f19b6c",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/field.json",
@@ -476,10 +502,11 @@
       "name": "hover-card",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/hover-card.tsx",
-      "sourceSha256": "caff01c5cc0871e1ea939133d670ad03aa10c98d2d3317cdb7c607a08dff974c",
+      "sourceSha256": "34e0e851b1a3fd044b417b3043c02a1c5f95a5a3cae96dd65957537d13143d2c",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/hover-card.json",
@@ -492,10 +519,11 @@
       "name": "input",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/input.tsx",
-      "sourceSha256": "2e27b95123c5f23b4a06be2d989104a188d042c1d1dd95d29dd67da255bfc767",
+      "sourceSha256": "8fbb788587cecb0277e3d59b6990b650d8cdb71f585c126a042d0512a7b0be5b",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/input.json",
@@ -509,12 +537,13 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button",
         "input",
         "textarea"
       ],
       "sourcePath": "src/input-group.tsx",
-      "sourceSha256": "3d35c4ea17f56e9c1f405d56f94f83f25bac13cc33b594b24e46d54fa21fd759",
+      "sourceSha256": "1c86116b8f003ca4431e80ddcd534e96e81060d13d7bf65d3f4a178651dd3b26",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/input-group.json",
@@ -528,10 +557,11 @@
       "name": "input-otp",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/input-otp.tsx",
-      "sourceSha256": "f401888f6bccd52cc0d9659de4aa8652711c00e139322d1ab4017b07ce72a2c6",
+      "sourceSha256": "b3c3a843c59fc31605d007e0bb7fc4e54154e50901bf47f55550590ca5cdc7c9",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/input-otp.json",
@@ -546,10 +576,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "separator"
       ],
       "sourcePath": "src/item.tsx",
-      "sourceSha256": "672c31850764f4a224b9f99cdc7c92d14ac5b047d5ecf390a24d0407c4dc10cd",
+      "sourceSha256": "0bf2baf53eafe4e75cab8a1d96e39d1c04fda80dc0305cd355191f159f4586ec",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/item.json",
@@ -560,10 +591,11 @@
       "name": "kbd",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/kbd.tsx",
-      "sourceSha256": "553e8fcbe6224f78b24742348f757e83d579e3360dabe35122dc2cbea8906cb1",
+      "sourceSha256": "239dbba6d2c6275b28f91351cfbe9faf64a3659d05e8bd3fe98c4ae5d047f792",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/kbd.json",
@@ -574,10 +606,11 @@
       "name": "label",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/label.tsx",
-      "sourceSha256": "055f0a067e7b228820992cc1ebc4136b135749bbb790dfc92dc6f33b40d47c81",
+      "sourceSha256": "1e8412afbccfbb1fdfe3a70fb9a829a6b78894648ee23d12315be6b114bb9433",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/label.json",
@@ -591,10 +624,11 @@
       "name": "marker",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/marker.tsx",
-      "sourceSha256": "4de63dbcce0e7bbddfb06ce515c902b65b5de0474520f255c1e42ee439b519bb",
+      "sourceSha256": "c7534600a798708eb9dae8437c7e79c3629385df04e35c1afffb5298f852cb2f",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/marker.json",
@@ -609,10 +643,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "dropdown-menu"
       ],
       "sourcePath": "src/menubar.tsx",
-      "sourceSha256": "1355d58c9da60af8df68354a92f179430c0b65981416766db0f0a0dec679e6ce",
+      "sourceSha256": "3d129184a60c28fc052f7abfd39d3c9479176e2c4eccb959e95466e5fa9d2ece",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/menubar.json",
@@ -623,29 +658,23 @@
       "name": "message",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/message.tsx",
-      "sourceSha256": "ddc51f28f93932197e1481b3f1a0cde610a7905f2fa7030c2d25abe99683ad01",
+      "sourceSha256": "9cf847a089a7908cf64d9fc4ed133e02fbd771b5a50482623eabb43de849630e",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/message.json",
       "upstreamSha256": "dc0988b904c4b670ceb955ff3ade97f14bc07c56dd9906a2b69d7d5aab63c27b"
     },
     {
-      "dependencies": [
-        "@shadcn/react@0.2.1",
-        "lucide-react@1.28.0"
-      ],
+      "dependencies": [],
       "name": "message-scroller",
-      "registryDependencies": [
-        "applique-theme",
-        "utils",
-        "button"
-      ],
-      "sourcePath": "src/message-scroller.tsx",
-      "sourceSha256": "86c53fe8bbe7c2de60dc0f898273fdef4ef79fdbf0c2439028a8d441acb95476",
-      "status": "installable",
+      "registryDependencies": [],
+      "sourcePath": null,
+      "sourceSha256": null,
+      "status": "unsupported",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/message-scroller.json",
       "upstreamSha256": "c46a75d56dce7b6dc9f8a1f122dff235222bf7f8f8286484328393adeeab847b"
@@ -657,10 +686,11 @@
       "name": "native-select",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/native-select.tsx",
-      "sourceSha256": "b1943b391b932135c1a72b1171568c1644ab0e6754ff3215d053f3fc0c3bf09d",
+      "sourceSha256": "68c39edb87ee830e0ed185833d2a2edbb8efb8bb06c2e4ee8c9d752d7f00a107",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/native-select.json",
@@ -675,10 +705,11 @@
       "name": "navigation-menu",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/navigation-menu.tsx",
-      "sourceSha256": "dd4263b7eaec096b82c7bcc45e78e7cd4b2d966b2806a26b31ad266224fe9211",
+      "sourceSha256": "28b3cb416278055cbe7332b55e563a45dc65b477894f75369dd1d251c132a538",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/navigation-menu.json",
@@ -692,10 +723,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/pagination.tsx",
-      "sourceSha256": "9502792c8a079050c4a749e98830062fe25645cfa825f138d258ae0780292f46",
+      "sourceSha256": "cfce92639e9353f7559a2f0ab9c69afb23efbdde2ce65da157270067cca499bf",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/pagination.json",
@@ -708,10 +740,11 @@
       "name": "popover",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/popover.tsx",
-      "sourceSha256": "aa9b7842265ffc97ca976bf2f32a4c186a5c0a48a64b4e5de5b6151241d956ee",
+      "sourceSha256": "13d793f3adba19a48e14a71269a8a5b82e69b85d417fefaf1475fccf83207b69",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/popover.json",
@@ -724,10 +757,11 @@
       "name": "progress",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/progress.tsx",
-      "sourceSha256": "318a736acfa2e2f25416da0a330a234e436437322d84973141d0448f8a418c6d",
+      "sourceSha256": "327a4d00d0d52e3f4b8bf5dbebfa07c546199553257766bb7df84cdacfdce0c7",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/progress.json",
@@ -740,10 +774,11 @@
       "name": "radio-group",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/radio-group.tsx",
-      "sourceSha256": "6f9436a812125751fc83ed6ab630f828c5caa59df4e9e575e8b106d5b8dabddf",
+      "sourceSha256": "9bbe92709e309ba828af707702febe4c2beaaa094c201020d1448d8c99949d1b",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/radio-group.json",
@@ -756,10 +791,11 @@
       "name": "resizable",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/resizable.tsx",
-      "sourceSha256": "7c0bafa6804c65a153dd9d049031db637257bcb625ce969954fa5a75e0f2de33",
+      "sourceSha256": "1fbe28809f196bd67590f02e87ef201dce725bd4b58906ee6674ec93c26de0bc",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/resizable.json",
@@ -772,10 +808,11 @@
       "name": "scroll-area",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/scroll-area.tsx",
-      "sourceSha256": "d42f239db1219526460fa56aae28dad249293ebe134729b54fed80f50ee4bbe4",
+      "sourceSha256": "7dbdbea23280103c2074665c3cd22885a6309c718c7fb398a9e62577400c081c",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/scroll-area.json",
@@ -789,10 +826,11 @@
       "name": "select",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/select.tsx",
-      "sourceSha256": "f71edceaa4a75790b1d430e7ef0a0063316fe72316fbc52c0b6e89e076325743",
+      "sourceSha256": "604fa88424a19e368d7d78c8fc8f99f854cbccd4a945046651d9145dac662d40",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/select.json",
@@ -805,10 +843,11 @@
       "name": "separator",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/separator.tsx",
-      "sourceSha256": "de0d51b3d040a07416282f4ca22ffa3daa20b4443ec37660be5a11a22432c0e6",
+      "sourceSha256": "479e672f10ca44782214c85cbd69e8e60665ca55a5c45374671de9ec52adb3e4",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/separator.json",
@@ -823,10 +862,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/sheet.tsx",
-      "sourceSha256": "a5870349d2f04d58883ae70d6375fea4decc62bab2c8861fdcc782f0cbd8556b",
+      "sourceSha256": "4fe13da3c4ab4f9c7435261730350dfed991905941a328cd906e5b952aee9d77",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/sheet.json",
@@ -843,6 +883,7 @@
         "applique-theme",
         "use-mobile",
         "utils",
+        "applique-react18-compat",
         "button",
         "input",
         "separator",
@@ -851,7 +892,7 @@
         "tooltip"
       ],
       "sourcePath": "src/sidebar.tsx",
-      "sourceSha256": "eeafe0111568f9025971c74d5cd21a16f1b8b562053a5e79a8e326580992f027",
+      "sourceSha256": "8f9560c90bb33be706bcb4782bca0224582fe107b25cb6787ee1cee8877d8b68",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/sidebar.json",
@@ -862,10 +903,11 @@
       "name": "skeleton",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/skeleton.tsx",
-      "sourceSha256": "7b2f5fa461939185d2931f8345a50f5758e262cb5a4ec632a2d210a3faa42afb",
+      "sourceSha256": "98f5d9b2a7ee6e6522d853da5f0697d1c27e93a70bd93fd987b6f220c87a1d32",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/skeleton.json",
@@ -878,10 +920,11 @@
       "name": "slider",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/slider.tsx",
-      "sourceSha256": "751fce3bda800b3ee3fa8bcd1e0906e13664f4bd0b80763a0de57143775bef60",
+      "sourceSha256": "6fe60bf4a8d4558d6f841fd316212dbfdb836abd7a4ed6b9dc66a8bfbddd4135",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/slider.json",
@@ -911,10 +954,11 @@
       "name": "spinner",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/spinner.tsx",
-      "sourceSha256": "7a099939c868aef23d3f220b12cd550d9080607a303086d4ae96f0a4517b23ca",
+      "sourceSha256": "02f07584f599992a4c9cf232fafcb92c754044dbc6aa1bb2f7e4a563985a25ac",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/spinner.json",
@@ -927,10 +971,11 @@
       "name": "switch",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/switch.tsx",
-      "sourceSha256": "91c6a59675869875ea96f877eb4b53c3634699b05e8081d2ca3a5f7c49c4fb29",
+      "sourceSha256": "9eb811d2c7719c204088475fecf39b930fec918830900e24eed07729ebf23aeb",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/switch.json",
@@ -941,10 +986,11 @@
       "name": "table",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/table.tsx",
-      "sourceSha256": "2cd1ebd432699b316d777cce31f088d45e6e54da61ee6ce80cea74754e9ed6cc",
+      "sourceSha256": "557b01c8ec2f653ca896427afac5f4fe6f39207b0c5663f48b88eb1dfc94f1f1",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/table.json",
@@ -958,10 +1004,11 @@
       "name": "tabs",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/tabs.tsx",
-      "sourceSha256": "efbfd0258de51f2e219142f28b8e8c422471bc4b9f27983a1e42f070684fa321",
+      "sourceSha256": "8cec5b5206dbbaf52a5bb3fc29be8cfa06cc59e7d6d50a35fbffb1880ae0fe15",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/tabs.json",
@@ -972,10 +1019,11 @@
       "name": "textarea",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/textarea.tsx",
-      "sourceSha256": "10a057ef60ce8e3d9e388d1cd89354881d5492d77bb02f51d31b0e9b68faa176",
+      "sourceSha256": "1497a470a5b6170c9352aab4721e505b2af5a77c3fc1c7dedc2ee845bf55aae2",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/textarea.json",
@@ -990,10 +1038,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "button"
       ],
       "sourcePath": "src/toast.tsx",
-      "sourceSha256": "4a47d453002d27ab2b870f9f44b2096e883005577f042528d2a684550807dcd7",
+      "sourceSha256": "58ebfb6b7a57d75f859f446db8c1ef23a1cfd72cba13d7292da328a378a5c31f",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/toast.json",
@@ -1007,10 +1056,11 @@
       "name": "toggle",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/toggle.tsx",
-      "sourceSha256": "ffa7d859a8ccf1004fa97b5d60e1bfaad33232c2691629fc491e717a456e472f",
+      "sourceSha256": "cc4003df30e9b8136e6e949fc882abd295e9cf1dcc59bb9593c9012af6e29bd0",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/toggle.json",
@@ -1025,10 +1075,11 @@
       "registryDependencies": [
         "applique-theme",
         "utils",
+        "applique-react18-compat",
         "toggle"
       ],
       "sourcePath": "src/toggle-group.tsx",
-      "sourceSha256": "7bca49e169ccbeec20fef05a01be29ad0338edee3ec7bffedda9b83bd8e1f8b2",
+      "sourceSha256": "a850fb3c51a55dc140ee5762de39e6335fed860ef0ef841d20fe3d44bfb0c79e",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/toggle-group.json",
@@ -1041,10 +1092,11 @@
       "name": "tooltip",
       "registryDependencies": [
         "applique-theme",
-        "utils"
+        "utils",
+        "applique-react18-compat"
       ],
       "sourcePath": "src/tooltip.tsx",
-      "sourceSha256": "c966edeecb77d1434ab842b55313eca28844320611f98c9f42e039e7298bd449",
+      "sourceSha256": "ed8a4e08445dc0f0fab43ecfc311112334d5f29ef657c429610561cc0e7da253",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/tooltip.json",

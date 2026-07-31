@@ -3,8 +3,9 @@
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Separator({
+function SeparatorImpl({
   className,
   orientation = "horizontal",
   ...props
@@ -21,5 +22,7 @@ function Separator({
     />
   )
 }
+
+const Separator = withReact18Ref(SeparatorImpl)
 
 export { Separator }

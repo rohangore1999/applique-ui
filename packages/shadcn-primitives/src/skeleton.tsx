@@ -1,6 +1,7 @@
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+function SkeletonImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="skeleton"
@@ -9,5 +10,7 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+
+const Skeleton = withReact18Ref(SkeletonImpl)
 
 export { Skeleton }

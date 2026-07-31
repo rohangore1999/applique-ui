@@ -2,11 +2,12 @@
 
 /*
  * Installs every source-bearing UI item from the generated registry into an
- * isolated React 19 + Tailwind 4 consumer using the pinned shadcn CLI.
+ * isolated React 18 + Tailwind 4 consumer using the pinned shadcn CLI.
  *
  * This catches missing registry dependencies, stale import aliases, incomplete
- * npm dependency metadata, TypeScript incompatibilities, and token/CSS issues
- * before the static registry is published.
+ * npm dependency metadata, TypeScript incompatibilities, preservation of an
+ * existing client-owned utils file, and token/CSS issues before the static
+ * registry is published.
  */
 
 const fs = require('fs')
@@ -16,11 +17,20 @@ const path = require('path')
 const { spawn } = require('child_process')
 
 const SHADCN_CLI_VERSION = '4.16.0'
-const REACT_VERSION = '19.2.8'
-const REACT_TYPES_VERSION = '19.2.18'
-const REACT_DOM_TYPES_VERSION = '19.2.4'
+const REACT_VERSION = '18.3.1'
+const REACT_TYPES_VERSION = '18.3.28'
+const REACT_DOM_TYPES_VERSION = '18.3.7'
 const TAILWIND_VERSION = '4.3.3'
 const TYPESCRIPT_VERSION = '5.9.2'
+const PREEXISTING_UTILS_SOURCE = `import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export const consumerOwnedUtilsSentinel = 'keep-client-utils'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+`
 
 const packageDir = path.resolve(__dirname, '..')
 const manifestPath = path.join(packageDir, 'registry.json')
@@ -46,14 +56,17 @@ function writeText(filePath, value) {
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
+    const hasInput = typeof options.input === 'string'
     const child = spawn(command, args, {
       cwd: options.cwd || packageDir,
       env: {
         ...process.env,
         CI: '1',
       },
-      stdio: 'inherit',
+      stdio: hasInput ? ['pipe', 'inherit', 'inherit'] : 'inherit',
     })
+
+    if (hasInput) child.stdin.end(options.input)
 
     child.on('error', reject)
     child.on('exit', (code, signal) => {
@@ -253,6 +266,10 @@ function createConsumer(consumerDirectory, manifest) {
     path.join(consumerDirectory, 'src/index.css'),
     '@import "tailwindcss";\n'
   )
+  writeText(
+    path.join(consumerDirectory, 'src/lib/utils.ts'),
+    PREEXISTING_UTILS_SOURCE
+  )
 
   const imports = []
   const moduleNames = []
@@ -271,7 +288,27 @@ function createConsumer(consumerDirectory, manifest) {
 
   writeText(
     path.join(consumerDirectory, 'src/smoke.tsx'),
-    `${imports.join('\n')}
+    `import { createRef } from 'react'
+import { Button as RefButton } from '@/components/ui/button'
+import { CalendarDayButton as RefCalendarDayButton } from '@/components/ui/calendar'
+import { Input as RefInput } from '@/components/ui/input'
+${imports.join('\n')}
+
+const buttonRef = createRef<HTMLButtonElement>()
+const calendarDayRef = createRef<HTMLButtonElement>()
+const inputRef = createRef<HTMLInputElement>()
+
+export const react18RefTypeSmoke = (
+  <>
+    <RefButton ref={buttonRef}>Save</RefButton>
+    <RefInput ref={inputRef} aria-label="Name" />
+    <RefCalendarDayButton
+      ref={calendarDayRef}
+      day={null as never}
+      modifiers={{ focused: false }}
+    />
+  </>
+)
 
 export const registryModules = [
   ${moduleNames.join(',\n  ')},
@@ -281,7 +318,10 @@ export const registryModules = [
 }
 
 function assertInstalledConsumer(consumerDirectory, manifest) {
-  const expectedPaths = new Set(['src/lib/utils.ts'])
+  const expectedPaths = new Set([
+    'src/lib/applique-react18-compat.ts',
+    'src/lib/utils.ts',
+  ])
 
   for (const item of sourceItems(manifest)) {
     for (const file of item.files) {
@@ -323,6 +363,56 @@ function assertInstalledConsumer(consumerDirectory, manifest) {
     assert(
       !source.includes('dark: ".dark"') && !source.includes("dark: '.dark'"),
       `${relativePath} contains an unscoped .dark selector`
+    )
+
+    if (relativePath.startsWith('src/components/ui/')) {
+      for (const match of source.matchAll(
+        /^function\s+([A-Z][A-Za-z0-9_]*)Impl\b/gm
+      )) {
+        assert(
+          source.includes(
+            `const ${match[1]} = withReact18Ref(${match[1]}Impl)`
+          ),
+          `${relativePath} does not forward refs for ${match[1]}`
+        )
+      }
+    }
+  }
+
+  assert(
+    fs.readFileSync(
+      path.join(consumerDirectory, 'src/lib/utils.ts'),
+      'utf8'
+    ) === PREEXISTING_UTILS_SOURCE,
+    'shadcn overwrote the consumer-owned utils file without --overwrite'
+  )
+
+  const installedCalendar = fs.readFileSync(
+    path.join(consumerDirectory, 'src/components/ui/calendar.tsx'),
+    'utf8'
+  )
+  assert(
+    installedCalendar.includes('ref={mergeRefs(ref, forwardedRef)}') &&
+      installedCalendar.includes('ref?: React.Ref<HTMLButtonElement>'),
+    'Calendar did not preserve both its focus ref and the consumer ref'
+  )
+
+  const installedChart = fs.readFileSync(
+    path.join(consumerDirectory, 'src/components/ui/chart.tsx'),
+    'utf8'
+  )
+  for (const componentName of [
+    'ChartTooltipContentImpl',
+    'ChartLegendContentImpl',
+  ]) {
+    const componentStart = installedChart.indexOf(`function ${componentName}`)
+    const componentEnd = installedChart.indexOf('\n}\n', componentStart)
+    const componentSource = installedChart.slice(componentStart, componentEnd)
+    assert(
+      componentStart >= 0 &&
+        componentSource.includes('  ref,') &&
+        componentSource.includes('ref={ref}'),
+      `${componentName} did not forward its DOM ref`
     )
   }
 
@@ -384,6 +474,19 @@ function assertInstalledConsumer(consumerDirectory, manifest) {
     'shadcn did not install the pinned Hanken Grotesk package'
   )
   assert(
+    !fs.existsSync(
+      path.join(consumerDirectory, 'node_modules/@shadcn/react/package.json')
+    ),
+    'React 18 consumer unexpectedly installed @shadcn/react'
+  )
+  const reactIsPackage = readJson(
+    path.join(consumerDirectory, 'node_modules/react-is/package.json')
+  )
+  assert(
+    reactIsPackage.version === '18.3.1',
+    `React 18 consumer installed react-is@${reactIsPackage.version}`
+  )
+  assert(
     !/hsl\s*\(\s*var\s*\(/i.test(installedCss),
     'installed CSS contains an obsolete hsl(var(...)) wrapper'
   )
@@ -421,8 +524,8 @@ async function main() {
   const components = sourceItems(manifest)
 
   assert(
-    components.length >= 61,
-    `Expected at least 61 source-bearing UI items, found ${components.length}`
+    components.length === 60,
+    `Expected 60 React 18-compatible UI items, found ${components.length}`
   )
 
   const temporaryRoot = fs.mkdtempSync(
@@ -459,18 +562,20 @@ async function main() {
     )
 
     await run(
-      'pnpm',
+      'npx',
       [
-        'dlx',
+        '--yes',
         `shadcn@${SHADCN_CLI_VERSION}`,
         'add',
         ...itemUrls,
         '--yes',
-        '--overwrite',
         '--cwd',
         consumerDirectory,
       ],
-      { cwd: consumerDirectory }
+      {
+        cwd: consumerDirectory,
+        input: 'n\n',
+      }
     )
 
     await run(
@@ -494,7 +599,7 @@ async function main() {
 
     assertInstalledConsumer(consumerDirectory, manifest)
     console.log(
-      `[registry] smoke test passed for ${components.length} components with shadcn@${SHADCN_CLI_VERSION}`
+      `[registry] React ${REACT_VERSION} smoke test passed for ${components.length} components with shadcn@${SHADCN_CLI_VERSION}`
     )
   } finally {
     if (server.listening) await close(server)

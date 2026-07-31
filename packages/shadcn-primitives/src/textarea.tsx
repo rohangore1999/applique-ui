@@ -1,8 +1,9 @@
 import * as React from "react"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+function TextareaImpl({ className, ...props }: React.ComponentProps<"textarea">) {
   return (
     <textarea
       data-slot="textarea"
@@ -14,5 +15,7 @@ function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
     />
   )
 }
+
+const Textarea = withReact18Ref(TextareaImpl)
 
 export { Textarea }

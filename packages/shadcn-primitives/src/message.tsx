@@ -1,8 +1,9 @@
 import * as React from "react"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function MessageGroup({ className, ...props }: React.ComponentProps<"div">) {
+function MessageGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="message-group"
@@ -12,7 +13,7 @@ function MessageGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function Message({
+function MessageImpl({
   className,
   align = "start",
   ...props
@@ -30,7 +31,7 @@ function Message({
   )
 }
 
-function MessageAvatar({ className, ...props }: React.ComponentProps<"div">) {
+function MessageAvatarImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="message-avatar"
@@ -43,7 +44,7 @@ function MessageAvatar({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function MessageContent({ className, ...props }: React.ComponentProps<"div">) {
+function MessageContentImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="message-content"
@@ -56,7 +57,7 @@ function MessageContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function MessageHeader({ className, ...props }: React.ComponentProps<"div">) {
+function MessageHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="message-header"
@@ -69,7 +70,7 @@ function MessageHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function MessageFooter({ className, ...props }: React.ComponentProps<"div">) {
+function MessageFooterImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="message-footer"
@@ -81,6 +82,13 @@ function MessageFooter({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+
+const MessageGroup = withReact18Ref(MessageGroupImpl)
+const Message = withReact18Ref(MessageImpl)
+const MessageAvatar = withReact18Ref(MessageAvatarImpl)
+const MessageContent = withReact18Ref(MessageContentImpl)
+const MessageHeader = withReact18Ref(MessageHeaderImpl)
+const MessageFooter = withReact18Ref(MessageFooterImpl)
 
 export {
   MessageGroup,

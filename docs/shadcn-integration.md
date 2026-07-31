@@ -9,11 +9,12 @@ the resulting source, and imports it from its normal local aliases.
 - Registry: `v0.1.0`
 - shadcn CLI: `4.16.0`
 - Style: `base-nova` (Base UI)
-- React: `19.2.8`
+- React and React DOM: `18.3.1`
 - Tailwind CSS: `4.3.3`
 - Coverage: all 62 official shadcn UI entries
-- Installable source: 61 entries
-- Exception: upstream `Form` is fileless/deprecated; use `Field`
+- Installable source: 60 UI entries
+- Exceptions: upstream `Form` is fileless/deprecated; `Message Scroller`
+  requires React 19 and is excluded from this React 18 baseline
 
 The release also installs the Applique semantic theme, exact Figma-backed
 tokens, and the pinned Hanken Grotesk variable font. Applique currently
@@ -24,6 +25,11 @@ variant is scoped to the same explicit data attribute. A client application's
 
 ## Install in a client
 
+Run registry installation and updates with Node.js `>=20.18.1`, as required by
+the pinned shadcn CLI. The copied component source itself adds no Node runtime
+requirement; the client's ongoing development and build version depends on its
+own toolchain.
+
 The client needs a valid shadcn `components.json` with Tailwind 4 and local
 aliases. Install a component from the immutable version:
 
@@ -33,6 +39,9 @@ npx shadcn@4.16.0 add \
 ```
 
 The CLI writes the component and its dependencies into the client repository.
+React 18 ref helpers use the Applique-owned
+`@/lib/applique-react18-compat` target, so a pre-existing shadcn `utils.ts` with
+the normal `cn()` export remains client-owned and does not need to be replaced.
 The client then imports its local copy:
 
 ```tsx

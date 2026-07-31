@@ -5,9 +5,10 @@ import * as React from "react"
 import { Select as SelectPrimitive } from "@base-ui/react/select"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 const Select = SelectPrimitive.Root
 
-function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
+function SelectGroupImpl({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
     <SelectPrimitive.Group
       data-slot="select-group"
@@ -17,7 +18,7 @@ function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   )
 }
 
-function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
+function SelectValueImpl({ className, ...props }: SelectPrimitive.Value.Props) {
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
@@ -27,7 +28,7 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   )
 }
 
-function SelectTrigger({
+function SelectTriggerImpl({
   className,
   size = "default",
   children,
@@ -57,7 +58,7 @@ function SelectTrigger({
   )
 }
 
-function SelectContent({
+function SelectContentImpl({
   className,
   children,
   side = "bottom",
@@ -99,7 +100,7 @@ function SelectContent({
   )
 }
 
-function SelectLabel({
+function SelectLabelImpl({
   className,
   ...props
 }: SelectPrimitive.GroupLabel.Props) {
@@ -112,7 +113,7 @@ function SelectLabel({
   )
 }
 
-function SelectItem({
+function SelectItemImpl({
   className,
   children,
   ...props
@@ -142,7 +143,7 @@ function SelectItem({
   )
 }
 
-function SelectSeparator({
+function SelectSeparatorImpl({
   className,
   ...props
 }: SelectPrimitive.Separator.Props) {
@@ -155,7 +156,7 @@ function SelectSeparator({
   )
 }
 
-function SelectScrollUpButton({
+function SelectScrollUpButtonImpl({
   className,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.ScrollUpArrow>) {
@@ -174,7 +175,7 @@ function SelectScrollUpButton({
   )
 }
 
-function SelectScrollDownButton({
+function SelectScrollDownButtonImpl({
   className,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.ScrollDownArrow>) {
@@ -192,6 +193,16 @@ function SelectScrollDownButton({
     </SelectPrimitive.ScrollDownArrow>
   )
 }
+
+const SelectGroup = withReact18Ref(SelectGroupImpl)
+const SelectValue = withReact18Ref(SelectValueImpl)
+const SelectTrigger = withReact18Ref(SelectTriggerImpl)
+const SelectContent = withReact18Ref(SelectContentImpl)
+const SelectLabel = withReact18Ref(SelectLabelImpl)
+const SelectItem = withReact18Ref(SelectItemImpl)
+const SelectSeparator = withReact18Ref(SelectSeparatorImpl)
+const SelectScrollUpButton = withReact18Ref(SelectScrollUpButtonImpl)
+const SelectScrollDownButton = withReact18Ref(SelectScrollDownButtonImpl)
 
 export {
   Select,

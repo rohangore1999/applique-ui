@@ -3,8 +3,9 @@
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Progress({
+function ProgressImpl({
   className,
   children,
   value,
@@ -25,7 +26,7 @@ function Progress({
   )
 }
 
-function ProgressTrack({ className, ...props }: ProgressPrimitive.Track.Props) {
+function ProgressTrackImpl({ className, ...props }: ProgressPrimitive.Track.Props) {
   return (
     <ProgressPrimitive.Track
       className={cn(
@@ -38,7 +39,7 @@ function ProgressTrack({ className, ...props }: ProgressPrimitive.Track.Props) {
   )
 }
 
-function ProgressIndicator({
+function ProgressIndicatorImpl({
   className,
   ...props
 }: ProgressPrimitive.Indicator.Props) {
@@ -51,7 +52,7 @@ function ProgressIndicator({
   )
 }
 
-function ProgressLabel({ className, ...props }: ProgressPrimitive.Label.Props) {
+function ProgressLabelImpl({ className, ...props }: ProgressPrimitive.Label.Props) {
   return (
     <ProgressPrimitive.Label
       className={cn("text-sm font-medium", className)}
@@ -61,7 +62,7 @@ function ProgressLabel({ className, ...props }: ProgressPrimitive.Label.Props) {
   )
 }
 
-function ProgressValue({ className, ...props }: ProgressPrimitive.Value.Props) {
+function ProgressValueImpl({ className, ...props }: ProgressPrimitive.Value.Props) {
   return (
     <ProgressPrimitive.Value
       className={cn(
@@ -73,6 +74,12 @@ function ProgressValue({ className, ...props }: ProgressPrimitive.Value.Props) {
     />
   )
 }
+
+const Progress = withReact18Ref(ProgressImpl)
+const ProgressTrack = withReact18Ref(ProgressTrackImpl)
+const ProgressIndicator = withReact18Ref(ProgressIndicatorImpl)
+const ProgressLabel = withReact18Ref(ProgressLabelImpl)
+const ProgressValue = withReact18Ref(ProgressValueImpl)
 
 export {
   Progress,

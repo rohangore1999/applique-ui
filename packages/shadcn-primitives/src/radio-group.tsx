@@ -4,8 +4,9 @@ import { Radio as RadioPrimitive } from "@base-ui/react/radio"
 import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function RadioGroup({ className, ...props }: RadioGroupPrimitive.Props) {
+function RadioGroupImpl({ className, ...props }: RadioGroupPrimitive.Props) {
   return (
     <RadioGroupPrimitive
       data-slot="radio-group"
@@ -15,7 +16,7 @@ function RadioGroup({ className, ...props }: RadioGroupPrimitive.Props) {
   )
 }
 
-function RadioGroupItem({ className, ...props }: RadioPrimitive.Root.Props) {
+function RadioGroupItemImpl({ className, ...props }: RadioPrimitive.Root.Props) {
   return (
     <RadioPrimitive.Root
       data-slot="radio-group-item"
@@ -34,5 +35,8 @@ function RadioGroupItem({ className, ...props }: RadioPrimitive.Root.Props) {
     </RadioPrimitive.Root>
   )
 }
+
+const RadioGroup = withReact18Ref(RadioGroupImpl)
+const RadioGroupItem = withReact18Ref(RadioGroupItemImpl)
 
 export { RadioGroup, RadioGroupItem }

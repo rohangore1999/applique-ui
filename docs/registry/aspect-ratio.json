@@ -11,12 +11,13 @@
   ],
   "registryDependencies": [
     "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json"
   ],
   "files": [
     {
       "path": "ui/aspect-ratio.tsx",
-      "content": "import { cn } from \"@/lib/utils\"\n\nfunction AspectRatio({\n  ratio,\n  className,\n  ...props\n}: React.ComponentProps<\"div\"> & { ratio: number }) {\n  return (\n    <div\n      data-slot=\"aspect-ratio\"\n      style={\n        {\n          \"--ratio\": ratio,\n        } as React.CSSProperties\n      }\n      className={cn(\"relative aspect-(--ratio)\", className)}\n      {...props}\n    />\n  )\n}\n\nexport { AspectRatio }\n",
+      "content": "import { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nfunction AspectRatioImpl({\n  ratio,\n  className,\n  ...props\n}: React.ComponentProps<\"div\"> & { ratio: number }) {\n  return (\n    <div\n      data-slot=\"aspect-ratio\"\n      style={\n        {\n          \"--ratio\": ratio,\n        } as React.CSSProperties\n      }\n      className={cn(\"relative aspect-(--ratio)\", className)}\n      {...props}\n    />\n  )\n}\n\nconst AspectRatio = withReact18Ref(AspectRatioImpl)\n\nexport { AspectRatio }\n",
       "type": "registry:ui",
       "target": "@ui/aspect-ratio.tsx"
     }
@@ -25,7 +26,7 @@
     "status": "experimental",
     "upstream": {
       "cliVersion": "4.16.0",
-      "sourceSha256": "a57801b367527b57ccfae72c1490d51f0f05ed7ef8753a085eefd541176079f6",
+      "sourceSha256": "f317dec0c31ef5df2493f158438db903663803bf6700e9166f1a51cad6f1c070",
       "style": "base-nova",
       "upstreamSha256": "6fea2cf3c5693da36e912d7f4da80e1f12c6992d4f6b0fb3b9ca1675b3d17545"
     },

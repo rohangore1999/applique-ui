@@ -19,6 +19,7 @@ const path = require('path')
 
 const PACKAGE_DIR = path.resolve(__dirname, '..')
 const SNAPSHOT_LOCK_PATH = path.join(PACKAGE_DIR, 'shadcn-base-nova.lock.json')
+const SOURCE_MANIFEST_PATH = path.join(PACKAGE_DIR, 'registry.json')
 const DEFAULT_REGISTRY_DIR = path.resolve(
   __dirname,
   '..',
@@ -32,6 +33,22 @@ const REGISTRY_SCHEMA = 'https://ui.shadcn.com/schema/registry.json'
 const REGISTRY_ITEM_SCHEMA = 'https://ui.shadcn.com/schema/registry-item.json'
 const NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const TYPE_PATTERN = /^registry:[a-z][a-z0-9-]*$/
+const EXACT_SEMVER_PATTERN = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+(?:[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/
+const FOUNDATION_ITEM_TYPES = new Map([
+  ['applique-theme', 'registry:theme'],
+  ['applique-react18-compat', 'registry:lib'],
+  ['utils', 'registry:lib'],
+])
+const FOUNDATION_ITEM_NAMES = new Set(FOUNDATION_ITEM_TYPES.keys())
+const FOUNDATION_DEPENDENCY_PINS = {
+  '@fontsource-variable/hanken-grotesk': '5.3.0',
+}
+const EXPECTED_UI_ENTRIES = 62
+const EXPECTED_INSTALLABLE_UI_ENTRIES = 60
+const EXPECTED_SUPPORT_HOOKS = 1
+const EXPECTED_FOUNDATION_ENTRIES = FOUNDATION_ITEM_NAMES.size
+const EXPECTED_MANIFEST_ENTRIES =
+  EXPECTED_UI_ENTRIES + EXPECTED_SUPPORT_HOOKS + EXPECTED_FOUNDATION_ENTRIES
 const APPLIQUE_SEMANTIC_COLOR_VARS = [
   'background',
   'foreground',
@@ -91,6 +108,62 @@ function assertUniqueStrings(values, label) {
   }
 }
 
+function dependencyParts(dependency, label) {
+  assertString(dependency, label)
+
+  const versionSeparator = dependency.startsWith('@')
+    ? dependency.indexOf('@', 1)
+    : dependency.lastIndexOf('@')
+
+  assert(
+    versionSeparator > 0,
+    `${label} must pin an exact package version, got "${dependency}"`
+  )
+
+  const packageName = dependency.slice(0, versionSeparator)
+  const version = dependency.slice(versionSeparator + 1)
+  const validPackageName = packageName.startsWith('@')
+    ? /^@[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*$/i.test(packageName)
+    : /^[a-z0-9][a-z0-9._-]*$/i.test(packageName)
+
+  assert(
+    validPackageName,
+    `${label} has an invalid package name "${packageName}"`
+  )
+  assert(
+    EXACT_SEMVER_PATTERN.test(version),
+    `${label} must use an exact semantic version, got "${dependency}"`
+  )
+
+  return { packageName, version }
+}
+
+function assertSameStringSet(actual, expected, label) {
+  const actualValues = [...actual].sort()
+  const expectedValues = [...expected].sort()
+
+  assert(
+    JSON.stringify(actualValues) === JSON.stringify(expectedValues),
+    `${label} mismatch: expected [${expectedValues.join(
+      ', '
+    )}], got [${actualValues.join(', ')}]`
+  )
+}
+
+function availabilityStatus(item) {
+  if (item.meta && item.meta.status === 'deprecated') return 'deprecated'
+  if (item.meta && item.meta.status === 'unsupported') return 'unsupported'
+  if (
+    item.type === 'registry:theme' &&
+    item.cssVars &&
+    typeof item.cssVars === 'object'
+  ) {
+    return 'installable'
+  }
+  if (Array.isArray(item.files) && item.files.length > 0) return 'installable'
+  return null
+}
+
 function assertSafeRelativePath(value, label) {
   assertString(value, label)
   assert(!path.isAbsolute(value), `${label} must be relative`)
@@ -105,20 +178,52 @@ function assertSafeRelativePath(value, label) {
   )
 }
 
-function isFilelessDeprecatedItem(item) {
+function isExplicitFilelessItem(item) {
   return Boolean(
     item &&
       item.meta &&
-      item.meta.status === 'deprecated' &&
-      item.meta.upstream &&
-      item.meta.upstream.fileless === true
+      ((item.meta.status === 'deprecated' &&
+        item.meta.upstream &&
+        item.meta.upstream.fileless === true) ||
+        (item.meta.status === 'unsupported' &&
+          item.meta.compatibility &&
+          item.meta.compatibility.requiredReact === '>=19' &&
+          item.meta.upstream &&
+          item.meta.upstream.excluded === true))
   )
 }
 
-function validateDependencies(item, label) {
+function validateDependencies(item, label, options = {}) {
+  const { dependencyPins, requireKnownDependencyPins = false } = options
+
   for (const field of ['dependencies', 'devDependencies']) {
     if (item[field] !== undefined) {
       assertUniqueStrings(item[field], `${label}.${field}`)
+
+      for (const [index, dependency] of item[field].entries()) {
+        const dependencyLabel = `${label}.${field}[${index}]`
+        const { packageName, version } = dependencyParts(
+          dependency,
+          dependencyLabel
+        )
+
+        if (!dependencyPins) continue
+
+        const hasReviewedPin = Object.prototype.hasOwnProperty.call(
+          dependencyPins,
+          packageName
+        )
+        assert(
+          hasReviewedPin || !requireKnownDependencyPins,
+          `${dependencyLabel} has no reviewed dependency pin for ${packageName}`
+        )
+        if (hasReviewedPin) {
+          assert(
+            dependencyPins[packageName] === version,
+            `${dependencyLabel} must match reviewed pin ${packageName}@${dependencyPins[packageName]}`
+          )
+        }
+      }
     }
   }
 
@@ -190,7 +295,9 @@ function validateFile(file, label, requireContent) {
   }
 }
 
-function validateAppliqueTheme(item, label) {
+function validateAppliqueTheme(item, label, options = {}) {
+  const { requireBuiltTheme = true } = options
+
   assert(
     item.type === 'registry:theme',
     `${label} must be a registry:theme item`
@@ -202,13 +309,18 @@ function validateAppliqueTheme(item, label) {
   assert(
     item.cssVars &&
       item.cssVars.theme &&
-      item.cssVars.light &&
       typeof item.cssVars.theme === 'object' &&
-      typeof item.cssVars.light === 'object' &&
-      !Array.isArray(item.cssVars.theme) &&
-      !Array.isArray(item.cssVars.light),
-    `${label} must contain cssVars.theme and cssVars.light`
+      !Array.isArray(item.cssVars.theme),
+    `${label} must contain cssVars.theme`
   )
+  if (requireBuiltTheme) {
+    assert(
+      item.cssVars.light &&
+        typeof item.cssVars.light === 'object' &&
+        !Array.isArray(item.cssVars.light),
+      `${label} must contain generated cssVars.light`
+    )
+  }
   assert(
     item.cssVars.dark === undefined,
     `${label} must remain light-only until Applique defines dark tokens`
@@ -231,29 +343,35 @@ function validateAppliqueTheme(item, label) {
   )
 
   for (const variableName of APPLIQUE_SEMANTIC_COLOR_VARS) {
-    const lightValue = item.cssVars.light[variableName]
-    assert(
-      /^#[0-9a-f]{6}$/i.test(lightValue || ''),
-      `${label}.cssVars.light.${variableName} must be an exact hex color`
-    )
+    if (requireBuiltTheme) {
+      const lightValue = item.cssVars.light[variableName]
+      assert(
+        /^#[0-9a-f]{6}$/i.test(lightValue || ''),
+        `${label}.cssVars.light.${variableName} must be an exact hex color`
+      )
+    }
     assert(
       item.cssVars.theme[`color-${variableName}`] === `var(--${variableName})`,
       `${label}.cssVars.theme.color-${variableName} must map to var(--${variableName})`
     )
   }
 
-  assert(
-    item.cssVars.light.primary.toLowerCase() === '#5232d0',
-    `${label}.cssVars.light.primary must match the Applique Figma token #5232d0`
-  )
-
-  for (const [variableName, lightValue] of Object.entries(item.cssVars.light)) {
-    if (APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName)) continue
-
+  if (requireBuiltTheme) {
     assert(
-      item.cssVars.theme[variableName] === lightValue,
-      `${label}.cssVars.theme.${variableName} must preserve the exact light token value`
+      item.cssVars.light.primary.toLowerCase() === '#5232d0',
+      `${label}.cssVars.light.primary must match the Applique Figma token #5232d0`
     )
+
+    for (const [variableName, lightValue] of Object.entries(
+      item.cssVars.light
+    )) {
+      if (APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName)) continue
+
+      assert(
+        item.cssVars.theme[variableName] === lightValue,
+        `${label}.cssVars.theme.${variableName} must preserve the exact light token value`
+      )
+    }
   }
 
   for (const [variableName, themeValue] of Object.entries(item.cssVars.theme)) {
@@ -272,7 +390,13 @@ function validateAppliqueTheme(item, label) {
 }
 
 function validateItem(item, label, options = {}) {
-  const { requireContent = false, requireSchema = false } = options
+  const {
+    dependencyPins,
+    requireContent = false,
+    requireBuiltTheme = true,
+    requireKnownDependencyPins = false,
+    requireSchema = false,
+  } = options
 
   assert(
     item && typeof item === 'object' && !Array.isArray(item),
@@ -301,7 +425,10 @@ function validateItem(item, label, options = {}) {
     )
   }
 
-  validateDependencies(item, label)
+  validateDependencies(item, label, {
+    dependencyPins,
+    requireKnownDependencyPins,
+  })
 
   if (item.files !== undefined) {
     assert(Array.isArray(item.files), `${label}.files must be an array`)
@@ -324,8 +451,8 @@ function validateItem(item, label, options = {}) {
     (item.css !== undefined || item.cssVars !== undefined)
 
   assert(
-    hasFiles || hasThemePayload || isFilelessDeprecatedItem(item),
-    `${label} must contain files, a theme payload, or explicit fileless deprecated metadata`
+    hasFiles || hasThemePayload || isExplicitFilelessItem(item),
+    `${label} must contain files, a theme payload, or explicit fileless metadata`
   )
 
   if (item.cssVars !== undefined) {
@@ -342,11 +469,11 @@ function validateItem(item, label, options = {}) {
   }
 
   if (item.name === 'applique-theme') {
-    validateAppliqueTheme(item, label)
+    validateAppliqueTheme(item, label, { requireBuiltTheme })
   }
 }
 
-function validateCatalog(catalog, label) {
+function validateCatalog(catalog, label, options = {}) {
   assert(
     catalog && typeof catalog === 'object' && !Array.isArray(catalog),
     `${label} must be an object`
@@ -366,7 +493,7 @@ function validateCatalog(catalog, label) {
   const names = new Set()
   for (const [index, item] of catalog.items.entries()) {
     const itemLabel = `${label}.items[${index}]`
-    validateItem(item, itemLabel)
+    validateItem(item, itemLabel, options)
     assert(
       !names.has(item.name),
       `${label}.items contains duplicate name "${item.name}"`
@@ -413,24 +540,97 @@ function sha256(value) {
     .digest('hex')
 }
 
-function validatePinnedSnapshot() {
+function validateDependencyPins(lock) {
   assert(
-    fs.existsSync(SNAPSHOT_LOCK_PATH),
-    `missing shadcn snapshot lock: ${SNAPSHOT_LOCK_PATH}`
+    lock.dependencyPins &&
+      typeof lock.dependencyPins === 'object' &&
+      !Array.isArray(lock.dependencyPins),
+    'snapshot lock must contain dependencyPins'
   )
-  const lock = readJson(SNAPSHOT_LOCK_PATH)
+
+  for (const [packageName, version] of Object.entries(lock.dependencyPins)) {
+    dependencyParts(
+      `${packageName}@${version}`,
+      `dependencyPins.${packageName}`
+    )
+  }
+
+  for (const [packageName, version] of Object.entries(
+    FOUNDATION_DEPENDENCY_PINS
+  )) {
+    if (lock.dependencyPins[packageName] !== undefined) {
+      assert(
+        lock.dependencyPins[packageName] === version,
+        `snapshot pin for ${packageName} must match the foundation pin ${version}`
+      )
+    }
+  }
+
+  return {
+    ...lock.dependencyPins,
+    ...FOUNDATION_DEPENDENCY_PINS,
+  }
+}
+
+function validateSnapshotDocument(lock) {
   assert(lock.cliVersion === '4.16.0', 'snapshot must pin shadcn CLI 4.16.0')
   assert(lock.style === 'base-nova', 'snapshot must use base-nova')
-  assert(lock.itemCount === 62, 'snapshot must index exactly 62 UI items')
+  assert(
+    lock.itemCount === EXPECTED_UI_ENTRIES,
+    `snapshot must index exactly ${EXPECTED_UI_ENTRIES} UI items`
+  )
   assert(Array.isArray(lock.items), 'snapshot lock must contain an items array')
+  assert(
+    lock.items.length === EXPECTED_UI_ENTRIES + EXPECTED_SUPPORT_HOOKS,
+    `snapshot must contain ${EXPECTED_UI_ENTRIES} UI items and ${EXPECTED_SUPPORT_HOOKS} support hook`
+  )
+
+  const dependencyPins = validateDependencyPins(lock)
 
   const names = new Set()
-  let deprecatedItems = 0
-  let installableItems = 0
+  const itemsByName = new Map()
+  let deprecatedUiItems = 0
+  let installableUiItems = 0
+  let supportHooks = 0
+  let unsupportedUiItems = 0
+  let uiItems = 0
+
   for (const item of lock.items) {
     assertString(item.name, 'snapshot item.name')
     assert(!names.has(item.name), `duplicate snapshot item ${item.name}`)
     names.add(item.name)
+    itemsByName.set(item.name, item)
+    assert(
+      item.type === 'registry:ui' || item.type === 'registry:hook',
+      `${item.name} snapshot type must be registry:ui or registry:hook`
+    )
+    assert(
+      Array.isArray(item.dependencies),
+      `${item.name} must list dependencies`
+    )
+    assert(
+      Array.isArray(item.registryDependencies),
+      `${item.name} must list registryDependencies`
+    )
+    validateDependencies(item, `snapshot.${item.name}`, {
+      dependencyPins,
+      requireKnownDependencyPins: true,
+    })
+
+    if (item.type === 'registry:ui') {
+      uiItems += 1
+    } else {
+      supportHooks += 1
+      assert(
+        item.name === 'use-mobile',
+        'use-mobile must be the only support hook in the snapshot'
+      )
+      assert(
+        item.status === 'installable',
+        'the use-mobile support hook must remain installable'
+      )
+    }
+
     assertSafeRelativePath(item.upstreamPath, `${item.name}.upstreamPath`)
     assertString(item.upstreamSha256, `${item.name}.upstreamSha256`)
     const upstreamPath = path.resolve(PACKAGE_DIR, item.upstreamPath)
@@ -448,7 +648,11 @@ function validatePinnedSnapshot() {
     )
 
     if (item.status === 'deprecated') {
-      deprecatedItems += 1
+      deprecatedUiItems += 1
+      assert(
+        item.type === 'registry:ui',
+        'only a UI item may be deprecated in the snapshot'
+      )
       assert(
         item.name === 'form',
         'only Form may be a deprecated snapshot item'
@@ -461,7 +665,33 @@ function validatePinnedSnapshot() {
       continue
     }
 
+    if (item.status === 'unsupported') {
+      unsupportedUiItems += 1
+      assert(
+        item.type === 'registry:ui',
+        'only a UI item may be unsupported in the snapshot'
+      )
+      assert(
+        item.name === 'message-scroller',
+        'only Message Scroller may be excluded from the React 18 baseline'
+      )
+      assert(
+        item.sourcePath === null,
+        'unsupported Message Scroller must not publish source'
+      )
+      assert(
+        item.sourceSha256 === null,
+        'unsupported Message Scroller must not claim a source hash'
+      )
+      assert(
+        Array.isArray(item.dependencies) && item.dependencies.length === 0,
+        'unsupported Message Scroller must not publish React 19 dependencies'
+      )
+      continue
+    }
+
     assert(item.status === 'installable', `${item.name} has invalid status`)
+    if (item.type === 'registry:ui') installableUiItems += 1
     assertSafeRelativePath(item.sourcePath, `${item.name}.sourcePath`)
     assertString(item.sourceSha256, `${item.name}.sourceSha256`)
     const sourcePath = path.resolve(PACKAGE_DIR, item.sourcePath)
@@ -477,19 +707,408 @@ function validatePinnedSnapshot() {
       sha256(fs.readFileSync(sourcePath, 'utf8')) === item.sourceSha256,
       `${item.name} source does not match the pinned snapshot hash`
     )
-    installableItems += 1
+  }
+
+  for (const item of lock.items) {
+    for (const dependency of item.registryDependencies) {
+      assert(
+        names.has(dependency) || FOUNDATION_ITEM_NAMES.has(dependency),
+        `${item.name} references unknown pinned registry item ${dependency}`
+      )
+    }
   }
 
   assert(names.has('use-mobile'), 'snapshot must include use-mobile')
-  assert(deprecatedItems === 1, 'snapshot must contain one deprecated item')
   assert(
-    installableItems === 62,
-    `snapshot must contain 62 installable source items, got ${installableItems}`
+    uiItems === EXPECTED_UI_ENTRIES,
+    `snapshot must contain ${EXPECTED_UI_ENTRIES} UI items, got ${uiItems}`
   )
-  return { entries: lock.items.length, installableItems }
+  assert(
+    installableUiItems === EXPECTED_INSTALLABLE_UI_ENTRIES,
+    `snapshot must contain ${EXPECTED_INSTALLABLE_UI_ENTRIES} installable UI items, got ${installableUiItems}`
+  )
+  assert(
+    deprecatedUiItems === 1,
+    'snapshot must contain one deprecated UI item (Form)'
+  )
+  assert(
+    unsupportedUiItems === 1,
+    'snapshot must contain one React 18-incompatible UI item (Message Scroller)'
+  )
+  assert(
+    supportHooks === EXPECTED_SUPPORT_HOOKS,
+    `snapshot must contain ${EXPECTED_SUPPORT_HOOKS} support hook, got ${supportHooks}`
+  )
+
+  return {
+    dependencyPins,
+    installableUiItems,
+    itemsByName,
+    lock,
+    supportHooks,
+    uiItems,
+  }
 }
 
-function validateRegistryDirectory(directory) {
+function validatePinnedSnapshot() {
+  assert(
+    fs.existsSync(SNAPSHOT_LOCK_PATH),
+    `missing shadcn snapshot lock: ${SNAPSHOT_LOCK_PATH}`
+  )
+
+  return validateSnapshotDocument(readJson(SNAPSHOT_LOCK_PATH))
+}
+
+function itemStringArray(item, field) {
+  return item[field] === undefined ? [] : item[field]
+}
+
+function indexItems(items, label) {
+  const indexed = new Map()
+
+  for (const item of items) {
+    assert(!indexed.has(item.name), `${label} contains duplicate ${item.name}`)
+    indexed.set(item.name, item)
+  }
+
+  return indexed
+}
+
+function validateSourceManifest(manifest, snapshot) {
+  validateCatalog(manifest, 'source registry.json', {
+    dependencyPins: snapshot.dependencyPins,
+    requireBuiltTheme: false,
+    requireKnownDependencyPins: true,
+  })
+
+  assert(
+    manifest.items.length === EXPECTED_MANIFEST_ENTRIES,
+    `source registry must contain ${EXPECTED_MANIFEST_ENTRIES} items (${EXPECTED_UI_ENTRIES} UI, ${EXPECTED_SUPPORT_HOOKS} support hook, and ${EXPECTED_FOUNDATION_ENTRIES} registry foundations)`
+  )
+  assert(
+    manifest.meta && typeof manifest.meta === 'object',
+    'source registry must contain metadata'
+  )
+  assert(
+    EXACT_SEMVER_PATTERN.test(manifest.meta.version || ''),
+    'source registry meta.version must be an exact semantic version'
+  )
+  assert(
+    manifest.meta.upstream &&
+      manifest.meta.upstream.cliVersion === snapshot.lock.cliVersion &&
+      manifest.meta.upstream.style === snapshot.lock.style &&
+      manifest.meta.upstream.itemCount === EXPECTED_UI_ENTRIES,
+    'source registry upstream metadata must match the pinned UI snapshot'
+  )
+
+  const itemsByName = indexItems(manifest.items, 'source registry')
+  const expectedNames = new Set([
+    ...snapshot.itemsByName.keys(),
+    ...FOUNDATION_ITEM_NAMES,
+  ])
+  assertSameStringSet(
+    itemsByName.keys(),
+    expectedNames,
+    'source registry item names'
+  )
+
+  for (const [name, type] of FOUNDATION_ITEM_TYPES) {
+    const item = itemsByName.get(name)
+    assert(item.type === type, `${name} must remain a ${type} foundation`)
+    assert(
+      item.meta && item.meta.status === 'foundation',
+      `${name} must retain foundation status`
+    )
+    assert(
+      availabilityStatus(item) === 'installable',
+      `${name} foundation must remain installable`
+    )
+  }
+
+  for (const [name, pinnedItem] of snapshot.itemsByName) {
+    const manifestItem = itemsByName.get(name)
+    const label = `source registry item ${name}`
+
+    assert(
+      manifestItem.type === pinnedItem.type,
+      `${label} type must match the snapshot`
+    )
+    assert(
+      availabilityStatus(manifestItem) === pinnedItem.status,
+      `${label} availability must match snapshot status ${pinnedItem.status}`
+    )
+    assertSameStringSet(
+      itemStringArray(manifestItem, 'dependencies'),
+      pinnedItem.dependencies,
+      `${label} dependencies`
+    )
+    assertSameStringSet(
+      itemStringArray(manifestItem, 'registryDependencies'),
+      pinnedItem.registryDependencies,
+      `${label} registryDependencies`
+    )
+
+    const expectedSourcePaths = pinnedItem.sourcePath
+      ? [pinnedItem.sourcePath]
+      : []
+    assertSameStringSet(
+      itemStringArray(manifestItem, 'files').map((file) => file.path),
+      expectedSourcePaths,
+      `${label} source paths`
+    )
+
+    const upstream = manifestItem.meta && manifestItem.meta.upstream
+    assert(upstream, `${label} must contain upstream metadata`)
+    assert(
+      upstream.cliVersion === snapshot.lock.cliVersion &&
+        upstream.style === snapshot.lock.style &&
+        upstream.sourceSha256 === pinnedItem.sourceSha256 &&
+        upstream.upstreamSha256 === pinnedItem.upstreamSha256,
+      `${label} upstream metadata must match the snapshot`
+    )
+  }
+
+  for (const item of manifest.items) {
+    for (const dependency of itemStringArray(item, 'registryDependencies')) {
+      assert(
+        itemsByName.has(dependency),
+        `${item.name} references unknown source registry item ${dependency}`
+      )
+    }
+  }
+
+  const usedDependencyPins = new Set()
+  for (const item of manifest.items) {
+    for (const field of ['dependencies', 'devDependencies']) {
+      for (const [index, dependency] of itemStringArray(
+        item,
+        field
+      ).entries()) {
+        usedDependencyPins.add(
+          dependencyParts(
+            dependency,
+            `source registry item ${item.name}.${field}[${index}]`
+          ).packageName
+        )
+      }
+    }
+  }
+  assertSameStringSet(
+    usedDependencyPins,
+    Object.keys(snapshot.dependencyPins),
+    'source registry dependency pin coverage'
+  )
+
+  return {
+    items: manifest.items.length,
+    itemsByName,
+  }
+}
+
+function registryDependencyName(dependency, label) {
+  if (!/^https?:\/\//.test(dependency)) return dependency
+
+  const dependencyUrl = new URL(dependency)
+  const fileName = path.posix.basename(dependencyUrl.pathname)
+  assert(fileName.endsWith('.json'), `${label} must reference a JSON item`)
+
+  let name
+  try {
+    name = decodeURIComponent(fileName.slice(0, -'.json'.length))
+  } catch (error) {
+    throw new Error(`${label} contains an invalid encoded item name`)
+  }
+
+  assert(
+    NAME_PATTERN.test(name),
+    `${label} contains invalid registry item name "${name}"`
+  )
+  return name
+}
+
+function normalizedRegistryDependencies(item, label) {
+  return itemStringArray(
+    item,
+    'registryDependencies'
+  ).map((dependency, index) =>
+    registryDependencyName(
+      dependency,
+      `${label}.registryDependencies[${index}]`
+    )
+  )
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map((entry) => stableJson(entry)).join(',')}]`
+  }
+
+  if (value && typeof value === 'object') {
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`)
+      .join(',')}}`
+  }
+
+  return JSON.stringify(value)
+}
+
+function catalogComparableItem(item) {
+  const comparable = JSON.parse(JSON.stringify(item))
+  delete comparable.$schema
+
+  if (comparable.meta) {
+    delete comparable.meta.registryUrl
+    delete comparable.meta.versionedRegistryUrl
+  }
+
+  return comparable
+}
+
+function validatePublishedContract(item, sourceItem, pinnedItem, label) {
+  assert(item.type === sourceItem.type, `${label} type differs from the source`)
+  assert(
+    availabilityStatus(item) === availabilityStatus(sourceItem),
+    `${label} availability differs from the source manifest`
+  )
+  assert(
+    (item.meta && item.meta.status) ===
+      (sourceItem.meta && sourceItem.meta.status),
+    `${label} status differs from the source manifest`
+  )
+  assertSameStringSet(
+    itemStringArray(item, 'dependencies'),
+    itemStringArray(sourceItem, 'dependencies'),
+    `${label} dependencies`
+  )
+  assertSameStringSet(
+    itemStringArray(item, 'devDependencies'),
+    itemStringArray(sourceItem, 'devDependencies'),
+    `${label} devDependencies`
+  )
+  assertSameStringSet(
+    normalizedRegistryDependencies(item, label),
+    itemStringArray(sourceItem, 'registryDependencies'),
+    `${label} registryDependencies`
+  )
+  assertSameStringSet(
+    itemStringArray(item, 'files')
+      .map((file) => file.target)
+      .filter((target) => target !== undefined),
+    itemStringArray(sourceItem, 'files')
+      .map((file) => file.target)
+      .filter((target) => target !== undefined),
+    `${label} file targets`
+  )
+
+  if (pinnedItem) {
+    assert(
+      availabilityStatus(item) === pinnedItem.status,
+      `${label} availability differs from snapshot status ${pinnedItem.status}`
+    )
+    const upstream = item.meta && item.meta.upstream
+    assert(upstream, `${label} must contain upstream metadata`)
+    assert(
+      upstream.cliVersion === '4.16.0' &&
+        upstream.style === 'base-nova' &&
+        upstream.sourceSha256 === pinnedItem.sourceSha256 &&
+        upstream.upstreamSha256 === pinnedItem.upstreamSha256,
+      `${label} upstream metadata differs from the snapshot`
+    )
+  }
+}
+
+function documentsAtPrefix(documents, prefix) {
+  const directDocuments = new Map()
+
+  for (const [relativePath, document] of documents) {
+    if (prefix && !relativePath.startsWith(prefix)) continue
+
+    const suffix = prefix ? relativePath.slice(prefix.length) : relativePath
+    if (!suffix || suffix.includes('/')) continue
+    directDocuments.set(suffix, document)
+  }
+
+  return directDocuments
+}
+
+function validateCurrentPublishedSet(
+  documents,
+  prefix,
+  manifest,
+  sourceManifest,
+  snapshot
+) {
+  const location = prefix || 'registry root/'
+  const directDocuments = documentsAtPrefix(documents, prefix)
+  const expectedFiles = new Set([
+    'registry.json',
+    ...manifest.items.map((item) => `${item.name}.json`),
+  ])
+  assertSameStringSet(
+    directDocuments.keys(),
+    expectedFiles,
+    `${location} JSON files`
+  )
+
+  const catalog = directDocuments.get('registry.json')
+  validateCatalog(catalog, `${location}registry.json`, {
+    dependencyPins: snapshot.dependencyPins,
+    requireKnownDependencyPins: true,
+  })
+  assert(
+    catalog.name === manifest.name && catalog.homepage === manifest.homepage,
+    `${location} catalog identity differs from the source manifest`
+  )
+  assert(
+    catalog.meta && catalog.meta.registryVersion === manifest.meta.version,
+    `${location} catalog version differs from the source manifest`
+  )
+
+  const catalogItems = indexItems(catalog.items, `${location} catalog`)
+  assertSameStringSet(
+    catalogItems.keys(),
+    sourceManifest.itemsByName.keys(),
+    `${location} catalog item names`
+  )
+
+  const publishedItems = new Map()
+  for (const [name, sourceItem] of sourceManifest.itemsByName) {
+    const itemFile = `${name}.json`
+    const standaloneItem = directDocuments.get(itemFile)
+    const catalogItem = catalogItems.get(name)
+
+    validateItem(standaloneItem, `${location}${itemFile}`, {
+      dependencyPins: snapshot.dependencyPins,
+      requireContent: standaloneItem.type !== 'registry:theme',
+      requireKnownDependencyPins: true,
+      requireSchema: true,
+    })
+    validatePublishedContract(
+      standaloneItem,
+      sourceItem,
+      snapshot.itemsByName.get(name),
+      `${location}${itemFile}`
+    )
+    validatePublishedContract(
+      catalogItem,
+      sourceItem,
+      snapshot.itemsByName.get(name),
+      `${location}registry.json item ${name}`
+    )
+    assert(
+      stableJson(catalogComparableItem(catalogItem)) ===
+        stableJson(catalogComparableItem(standaloneItem)),
+      `${location} catalog item ${name} differs from ${itemFile}`
+    )
+    publishedItems.set(name, standaloneItem)
+  }
+
+  return publishedItems
+}
+
+function validateRegistryDirectory(directory, options = {}) {
+  const { manifest, snapshot } = options
   const registryDirectory = path.resolve(directory)
 
   assert(
@@ -510,6 +1129,7 @@ function validateRegistryDirectory(directory) {
   const jsonFiles = collectJsonFiles(registryDirectory)
   assert(jsonFiles.length > 1, 'registry must contain a catalog and item files')
 
+  const documents = new Map()
   let catalogCount = 0
   let itemCount = 0
 
@@ -518,6 +1138,7 @@ function validateRegistryDirectory(directory) {
       .relative(registryDirectory, filePath)
       .replace(/\\/g, '/')
     const document = readJson(filePath)
+    documents.set(relativePath, document)
 
     if (path.basename(filePath) === 'registry.json') {
       validateCatalog(document, relativePath)
@@ -541,22 +1162,59 @@ function validateRegistryDirectory(directory) {
   assert(catalogCount > 0, 'registry must contain at least one catalog')
   assert(itemCount > 0, 'registry must contain at least one installable item')
 
+  let publishedItems
+  if (manifest || snapshot) {
+    assert(
+      manifest && snapshot,
+      'current registry reconciliation requires both manifest and snapshot'
+    )
+    const sourceManifest =
+      options.sourceManifest || validateSourceManifest(manifest, snapshot)
+    const rootItems = validateCurrentPublishedSet(
+      documents,
+      '',
+      manifest,
+      sourceManifest,
+      snapshot
+    )
+    const versionPrefix = `v${manifest.meta.version}/`
+    const versionItems = validateCurrentPublishedSet(
+      documents,
+      versionPrefix,
+      manifest,
+      sourceManifest,
+      snapshot
+    )
+
+    for (const name of sourceManifest.itemsByName.keys()) {
+      assert(
+        stableJson(rootItems.get(name)) === stableJson(versionItems.get(name)),
+        `current and ${versionPrefix} payloads differ for ${name}`
+      )
+    }
+    publishedItems = rootItems.size
+  }
+
   return {
     directory: registryDirectory,
     files: jsonFiles.length,
     catalogs: catalogCount,
     items: itemCount,
+    publishedItems,
   }
 }
 
 if (require.main === module) {
   try {
     const snapshot = validatePinnedSnapshot()
+    const manifest = readJson(SOURCE_MANIFEST_PATH)
+    const sourceManifest = validateSourceManifest(manifest, snapshot)
     const result = validateRegistryDirectory(
-      process.argv[2] || DEFAULT_REGISTRY_DIR
+      process.argv[2] || DEFAULT_REGISTRY_DIR,
+      { manifest, snapshot, sourceManifest }
     )
     console.log(
-      `[registry] valid: ${result.items} items in ${result.catalogs} catalogs (${result.files} JSON files); ${snapshot.installableItems}/${snapshot.entries} pinned sources installable`
+      `[registry] valid: ${sourceManifest.items} current items (${snapshot.installableUiItems}/${snapshot.uiItems} pinned UI sources installable, ${snapshot.supportHooks}/${EXPECTED_SUPPORT_HOOKS} support hook installable, ${EXPECTED_FOUNDATION_ENTRIES} registry foundations); ${result.items} published item documents in ${result.catalogs} catalogs (${result.files} JSON files)`
     )
   } catch (error) {
     console.error(`[registry] validation failed: ${error.message}`)
@@ -569,4 +1227,6 @@ module.exports = {
   validateCatalog,
   validateItem,
   validatePinnedSnapshot,
+  validateSnapshotDocument,
+  validateSourceManifest,
 }

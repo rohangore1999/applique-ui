@@ -4,8 +4,9 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function BubbleGroup({ className, ...props }: React.ComponentProps<"div">) {
+function BubbleGroupImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="bubble-group"
@@ -42,7 +43,7 @@ const bubbleVariants = cva(
   }
 )
 
-function Bubble({
+function BubbleImpl({
   variant = "default",
   align = "start",
   className,
@@ -62,7 +63,7 @@ function Bubble({
   )
 }
 
-function BubbleContent({
+function BubbleContentImpl({
   className,
   render,
   ...props
@@ -105,7 +106,7 @@ const bubbleReactionsVariants = cva(
   }
 )
 
-function BubbleReactions({
+function BubbleReactionsImpl({
   side = "bottom",
   align = "end",
   className,
@@ -124,5 +125,10 @@ function BubbleReactions({
     />
   )
 }
+
+const BubbleGroup = withReact18Ref(BubbleGroupImpl)
+const Bubble = withReact18Ref(BubbleImpl)
+const BubbleContent = withReact18Ref(BubbleContentImpl)
+const BubbleReactions = withReact18Ref(BubbleReactionsImpl)
 
 export { BubbleGroup, Bubble, BubbleContent, BubbleReactions }

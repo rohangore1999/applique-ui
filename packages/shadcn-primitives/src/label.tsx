@@ -3,8 +3,9 @@
 import * as React from "react"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Label({ className, ...props }: React.ComponentProps<"label">) {
+function LabelImpl({ className, ...props }: React.ComponentProps<"label">) {
   return (
     <label
       data-slot="label"
@@ -16,5 +17,7 @@ function Label({ className, ...props }: React.ComponentProps<"label">) {
     />
   )
 }
+
+const Label = withReact18Ref(LabelImpl)
 
 export { Label }

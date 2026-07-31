@@ -3,18 +3,19 @@
 import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function HoverCard({ ...props }: PreviewCardPrimitive.Root.Props) {
+function HoverCardImpl({ ...props }: PreviewCardPrimitive.Root.Props) {
   return <PreviewCardPrimitive.Root data-slot="hover-card" {...props} />
 }
 
-function HoverCardTrigger({ ...props }: PreviewCardPrimitive.Trigger.Props) {
+function HoverCardTriggerImpl({ ...props }: PreviewCardPrimitive.Trigger.Props) {
   return (
     <PreviewCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
   )
 }
 
-function HoverCardContent({
+function HoverCardContentImpl({
   className,
   side = "bottom",
   sideOffset = 4,
@@ -47,5 +48,9 @@ function HoverCardContent({
     </PreviewCardPrimitive.Portal>
   )
 }
+
+const HoverCard = withReact18Ref(HoverCardImpl)
+const HoverCardTrigger = withReact18Ref(HoverCardTriggerImpl)
+const HoverCardContent = withReact18Ref(HoverCardContentImpl)
 
 export { HoverCard, HoverCardTrigger, HoverCardContent }

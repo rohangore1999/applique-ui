@@ -4,6 +4,7 @@ import * as React from "react"
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
 type DrawerContextProps = {
   hasSnapPoints: boolean
@@ -24,7 +25,7 @@ function useDrawer() {
   return context
 }
 
-function Drawer({
+function DrawerImpl({
   modal = true,
   showSwipeHandle = false,
   snapPoints,
@@ -52,19 +53,19 @@ function Drawer({
   )
 }
 
-function DrawerTrigger({ ...props }: DrawerPrimitive.Trigger.Props) {
+function DrawerTriggerImpl({ ...props }: DrawerPrimitive.Trigger.Props) {
   return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />
 }
 
-function DrawerPortal({ ...props }: DrawerPrimitive.Portal.Props) {
+function DrawerPortalImpl({ ...props }: DrawerPrimitive.Portal.Props) {
   return <DrawerPrimitive.Portal data-slot="drawer-portal" {...props} />
 }
 
-function DrawerClose({ ...props }: DrawerPrimitive.Close.Props) {
+function DrawerCloseImpl({ ...props }: DrawerPrimitive.Close.Props) {
   return <DrawerPrimitive.Close data-slot="drawer-close" {...props} />
 }
 
-function DrawerOverlay({
+function DrawerOverlayImpl({
   className,
   ...props
 }: DrawerPrimitive.Backdrop.Props) {
@@ -80,7 +81,7 @@ function DrawerOverlay({
   )
 }
 
-function DrawerSwipeHandle({
+function DrawerSwipeHandleImpl({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -97,7 +98,7 @@ function DrawerSwipeHandle({
   )
 }
 
-function DrawerContent({
+function DrawerContentImpl({
   className,
   children,
   ...props
@@ -164,7 +165,7 @@ function DrawerContent({
   )
 }
 
-function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
+function DrawerHeaderImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="drawer-header"
@@ -177,7 +178,7 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
+function DrawerFooterImpl({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="drawer-footer"
@@ -187,7 +188,7 @@ function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function DrawerTitle({ className, ...props }: DrawerPrimitive.Title.Props) {
+function DrawerTitleImpl({ className, ...props }: DrawerPrimitive.Title.Props) {
   return (
     <DrawerPrimitive.Title
       data-slot="drawer-title"
@@ -200,7 +201,7 @@ function DrawerTitle({ className, ...props }: DrawerPrimitive.Title.Props) {
   )
 }
 
-function DrawerDescription({
+function DrawerDescriptionImpl({
   className,
   ...props
 }: DrawerPrimitive.Description.Props) {
@@ -212,6 +213,18 @@ function DrawerDescription({
     />
   )
 }
+
+const Drawer = withReact18Ref(DrawerImpl)
+const DrawerTrigger = withReact18Ref(DrawerTriggerImpl)
+const DrawerPortal = withReact18Ref(DrawerPortalImpl)
+const DrawerClose = withReact18Ref(DrawerCloseImpl)
+const DrawerOverlay = withReact18Ref(DrawerOverlayImpl)
+const DrawerSwipeHandle = withReact18Ref(DrawerSwipeHandleImpl)
+const DrawerContent = withReact18Ref(DrawerContentImpl)
+const DrawerHeader = withReact18Ref(DrawerHeaderImpl)
+const DrawerFooter = withReact18Ref(DrawerFooterImpl)
+const DrawerTitle = withReact18Ref(DrawerTitleImpl)
+const DrawerDescription = withReact18Ref(DrawerDescriptionImpl)
 
 export {
   Drawer,

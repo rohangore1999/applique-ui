@@ -13,12 +13,13 @@
   ],
   "registryDependencies": [
     "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json"
   ],
   "files": [
     {
       "path": "ui/spinner.tsx",
-      "content": "import { Loader2Icon } from \"lucide-react\"\nimport { cn } from \"@/lib/utils\"\nfunction Spinner({ className, ...props }: React.ComponentProps<\"svg\">) {\n  return (\n    <Loader2Icon\n      data-slot=\"spinner\"\n      role=\"status\"\n      aria-label=\"Loading\"\n      className={cn(\"size-4 animate-spin\", className)}\n      {...props}\n     />\n  )\n}\n\nexport { Spinner }\n",
+      "content": "import { Loader2Icon } from \"lucide-react\"\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\nfunction SpinnerImpl({ className, ...props }: React.ComponentProps<\"svg\">) {\n  return (\n    <Loader2Icon\n      data-slot=\"spinner\"\n      role=\"status\"\n      aria-label=\"Loading\"\n      className={cn(\"size-4 animate-spin\", className)}\n      {...props}\n     />\n  )\n}\n\nconst Spinner = withReact18Ref(SpinnerImpl)\n\nexport { Spinner }\n",
       "type": "registry:ui",
       "target": "@ui/spinner.tsx"
     }
@@ -27,7 +28,7 @@
     "status": "experimental",
     "upstream": {
       "cliVersion": "4.16.0",
-      "sourceSha256": "7a099939c868aef23d3f220b12cd550d9080607a303086d4ae96f0a4517b23ca",
+      "sourceSha256": "02f07584f599992a4c9cf232fafcb92c754044dbc6aa1bb2f7e4a563985a25ac",
       "style": "base-nova",
       "upstreamSha256": "8d32261934ec6e05511d742341bd4d01a2b0b121d27cede9bfbfd3c8ec221f86"
     },

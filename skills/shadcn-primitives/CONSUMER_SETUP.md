@@ -4,11 +4,16 @@ Applique components are installed as local source from the registry.
 
 ## Requirements
 
-- Node.js `>=20.18.1`
-- React and React DOM `19.2.8`
+- Node.js `>=20.18.1` for running the pinned shadcn installation/update CLI
+- React and React DOM `18.3.1`
 - Tailwind CSS `4.3.3`
 - a valid shadcn `components.json`
 - shadcn CLI `4.16.0`
+
+Node 20 is required only while the shadcn CLI installs or updates registry
+source. The copied source itself adds no Node 20 runtime requirement; whether
+the client can keep Node 18 for development and builds depends on its own
+toolchain.
 
 The aliases in `components.json` determine where the CLI writes files. A
 typical setup uses:
@@ -72,13 +77,16 @@ npx shadcn@4.16.0 add \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/dialog.json
 ```
 
-Form is the sole official fileless entry in this baseline. Install and use
-Field instead:
+Form is the upstream fileless/deprecated entry in this baseline. Install and
+use Field instead:
 
 ```bash
 npx shadcn@4.16.0 add \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/field.json
 ```
+
+Message Scroller is listed for upstream coverage but has no installable source
+in this baseline because its upstream primitive requires React 19.
 
 ## Update
 

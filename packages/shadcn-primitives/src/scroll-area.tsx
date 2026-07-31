@@ -4,8 +4,9 @@ import * as React from "react"
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function ScrollArea({
+function ScrollAreaImpl({
   className,
   children,
   ...props
@@ -28,7 +29,7 @@ function ScrollArea({
   )
 }
 
-function ScrollBar({
+function ScrollBarImpl({
   className,
   orientation = "vertical",
   ...props
@@ -51,5 +52,8 @@ function ScrollBar({
     </ScrollAreaPrimitive.Scrollbar>
   )
 }
+
+const ScrollArea = withReact18Ref(ScrollAreaImpl)
+const ScrollBar = withReact18Ref(ScrollBarImpl)
 
 export { ScrollArea, ScrollBar }

@@ -1,8 +1,9 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "./utils"
+import { withReact18Ref } from "./applique-react18-compat"
 
-function Slider({
+function SliderImpl({
   className,
   defaultValue,
   value,
@@ -48,5 +49,7 @@ function Slider({
     </SliderPrimitive.Root>
   )
 }
+
+const Slider = withReact18Ref(SliderImpl)
 
 export { Slider }

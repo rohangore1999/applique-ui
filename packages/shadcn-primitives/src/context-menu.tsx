@@ -5,17 +5,18 @@ import * as React from "react"
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu"
 
 import { cn } from "./utils"
-function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props) {
+import { withReact18Ref } from "./applique-react18-compat"
+function ContextMenuImpl({ ...props }: ContextMenuPrimitive.Root.Props) {
   return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />
 }
 
-function ContextMenuPortal({ ...props }: ContextMenuPrimitive.Portal.Props) {
+function ContextMenuPortalImpl({ ...props }: ContextMenuPrimitive.Portal.Props) {
   return (
     <ContextMenuPrimitive.Portal data-slot="context-menu-portal" {...props} />
   )
 }
 
-function ContextMenuTrigger({
+function ContextMenuTriggerImpl({
   className,
   ...props
 }: ContextMenuPrimitive.Trigger.Props) {
@@ -28,7 +29,7 @@ function ContextMenuTrigger({
   )
 }
 
-function ContextMenuContent({
+function ContextMenuContentImpl({
   className,
   align = "start",
   alignOffset = 4,
@@ -62,13 +63,13 @@ function ContextMenuContent({
   )
 }
 
-function ContextMenuGroup({ ...props }: ContextMenuPrimitive.Group.Props) {
+function ContextMenuGroupImpl({ ...props }: ContextMenuPrimitive.Group.Props) {
   return (
     <ContextMenuPrimitive.Group data-slot="context-menu-group" {...props} />
   )
 }
 
-function ContextMenuLabel({
+function ContextMenuLabelImpl({
   className,
   inset,
   ...props
@@ -88,7 +89,7 @@ function ContextMenuLabel({
   )
 }
 
-function ContextMenuItem({
+function ContextMenuItemImpl({
   className,
   inset,
   variant = "default",
@@ -111,13 +112,13 @@ function ContextMenuItem({
   )
 }
 
-function ContextMenuSub({ ...props }: ContextMenuPrimitive.SubmenuRoot.Props) {
+function ContextMenuSubImpl({ ...props }: ContextMenuPrimitive.SubmenuRoot.Props) {
   return (
     <ContextMenuPrimitive.SubmenuRoot data-slot="context-menu-sub" {...props} />
   )
 }
 
-function ContextMenuSubTrigger({
+function ContextMenuSubTriggerImpl({
   className,
   inset,
   children,
@@ -143,7 +144,7 @@ function ContextMenuSubTrigger({
   )
 }
 
-function ContextMenuSubContent({
+function ContextMenuSubContentImpl({
   ...props
 }: React.ComponentProps<typeof ContextMenuContent>) {
   return (
@@ -156,7 +157,7 @@ function ContextMenuSubContent({
   )
 }
 
-function ContextMenuCheckboxItem({
+function ContextMenuCheckboxItemImpl({
   className,
   children,
   checked,
@@ -187,7 +188,7 @@ function ContextMenuCheckboxItem({
   )
 }
 
-function ContextMenuRadioGroup({
+function ContextMenuRadioGroupImpl({
   ...props
 }: ContextMenuPrimitive.RadioGroup.Props) {
   return (
@@ -198,7 +199,7 @@ function ContextMenuRadioGroup({
   )
 }
 
-function ContextMenuRadioItem({
+function ContextMenuRadioItemImpl({
   className,
   children,
   inset,
@@ -227,7 +228,7 @@ function ContextMenuRadioItem({
   )
 }
 
-function ContextMenuSeparator({
+function ContextMenuSeparatorImpl({
   className,
   ...props
 }: ContextMenuPrimitive.Separator.Props) {
@@ -240,7 +241,7 @@ function ContextMenuSeparator({
   )
 }
 
-function ContextMenuShortcut({
+function ContextMenuShortcutImpl({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -255,6 +256,22 @@ function ContextMenuShortcut({
     />
   )
 }
+
+const ContextMenu = withReact18Ref(ContextMenuImpl)
+const ContextMenuPortal = withReact18Ref(ContextMenuPortalImpl)
+const ContextMenuTrigger = withReact18Ref(ContextMenuTriggerImpl)
+const ContextMenuContent = withReact18Ref(ContextMenuContentImpl)
+const ContextMenuGroup = withReact18Ref(ContextMenuGroupImpl)
+const ContextMenuLabel = withReact18Ref(ContextMenuLabelImpl)
+const ContextMenuItem = withReact18Ref(ContextMenuItemImpl)
+const ContextMenuSub = withReact18Ref(ContextMenuSubImpl)
+const ContextMenuSubTrigger = withReact18Ref(ContextMenuSubTriggerImpl)
+const ContextMenuSubContent = withReact18Ref(ContextMenuSubContentImpl)
+const ContextMenuCheckboxItem = withReact18Ref(ContextMenuCheckboxItemImpl)
+const ContextMenuRadioGroup = withReact18Ref(ContextMenuRadioGroupImpl)
+const ContextMenuRadioItem = withReact18Ref(ContextMenuRadioItemImpl)
+const ContextMenuSeparator = withReact18Ref(ContextMenuSeparatorImpl)
+const ContextMenuShortcut = withReact18Ref(ContextMenuShortcutImpl)
 
 export {
   ContextMenu,

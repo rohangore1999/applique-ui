@@ -3,7 +3,8 @@ import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui/react/naviga
 import { cva } from "class-variance-authority"
 
 import { cn } from "./utils"
-function NavigationMenu({
+import { withReact18Ref } from "./applique-react18-compat"
+function NavigationMenuImpl({
   align = "start",
   className,
   children,
@@ -25,7 +26,7 @@ function NavigationMenu({
   )
 }
 
-function NavigationMenuList({
+function NavigationMenuListImpl({
   className,
   ...props
 }: React.ComponentPropsWithRef<typeof NavigationMenuPrimitive.List>) {
@@ -41,7 +42,7 @@ function NavigationMenuList({
   )
 }
 
-function NavigationMenuItem({
+function NavigationMenuItemImpl({
   className,
   ...props
 }: React.ComponentPropsWithRef<typeof NavigationMenuPrimitive.Item>) {
@@ -58,7 +59,7 @@ const navigationMenuTriggerStyle = cva(
   "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-lg px-2.5 py-1.5 text-sm font-medium transition-all outline-none hover:bg-muted focus:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-popup-open:bg-muted/50 data-popup-open:hover:bg-muted data-open:bg-muted/50 data-open:hover:bg-muted data-open:focus:bg-muted"
 )
 
-function NavigationMenuTrigger({
+function NavigationMenuTriggerImpl({
   className,
   children,
   ...props
@@ -78,7 +79,7 @@ function NavigationMenuTrigger({
   )
 }
 
-function NavigationMenuContent({
+function NavigationMenuContentImpl({
   className,
   ...props
 }: NavigationMenuPrimitive.Content.Props) {
@@ -94,7 +95,7 @@ function NavigationMenuContent({
   )
 }
 
-function NavigationMenuPositioner({
+function NavigationMenuPositionerImpl({
   className,
   side = "bottom",
   sideOffset = 8,
@@ -123,7 +124,7 @@ function NavigationMenuPositioner({
   )
 }
 
-function NavigationMenuLink({
+function NavigationMenuLinkImpl({
   className,
   ...props
 }: NavigationMenuPrimitive.Link.Props) {
@@ -139,7 +140,7 @@ function NavigationMenuLink({
   )
 }
 
-function NavigationMenuIndicator({
+function NavigationMenuIndicatorImpl({
   className,
   ...props
 }: React.ComponentPropsWithRef<typeof NavigationMenuPrimitive.Icon>) {
@@ -156,6 +157,15 @@ function NavigationMenuIndicator({
     </NavigationMenuPrimitive.Icon>
   )
 }
+
+const NavigationMenu = withReact18Ref(NavigationMenuImpl)
+const NavigationMenuList = withReact18Ref(NavigationMenuListImpl)
+const NavigationMenuItem = withReact18Ref(NavigationMenuItemImpl)
+const NavigationMenuTrigger = withReact18Ref(NavigationMenuTriggerImpl)
+const NavigationMenuContent = withReact18Ref(NavigationMenuContentImpl)
+const NavigationMenuPositioner = withReact18Ref(NavigationMenuPositionerImpl)
+const NavigationMenuLink = withReact18Ref(NavigationMenuLinkImpl)
+const NavigationMenuIndicator = withReact18Ref(NavigationMenuIndicatorImpl)
 
 export {
   NavigationMenu,

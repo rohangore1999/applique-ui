@@ -11,12 +11,13 @@
   ],
   "registryDependencies": [
     "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json"
   ],
   "files": [
     {
       "path": "ui/skeleton.tsx",
-      "content": "import { cn } from \"@/lib/utils\"\n\nfunction Skeleton({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"skeleton\"\n      className={cn(\"animate-pulse rounded-md bg-muted\", className)}\n      {...props}\n    />\n  )\n}\n\nexport { Skeleton }\n",
+      "content": "import { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nfunction SkeletonImpl({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"skeleton\"\n      className={cn(\"animate-pulse rounded-md bg-muted\", className)}\n      {...props}\n    />\n  )\n}\n\nconst Skeleton = withReact18Ref(SkeletonImpl)\n\nexport { Skeleton }\n",
       "type": "registry:ui",
       "target": "@ui/skeleton.tsx"
     }
@@ -25,7 +26,7 @@
     "status": "experimental",
     "upstream": {
       "cliVersion": "4.16.0",
-      "sourceSha256": "7b2f5fa461939185d2931f8345a50f5758e262cb5a4ec632a2d210a3faa42afb",
+      "sourceSha256": "98f5d9b2a7ee6e6522d853da5f0697d1c27e93a70bd93fd987b6f220c87a1d32",
       "style": "base-nova",
       "upstreamSha256": "28c0dcddd167ab534876d76ac3336f89b9bd5dda1f24f21ce2a0b8528ad44f21"
     },
