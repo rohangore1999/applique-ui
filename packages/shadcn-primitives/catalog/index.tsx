@@ -696,11 +696,11 @@ function MigrationMappingRow({ mapping }: { mapping: CatalogueMapping }) {
 }
 
 function MigrationGuide() {
-  const [activeKind, setActiveKind] = React.useState<'all' | MappingKind>('all')
+  const [activeKind, setActiveKind] = React.useState<MappingKind>('direct')
   const [query, setQuery] = React.useState('')
   const normalizedQuery = query.trim().toLowerCase()
   const visibleMappings = migrationRows.filter((mapping) => {
-    const matchesKind = activeKind === 'all' || mapping.kind === activeKind
+    const matchesKind = mapping.kind === activeKind
     const searchText = [
       mapping.id,
       mapping.kind,
@@ -761,13 +761,6 @@ function MigrationGuide() {
           className="migration-filters"
           role="group"
         >
-          <button
-            aria-pressed={activeKind === 'all'}
-            onClick={() => setActiveKind('all')}
-            type="button"
-          >
-            All mappings <span>{migrationRows.length}</span>
-          </button>
           {mappingKindOrder.map((kind) => (
             <button
               aria-pressed={activeKind === kind}
