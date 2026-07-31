@@ -1,9 +1,23 @@
 import * as React from 'react'
-import {
-  CircleIcon,
-  icons,
-  type LucideProps,
-} from 'lucide-react'
+import { CircleHelpIcon, icons, LucideProps } from 'lucide-react'
+
+const legacyLucideNames: Record<string, string> = {
+  AlertTriangle: 'TriangleAlert',
+  ArrowLeftCircle: 'CircleArrowLeft',
+  FileWarning: 'FileExclamationPoint',
+  FlipHorizontal: 'SquareCenterlineDashedHorizontal',
+  FlipVertical: 'SquareCenterlineDashedVertical',
+  HelpCircle: 'CircleQuestionMark',
+  Home: 'House',
+  Layout: 'PanelsTopLeft',
+  MoreHorizontal: 'Ellipsis',
+  PlusCircle: 'CirclePlus',
+}
+
+const lucideIcons = (icons as unknown) as Record<
+  string,
+  React.ComponentType<LucideProps>
+>
 
 export interface IconPlaceholderProps extends LucideProps {
   hugeicons?: string
@@ -21,10 +35,20 @@ export function IconPlaceholder({
   tabler: _tabler,
   ...props
 }: IconPlaceholderProps) {
-  const Icon =
-    (lucide
-      ? (icons as Record<string, React.ComponentType<LucideProps>>)[lucide]
-      : undefined) || CircleIcon
+  const requestedName = lucide && lucide.replace(/Icon$/, '')
+  const resolvedName =
+    (requestedName && legacyLucideNames[requestedName]) || requestedName
+  const Icon = (resolvedName && lucideIcons[resolvedName]) || CircleHelpIcon
 
-  return <Icon aria-hidden="true" {...props} />
+  return (
+    <Icon
+      aria-hidden="true"
+      data-missing-lucide-icon={
+        lucide && resolvedName && !lucideIcons[resolvedName]
+          ? lucide
+          : undefined
+      }
+      {...props}
+    />
+  )
 }
