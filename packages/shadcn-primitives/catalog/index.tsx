@@ -3,23 +3,119 @@ import { createRoot } from 'react-dom/client'
 import './catalog.css'
 import '../src/design.css'
 import {
+  CatalogueApiExport,
+  CatalogueComponent,
+  CatalogueMapping,
+  CataloguePropMapping,
+  MappingKind,
+  PropMappingKind,
   catalogueComponents,
+  catalogueMappings,
   catalogueSource,
   findComponent,
-  type CatalogueApiExport,
-  type CatalogueComponent,
 } from './components'
 import { previewLoaders } from './generated/preview-loaders.generated'
 import { Toaster as BaseToaster } from '../src/toast'
 import { Toaster as SonnerToaster } from '../src/sonner'
 
 const SHADCN_CLI_VERSION = '4.16.0'
+const mappingKindOrder: MappingKind[] = [
+  'direct',
+  'composition',
+  'no-equivalent',
+  'ambiguous',
+]
+const mappingKindDetails: Record<
+  MappingKind,
+  { description: string; label: string }
+> = {
+  direct: {
+    description:
+      'One shadcn component family covers the same primary interaction.',
+    label: 'Direct',
+  },
+  composition: {
+    description:
+      'Multiple shadcn component families and Applique glue recreate the behavior.',
+    label: 'Composition',
+  },
+  'no-equivalent': {
+    description:
+      'The capability currently exists in only one system; direction is shown per row.',
+    label: 'No equivalent',
+  },
+  ambiguous: {
+    description:
+      'The correct target depends on the intent of each client usage.',
+    label: 'Ambiguous',
+  },
+}
+const propMappingKindOrder: PropMappingKind[] = [
+  'forwarded',
+  'mapped',
+  'composition-owned',
+  'unsupported',
+  'needs-review',
+]
+const propMappingKindDetails: Record<
+  PropMappingKind,
+  { description: string; label: string; shortLabel: string }
+> = {
+  forwarded: {
+    description: 'Same name and behavior; pass through unchanged.',
+    label: 'Direct / forwarded',
+    shortLabel: 'Direct',
+  },
+  mapped: {
+    description: 'The facade renames a prop or converts values and events.',
+    label: 'Mapped by facade',
+    shortLabel: 'Mapped',
+  },
+  'composition-owned': {
+    description:
+      'The facade consumes the prop and builds behavior from registry primitives.',
+    label: 'Owned by composition',
+    shortLabel: 'Composed',
+  },
+  unsupported: {
+    description: 'Intentionally excluded from the new facade contract.',
+    label: 'Unsupported',
+    shortLabel: 'Unsupported',
+  },
+  'needs-review': {
+    description: 'Usage or UX intent must be resolved before implementation.',
+    label: 'Needs review',
+    shortLabel: 'Review',
+  },
+}
+const migrationRows = catalogueMappings.flatMap((mapping) => {
+  if (mapping.kind !== 'no-equivalent') return [mapping]
 
-function slugFromHash() {
+  const populatedSide =
+    mapping.applique.length > 0 ? mapping.applique : mapping.shadcn
+
+  return populatedSide.map((slug) => ({
+    ...mapping,
+    applique: mapping.applique.length > 0 ? [slug] : [],
+    id: `${mapping.id}-${slug}`,
+    shadcn: mapping.shadcn.length > 0 ? [slug] : [],
+  }))
+})
+
+type CatalogueRoute =
+  | { kind: 'component'; slug: string }
+  | { kind: 'migration' }
+
+function routeFromHash(): CatalogueRoute {
+  if (window.location.hash === '#/migration') return { kind: 'migration' }
+
   const match = window.location.hash.match(/^#\/components\/([^/?#]+)/)
   const slug = match?.[1] ? decodeURIComponent(match[1]) : 'button'
 
-  return findComponent(slug)?.slug ?? 'button'
+  return {
+    kind: 'component',
+    slug: findComponent(slug)?.slug ?? 'button',
+  }
 }
 
 function registryUrl(slug: string) {
@@ -29,22 +125,22 @@ function registryUrl(slug: string) {
   return new URL(`../registry/${slug}.json`, pageUrl).toString()
 }
 
-function useActiveSlug() {
-  const [slug, setSlug] = React.useState(slugFromHash)
+function useCatalogueRoute() {
+  const [route, setRoute] = React.useState<CatalogueRoute>(routeFromHash)
 
   React.useEffect(() => {
-    const updateSlug = () => setSlug(slugFromHash())
+    const updateRoute = () => setRoute(routeFromHash())
 
-    window.addEventListener('hashchange', updateSlug)
+    window.addEventListener('hashchange', updateRoute)
 
     if (!window.location.hash) {
       window.history.replaceState(null, '', '#/components/button')
     }
 
-    return () => window.removeEventListener('hashchange', updateSlug)
+    return () => window.removeEventListener('hashchange', updateRoute)
   }, [])
 
-  return slug
+  return route
 }
 
 function StatusBadge({ component }: { component: CatalogueComponent }) {
@@ -52,8 +148,8 @@ function StatusBadge({ component }: { component: CatalogueComponent }) {
     component.availability === 'deprecated'
       ? 'Deprecated'
       : component.registryStatus === 'ready'
-        ? 'Registry ready'
-        : 'Source unavailable'
+      ? 'Registry ready'
+      : 'Source unavailable'
 
   return (
     <span className={`status-badge status-badge--${component.registryStatus}`}>
@@ -117,10 +213,9 @@ class PreviewErrorBoundary extends React.Component<
 
 function ComponentPreview({ component }: { component: CatalogueComponent }) {
   const loader = previewLoaders[component.slug]
-  const Preview = React.useMemo(
-    () => (loader ? React.lazy(loader) : null),
-    [loader]
-  )
+  const Preview = React.useMemo(() => (loader ? React.lazy(loader) : null), [
+    loader,
+  ])
 
   if (!Preview) return null
 
@@ -150,7 +245,13 @@ function ComponentPreview({ component }: { component: CatalogueComponent }) {
   )
 }
 
-function ExportApi({ item, index }: { item: CatalogueApiExport; index: number }) {
+function ExportApi({
+  item,
+  index,
+}: {
+  item: CatalogueApiExport
+  index: number
+}) {
   const hasPropSurface =
     item.ownedProps.length > 0 || item.propSources.length > 0
 
@@ -386,7 +487,9 @@ function RegistrySource({
               className="source-code"
               key={file.path || file.target || index}
             >
-              <summary>{file.path || file.target || `Source ${index + 1}`}</summary>
+              <summary>
+                {file.path || file.target || `Source ${index + 1}`}
+              </summary>
               <pre>
                 <code>{file.content}</code>
               </pre>
@@ -394,6 +497,347 @@ function RegistrySource({
           ))
         : null}
     </section>
+  )
+}
+
+function PropMappingRow({ mapping }: { mapping: CataloguePropMapping }) {
+  return (
+    <div className="prop-mapping-row">
+      <div className="prop-mapping-cell">
+        <span>Applique prop</span>
+        <div className="prop-mapping-chips">
+          {mapping.from.map((prop) => (
+            <code key={prop}>{prop}</code>
+          ))}
+        </div>
+      </div>
+
+      <span className="prop-mapping-arrow" aria-hidden="true">
+        →
+      </span>
+
+      <div className="prop-mapping-cell">
+        <span>Registry target</span>
+        {mapping.targets.length > 0 ? (
+          <div className="prop-mapping-chips">
+            {mapping.targets.map((target, index) => (
+              <code key={`${target.component}-${target.prop || index}`}>
+                {findComponent(target.component)?.name ?? target.component}
+                {target.prop ? `.${target.prop}` : ''}
+              </code>
+            ))}
+          </div>
+        ) : (
+          <em>No registry target</em>
+        )}
+      </div>
+
+      <div className="prop-mapping-explanation">
+        <p>{mapping.summary}</p>
+        {mapping.valueMap ? (
+          <div className="prop-value-map" aria-label="Value mapping">
+            {Object.entries(mapping.valueMap).map(([source, target]) => (
+              <code key={source}>
+                {source} <span aria-hidden="true">→</span> {target}
+              </code>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
+function PropMigration({ mapping }: { mapping: CatalogueMapping }) {
+  const propMappings = mapping.propMappings
+
+  if (!propMappings) {
+    const message =
+      mapping.kind === 'no-equivalent'
+        ? mapping.applique.length > 0
+          ? 'No prop mapping until a registry replacement is selected.'
+          : 'New registry API; no legacy prop migration is required.'
+        : 'Prop audit pending. Component similarity does not prove prop compatibility.'
+
+    return <p className="prop-audit-pending">{message}</p>
+  }
+
+  const assessedProps = new Set(
+    propMappings.flatMap((propMapping) => propMapping.from)
+  ).size
+
+  return (
+    <details className="prop-migration">
+      <summary>
+        <span className="prop-migration__title">
+          <strong>Prop migration</strong>
+          <small>
+            {assessedProps} legacy {assessedProps === 1 ? 'prop' : 'props'}{' '}
+            assessed
+          </small>
+        </span>
+        <span className="prop-migration__counts">
+          {propMappingKindOrder.map((kind) => {
+            const count = propMappings.filter(
+              (propMapping) => propMapping.kind === kind
+            ).length
+            if (count === 0) return null
+
+            return (
+              <span className={`prop-count prop-count--${kind}`} key={kind}>
+                {propMappingKindDetails[kind].shortLabel} {count}
+              </span>
+            )
+          })}
+        </span>
+        <span className="prop-migration__chevron" aria-hidden="true">
+          ⌄
+        </span>
+      </summary>
+
+      <div className="prop-migration__body">
+        <p className="prop-migration__note">
+          This is a curated adapter contract, not an automatic name match.
+          Counts describe assessed legacy props and may not yet cover every
+          runtime escape hatch.
+        </p>
+
+        {propMappingKindOrder.map((kind) => {
+          const entries = propMappings.filter(
+            (propMapping) => propMapping.kind === kind
+          )
+          if (entries.length === 0) return null
+
+          return (
+            <section className="prop-strategy" key={kind}>
+              <header>
+                <div>
+                  <h4>{propMappingKindDetails[kind].label}</h4>
+                  <p>{propMappingKindDetails[kind].description}</p>
+                </div>
+                <span>{entries.length}</span>
+              </header>
+              <div className="prop-strategy__rows">
+                {entries.map((entry) => (
+                  <PropMappingRow key={entry.id} mapping={entry} />
+                ))}
+              </div>
+            </section>
+          )
+        })}
+      </div>
+    </details>
+  )
+}
+
+function MigrationMappingRow({ mapping }: { mapping: CatalogueMapping }) {
+  const direction =
+    mapping.kind === 'no-equivalent'
+      ? mapping.applique.length > 0
+        ? 'Applique only'
+        : 'New in registry'
+      : null
+
+  return (
+    <article className="migration-row">
+      <div className="migration-row__meta">
+        {direction ? (
+          <span className="migration-direction">{direction}</span>
+        ) : null}
+        <span className={`mapping-review mapping-review--${mapping.review}`}>
+          {mapping.review === 'approved' ? 'Approved' : 'Initial assessment'}
+        </span>
+      </div>
+
+      <div className="migration-row__mapping">
+        <div className="migration-side">
+          <span>Applique</span>
+          {mapping.applique.length > 0 ? (
+            <div className="migration-chips">
+              {mapping.applique.map((slug) => (
+                <code className="migration-chip" key={slug}>
+                  @applique-ui/{slug}
+                </code>
+              ))}
+            </div>
+          ) : (
+            <p>No legacy counterpart</p>
+          )}
+        </div>
+
+        <span className="migration-arrow" aria-hidden="true">
+          →
+        </span>
+
+        <div className="migration-side">
+          <span>shadcn registry</span>
+          {mapping.shadcn.length > 0 ? (
+            <div className="migration-chips">
+              {mapping.shadcn.map((slug) => (
+                <a
+                  className="migration-chip migration-chip--link"
+                  href={`#/components/${slug}`}
+                  key={slug}
+                >
+                  {findComponent(slug)?.name ?? slug}
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p>No registry counterpart</p>
+          )}
+        </div>
+      </div>
+
+      <p className="migration-row__summary">{mapping.summary}</p>
+      <PropMigration mapping={mapping} />
+    </article>
+  )
+}
+
+function MigrationGuide() {
+  const [activeKind, setActiveKind] = React.useState<'all' | MappingKind>('all')
+  const [query, setQuery] = React.useState('')
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMappings = migrationRows.filter((mapping) => {
+    const matchesKind = activeKind === 'all' || mapping.kind === activeKind
+    const searchText = [
+      mapping.id,
+      mapping.kind,
+      mapping.summary,
+      ...mapping.applique,
+      ...mapping.shadcn,
+      ...(mapping.propMappings ?? []).flatMap((propMapping) => [
+        propMapping.id,
+        propMapping.kind,
+        propMapping.summary,
+        ...propMapping.from,
+        ...propMapping.targets.flatMap((target) => [
+          target.component,
+          target.prop ?? '',
+        ]),
+        ...Object.entries(propMapping.valueMap ?? {}).flat(),
+      ]),
+    ]
+      .join(' ')
+      .toLowerCase()
+
+    return matchesKind && searchText.includes(normalizedQuery)
+  })
+
+  return (
+    <main className="content migration-page" id="main-content">
+      <div className="breadcrumb">
+        Applique <span aria-hidden="true">/</span> Migration guide
+      </div>
+
+      <header className="component-header migration-header">
+        <div>
+          <h1>Component migration map</h1>
+          <p>
+            Compare legacy Applique behavior with the pinned shadcn registry.
+            These strategies describe migration relationships, not permanent
+            labels on individual shadcn components.
+          </p>
+        </div>
+        <span className="status-badge status-badge--unavailable">
+          Initial assessment
+        </span>
+      </header>
+
+      <aside className="migration-note">
+        <strong>Why this is a separate view</strong>
+        <p>
+          One registry component can play several roles. Button participates in
+          the InputDate recipe as well as the legacy Button composition, for
+          example. Final mappings should be approved after reviewing client
+          usage and UX requirements.
+        </p>
+      </aside>
+
+      <div className="migration-toolbar">
+        <div
+          aria-label="Filter migration strategy"
+          className="migration-filters"
+          role="group"
+        >
+          <button
+            aria-pressed={activeKind === 'all'}
+            onClick={() => setActiveKind('all')}
+            type="button"
+          >
+            All <span>{migrationRows.length}</span>
+          </button>
+          {mappingKindOrder.map((kind) => (
+            <button
+              aria-pressed={activeKind === kind}
+              key={kind}
+              onClick={() => setActiveKind(kind)}
+              type="button"
+            >
+              {mappingKindDetails[kind].label}{' '}
+              <span>
+                {
+                  migrationRows.filter((mapping) => mapping.kind === kind)
+                    .length
+                }
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <label className="migration-search">
+          <span className="sr-only">Search migration mappings</span>
+          <input
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search mappings"
+            type="search"
+            value={query}
+          />
+        </label>
+      </div>
+
+      {visibleMappings.length > 0 ? (
+        mappingKindOrder.map((kind) => {
+          const mappings = visibleMappings.filter(
+            (mapping) => mapping.kind === kind
+          )
+          if (mappings.length === 0) return null
+
+          return (
+            <section
+              aria-labelledby={`migration-${kind}`}
+              className="panel migration-group"
+              key={kind}
+            >
+              <div className="panel__header migration-group__header">
+                <div>
+                  <p className="eyebrow">Migration strategy</p>
+                  <h2 id={`migration-${kind}`}>
+                    {mappingKindDetails[kind].label}
+                  </h2>
+                  <p>{mappingKindDetails[kind].description}</p>
+                </div>
+                <span className="token-note">
+                  {mappings.length}{' '}
+                  {mappings.length === 1 ? 'mapping' : 'mappings'}
+                </span>
+              </div>
+              <div className="migration-rows">
+                {mappings.map((mapping) => (
+                  <MigrationMappingRow key={mapping.id} mapping={mapping} />
+                ))}
+              </div>
+            </section>
+          )
+        })
+      ) : (
+        <section className="panel no-mappings">
+          <h2>No mappings found</h2>
+          <p>Try another component name or migration strategy.</p>
+        </section>
+      )}
+    </main>
   )
 }
 
@@ -481,8 +925,11 @@ function ComponentPage({ component }: { component: CatalogueComponent }) {
 }
 
 function App() {
-  const activeSlug = useActiveSlug()
-  const activeComponent = findComponent(activeSlug) ?? catalogueComponents[0]
+  const route = useCatalogueRoute()
+  const activeComponent =
+    route.kind === 'component'
+      ? findComponent(route.slug) ?? catalogueComponents[0]
+      : catalogueComponents[0]
   const [query, setQuery] = React.useState('')
   const normalizedQuery = query.trim().toLowerCase()
   const filteredComponents = catalogueComponents.filter((component) =>
@@ -507,6 +954,23 @@ function App() {
           </div>
         </div>
 
+        <nav aria-label="Catalogue views" className="catalogue-views">
+          <a
+            aria-current={route.kind === 'component' ? 'page' : undefined}
+            href="#/components/button"
+          >
+            <strong>Components</strong>
+            <span>{catalogueComponents.length} registry entries</span>
+          </a>
+          <a
+            aria-current={route.kind === 'migration' ? 'page' : undefined}
+            href="#/migration"
+          >
+            <strong>Migration guide</strong>
+            <span>4 mapping strategies</span>
+          </a>
+        </nav>
+
         <label className="search">
           <span className="sr-only">Search components</span>
           <input
@@ -527,7 +991,10 @@ function App() {
             filteredComponents.map((component) => (
               <a
                 aria-current={
-                  component.slug === activeComponent.slug ? 'page' : undefined
+                  route.kind === 'component' &&
+                  component.slug === activeComponent.slug
+                    ? 'page'
+                    : undefined
                 }
                 className="component-link"
                 href={`#/components/${component.slug}`}
@@ -542,8 +1009,8 @@ function App() {
                     component.registryStatus === 'ready'
                       ? 'Registry ready'
                       : component.availability === 'deprecated'
-                        ? 'Deprecated'
-                        : 'Unavailable'
+                      ? 'Deprecated'
+                      : 'Unavailable'
                   }
                   className={`component-link__status component-link__status--${component.registryStatus}`}
                 />
@@ -562,7 +1029,11 @@ function App() {
         </footer>
       </aside>
 
-      <ComponentPage component={activeComponent} />
+      {route.kind === 'migration' ? (
+        <MigrationGuide />
+      ) : (
+        <ComponentPage component={activeComponent} />
+      )}
       <BaseToaster />
       <SonnerToaster />
     </div>

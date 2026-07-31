@@ -1,11 +1,24 @@
 import {
   generatedCatalogueComponents,
+  generatedCatalogueMappings,
   generatedCatalogueSource,
 } from './generated/components.generated'
 
 export type RegistryStatus = 'ready' | 'unavailable'
 export type ComponentAvailability = 'registry' | 'deprecated'
 export type ApiExportKind = 'component' | 'hook' | 'type' | 'utility'
+export type MappingKind =
+  | 'direct'
+  | 'composition'
+  | 'no-equivalent'
+  | 'ambiguous'
+export type MappingReview = 'proposed' | 'approved'
+export type PropMappingKind =
+  | 'forwarded'
+  | 'mapped'
+  | 'composition-owned'
+  | 'unsupported'
+  | 'needs-review'
 
 export interface CatalogueOwnedProp {
   name: string
@@ -41,8 +54,33 @@ export interface CatalogueComponent {
   }
 }
 
-export const catalogueComponents =
-  generatedCatalogueComponents as unknown as CatalogueComponent[]
+export interface CataloguePropTarget {
+  component: string
+  prop?: string
+}
+
+export interface CataloguePropMapping {
+  from: string[]
+  id: string
+  kind: PropMappingKind
+  summary: string
+  targets: CataloguePropTarget[]
+  valueMap?: Record<string, string>
+}
+
+export interface CatalogueMapping {
+  applique: string[]
+  id: string
+  kind: MappingKind
+  propMappings?: CataloguePropMapping[]
+  review: MappingReview
+  shadcn: string[]
+  summary: string
+}
+
+export const catalogueComponents = (generatedCatalogueComponents as unknown) as CatalogueComponent[]
+
+export const catalogueMappings = (generatedCatalogueMappings as unknown) as CatalogueMapping[]
 
 export const catalogueSource = generatedCatalogueSource
 

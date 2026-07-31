@@ -24,6 +24,10 @@ const sourceDirectory = path.join(packageDirectory, 'src')
 const catalogDirectory = path.join(packageDirectory, 'catalog')
 const generatedDirectory = path.join(catalogDirectory, 'generated')
 const previewDirectory = path.join(catalogDirectory, 'previews', 'base')
+const componentMappingsPath = path.join(
+  catalogDirectory,
+  'component-mappings.json'
+)
 
 const UPSTREAM_COMMIT = '705ce5961080264830471ddd885c01b907706068'
 const UPSTREAM_BASE = 'base'
@@ -721,8 +725,275 @@ function serializeTypeScript(value) {
   return JSON.stringify(value, null, 2)
 }
 
+function loadCatalogueMappings() {
+  const document = JSON.parse(fs.readFileSync(componentMappingsPath, 'utf8'))
+  if (!document || !Array.isArray(document.mappings)) {
+    throw new Error('catalog/component-mappings.json must contain mappings[]')
+  }
+
+  const validKinds = new Set([
+    'direct',
+    'composition',
+    'no-equivalent',
+    'ambiguous',
+  ])
+  const validReviews = new Set(['proposed', 'approved'])
+  const validPropKinds = new Set([
+    'forwarded',
+    'mapped',
+    'composition-owned',
+    'unsupported',
+    'needs-review',
+  ])
+  const knownShadcn = new Set(expectedComponentSlugs)
+  const legacyComponentsDirectory = path.join(repositoryDirectory, 'components')
+  const knownApplique = new Set(
+    fs
+      .readdirSync(legacyComponentsDirectory, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+  )
+  const seenIds = new Set()
+  const referencedApplique = new Set()
+
+  for (const [index, mapping] of document.mappings.entries()) {
+    const label = `component-mappings.json mappings[${index}]`
+    if (!mapping || typeof mapping !== 'object' || Array.isArray(mapping)) {
+      throw new Error(`${label} must be an object`)
+    }
+    if (typeof mapping.id !== 'string' || !/^[a-z0-9-]+$/.test(mapping.id)) {
+      throw new Error(`${label}.id must be a kebab-case string`)
+    }
+    if (seenIds.has(mapping.id)) {
+      throw new Error(`${label}.id duplicates ${mapping.id}`)
+    }
+    seenIds.add(mapping.id)
+
+    if (!validKinds.has(mapping.kind)) {
+      throw new Error(`${label}.kind is not a supported migration strategy`)
+    }
+    if (!validReviews.has(mapping.review)) {
+      throw new Error(`${label}.review must be proposed or approved`)
+    }
+    if (typeof mapping.summary !== 'string' || !mapping.summary.trim()) {
+      throw new Error(`${label}.summary must be a non-empty string`)
+    }
+
+    for (const side of ['applique', 'shadcn']) {
+      const values = mapping[side]
+      if (
+        !Array.isArray(values) ||
+        values.some((value) => typeof value !== 'string' || !value)
+      ) {
+        throw new Error(`${label}.${side} must be an array of component slugs`)
+      }
+      if (new Set(values).size !== values.length) {
+        throw new Error(`${label}.${side} must not contain duplicate slugs`)
+      }
+    }
+
+    for (const slug of mapping.applique) {
+      if (!knownApplique.has(slug)) {
+        throw new Error(
+          `${label}.applique references unknown component ${slug}`
+        )
+      }
+      referencedApplique.add(slug)
+    }
+    for (const slug of mapping.shadcn) {
+      if (!knownShadcn.has(slug)) {
+        throw new Error(`${label}.shadcn references unknown component ${slug}`)
+      }
+    }
+
+    const hasApplique = mapping.applique.length > 0
+    const hasShadcn = mapping.shadcn.length > 0
+    if (mapping.kind === 'direct') {
+      if (mapping.applique.length !== 1 || mapping.shadcn.length !== 1) {
+        throw new Error(
+          `${label} direct mappings require one component per side`
+        )
+      }
+    } else if (mapping.kind === 'composition') {
+      if (!hasApplique || mapping.shadcn.length < 2) {
+        throw new Error(
+          `${label} composition mappings require Applique source and multiple shadcn targets`
+        )
+      }
+    } else if (mapping.kind === 'ambiguous') {
+      if (!hasApplique || mapping.shadcn.length < 2) {
+        throw new Error(
+          `${label} ambiguous mappings require Applique source and multiple possible targets`
+        )
+      }
+    } else if (hasApplique === hasShadcn) {
+      throw new Error(
+        `${label} no-equivalent mappings require exactly one populated side`
+      )
+    }
+
+    if (mapping.propMappings !== undefined) {
+      if (
+        !Array.isArray(mapping.propMappings) ||
+        mapping.propMappings.length === 0
+      ) {
+        throw new Error(`${label}.propMappings must be a non-empty array`)
+      }
+
+      const seenPropIds = new Set()
+      const seenSourceProps = new Set()
+
+      for (const [propIndex, propMapping] of mapping.propMappings.entries()) {
+        const propLabel = `${label}.propMappings[${propIndex}]`
+        if (
+          !propMapping ||
+          typeof propMapping !== 'object' ||
+          Array.isArray(propMapping)
+        ) {
+          throw new Error(`${propLabel} must be an object`)
+        }
+        if (
+          typeof propMapping.id !== 'string' ||
+          !/^[a-z0-9-]+$/.test(propMapping.id)
+        ) {
+          throw new Error(`${propLabel}.id must be a kebab-case string`)
+        }
+        if (seenPropIds.has(propMapping.id)) {
+          throw new Error(`${propLabel}.id duplicates ${propMapping.id}`)
+        }
+        seenPropIds.add(propMapping.id)
+
+        if (!validPropKinds.has(propMapping.kind)) {
+          throw new Error(`${propLabel}.kind is not a supported prop strategy`)
+        }
+        if (
+          typeof propMapping.summary !== 'string' ||
+          !propMapping.summary.trim()
+        ) {
+          throw new Error(`${propLabel}.summary must be a non-empty string`)
+        }
+        if (
+          !Array.isArray(propMapping.from) ||
+          propMapping.from.length === 0 ||
+          propMapping.from.some(
+            (source) => typeof source !== 'string' || !source.trim()
+          )
+        ) {
+          throw new Error(`${propLabel}.from must list source prop names`)
+        }
+        if (new Set(propMapping.from).size !== propMapping.from.length) {
+          throw new Error(`${propLabel}.from must not contain duplicates`)
+        }
+        for (const source of propMapping.from) {
+          if (seenSourceProps.has(source)) {
+            throw new Error(
+              `${propLabel}.from duplicates source prop ${source} in this component mapping`
+            )
+          }
+          seenSourceProps.add(source)
+        }
+
+        if (!Array.isArray(propMapping.targets)) {
+          throw new Error(`${propLabel}.targets must be an array`)
+        }
+        for (const [targetIndex, target] of propMapping.targets.entries()) {
+          const targetLabel = `${propLabel}.targets[${targetIndex}]`
+          if (
+            !target ||
+            typeof target !== 'object' ||
+            Array.isArray(target) ||
+            typeof target.component !== 'string' ||
+            !target.component
+          ) {
+            throw new Error(`${targetLabel} must identify a component`)
+          }
+          if (!knownShadcn.has(target.component)) {
+            throw new Error(
+              `${targetLabel} references unknown component ${target.component}`
+            )
+          }
+          if (!mapping.shadcn.includes(target.component)) {
+            throw new Error(
+              `${targetLabel} must reference a component from its parent mapping`
+            )
+          }
+          if (
+            target.prop !== undefined &&
+            (typeof target.prop !== 'string' || !target.prop.trim())
+          ) {
+            throw new Error(`${targetLabel}.prop must be a non-empty string`)
+          }
+        }
+
+        if (propMapping.kind === 'forwarded') {
+          if (
+            propMapping.from.length !== 1 ||
+            propMapping.targets.length !== 1 ||
+            propMapping.targets[0].prop !== propMapping.from[0]
+          ) {
+            throw new Error(
+              `${propLabel} forwarded props require one same-named source and target prop`
+            )
+          }
+        } else if (
+          ['mapped', 'composition-owned'].includes(propMapping.kind) &&
+          propMapping.targets.length === 0
+        ) {
+          throw new Error(`${propLabel} requires at least one registry target`)
+        } else if (
+          propMapping.kind === 'unsupported' &&
+          propMapping.targets.length > 0
+        ) {
+          throw new Error(`${propLabel} unsupported props cannot have targets`)
+        }
+
+        if (propMapping.valueMap !== undefined) {
+          if (
+            propMapping.kind !== 'mapped' ||
+            !propMapping.valueMap ||
+            typeof propMapping.valueMap !== 'object' ||
+            Array.isArray(propMapping.valueMap) ||
+            Object.keys(propMapping.valueMap).length === 0 ||
+            Object.entries(propMapping.valueMap).some(
+              ([source, target]) =>
+                !source || typeof target !== 'string' || !target
+            )
+          ) {
+            throw new Error(
+              `${propLabel}.valueMap is only valid as a non-empty string map on mapped props`
+            )
+          }
+        }
+      }
+
+      if (
+        mapping.review === 'approved' &&
+        mapping.propMappings.some(({ kind }) => kind === 'needs-review')
+      ) {
+        throw new Error(
+          `${label} cannot be approved while prop mappings still need review`
+        )
+      }
+    }
+  }
+
+  const unclassified = [...knownApplique].filter(
+    (slug) => !referencedApplique.has(slug)
+  )
+  if (unclassified.length > 0) {
+    throw new Error(
+      `component-mappings.json does not classify: ${unclassified
+        .sort()
+        .join(', ')}`
+    )
+  }
+
+  return document.mappings
+}
+
 function writeGeneratedMetadata() {
   const pinned = slugsFromPinnedIndex()
+  const mappings = loadCatalogueMappings()
   const components = pinned.slugs.map((slug) => {
     const sourcePath = path.join(sourceDirectory, `${slug}.tsx`)
     const unavailable = unavailableSlugs.includes(slug)
@@ -756,6 +1027,8 @@ function writeGeneratedMetadata() {
   fs.mkdirSync(generatedDirectory, { recursive: true })
   const metadataSource = `/* This file is generated by scripts/generate-catalog-metadata.js. */\n\nexport const generatedCatalogueComponents = ${serializeTypeScript(
     components
+  )} as const\n\nexport const generatedCatalogueMappings = ${serializeTypeScript(
+    mappings
   )} as const\n\nexport const generatedCatalogueSource = ${JSON.stringify(
     pinned.path || `embedded pinned Base index @ ${UPSTREAM_COMMIT}`
   )} as const\n`
@@ -778,10 +1051,9 @@ function writeGeneratedMetadata() {
   )
 
   console.log(
-    `[catalog] generated ${
-      components.length
-    } component metadata records from ${pinned.path ||
-      'the embedded pinned index'}`
+    `[catalog] generated ${components.length} component metadata records and ${
+      mappings.length
+    } migration mappings from ${pinned.path || 'the embedded pinned index'}`
   )
 }
 

@@ -1,0 +1,782 @@
+{
+  "mappings": [
+    {
+      "id": "accordion",
+      "kind": "direct",
+      "applique": ["accordion"],
+      "shadcn": ["accordion"],
+      "summary": "The same disclosure interaction exists in both systems; controlled state and item values need an adapter.",
+      "review": "proposed"
+    },
+    {
+      "id": "avatar",
+      "kind": "direct",
+      "applique": ["avatar"],
+      "shadcn": ["avatar"],
+      "summary": "Map image, fallback initials, size, and accessible-name behavior.",
+      "review": "proposed"
+    },
+    {
+      "id": "badge",
+      "kind": "direct",
+      "applique": ["badge"],
+      "shadcn": ["badge"],
+      "summary": "Map the existing color, size, and visual-variant values onto the registry Badge.",
+      "review": "proposed"
+    },
+    {
+      "id": "bread-crumb",
+      "kind": "direct",
+      "applique": ["bread-crumb"],
+      "shadcn": ["breadcrumb"],
+      "summary": "The interaction is equivalent; the legacy item model must be adapted to the compound Breadcrumb API.",
+      "review": "proposed"
+    },
+    {
+      "id": "input-checkbox",
+      "kind": "direct",
+      "applique": ["input-checkbox"],
+      "shadcn": ["checkbox"],
+      "summary": "Map checked and indeterminate state, adding Label when the legacy title prop is present.",
+      "review": "proposed"
+    },
+    {
+      "id": "input-number",
+      "kind": "direct",
+      "applique": ["input-number"],
+      "shadcn": ["input"],
+      "summary": "Use a numeric Input and preserve the legacy number-valued onChange contract.",
+      "review": "proposed"
+    },
+    {
+      "id": "input-radio",
+      "kind": "direct",
+      "applique": ["input-radio"],
+      "shadcn": ["radio-group"],
+      "summary": "Generate RadioGroup items from the legacy options and map its value callback.",
+      "review": "proposed"
+    },
+    {
+      "id": "input-text",
+      "kind": "direct",
+      "applique": ["input-text"],
+      "shadcn": ["input"],
+      "summary": "Map the native event to the legacy value callback and preserve validation state.",
+      "propMappings": [
+        {
+          "id": "type",
+          "kind": "forwarded",
+          "from": ["type"],
+          "targets": [{ "component": "input", "prop": "type" }],
+          "summary": "The text, email, password, tel, url, and search values keep their native meaning."
+        },
+        {
+          "id": "value",
+          "kind": "mapped",
+          "from": ["value"],
+          "targets": [{ "component": "input", "prop": "value" }],
+          "summary": "Preserve the legacy controlled-input rule by normalizing a non-string or missing value to an empty string."
+        },
+        {
+          "id": "on-change",
+          "kind": "mapped",
+          "from": ["onChange"],
+          "targets": [{ "component": "input", "prop": "onChange" }],
+          "summary": "Read event.currentTarget.value before calling the legacy value-only callback."
+        },
+        {
+          "id": "id",
+          "kind": "forwarded",
+          "from": ["id"],
+          "targets": [{ "component": "input", "prop": "id" }],
+          "summary": "Forward the native input identifier unchanged."
+        },
+        {
+          "id": "name",
+          "kind": "forwarded",
+          "from": ["name"],
+          "targets": [{ "component": "input", "prop": "name" }],
+          "summary": "Forward the native form field name unchanged."
+        },
+        {
+          "id": "placeholder",
+          "kind": "forwarded",
+          "from": ["placeholder"],
+          "targets": [{ "component": "input", "prop": "placeholder" }],
+          "summary": "Forward placeholder text unchanged."
+        },
+        {
+          "id": "disabled",
+          "kind": "forwarded",
+          "from": ["disabled"],
+          "targets": [{ "component": "input", "prop": "disabled" }],
+          "summary": "Forward the native disabled state unchanged."
+        },
+        {
+          "id": "required",
+          "kind": "forwarded",
+          "from": ["required"],
+          "targets": [{ "component": "input", "prop": "required" }],
+          "summary": "Forward the native required state unchanged."
+        },
+        {
+          "id": "class-name",
+          "kind": "needs-review",
+          "from": ["className"],
+          "targets": [{ "component": "input", "prop": "className" }],
+          "summary": "Legacy Input can apply this to a wrapper while the registry Input applies it to the input element; approve the target before promising compatibility."
+        }
+      ],
+      "review": "proposed"
+    },
+    {
+      "id": "input-text-area",
+      "kind": "direct",
+      "applique": ["input-text-area"],
+      "shadcn": ["textarea"],
+      "summary": "Map the value callback, resize behavior, and validation variants.",
+      "review": "proposed"
+    },
+    {
+      "id": "tabs",
+      "kind": "direct",
+      "applique": ["tabs"],
+      "shadcn": ["tabs"],
+      "summary": "Translate index-based legacy state to the string values used by registry Tabs.",
+      "review": "proposed"
+    },
+    {
+      "id": "tooltip",
+      "kind": "direct",
+      "applique": ["tooltip"],
+      "shadcn": ["tooltip"],
+      "summary": "Map renderContent, trigger, delay, and placement onto the compound Tooltip API.",
+      "review": "proposed"
+    },
+    {
+      "id": "banner",
+      "kind": "composition",
+      "applique": ["banner"],
+      "shadcn": ["alert", "button"],
+      "summary": "Compose Alert with Applique-owned icon, close, link, and action behavior.",
+      "review": "proposed"
+    },
+    {
+      "id": "button",
+      "kind": "composition",
+      "applique": ["button"],
+      "shadcn": ["button", "spinner", "badge"],
+      "summary": "Compose loading, notification, icon, caption, anchor, and router behavior around the registry Button.",
+      "propMappings": [
+        {
+          "id": "children",
+          "kind": "forwarded",
+          "from": ["children"],
+          "targets": [{ "component": "button", "prop": "children" }],
+          "summary": "Forward React content unchanged."
+        },
+        {
+          "id": "on-click",
+          "kind": "forwarded",
+          "from": ["onClick"],
+          "targets": [{ "component": "button", "prop": "onClick" }],
+          "summary": "Forward the click handler; the facade retains the loading and disabled click guard."
+        },
+        {
+          "id": "disabled",
+          "kind": "forwarded",
+          "from": ["disabled"],
+          "targets": [{ "component": "button", "prop": "disabled" }],
+          "summary": "Forward disabled unchanged, except loading also forces the target Button to be disabled."
+        },
+        {
+          "id": "class-name",
+          "kind": "forwarded",
+          "from": ["className"],
+          "targets": [{ "component": "button", "prop": "className" }],
+          "summary": "Merge the client class with the registry variant classes."
+        },
+        {
+          "id": "visual-type",
+          "kind": "mapped",
+          "from": ["type"],
+          "targets": [{ "component": "button", "prop": "variant" }],
+          "valueMap": {
+            "primary": "default",
+            "secondary": "outline",
+            "tertiary": "ghost",
+            "link": "link",
+            "text": "link + compatibility modifier"
+          },
+          "summary": "Translate the legacy visual type. An omitted legacy type must still resolve to outline because its default is secondary; UX must approve the visual equivalence."
+        },
+        {
+          "id": "html-type",
+          "kind": "mapped",
+          "from": ["htmlType"],
+          "targets": [{ "component": "button", "prop": "type" }],
+          "summary": "Rename to the native button type and preserve the legacy default of button."
+        },
+        {
+          "id": "size",
+          "kind": "mapped",
+          "from": ["size"],
+          "targets": [{ "component": "button", "prop": "size" }],
+          "valueMap": {
+            "xs": "icon-xs",
+            "small": "sm",
+            "regular": "default",
+            "large": "Applique large-button recipe"
+          },
+          "summary": "Map the compact sizes directly. Legacy large is a full-width captioned tile, so the facade owns that recipe rather than using shadcn lg."
+        },
+        {
+          "id": "transform",
+          "kind": "mapped",
+          "from": ["transform"],
+          "targets": [{ "component": "button", "prop": "style" }],
+          "summary": "Apply the value as style.textTransform; preserve the legacy default of none."
+        },
+        {
+          "id": "inherit-text-color",
+          "kind": "mapped",
+          "from": ["inheritTextColor"],
+          "targets": [{ "component": "button", "prop": "className" }],
+          "summary": "Translate true to an Applique-owned text-inherit compatibility class across interaction states."
+        },
+        {
+          "id": "icon",
+          "kind": "composition-owned",
+          "from": ["icon"],
+          "targets": [{ "component": "button", "prop": "children" }],
+          "summary": "Resolve the Applique icon name and render it before the label with data-icon=inline-start."
+        },
+        {
+          "id": "secondary-icon",
+          "kind": "composition-owned",
+          "from": ["secondaryIcon"],
+          "targets": [{ "component": "button", "prop": "children" }],
+          "summary": "Resolve and render the trailing icon with data-icon=inline-end."
+        },
+        {
+          "id": "loading",
+          "kind": "composition-owned",
+          "from": ["loading"],
+          "targets": [
+            { "component": "button", "prop": "disabled" },
+            { "component": "spinner" }
+          ],
+          "summary": "Disable the Button, render Spinner, suppress clicks, and expose an accessible busy state."
+        },
+        {
+          "id": "notifications",
+          "kind": "composition-owned",
+          "from": ["notifications"],
+          "targets": [
+            { "component": "button", "prop": "children" },
+            { "component": "badge" }
+          ],
+          "summary": "Compose the bell and count badge, cap visible counts at 99+, and preserve the active-count emphasis."
+        },
+        {
+          "id": "href",
+          "kind": "composition-owned",
+          "from": ["href"],
+          "targets": [{ "component": "button", "prop": "render" }],
+          "summary": "Render an anchor through the Base UI polymorphic render surface instead of forwarding href to a native button."
+        },
+        {
+          "id": "to",
+          "kind": "composition-owned",
+          "from": ["to"],
+          "targets": [{ "component": "button", "prop": "render" }],
+          "summary": "Render the client router Link through an agreed router integration; keep the href and to conflict check."
+        },
+        {
+          "id": "caption",
+          "kind": "composition-owned",
+          "from": ["caption"],
+          "targets": [{ "component": "button", "prop": "children" }],
+          "summary": "Render secondary text only inside the Applique-owned large-button layout."
+        },
+        {
+          "id": "label",
+          "kind": "composition-owned",
+          "from": ["label"],
+          "targets": [{ "component": "button", "prop": "children" }],
+          "summary": "Preserve the runtime legacy fallback to label when children is absent, although label is missing from the declared Button Props."
+        },
+        {
+          "id": "color",
+          "kind": "needs-review",
+          "from": ["color"],
+          "targets": [],
+          "summary": "Do not map arbitrary color strings automatically. UX must define semantic tone variants for the supported legacy colors."
+        },
+        {
+          "id": "state",
+          "kind": "unsupported",
+          "from": ["state"],
+          "targets": [],
+          "summary": "Drop the undocumented arbitrary-state CSS class escape hatch; clients should use className while remaining usage is removed."
+        }
+      ],
+      "review": "proposed"
+    },
+    {
+      "id": "button-group",
+      "kind": "composition",
+      "applique": ["button-group"],
+      "shadcn": ["button-group", "dropdown-menu"],
+      "summary": "Use ButtonGroup for visible actions and DropdownMenu for the legacy overflow behavior.",
+      "review": "proposed"
+    },
+    {
+      "id": "fab",
+      "kind": "composition",
+      "applique": ["fab"],
+      "shadcn": ["button", "dropdown-menu", "popover"],
+      "summary": "Build the floating trigger from Button; speed-dial actions and positioning require Applique-owned behavior.",
+      "review": "proposed"
+    },
+    {
+      "id": "field",
+      "kind": "composition",
+      "applique": ["field"],
+      "shadcn": ["field", "label"],
+      "summary": "Compose label, description, error, success, and child-state propagation around Field.",
+      "review": "proposed"
+    },
+    {
+      "id": "form",
+      "kind": "composition",
+      "applique": ["form"],
+      "shadcn": ["field", "input", "select", "checkbox", "radio-group"],
+      "summary": "Rebuild the controlled-object and layout contract with native form behavior and field primitives.",
+      "review": "proposed"
+    },
+    {
+      "id": "image",
+      "kind": "composition",
+      "applique": ["image"],
+      "shadcn": ["aspect-ratio", "skeleton"],
+      "summary": "Use a native image with AspectRatio and Skeleton while retaining loading, error, and fallback logic.",
+      "review": "proposed"
+    },
+    {
+      "id": "input",
+      "kind": "composition",
+      "applique": ["input"],
+      "shadcn": ["input", "input-group"],
+      "summary": "InputGroup supplies the icon and start/end adornment behavior missing from the basic Input.",
+      "review": "proposed"
+    },
+    {
+      "id": "input-date",
+      "kind": "composition",
+      "applique": ["input-date"],
+      "shadcn": ["calendar", "popover", "input", "button"],
+      "summary": "Compose the field, trigger, overlay, and calendar; range, time, presets, and formatting remain Applique-owned.",
+      "propMappings": [
+        {
+          "id": "value",
+          "kind": "mapped",
+          "from": ["value"],
+          "targets": [
+            { "component": "calendar", "prop": "selected" },
+            { "component": "input", "prop": "value" }
+          ],
+          "summary": "Parse Date, string, DateRange, or StringDateRange into Calendar selection state and formatted trigger text."
+        },
+        {
+          "id": "on-change",
+          "kind": "mapped",
+          "from": ["onChange"],
+          "targets": [
+            { "component": "calendar", "prop": "onSelect" },
+            { "component": "input", "prop": "onChange" }
+          ],
+          "summary": "Normalize the selection, preserve range ordering, and serialize back to the caller's Date or formatted-string contract."
+        },
+        {
+          "id": "range",
+          "kind": "mapped",
+          "from": ["range"],
+          "targets": [{ "component": "calendar", "prop": "mode" }],
+          "valueMap": { "false": "single", "true": "range" },
+          "summary": "Choose Calendar single or range selection mode."
+        },
+        {
+          "id": "months-to-display",
+          "kind": "mapped",
+          "from": ["monthsToDisplay"],
+          "targets": [{ "component": "calendar", "prop": "numberOfMonths" }],
+          "summary": "Rename the number of visible month blocks."
+        },
+        {
+          "id": "disabled-ranges",
+          "kind": "mapped",
+          "from": ["disabledRanges"],
+          "targets": [{ "component": "calendar", "prop": "disabled" }],
+          "summary": "Normalize Date and string ranges into react-day-picker disabled matchers."
+        },
+        {
+          "id": "year-month-change",
+          "kind": "mapped",
+          "from": ["onYearMonthChange"],
+          "targets": [{ "component": "calendar", "prop": "onMonthChange" }],
+          "summary": "Adapt Calendar month navigation to the legacy callback value contract."
+        },
+        {
+          "id": "render-date",
+          "kind": "mapped",
+          "from": ["renderDate"],
+          "targets": [{ "component": "calendar", "prop": "components" }],
+          "summary": "Adapt the renderer through a custom Calendar DayButton while preserving selection and accessibility behavior."
+        },
+        {
+          "id": "disabled",
+          "kind": "composition-owned",
+          "from": ["disabled"],
+          "targets": [
+            { "component": "button", "prop": "disabled" },
+            { "component": "input", "prop": "disabled" },
+            { "component": "calendar", "prop": "disabled" }
+          ],
+          "summary": "Fan the effective disabled state across the trigger, editable input, and calendar interaction."
+        },
+        {
+          "id": "format",
+          "kind": "composition-owned",
+          "from": ["format"],
+          "targets": [
+            { "component": "calendar" },
+            { "component": "input", "prop": "value" }
+          ],
+          "summary": "Own parsing and output serialization around Calendar; this is not a primitive presentation prop."
+        },
+        {
+          "id": "display-format",
+          "kind": "composition-owned",
+          "from": ["displayFormat"],
+          "targets": [{ "component": "input", "prop": "value" }],
+          "summary": "Format trigger text independently from the value serialization format."
+        },
+        {
+          "id": "presets",
+          "kind": "composition-owned",
+          "from": ["presets"],
+          "targets": [{ "component": "button" }],
+          "summary": "Render preset actions beside Calendar and feed their values through the same normalized selection path."
+        },
+        {
+          "id": "include-time",
+          "kind": "composition-owned",
+          "from": ["includeTime"],
+          "targets": [{ "component": "input" }, { "component": "button" }],
+          "summary": "Provide Applique-owned time controls and confirmation flow because Calendar does not select time."
+        },
+        {
+          "id": "wrapper-class-name",
+          "kind": "mapped",
+          "from": ["wrapperClassName"],
+          "targets": [{ "component": "popover", "prop": "className" }],
+          "summary": "Apply the legacy wrapper class to Popover content rather than to Calendar."
+        },
+        {
+          "id": "class-name",
+          "kind": "needs-review",
+          "from": ["className"],
+          "targets": [],
+          "summary": "Keep this on an Applique facade wrapper; approve its DOM target before clients depend on selector placement."
+        },
+        {
+          "id": "disabled-time",
+          "kind": "needs-review",
+          "from": ["disabledTime"],
+          "targets": [],
+          "summary": "This runtime-only time constraint needs a documented facade type and UX behavior before the time recipe is considered compatible."
+        }
+      ],
+      "review": "proposed"
+    },
+    {
+      "id": "input-file",
+      "kind": "composition",
+      "applique": ["input-file"],
+      "shadcn": ["input", "button", "attachment"],
+      "summary": "Compose the file input, trigger, filename/upload display, and legacy validation behavior.",
+      "review": "proposed"
+    },
+    {
+      "id": "input-month",
+      "kind": "composition",
+      "applique": ["input-month"],
+      "shadcn": ["calendar", "popover", "input"],
+      "summary": "Compose month/year selection and formatting around Calendar rather than exposing a plain date picker.",
+      "review": "proposed"
+    },
+    {
+      "id": "nav-bar",
+      "kind": "composition",
+      "applique": ["nav-bar"],
+      "shadcn": ["sidebar", "sheet", "navigation-menu"],
+      "summary": "Compose desktop, responsive, and router-aware navigation from Sidebar, Sheet, and navigation primitives.",
+      "review": "proposed"
+    },
+    {
+      "id": "page",
+      "kind": "composition",
+      "applique": ["page"],
+      "shadcn": ["sidebar", "breadcrumb", "navigation-menu"],
+      "summary": "Page remains an Applique layout recipe assembled from navigation and content primitives.",
+      "review": "proposed"
+    },
+    {
+      "id": "pagination",
+      "kind": "composition",
+      "applique": ["pagination"],
+      "shadcn": ["pagination", "select", "input"],
+      "summary": "Compose page navigation, page-size selection, direct entry, and the legacy pagination state contract.",
+      "review": "proposed"
+    },
+    {
+      "id": "section",
+      "kind": "composition",
+      "applique": ["section"],
+      "shadcn": ["card", "separator"],
+      "summary": "Build the semantic section, header, content, and actions as an Applique layout recipe.",
+      "review": "proposed"
+    },
+    {
+      "id": "table",
+      "kind": "composition",
+      "applique": ["table"],
+      "shadcn": ["table", "input", "dropdown-menu", "pagination"],
+      "summary": "The table shell is reusable; sorting, filtering, pagination, and virtualization remain composed behavior.",
+      "review": "proposed"
+    },
+    {
+      "id": "top-bar",
+      "kind": "composition",
+      "applique": ["top-bar"],
+      "shadcn": ["breadcrumb", "avatar", "dropdown-menu"],
+      "summary": "Compose location, account identity, and action-menu behavior into the existing TopBar layout.",
+      "review": "proposed"
+    },
+    {
+      "id": "top-nav",
+      "kind": "composition",
+      "applique": ["top-nav"],
+      "shadcn": ["navigation-menu", "sheet", "sidebar"],
+      "summary": "Compose responsive navigation and active-route behavior instead of replacing TopNav with one primitive.",
+      "review": "proposed"
+    },
+    {
+      "id": "dropdown",
+      "kind": "ambiguous",
+      "applique": ["dropdown"],
+      "shadcn": ["select", "dropdown-menu", "popover"],
+      "summary": "Choose Select for a stored value, DropdownMenu for actions, or Popover for arbitrary interactive content.",
+      "propMappings": [
+        {
+          "id": "open-state",
+          "kind": "mapped",
+          "from": ["isOpen"],
+          "targets": [
+            { "component": "select", "prop": "open" },
+            { "component": "dropdown-menu", "prop": "open" },
+            { "component": "popover", "prop": "open" }
+          ],
+          "summary": "Rename the controlled open state after choosing the target interaction."
+        },
+        {
+          "id": "open-change",
+          "kind": "mapped",
+          "from": ["onOpen", "onClose", "onclose"],
+          "targets": [
+            { "component": "select", "prop": "onOpenChange" },
+            { "component": "dropdown-menu", "prop": "onOpenChange" },
+            { "component": "popover", "prop": "onOpenChange" }
+          ],
+          "summary": "Split the target boolean callback into legacy open and close callbacks. onclose is retained only to expose the legacy declaration typo; runtime consumers use onClose."
+        },
+        {
+          "id": "trigger",
+          "kind": "composition-owned",
+          "from": ["renderTrigger", "trigger"],
+          "targets": [
+            { "component": "select", "prop": "Trigger" },
+            { "component": "dropdown-menu", "prop": "Trigger" },
+            { "component": "popover", "prop": "Trigger" }
+          ],
+          "summary": "Render the supplied trigger through the chosen compound component; the deprecated string trigger becomes an Applique Button."
+        },
+        {
+          "id": "position",
+          "kind": "mapped",
+          "from": ["up", "down", "left", "right"],
+          "targets": [
+            { "component": "select", "prop": "side/align" },
+            { "component": "dropdown-menu", "prop": "side/align" },
+            { "component": "popover", "prop": "side/align" }
+          ],
+          "summary": "Map up/down to top/bottom. Interpret left/right as a side alone or start/end alignment when combined with a vertical direction."
+        },
+        {
+          "id": "auto-position",
+          "kind": "mapped",
+          "from": ["auto"],
+          "targets": [
+            { "component": "select", "prop": "collision handling" },
+            {
+              "component": "dropdown-menu",
+              "prop": "collision handling"
+            },
+            { "component": "popover", "prop": "collision handling" }
+          ],
+          "summary": "Use the primitive collision logic as an approximate replacement; it is not a literal boolean prop mapping."
+        },
+        {
+          "id": "wrapper-class-name",
+          "kind": "mapped",
+          "from": ["wrapperClassName"],
+          "targets": [
+            { "component": "select", "prop": "Content.className" },
+            {
+              "component": "dropdown-menu",
+              "prop": "Content.className"
+            },
+            { "component": "popover", "prop": "Content.className" }
+          ],
+          "summary": "Apply the class to the chosen content surface."
+        },
+        {
+          "id": "children",
+          "kind": "needs-review",
+          "from": ["children"],
+          "targets": [
+            { "component": "select" },
+            { "component": "dropdown-menu" },
+            { "component": "popover" }
+          ],
+          "summary": "Inspect usage: stored values become Select items, actions become DropdownMenu items, and arbitrary interactive content belongs in Popover."
+        },
+        {
+          "id": "trigger-on",
+          "kind": "needs-review",
+          "from": ["triggerOn"],
+          "targets": [
+            { "component": "dropdown-menu" },
+            { "component": "popover" }
+          ],
+          "summary": "Click is broadly supported, but hover and focus semantics are not uniform across all three candidate targets."
+        },
+        {
+          "id": "container",
+          "kind": "needs-review",
+          "from": ["container"],
+          "targets": [],
+          "summary": "The current registry wrappers do not expose the legacy custom portal container contract."
+        }
+      ],
+      "review": "proposed"
+    },
+    {
+      "id": "input-select",
+      "kind": "ambiguous",
+      "applique": ["input-select"],
+      "shadcn": ["select", "combobox", "native-select"],
+      "summary": "Choose according to native, simple, searchable, multiple, and custom-option requirements.",
+      "review": "proposed"
+    },
+    {
+      "id": "list",
+      "kind": "ambiguous",
+      "applique": ["list"],
+      "shadcn": ["item", "command", "checkbox", "radio-group"],
+      "summary": "The target depends on whether the list displays content, runs commands, or selects one or many values.",
+      "review": "proposed"
+    },
+    {
+      "id": "loader",
+      "kind": "ambiguous",
+      "applique": ["loader"],
+      "shadcn": ["spinner", "progress"],
+      "summary": "Choose Spinner for indeterminate activity or Progress for a measurable bar.",
+      "review": "proposed"
+    },
+    {
+      "id": "modal",
+      "kind": "ambiguous",
+      "applique": ["modal"],
+      "shadcn": ["dialog", "alert-dialog", "drawer", "sheet"],
+      "summary": "Choose by intent: general modal, confirmation, mobile drawer, or side panel.",
+      "review": "proposed"
+    },
+    {
+      "id": "progress",
+      "kind": "ambiguous",
+      "applique": ["progress"],
+      "shadcn": ["progress", "spinner"],
+      "summary": "The legacy bar maps to Progress; circular or indeterminate usage needs Spinner or custom composition.",
+      "review": "proposed"
+    },
+    {
+      "id": "applique-only",
+      "kind": "no-equivalent",
+      "applique": [
+        "click-away",
+        "error-boundary",
+        "grid",
+        "icon",
+        "input-masked",
+        "layout",
+        "measure",
+        "portal",
+        "schema-form",
+        "stepper",
+        "text",
+        "virtual-grid",
+        "virtual-list"
+      ],
+      "shadcn": [],
+      "summary": "No current registry component provides this capability directly; keep it Applique-owned or review an external primitive.",
+      "review": "proposed"
+    },
+    {
+      "id": "shadcn-only",
+      "kind": "no-equivalent",
+      "applique": [],
+      "shadcn": [
+        "aspect-ratio",
+        "bubble",
+        "carousel",
+        "chart",
+        "command",
+        "context-menu",
+        "direction",
+        "empty",
+        "hover-card",
+        "input-otp",
+        "kbd",
+        "marker",
+        "menubar",
+        "message",
+        "message-scroller",
+        "resizable",
+        "scroll-area",
+        "separator",
+        "skeleton",
+        "slider",
+        "sonner",
+        "switch",
+        "toast",
+        "toggle",
+        "toggle-group"
+      ],
+      "summary": "This is a new registry capability with no dedicated legacy Applique component.",
+      "review": "proposed"
+    }
+  ]
+}
