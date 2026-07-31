@@ -509,7 +509,6 @@ function App() {
 
         <label className="search">
           <span className="sr-only">Search components</span>
-          <span aria-hidden="true">⌕</span>
           <input
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search components"
