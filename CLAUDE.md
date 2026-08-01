@@ -8,7 +8,8 @@ Applique is Myntra's enterprise design system — a pnpm monorepo containing ~50
 
 - **Main consumer package**: `packages/uikit` (re-exports all components)
 - **Icons**: separate `@applique-ui/uikit-icons` package
-- **Primitives**: `packages/shadcn-primitives` wraps shadcn/ui components
+- **Primitives**: `packages/shadcn-primitives` owns the versioned shadcn source
+  registry; its canonical guide is `docs/REGISTRY.md`
 - **Design tokens/theme**: `packages/uikit-design`
 
 ## Commands

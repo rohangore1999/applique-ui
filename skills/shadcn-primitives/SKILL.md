@@ -1,100 +1,11 @@
 # Maintaining the Applique shadcn registry
 
-Read this before changing `packages/shadcn-primitives`.
+This file is the automation entry point, not a second product guide.
 
-## Architecture
+Before changing `packages/shadcn-primitives`, read
+[`docs/REGISTRY.md`](../../docs/REGISTRY.md) completely and follow its source
+of truth, immutability, sync, testing, and publishing rules.
 
-The public product is a shadcn source registry plus a static catalogue.
-Clients run the pinned shadcn CLI against an immutable item URL, receive local
-TypeScript source, and import that local source. Do not document package
-imports as the standard integration path.
-
-Current baseline:
-
-- Registry `v0.1.0`
-- shadcn CLI `4.16.0`
-- official style `base-nova`
-- upstream commit `705ce5961080264830471ddd885c01b907706068`
-- React and React DOM `18.3.1`
-- Tailwind CSS `4.3.3`
-- all 62 official UI entries; 60 source-bearing and installable, fileless
-  deprecated Form, and React-19-only Message Scroller
-
-## Sources of truth
-
-- `registry.json`: registry manifest and release version
-- `src/tokens.css`: exact Applique light tokens
-- `upstream/base-nova/*.json`: reviewed official snapshots
-- `shadcn-base-nova.lock.json`: versions and SHA-256 provenance
-- `scripts/sync-shadcn.js`: deterministic source transformation
-- `scripts/generate-registry.js`: generated item/catalog builder
-- `docs/registry`: generated public registry
-- `catalog`: source for the static catalogue
-
-Never edit `docs/registry/*.json`, generated catalogue metadata, or generated
-catalogue bundles as source.
-
-## Non-negotiable rules
-
-1. Keep registry dependencies exact; do not publish `latest` or ranges.
-2. Keep adopted version directories immutable. The current `v0.1.0` can
-   change only while it has no consumers.
-3. Preserve official component APIs in the primitive layer. Put future
-   Applique prop mapping in separate facade components.
-4. Use semantic utilities and Applique tokens. Do not add arbitrary brand
-   colors to component source.
-5. Applique is light-only today. `sync-shadcn.js` rewrites upstream `dark:`
-   utilities to `applique-dark:`. Do not restore unscoped `dark:` utilities.
-6. Keep Hanken Grotesk pinned and delivered by the theme; naming a font in a
-   token without loading it is insufficient.
-7. Preserve `data-slot` attributes and upstream accessibility behavior.
-8. Treat Form as upstream fileless/deprecated and direct clients to Field.
-9. Keep Message Scroller excluded until its upstream primitive supports the
-   React 18 baseline; do not publish its React 19 dependency transitively.
-
-## Refreshing upstream
-
-Normal builds are offline. Prefer an audited directory:
-
-```bash
-cd packages/shadcn-primitives
-node scripts/sync-shadcn.js --from upstream/base-nova --check
-```
-
-A network refresh is deliberately explicit because the official registry
-endpoint is mutable:
-
-```bash
-node scripts/sync-shadcn.js --allow-network
-```
-
-Before accepting a network refresh, verify the stable shadcn CLI version and
-upstream commit, update the constants and exact dependency pins together, and
-review every snapshot/source/hash diff.
-
-## Build and verification
-
-From the repository root:
-
-```bash
-pnpm --filter @rohangore1999/shadcn-primitives run build:pages
-pnpm --filter @rohangore1999/shadcn-primitives run validate:registry
-pnpm --filter @rohangore1999/shadcn-primitives run smoke:react18
-pnpm --filter @rohangore1999/shadcn-primitives run smoke:registry
-pnpm --filter @rohangore1999/shadcn-primitives exec \
-  tsc --noEmit -p tsconfig.json
-pnpm --filter @rohangore1999/shadcn-primitives exec \
-  tsc --noEmit -p catalog/tsconfig.json
-```
-
-The registry smoke test must install all 60 source-bearing UI entries into a
-blank React 18 consumer, type-check them, compile Tailwind, and verify the
-theme, scoped dark variant, and font. The React 18 runtime smoke test rebuilds
-the package and verifies representative DOM refs and Calendar focus behavior.
-
-## Publishing
-
-GitHub Pages serves the checked-in `docs` directory. Build with the public
-base URL, commit all related source and generated output, push the configured
-Pages branch, then verify the catalogue, catalog JSON, theme JSON, and at least
-one component URL over HTTPS.
+Do not hand-edit generated registry JSON, generated catalogue metadata, or the
+bundled catalogue. Keep primitive APIs separate from any future
+Applique-owned facade contract.
