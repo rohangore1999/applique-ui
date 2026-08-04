@@ -84,6 +84,32 @@ const UI_ITEMS = [
   'tooltip',
 ]
 const SUPPORT_ITEMS = ['use-mobile']
+const PUBLIC_FACADE_NAMES = new Set([
+  'accordion',
+  'avatar',
+  'badge',
+  'banner',
+  'bread-crumb',
+  'button',
+  'button-group',
+  'input-checkbox',
+  'input-number',
+  'input-radio',
+  'input-text',
+  'input-text-area',
+  'section',
+  'tabs',
+  'tooltip',
+])
+const INTERNALIZED_PRIMITIVE_NAMES = new Set([
+  'accordion',
+  'avatar',
+  'badge',
+  'button',
+  'button-group',
+  'tabs',
+  'tooltip',
+])
 const REACT_18_UNSUPPORTED_ITEMS = {
   'message-scroller': {
     requiredReact: '>=19',
@@ -371,9 +397,7 @@ function transformReact18Refs(content, itemName) {
   }
 
   if (itemName === 'calendar') {
-    const dayButtonStart = transformed.indexOf(
-      'function CalendarDayButtonImpl'
-    )
+    const dayButtonStart = transformed.indexOf('function CalendarDayButtonImpl')
     const dayButtonEnd = transformed.indexOf('\n}\n', dayButtonStart) + 3
     assert(
       dayButtonStart >= 0 && dayButtonEnd > dayButtonStart + 2,
@@ -398,9 +422,10 @@ function transformReact18Refs(content, itemName) {
         dayButton.includes('ref?: React.Ref<HTMLButtonElement>'),
       'Could not merge CalendarDayButton refs for React 18'
     )
-    transformed = `${transformed.slice(0, dayButtonStart)}${dayButton}${transformed.slice(
-      dayButtonEnd
-    )}`
+    transformed = `${transformed.slice(
+      0,
+      dayButtonStart
+    )}${dayButton}${transformed.slice(dayButtonEnd)}`
   }
 
   if (itemName === 'chart') {
@@ -439,9 +464,10 @@ function transformReact18Refs(content, itemName) {
     .join('\n')
   const transformedExportStart = transformed.lastIndexOf('export {')
 
-  return `${transformed.slice(0, transformedExportStart)}${wrappers}\n\n${transformed.slice(
+  return `${transformed.slice(
+    0,
     transformedExportStart
-  )}`
+  )}${wrappers}\n\n${transformed.slice(transformedExportStart)}`
 }
 
 function transformSource(content, itemName) {
@@ -489,12 +515,21 @@ function localDependencyFromSpecifier(specifier) {
   return /^\.\/[a-z0-9-]+$/.test(specifier) ? specifier.slice(2) : null
 }
 
+function registryNameForPrimitive(name) {
+  return INTERNALIZED_PRIMITIVE_NAMES.has(name)
+    ? `applique-internal-${name}`
+    : name
+}
+
 function consumerImportForLocalDependency(dependency) {
   if (dependency === 'utils') return '@/lib/utils'
   if (dependency === 'applique-react18-compat') {
     return '@/lib/applique-react18-compat'
   }
   if (dependency === 'use-mobile') return '@/hooks/use-mobile'
+  if (INTERNALIZED_PRIMITIVE_NAMES.has(dependency)) {
+    return `@/components/applique/internal/${dependency}`
+  }
   return `@/components/ui/${dependency}`
 }
 
@@ -522,10 +557,10 @@ function buildRegistryDependencies(upstreamItem, transformedSource) {
   const dependencies = new Set(['applique-theme'])
   for (const specifier of collectModuleSpecifiers(transformedSource)) {
     const dependency = localDependencyFromSpecifier(specifier)
-    if (dependency) dependencies.add(dependency)
+    if (dependency) dependencies.add(registryNameForPrimitive(dependency))
   }
   for (const dependency of upstreamItem.registryDependencies || []) {
-    dependencies.add(dependency)
+    dependencies.add(registryNameForPrimitive(dependency))
   }
   return [...dependencies]
 }
@@ -575,7 +610,6 @@ function createManifestItem(snapshot) {
     }
   }
 
-
   if (snapshot.status === 'unsupported') {
     return {
       name: snapshot.name,
@@ -595,21 +629,30 @@ function createManifestItem(snapshot) {
     }
   }
 
-  const target =
-    snapshot.type === 'registry:hook'
-      ? `@hooks/${snapshot.name}.ts`
+  const internalized = INTERNALIZED_PRIMITIVE_NAMES.has(snapshot.name)
+  const manifestName = registryNameForPrimitive(snapshot.name)
+  const target = snapshot.type === 'registry:hook'
+    ? `@hooks/${snapshot.name}.ts`
+    : internalized
+      ? `@components/applique/internal/${snapshot.name}.tsx`
       : `@ui/${snapshot.name}.tsx`
   const item = {
-    name: snapshot.name,
+    name: manifestName,
     type: snapshot.type,
-    title: titleFromName(snapshot.name),
+    title: internalized
+      ? `Internal ${titleFromName(snapshot.name)} Primitive`
+      : titleFromName(snapshot.name),
     description:
       snapshot.type === 'registry:hook'
         ? 'Support hook required by the Applique-themed Sidebar.'
+        : internalized
+          ? `Internal pinned shadcn ${STYLE} primitive used by the public Applique facade.`
         : `Official shadcn ${STYLE} component with Applique theme tokens.`,
     categories:
       snapshot.type === 'registry:hook'
         ? ['foundation', 'hook']
+        : internalized
+          ? ['internal', 'primitive', 'base-ui']
         : ['primitive', 'base-ui'],
     dependencies: snapshot.dependencies,
     registryDependencies: snapshot.registryDependencies,
@@ -621,7 +664,12 @@ function createManifestItem(snapshot) {
       },
     ],
     meta: {
-      status: snapshot.type === 'registry:hook' ? 'foundation' : 'experimental',
+      status:
+        snapshot.type === 'registry:hook'
+          ? 'foundation'
+          : internalized
+            ? 'internal'
+            : 'experimental',
       upstream,
     },
   }
@@ -631,10 +679,14 @@ function createManifestItem(snapshot) {
   return item
 }
 
-function createIndex(snapshots) {
+function createIndex(snapshots, ownedItems) {
   const lines = ['/* This file is generated by scripts/sync-shadcn.js. */', '']
   for (const snapshot of snapshots) {
-    if (snapshot.type !== 'registry:ui' || snapshot.status !== 'installable') {
+    if (
+      snapshot.type !== 'registry:ui' ||
+      snapshot.status !== 'installable' ||
+      INTERNALIZED_PRIMITIVE_NAMES.has(snapshot.name)
+    ) {
       continue
     }
     lines.push(
@@ -642,6 +694,48 @@ function createIndex(snapshots) {
         ? `export { Toaster as SonnerToaster } from './sonner'`
         : `export * from './${snapshot.name}'`
     )
+  }
+  for (const item of ownedItems) {
+    for (const file of item.files) {
+      const modulePath = file.path
+        .replace(/^src\//, './')
+        .replace(/\.[jt]sx?$/, '')
+      const publicExports =
+        item.meta && item.meta.build && item.meta.build.publicExports
+
+      if (!Array.isArray(publicExports) || publicExports.length === 0) {
+        lines.push(`export * from '${modulePath}'`)
+        continue
+      }
+
+      for (const entry of publicExports) {
+        assert(
+          entry &&
+            typeof entry.name === 'string' &&
+            /^[A-Za-z_$][\w$]*$/.test(entry.name),
+          `Owned facade ${item.name} has an invalid public export`
+        )
+        assert(
+          entry.as === undefined ||
+            (typeof entry.as === 'string' &&
+              /^[A-Za-z_$][\w$]*$/.test(entry.as)),
+          `Owned facade ${item.name} has an invalid public export alias`
+        )
+        assert(
+          entry.type === undefined || typeof entry.type === 'boolean',
+          `Owned facade ${item.name} has an invalid public export type flag`
+        )
+
+        const exportedName = entry.as
+          ? `${entry.name} as ${entry.as}`
+          : entry.name
+        lines.push(
+          `export${
+            entry.type ? ' type' : ''
+          } { ${exportedName} } from '${modulePath}'`
+        )
+      }
+    }
   }
   lines.push(`export { useIsMobile } from './use-mobile'`)
   lines.push(`export { cn } from './utils'`, '')
@@ -663,7 +757,9 @@ function applyFiles(files, check) {
         continue
       }
       fs.unlinkSync(filePath)
-      console.log(`[shadcn-sync] removed ${path.relative(packageDir, filePath)}`)
+      console.log(
+        `[shadcn-sync] removed ${path.relative(packageDir, filePath)}`
+      )
       continue
     }
     const actual = exists ? fs.readFileSync(filePath, 'utf8') : null
@@ -796,10 +892,45 @@ async function main() {
   const foundationItems = currentManifest.items.filter((item) =>
     ['applique-theme', 'applique-react18-compat', 'utils'].includes(item.name)
   )
+  const ownedItems = currentManifest.items
+    .filter((item) => item.meta && item.meta.status === 'facade')
+    .sort((left, right) => left.name.localeCompare(right.name))
   assert(
     foundationItems.length === 3,
     'registry.json must contain applique-theme, applique-react18-compat, and utils'
   )
+  assert(
+    ownedItems.length === PUBLIC_FACADE_NAMES.size &&
+      ownedItems.every((item) => PUBLIC_FACADE_NAMES.has(item.name)),
+    'registry.json must contain every reviewed public facade name exactly once'
+  )
+  for (const item of ownedItems) {
+    assert(
+      item.type === 'registry:component' && PUBLIC_FACADE_NAMES.has(item.name),
+      `Owned facade ${item.name} must use its reviewed public registry name`
+    )
+    assert(
+      Array.isArray(item.files) && item.files.length > 0,
+      `Owned facade ${item.name} must contain source files`
+    )
+    for (const file of item.files) {
+      assert(
+        file.path.startsWith('src/facades/') &&
+          file.target.startsWith('@components/applique/'),
+        `Owned facade ${item.name} must use src/facades and @components/applique targets`
+      )
+      assert(
+        fs.existsSync(path.join(packageDir, file.path)),
+        `Owned facade ${item.name} source is missing: ${file.path}`
+      )
+    }
+    const publicExports = item.meta.build && item.meta.build.publicExports
+    assert(
+      !Array.isArray(publicExports) ||
+        publicExports.every((entry) => entry.as === undefined),
+      `Owned facade ${item.name} must expose its public names without Applique aliases`
+    )
+  }
   foundationItems.find((item) => item.name === 'utils').dependencies = [
     exactDependency('clsx'),
     exactDependency('tailwind-merge'),
@@ -824,6 +955,7 @@ async function main() {
       ...snapshots
         .filter((snapshot) => snapshot.type === 'registry:ui')
         .map(createManifestItem),
+      ...ownedItems,
     ],
   }
   const lock = {
@@ -852,7 +984,7 @@ async function main() {
 
   stageFile(stagedFiles, manifestPath, serialize(manifest))
   stageFile(stagedFiles, lockPath, serialize(lock))
-  stageFile(stagedFiles, indexPath, createIndex(snapshots))
+  stageFile(stagedFiles, indexPath, createIndex(snapshots, ownedItems))
   applyFiles(stagedFiles, options.check)
   console.log(
     `[shadcn-sync] ${options.check ? 'validated' : 'snapshotted'} ${

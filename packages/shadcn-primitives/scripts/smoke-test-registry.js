@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
 /*
- * Installs every source-bearing UI item from the generated registry into an
- * isolated React 18 + Tailwind 4 consumer using the pinned shadcn CLI.
+ * Installs every source-bearing primitive and Applique-owned facade from the
+ * generated registry into isolated React 18 + Tailwind 4 TypeScript and
+ * JavaScript consumers using the pinned shadcn CLI.
  *
  * This catches missing registry dependencies, stale import aliases, incomplete
- * npm dependency metadata, TypeScript incompatibilities, preservation of an
- * existing client-owned utils file, and token/CSS issues before the static
- * registry is published.
+ * npm dependency metadata, TypeScript incompatibilities, incomplete
+ * JavaScript conversion, preservation of an existing client-owned utils file,
+ * and token/CSS issues before the static registry is published.
  */
 
 const fs = require('fs')
@@ -22,7 +23,101 @@ const REACT_TYPES_VERSION = '18.3.28'
 const REACT_DOM_TYPES_VERSION = '18.3.7'
 const TAILWIND_VERSION = '4.3.3'
 const TYPESCRIPT_VERSION = '5.9.2'
-const PREEXISTING_UTILS_SOURCE = `import { clsx, type ClassValue } from 'clsx'
+const EXPECTED_INSTALLABLE_UI_ITEMS = 60
+const OWNED_FACADE_SMOKE_CONTRACTS = [
+  {
+    importPath: '@/components/applique/internal/avatar',
+    name: 'avatar',
+    primitiveTarget: '@components/applique/internal/avatar.tsx',
+    target: '@components/applique/avatar.tsx',
+  },
+  {
+    importPath: '@/components/ui/checkbox',
+    name: 'input-checkbox',
+    primitiveTarget: '@ui/checkbox.tsx',
+    target: '@components/applique/input-checkbox.tsx',
+  },
+  {
+    importPath: '@/components/ui/input',
+    name: 'input-number',
+    primitiveTarget: '@ui/input.tsx',
+    target: '@components/applique/input-number.tsx',
+  },
+  {
+    importPath: '@/components/ui/radio-group',
+    name: 'input-radio',
+    primitiveTarget: '@ui/radio-group.tsx',
+    target: '@components/applique/input-radio.tsx',
+  },
+  {
+    importPath: '@/components/ui/input',
+    name: 'input-text',
+    primitiveTarget: '@ui/input.tsx',
+    target: '@components/applique/input-text.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/accordion',
+    name: 'accordion',
+    primitiveTarget: '@components/applique/internal/accordion.tsx',
+    target: '@components/applique/accordion.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/badge',
+    name: 'badge',
+    primitiveTarget: '@components/applique/internal/badge.tsx',
+    target: '@components/applique/badge.tsx',
+  },
+  {
+    importPath: '@/components/ui/alert',
+    name: 'banner',
+    primitiveTarget: '@ui/alert.tsx',
+    target: '@components/applique/banner.tsx',
+  },
+  {
+    importPath: '@/components/ui/breadcrumb',
+    name: 'bread-crumb',
+    primitiveTarget: '@ui/breadcrumb.tsx',
+    target: '@components/applique/bread-crumb.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/button',
+    name: 'button',
+    primitiveTarget: '@components/applique/internal/button.tsx',
+    target: '@components/applique/button.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/button-group',
+    name: 'button-group',
+    primitiveTarget: '@components/applique/internal/button-group.tsx',
+    target: '@components/applique/button-group.tsx',
+  },
+  {
+    importPath: '@/components/ui/textarea',
+    name: 'input-text-area',
+    primitiveTarget: '@ui/textarea.tsx',
+    target: '@components/applique/input-text-area.tsx',
+  },
+  {
+    importPath: '@/components/ui/card',
+    name: 'section',
+    primitiveTarget: '@ui/card.tsx',
+    target: '@components/applique/section.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/tabs',
+    name: 'tabs',
+    primitiveTarget: '@components/applique/internal/tabs.tsx',
+    target: '@components/applique/tabs.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/tooltip',
+    name: 'tooltip',
+    primitiveTarget: '@components/applique/internal/tooltip.tsx',
+    target: '@components/applique/tooltip.tsx',
+  },
+]
+const EXPECTED_OWNED_FACADE_ITEMS = OWNED_FACADE_SMOKE_CONTRACTS.length
+const PREEXISTING_TYPESCRIPT_UTILS_SOURCE = `import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 export const consumerOwnedUtilsSentinel = 'keep-client-utils'
@@ -31,10 +126,44 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 `
+const PREEXISTING_JAVASCRIPT_UTILS_SOURCE = `import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export const consumerOwnedUtilsSentinel = 'keep-client-utils'
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs))
+}
+`
 
 const packageDir = path.resolve(__dirname, '..')
 const manifestPath = path.join(packageDir, 'registry.json')
 const generatorPath = path.join(__dirname, 'generate-registry.js')
+const shadcnPackageDirectory = path.dirname(
+  path.dirname(require.resolve('shadcn', { paths: [packageDir] }))
+)
+const { parse: parseJavaScript } = require(require.resolve('@babel/parser', {
+  paths: [shadcnPackageDirectory],
+}))
+
+const CONSUMER_MODES = [
+  {
+    id: 'typescript',
+    label: 'TypeScript/TSX',
+    tsx: true,
+    configFile: 'tsconfig.json',
+    smokeFile: 'src/smoke.tsx',
+    utilsSource: PREEXISTING_TYPESCRIPT_UTILS_SOURCE,
+  },
+  {
+    id: 'javascript',
+    label: 'JavaScript/JSX',
+    tsx: false,
+    configFile: 'jsconfig.json',
+    smokeFile: 'src/smoke.jsx',
+    utilsSource: PREEXISTING_JAVASCRIPT_UTILS_SOURCE,
+  },
+]
 
 function assert(condition, message) {
   if (!condition) throw new Error(message)
@@ -160,22 +289,31 @@ function close(server) {
 function sourceItems(manifest) {
   return manifest.items.filter(
     (item) =>
-      item.type === 'registry:ui' &&
+      ['registry:component', 'registry:ui'].includes(item.type) &&
       Array.isArray(item.files) &&
       item.files.length > 0
   )
 }
 
-function consumerPathForTarget(target) {
+function outputTarget(target, mode) {
+  if (mode.tsx) return target
+
+  return target.replace(/\.tsx$/, '.jsx').replace(/\.ts$/, '.js')
+}
+
+function consumerPathForTarget(target, mode) {
   const aliases = {
+    '@components/': 'src/components/',
     '@hooks/': 'src/hooks/',
     '@lib/': 'src/lib/',
     '@ui/': 'src/components/ui/',
   }
 
+  const resolvedTarget = outputTarget(target, mode)
+
   for (const [alias, replacement] of Object.entries(aliases)) {
-    if (target.startsWith(alias)) {
-      return `${replacement}${target.slice(alias.length)}`
+    if (resolvedTarget.startsWith(alias)) {
+      return `${replacement}${resolvedTarget.slice(alias.length)}`
     }
   }
 
@@ -183,24 +321,42 @@ function consumerPathForTarget(target) {
 }
 
 function importPathForTarget(target) {
+  if (target.startsWith('@components/')) {
+    return `@/components/${target
+      .slice('@components/'.length)
+      .replace(/\.[jt]sx?$/, '')}`
+  }
   if (target.startsWith('@ui/')) {
     return `@/components/ui/${target
       .slice('@ui/'.length)
-      .replace(/\.tsx?$/, '')}`
+      .replace(/\.[jt]sx?$/, '')}`
   }
   if (target.startsWith('@hooks/')) {
-    return `@/hooks/${target.slice('@hooks/'.length).replace(/\.tsx?$/, '')}`
+    return `@/hooks/${target.slice('@hooks/'.length).replace(/\.[jt]sx?$/, '')}`
   }
   if (target.startsWith('@lib/')) {
-    return `@/lib/${target.slice('@lib/'.length).replace(/\.tsx?$/, '')}`
+    return `@/lib/${target.slice('@lib/'.length).replace(/\.[jt]sx?$/, '')}`
   }
 
   throw new Error(`Smoke test does not understand registry target ${target}`)
 }
 
-function createConsumer(consumerDirectory, manifest) {
+function createConsumer(consumerDirectory, manifest, mode, options = {}) {
+  const devDependencies = {
+    '@tailwindcss/cli': TAILWIND_VERSION,
+    tailwindcss: TAILWIND_VERSION,
+  }
+
+  if (mode.tsx) {
+    Object.assign(devDependencies, {
+      '@types/react': REACT_TYPES_VERSION,
+      '@types/react-dom': REACT_DOM_TYPES_VERSION,
+      typescript: TYPESCRIPT_VERSION,
+    })
+  }
+
   writeJson(path.join(consumerDirectory, 'package.json'), {
-    name: 'applique-registry-smoke',
+    name: `applique-registry-smoke-${mode.id}`,
     private: true,
     version: '0.0.0',
     type: 'module',
@@ -208,20 +364,14 @@ function createConsumer(consumerDirectory, manifest) {
       react: REACT_VERSION,
       'react-dom': REACT_VERSION,
     },
-    devDependencies: {
-      '@tailwindcss/cli': TAILWIND_VERSION,
-      '@types/react': REACT_TYPES_VERSION,
-      '@types/react-dom': REACT_DOM_TYPES_VERSION,
-      tailwindcss: TAILWIND_VERSION,
-      typescript: TYPESCRIPT_VERSION,
-    },
+    devDependencies,
   })
 
   writeJson(path.join(consumerDirectory, 'components.json'), {
     $schema: 'https://ui.shadcn.com/schema.json',
     style: 'base-nova',
-    rsc: false,
-    tsx: true,
+    rsc: options.rsc ?? false,
+    tsx: mode.tsx,
     tailwind: {
       config: '',
       css: 'src/index.css',
@@ -239,8 +389,15 @@ function createConsumer(consumerDirectory, manifest) {
     },
   })
 
-  writeJson(path.join(consumerDirectory, 'tsconfig.json'), {
-    compilerOptions: {
+  const compilerOptions = {
+    baseUrl: '.',
+    paths: {
+      '@/*': ['./src/*'],
+    },
+  }
+
+  if (mode.tsx) {
+    Object.assign(compilerOptions, {
       target: 'ES2022',
       lib: ['ES2022', 'DOM', 'DOM.Iterable'],
       skipLibCheck: false,
@@ -254,11 +411,11 @@ function createConsumer(consumerDirectory, manifest) {
       isolatedModules: true,
       noEmit: true,
       jsx: 'react-jsx',
-      baseUrl: '.',
-      paths: {
-        '@/*': ['./src/*'],
-      },
-    },
+    })
+  }
+
+  writeJson(path.join(consumerDirectory, mode.configFile), {
+    compilerOptions,
     include: ['src'],
   })
 
@@ -267,8 +424,8 @@ function createConsumer(consumerDirectory, manifest) {
     '@import "tailwindcss";\n'
   )
   writeText(
-    path.join(consumerDirectory, 'src/lib/utils.ts'),
-    PREEXISTING_UTILS_SOURCE
+    path.join(consumerDirectory, `src/lib/utils.${mode.tsx ? 'ts' : 'js'}`),
+    mode.utilsSource
   )
 
   const imports = []
@@ -286,25 +443,38 @@ function createConsumer(consumerDirectory, manifest) {
     }
   }
 
+  const refDeclarations = mode.tsx
+    ? `const buttonRef = createRef<HTMLButtonElement>()
+const calendarDayRef = createRef<HTMLButtonElement>()
+const inputRef = createRef<HTMLInputElement>()`
+    : `const buttonRef = createRef()
+const calendarDayRef = createRef()
+const inputRef = createRef()`
+
   writeText(
-    path.join(consumerDirectory, 'src/smoke.tsx'),
+    path.join(consumerDirectory, mode.smokeFile),
     `import { createRef } from 'react'
-import { Button as RefButton } from '@/components/ui/button'
+import { Button as RefButton } from '@/components/applique/button'
 import { CalendarDayButton as RefCalendarDayButton } from '@/components/ui/calendar'
 import { Input as RefInput } from '@/components/ui/input'
+import { InputNumber as AppliqueInputNumber } from '@/components/applique/input-number'
 ${imports.join('\n')}
 
-const buttonRef = createRef<HTMLButtonElement>()
-const calendarDayRef = createRef<HTMLButtonElement>()
-const inputRef = createRef<HTMLInputElement>()
+${refDeclarations}
 
 export const react18RefTypeSmoke = (
   <>
     <RefButton ref={buttonRef}>Save</RefButton>
     <RefInput ref={inputRef} aria-label="Name" />
+    <AppliqueInputNumber
+      aria-label="Quantity"
+      min={1}
+      onChange={(value) => value.toFixed(1)}
+      value={2}
+    />
     <RefCalendarDayButton
       ref={calendarDayRef}
-      day={null as never}
+      day={${mode.tsx ? 'null as never' : 'null'}}
       modifiers={{ focused: false }}
     />
   </>
@@ -317,21 +487,138 @@ export const registryModules = [
   )
 }
 
-function assertInstalledConsumer(consumerDirectory, manifest) {
+function createFacadeOnlySmoke(consumerDirectory, mode) {
+  const refDeclaration = mode.tsx
+    ? 'const inputRef = createRef<HTMLInputElement>()'
+    : 'const inputRef = createRef()'
+
+  writeText(
+    path.join(consumerDirectory, mode.smokeFile),
+    `import { createRef } from 'react'
+import { Accordion } from '@/components/applique/accordion'
+import { Avatar } from '@/components/applique/avatar'
+import { Badge } from '@/components/applique/badge'
+import { BreadCrumb } from '@/components/applique/bread-crumb'
+import { InputCheckbox } from '@/components/applique/input-checkbox'
+import { InputNumber } from '@/components/applique/input-number'
+import { InputRadio } from '@/components/applique/input-radio'
+import { InputText } from '@/components/applique/input-text'
+import { InputTextArea } from '@/components/applique/input-text-area'
+import { Tabs } from '@/components/applique/tabs'
+import { Tooltip } from '@/components/applique/tooltip'
+
+${refDeclaration}
+
+export const appliqueFacadeSmoke = (
+  <>
+    <Accordion>
+      <Accordion.Item title="Registry">Reviewed source</Accordion.Item>
+    </Accordion>
+    <Avatar name="Jane Doe" size="medium" />
+    <Badge type="success" variant="solid">Ready</Badge>
+    <BreadCrumb>
+      <BreadCrumb.Item>Home</BreadCrumb.Item>
+      <BreadCrumb.Item>Registry</BreadCrumb.Item>
+    </BreadCrumb>
+    <InputCheckbox
+      onChange={(value) => Boolean(value)}
+      title="Accept terms"
+      value
+    />
+    <InputNumber
+      aria-label="Quantity"
+      min={1}
+      onChange={(value) => value.toFixed(1)}
+      ref={inputRef}
+      value={2}
+    />
+    <InputRadio
+      onChange={(value) => value.toUpperCase()}
+      options={[{ label: 'Standard', value: 'standard' }]}
+      value="standard"
+    />
+    <InputText onChange={(value) => value.trim()} value="Jane" />
+    <InputTextArea onChange={(value) => value.trim()} value="Notes" />
+    <Tabs defaultIndex={0} variant="line">
+      <Tabs.Tab title="Overview">Registry facade</Tabs.Tab>
+    </Tabs>
+    <Tooltip renderContent={() => 'Details'}>
+      <button type="button">Help</button>
+    </Tooltip>
+  </>
+)
+`
+  )
+}
+
+function filesWithin(directory) {
+  const files = []
+
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const entryPath = path.join(directory, entry.name)
+    if (entry.isDirectory()) {
+      files.push(...filesWithin(entryPath))
+    } else if (entry.isFile()) {
+      files.push(entryPath)
+    }
+  }
+
+  return files
+}
+
+function assertJavaScriptSources(consumerDirectory) {
+  const sourceDirectory = path.join(consumerDirectory, 'src')
+  const sourceFiles = filesWithin(sourceDirectory).filter((filePath) =>
+    /\.[jt]sx?$/.test(filePath)
+  )
+
+  for (const filePath of sourceFiles) {
+    const relativePath = path.relative(consumerDirectory, filePath)
+    assert(
+      !/\.tsx?$/.test(filePath),
+      `${relativePath} was not converted to JavaScript`
+    )
+
+    try {
+      parseJavaScript(fs.readFileSync(filePath, 'utf8'), {
+        sourceType: 'module',
+        plugins: ['jsx'],
+      })
+    } catch (error) {
+      throw new Error(
+        `${relativePath} is not valid JavaScript/JSX: ${error.message}`
+      )
+    }
+  }
+
+  const consumerPackage = readJson(path.join(consumerDirectory, 'package.json'))
+  const declaredDependencies = {
+    ...consumerPackage.dependencies,
+    ...consumerPackage.devDependencies,
+  }
+  for (const dependency of Object.keys(declaredDependencies)) {
+    assert(
+      dependency !== 'typescript' && !dependency.startsWith('@types/'),
+      `JavaScript consumer unexpectedly declares ${dependency}`
+    )
+  }
+}
+
+function assertInstalledConsumer(consumerDirectory, manifest, mode) {
   const expectedPaths = new Set([
-    'src/lib/applique-react18-compat.ts',
-    'src/lib/utils.ts',
+    consumerPathForTarget('@lib/applique-react18-compat.ts', mode),
+    consumerPathForTarget('@lib/utils.ts', mode),
   ])
 
   for (const item of sourceItems(manifest)) {
     for (const file of item.files) {
-      expectedPaths.add(consumerPathForTarget(file.target))
+      expectedPaths.add(consumerPathForTarget(file.target, mode))
     }
   }
 
   const hook = manifest.items.find((item) => item.name === 'use-mobile')
   for (const file of hook?.files || []) {
-    expectedPaths.add(consumerPathForTarget(file.target))
+    expectedPaths.add(consumerPathForTarget(file.target, mode))
   }
 
   for (const relativePath of expectedPaths) {
@@ -341,7 +628,7 @@ function assertInstalledConsumer(consumerDirectory, manifest) {
       `shadcn did not install ${relativePath}`
     )
 
-    if (!absolutePath.endsWith('.ts') && !absolutePath.endsWith('.tsx')) {
+    if (!/\.[jt]sx?$/.test(absolutePath)) {
       continue
     }
 
@@ -365,7 +652,10 @@ function assertInstalledConsumer(consumerDirectory, manifest) {
       `${relativePath} contains an unscoped .dark selector`
     )
 
-    if (relativePath.startsWith('src/components/ui/')) {
+    if (
+      relativePath.startsWith('src/components/ui/') ||
+      relativePath.startsWith('src/components/applique/internal/')
+    ) {
       for (const match of source.matchAll(
         /^function\s+([A-Z][A-Za-z0-9_]*)Impl\b/gm
       )) {
@@ -379,26 +669,53 @@ function assertInstalledConsumer(consumerDirectory, manifest) {
     }
   }
 
+  const utilsPath = consumerPathForTarget('@lib/utils.ts', mode)
   assert(
-    fs.readFileSync(
-      path.join(consumerDirectory, 'src/lib/utils.ts'),
-      'utf8'
-    ) === PREEXISTING_UTILS_SOURCE,
-    'shadcn overwrote the consumer-owned utils file without --overwrite'
+    fs.readFileSync(path.join(consumerDirectory, utilsPath), 'utf8') ===
+      mode.utilsSource,
+    `shadcn overwrote the consumer-owned ${path.basename(
+      utilsPath
+    )} file without --overwrite`
   )
 
-  const installedCalendar = fs.readFileSync(
-    path.join(consumerDirectory, 'src/components/ui/calendar.tsx'),
+  const inputNumberPath = consumerPathForTarget(
+    '@components/applique/input-number.tsx',
+    mode
+  )
+  const installedInputNumber = fs.readFileSync(
+    path.join(consumerDirectory, inputNumberPath),
     'utf8'
   )
   assert(
-    installedCalendar.includes('ref={mergeRefs(ref, forwardedRef)}') &&
-      installedCalendar.includes('ref?: React.Ref<HTMLButtonElement>'),
-    'Calendar did not preserve both its focus ref and the consumer ref'
+    installedInputNumber.includes('@/components/ui/input') &&
+      !installedInputNumber.includes('../input'),
+    'Applique InputNumber did not resolve its internal primitive import'
   )
 
+  const calendarPath = consumerPathForTarget('@ui/calendar.tsx', mode)
+  const installedCalendar = fs.readFileSync(
+    path.join(consumerDirectory, calendarPath),
+    'utf8'
+  )
+  assert(
+    installedCalendar.includes('ref={mergeRefs(ref, forwardedRef)}'),
+    'Calendar did not preserve both its focus ref and the consumer ref'
+  )
+  assert(
+    installedCalendar.includes('@/components/applique/internal/button') &&
+      !installedCalendar.includes('@/components/ui/button'),
+    'Calendar did not resolve Button to the internal shadcn primitive'
+  )
+  if (mode.tsx) {
+    assert(
+      installedCalendar.includes('ref?: React.Ref<HTMLButtonElement>'),
+      'Calendar TypeScript output lost its forwarded-ref type'
+    )
+  }
+
+  const chartPath = consumerPathForTarget('@ui/chart.tsx', mode)
   const installedChart = fs.readFileSync(
-    path.join(consumerDirectory, 'src/components/ui/chart.tsx'),
+    path.join(consumerDirectory, chartPath),
     'utf8'
   )
   for (const componentName of [
@@ -413,6 +730,21 @@ function assertInstalledConsumer(consumerDirectory, manifest) {
         componentSource.includes('  ref,') &&
         componentSource.includes('ref={ref}'),
       `${componentName} did not forward its DOM ref`
+    )
+  }
+
+  const sidebarPath = consumerPathForTarget('@ui/sidebar.tsx', mode)
+  const installedSidebar = fs.readFileSync(
+    path.join(consumerDirectory, sidebarPath),
+    'utf8'
+  )
+  for (const internalImport of [
+    '@/components/applique/internal/button',
+    '@/components/applique/internal/tooltip',
+  ]) {
+    assert(
+      installedSidebar.includes(internalImport),
+      `Sidebar did not resolve ${internalImport} to an internal shadcn primitive`
     )
   }
 
@@ -517,15 +849,64 @@ function assertInstalledConsumer(consumerDirectory, manifest) {
     !/@media\s*\(\s*prefers-color-scheme\s*:\s*dark\s*\)/i.test(compiledCss),
     'Tailwind emitted an OS-controlled dark-mode media query'
   )
+
+  if (!mode.tsx) assertJavaScriptSources(consumerDirectory)
+}
+
+function assertFacadeOnlyConsumer(consumerDirectory, mode) {
+  for (const contract of OWNED_FACADE_SMOKE_CONTRACTS) {
+    const facadePath = consumerPathForTarget(contract.target, mode)
+    const primitivePath = consumerPathForTarget(contract.primitiveTarget, mode)
+
+    for (const relativePath of [facadePath, primitivePath]) {
+      assert(
+        fs.existsSync(path.join(consumerDirectory, relativePath)),
+        `Facade-only install did not recursively install ${relativePath}`
+      )
+    }
+
+    const installedFacade = fs.readFileSync(
+      path.join(consumerDirectory, facadePath),
+      'utf8'
+    )
+    assert(
+      /^["']use client["']/.test(installedFacade),
+      `${contract.name} lost its client-component boundary`
+    )
+    assert(
+      installedFacade.includes(contract.importPath) &&
+        !installedFacade.includes('../'),
+      `${contract.name} did not resolve its primitive import`
+    )
+  }
+
+  if (!mode.tsx) assertJavaScriptSources(consumerDirectory)
 }
 
 async function main() {
   const manifest = readJson(manifestPath)
   const components = sourceItems(manifest)
+  const primitiveComponents = components.filter(
+    (item) => item.type === 'registry:ui'
+  )
+  const ownedFacades = components.filter(
+    (item) => item.type === 'registry:component'
+  )
 
   assert(
-    components.length === 60,
-    `Expected 60 React 18-compatible UI items, found ${components.length}`
+    primitiveComponents.length === EXPECTED_INSTALLABLE_UI_ITEMS,
+    `Expected ${EXPECTED_INSTALLABLE_UI_ITEMS} React 18-compatible UI items, found ${primitiveComponents.length}`
+  )
+  assert(
+    ownedFacades.length === EXPECTED_OWNED_FACADE_ITEMS &&
+      ownedFacades
+        .map((item) => item.name)
+        .sort()
+        .join(',') ===
+        OWNED_FACADE_SMOKE_CONTRACTS.map((item) => item.name)
+          .sort()
+          .join(','),
+    `Expected ${EXPECTED_OWNED_FACADE_ITEMS} reviewed Applique facades, found ${ownedFacades.length}`
   )
 
   const temporaryRoot = fs.mkdtempSync(
@@ -533,9 +914,7 @@ async function main() {
   )
   const hostDirectory = path.join(temporaryRoot, 'host')
   const registryDirectory = path.join(hostDirectory, 'registry')
-  const consumerDirectory = path.join(temporaryRoot, 'consumer')
   fs.mkdirSync(hostDirectory, { recursive: true })
-  fs.mkdirSync(consumerDirectory, { recursive: true })
 
   const server = createStaticServer(hostDirectory)
 
@@ -555,51 +934,105 @@ async function main() {
       registryDirectory,
     ])
 
-    createConsumer(consumerDirectory, manifest)
-
     const itemUrls = components.map(
       (item) => `${registryBaseUrl}/${encodeURIComponent(item.name)}.json`
     )
 
-    await run(
-      'npx',
-      [
-        '--yes',
-        `shadcn@${SHADCN_CLI_VERSION}`,
-        'add',
-        ...itemUrls,
-        '--yes',
-        '--cwd',
-        consumerDirectory,
-      ],
-      {
-        cwd: consumerDirectory,
-        input: 'n\n',
+    for (const mode of CONSUMER_MODES) {
+      const consumerDirectory = path.join(temporaryRoot, `consumer-${mode.id}`)
+      fs.mkdirSync(consumerDirectory, { recursive: true })
+      createConsumer(consumerDirectory, manifest, mode)
+
+      await run(
+        'npx',
+        [
+          '--yes',
+          `shadcn@${SHADCN_CLI_VERSION}`,
+          'add',
+          ...itemUrls,
+          '--yes',
+          '--cwd',
+          consumerDirectory,
+        ],
+        {
+          cwd: consumerDirectory,
+          input: 'n\n',
+        }
+      )
+
+      if (mode.tsx) {
+        await run(
+          'pnpm',
+          ['exec', 'tsc', '--noEmit', '--project', mode.configFile],
+          { cwd: consumerDirectory }
+        )
       }
+      await run(
+        'pnpm',
+        [
+          'exec',
+          'tailwindcss',
+          '-i',
+          'src/index.css',
+          '-o',
+          'dist.css',
+          '--minify',
+        ],
+        { cwd: consumerDirectory }
+      )
+
+      assertInstalledConsumer(consumerDirectory, manifest, mode)
+      console.log(
+        `[registry] ${mode.label} consumer passed for ${components.length} components`
+      )
+    }
+
+    const facadeUrls = ownedFacades.map(
+      (item) => `${registryBaseUrl}/${encodeURIComponent(item.name)}.json`
     )
 
-    await run(
-      'pnpm',
-      ['exec', 'tsc', '--noEmit', '--project', 'tsconfig.json'],
-      { cwd: consumerDirectory }
-    )
-    await run(
-      'pnpm',
-      [
-        'exec',
-        'tailwindcss',
-        '-i',
-        'src/index.css',
-        '-o',
-        'dist.css',
-        '--minify',
-      ],
-      { cwd: consumerDirectory }
-    )
+    for (const mode of CONSUMER_MODES) {
+      const consumerDirectory = path.join(
+        temporaryRoot,
+        `facade-only-${mode.id}`
+      )
+      fs.mkdirSync(consumerDirectory, { recursive: true })
+      createConsumer(consumerDirectory, manifest, mode, { rsc: true })
+      createFacadeOnlySmoke(consumerDirectory, mode)
 
-    assertInstalledConsumer(consumerDirectory, manifest)
+      await run(
+        'npx',
+        [
+          '--yes',
+          `shadcn@${SHADCN_CLI_VERSION}`,
+          'add',
+          ...facadeUrls,
+          '--yes',
+          '--cwd',
+          consumerDirectory,
+        ],
+        {
+          cwd: consumerDirectory,
+          input: 'n\n',
+        }
+      )
+
+      if (mode.tsx) {
+        await run(
+          'pnpm',
+          ['exec', 'tsc', '--noEmit', '--project', mode.configFile],
+          { cwd: consumerDirectory }
+        )
+      }
+
+      assertFacadeOnlyConsumer(consumerDirectory, mode)
+      console.log(
+        `[registry] ${mode.label} facade-only install passed for ${ownedFacades.length} facades`
+      )
+    }
+
     console.log(
-      `[registry] React ${REACT_VERSION} smoke test passed for ${components.length} components with shadcn@${SHADCN_CLI_VERSION}`
+      `[registry] React ${REACT_VERSION} smoke test passed in both output modes with shadcn@${SHADCN_CLI_VERSION}`
     )
   } finally {
     if (server.listening) await close(server)

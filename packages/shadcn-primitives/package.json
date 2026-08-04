@@ -21,7 +21,7 @@
     "validate:registry": "node scripts/generate-registry.js --check && node scripts/validate-registry.js",
     "smoke:react18": "node scripts/react18-runtime-smoke.js",
     "smoke:registry": "node scripts/smoke-test-registry.js",
-    "build:catalog": "node catalog/build.js",
+    "build:catalog": "node scripts/generate-catalog-metadata.js --metadata-only && node catalog/build.js",
     "build:pages": "npm run build:registry && npm run validate:registry && npm run build:catalog",
     "serve:catalog": "serve ../../docs -l 4173",
     "build:post": "npm run build:css && npm run build:inject-css && npm run build:registry"

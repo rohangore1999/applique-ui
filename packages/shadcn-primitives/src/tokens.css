@@ -43,6 +43,16 @@
   --destructive: #bf3823;         /* Cherry/700 */
   --destructive-foreground: #fef3f2; /* destructive-foreground-light = Cherry/50 */
 
+  /* ── Legacy semantic status surfaces (Applique Badge) ────── */
+  --applique-info-background: #e5eefb;
+  --applique-info-foreground: #0046ae;
+  --applique-success-background: #dffcf0;
+  --applique-success-foreground: #1f845a;
+  --applique-warning-background: #fff4e5;
+  --applique-warning-foreground: #b65c02;
+  --applique-error-background: #fcedeb;
+  --applique-error-foreground: #b63a2a;
+
   /* ── Borders & inputs — gray/200 (from Figma: border-light) ─ */
   --border: #e5e7eb;              /* gray/200 */
   --input: #e5e7eb;               /* input-light = gray/200 */

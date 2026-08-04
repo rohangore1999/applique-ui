@@ -40,6 +40,203 @@ const FOUNDATION_ITEM_TYPES = new Map([
   ['utils', 'registry:lib'],
 ])
 const FOUNDATION_ITEM_NAMES = new Set(FOUNDATION_ITEM_TYPES.keys())
+const INTERNAL_UPSTREAM_ITEM_NAMES = new Map([
+  ['accordion', 'applique-internal-accordion'],
+  ['avatar', 'applique-internal-avatar'],
+  ['badge', 'applique-internal-badge'],
+  ['button', 'applique-internal-button'],
+  ['button-group', 'applique-internal-button-group'],
+  ['tabs', 'applique-internal-tabs'],
+  ['tooltip', 'applique-internal-tooltip'],
+])
+const UPSTREAM_NAMES_BY_INTERNAL_ITEM = new Map(
+  [...INTERNAL_UPSTREAM_ITEM_NAMES].map(([upstreamName, internalName]) => [
+    internalName,
+    upstreamName,
+  ])
+)
+const INTERNAL_UPSTREAM_ITEM_NAME_SET = new Set(
+  INTERNAL_UPSTREAM_ITEM_NAMES.values()
+)
+const OWNED_FACADE_CONTRACTS = new Map([
+  [
+    'avatar',
+    {
+      publicExports: [
+        { name: 'Avatar' },
+        { name: 'AvatarProps', type: true },
+      ],
+      registryDependencies: ['applique-internal-avatar'],
+      sourcePath: 'src/facades/avatar.tsx',
+      target: '@components/applique/avatar.tsx',
+    },
+  ],
+  [
+    'input-checkbox',
+    {
+      registryDependencies: ['checkbox'],
+      sourcePath: 'src/facades/input-checkbox.tsx',
+      target: '@components/applique/input-checkbox.tsx',
+    },
+  ],
+  [
+    'input-number',
+    {
+      registryDependencies: ['input'],
+      sourcePath: 'src/facades/input-number.tsx',
+      target: '@components/applique/input-number.tsx',
+    },
+  ],
+  [
+    'input-radio',
+    {
+      registryDependencies: ['radio-group'],
+      sourcePath: 'src/facades/input-radio.tsx',
+      target: '@components/applique/input-radio.tsx',
+    },
+  ],
+  [
+    'input-text',
+    {
+      registryDependencies: ['input'],
+      sourcePath: 'src/facades/input-text.tsx',
+      target: '@components/applique/input-text.tsx',
+    },
+  ],
+  [
+    'accordion',
+    {
+      publicExports: [
+        { name: 'Accordion' },
+        { name: 'AccordionItem' },
+        { name: 'AccordionProps', type: true },
+        { name: 'AccordionItemProps', type: true },
+        { name: 'AccordionControlIcons', type: true },
+      ],
+      registryDependencies: ['applique-internal-accordion'],
+      sourcePath: 'src/facades/accordion.tsx',
+      target: '@components/applique/accordion.tsx',
+    },
+  ],
+  [
+    'badge',
+    {
+      publicExports: [
+        { name: 'Badge' },
+        { name: 'BadgeProps', type: true },
+      ],
+      registryDependencies: ['applique-internal-badge'],
+      sourcePath: 'src/facades/badge.tsx',
+      target: '@components/applique/badge.tsx',
+    },
+  ],
+  [
+    'banner',
+    {
+      publicExports: [
+        { name: 'Banner' },
+        { name: 'BannerActionable' },
+        { name: 'BannerProps', type: true },
+        { name: 'BannerActionableProps', type: true },
+        { name: 'BannerActionableData', type: true },
+        { name: 'BannerIcon', type: true },
+        { name: 'BannerLink', type: true },
+        { name: 'BannerTone', type: true },
+      ],
+      dependencies: ['lucide-react@1.28.0'],
+      registryDependencies: ['alert', 'applique-internal-button'],
+      sourcePath: 'src/facades/banner.tsx',
+      target: '@components/applique/banner.tsx',
+    },
+  ],
+  [
+    'bread-crumb',
+    {
+      registryDependencies: ['breadcrumb'],
+      sourcePath: 'src/facades/bread-crumb.tsx',
+      target: '@components/applique/bread-crumb.tsx',
+    },
+  ],
+  [
+    'button',
+    {
+      publicExports: [
+        { name: 'Button' },
+        { name: 'ButtonProps', type: true },
+      ],
+      registryDependencies: [
+        'applique-internal-badge',
+        'applique-internal-button',
+        'spinner',
+      ],
+      sourcePath: 'src/facades/button.tsx',
+      target: '@components/applique/button.tsx',
+    },
+  ],
+  [
+    'button-group',
+    {
+      publicExports: [
+        { name: 'ButtonGroup' },
+        { name: 'ButtonGroupProps', type: true },
+      ],
+      registryDependencies: [
+        'button',
+        'applique-internal-button',
+        'applique-internal-button-group',
+        'dropdown-menu',
+      ],
+      sourcePath: 'src/facades/button-group.tsx',
+      target: '@components/applique/button-group.tsx',
+    },
+  ],
+  [
+    'input-text-area',
+    {
+      registryDependencies: ['textarea'],
+      sourcePath: 'src/facades/input-text-area.tsx',
+      target: '@components/applique/input-text-area.tsx',
+    },
+  ],
+  [
+    'section',
+    {
+      publicExports: [
+        { name: 'Section' },
+        { name: 'SectionProps', type: true },
+      ],
+      registryDependencies: ['button', 'card'],
+      sourcePath: 'src/facades/section.tsx',
+      target: '@components/applique/section.tsx',
+    },
+  ],
+  [
+    'tabs',
+    {
+      publicExports: [
+        { name: 'Tabs' },
+        { name: 'Tab' },
+        { name: 'TabsProps', type: true },
+        { name: 'TabProps', type: true },
+      ],
+      registryDependencies: ['applique-internal-tabs'],
+      sourcePath: 'src/facades/tabs.tsx',
+      target: '@components/applique/tabs.tsx',
+    },
+  ],
+  [
+    'tooltip',
+    {
+      publicExports: [
+        { name: 'Tooltip' },
+        { name: 'TooltipProps', type: true },
+      ],
+      registryDependencies: ['applique-internal-tooltip'],
+      sourcePath: 'src/facades/tooltip.tsx',
+      target: '@components/applique/tooltip.tsx',
+    },
+  ],
+])
 const FOUNDATION_DEPENDENCY_PINS = {
   '@fontsource-variable/hanken-grotesk': '5.3.0',
 }
@@ -47,8 +244,12 @@ const EXPECTED_UI_ENTRIES = 62
 const EXPECTED_INSTALLABLE_UI_ENTRIES = 60
 const EXPECTED_SUPPORT_HOOKS = 1
 const EXPECTED_FOUNDATION_ENTRIES = FOUNDATION_ITEM_NAMES.size
+const EXPECTED_OWNED_FACADE_ENTRIES = OWNED_FACADE_CONTRACTS.size
 const EXPECTED_MANIFEST_ENTRIES =
-  EXPECTED_UI_ENTRIES + EXPECTED_SUPPORT_HOOKS + EXPECTED_FOUNDATION_ENTRIES
+  EXPECTED_UI_ENTRIES +
+  EXPECTED_SUPPORT_HOOKS +
+  EXPECTED_FOUNDATION_ENTRIES +
+  EXPECTED_OWNED_FACADE_ENTRIES
 const APPLIQUE_SEMANTIC_COLOR_VARS = [
   'background',
   'foreground',
@@ -66,6 +267,14 @@ const APPLIQUE_SEMANTIC_COLOR_VARS = [
   'accent-foreground',
   'destructive',
   'destructive-foreground',
+  'applique-info-background',
+  'applique-info-foreground',
+  'applique-success-background',
+  'applique-success-foreground',
+  'applique-warning-background',
+  'applique-warning-foreground',
+  'applique-error-background',
+  'applique-error-foreground',
   'border',
   'input',
   'outline-border',
@@ -712,7 +921,9 @@ function validateSnapshotDocument(lock) {
   for (const item of lock.items) {
     for (const dependency of item.registryDependencies) {
       assert(
-        names.has(dependency) || FOUNDATION_ITEM_NAMES.has(dependency),
+        names.has(dependency) ||
+          FOUNDATION_ITEM_NAMES.has(dependency) ||
+          INTERNAL_UPSTREAM_ITEM_NAME_SET.has(dependency),
         `${item.name} references unknown pinned registry item ${dependency}`
       )
     }
@@ -763,6 +974,22 @@ function itemStringArray(item, field) {
   return item[field] === undefined ? [] : item[field]
 }
 
+function manifestNameForPinnedItem(name) {
+  return INTERNAL_UPSTREAM_ITEM_NAMES.get(name) || name
+}
+
+function manifestDependenciesForPinnedItem(pinnedItem) {
+  return pinnedItem.registryDependencies.map(manifestNameForPinnedItem)
+}
+
+function pinnedItemForSourceItem(snapshot, name, sourceItem) {
+  if (sourceItem.meta && sourceItem.meta.status === 'facade') return undefined
+
+  return snapshot.itemsByName.get(
+    UPSTREAM_NAMES_BY_INTERNAL_ITEM.get(name) || name
+  )
+}
+
 function indexItems(items, label) {
   const indexed = new Map()
 
@@ -783,7 +1010,7 @@ function validateSourceManifest(manifest, snapshot) {
 
   assert(
     manifest.items.length === EXPECTED_MANIFEST_ENTRIES,
-    `source registry must contain ${EXPECTED_MANIFEST_ENTRIES} items (${EXPECTED_UI_ENTRIES} UI, ${EXPECTED_SUPPORT_HOOKS} support hook, and ${EXPECTED_FOUNDATION_ENTRIES} registry foundations)`
+    `source registry must contain ${EXPECTED_MANIFEST_ENTRIES} items (${EXPECTED_UI_ENTRIES} UI, ${EXPECTED_SUPPORT_HOOKS} support hook, ${EXPECTED_FOUNDATION_ENTRIES} registry foundations, and ${EXPECTED_OWNED_FACADE_ENTRIES} owned facade)`
   )
   assert(
     manifest.meta && typeof manifest.meta === 'object',
@@ -803,8 +1030,9 @@ function validateSourceManifest(manifest, snapshot) {
 
   const itemsByName = indexItems(manifest.items, 'source registry')
   const expectedNames = new Set([
-    ...snapshot.itemsByName.keys(),
+    ...[...snapshot.itemsByName.keys()].map(manifestNameForPinnedItem),
     ...FOUNDATION_ITEM_NAMES,
+    ...OWNED_FACADE_CONTRACTS.keys(),
   ])
   assertSameStringSet(
     itemsByName.keys(),
@@ -825,9 +1053,78 @@ function validateSourceManifest(manifest, snapshot) {
     )
   }
 
+  for (const [name, contract] of OWNED_FACADE_CONTRACTS) {
+    const item = itemsByName.get(name)
+    const label = `source registry owned facade ${name}`
+
+    assert(item.type === 'registry:component', `${label} has an invalid type`)
+    assert(
+      item.meta && item.meta.status === 'facade',
+      `${label} must retain facade status`
+    )
+    assert(
+      availabilityStatus(item) === 'installable',
+      `${label} must remain installable`
+    )
+    assert(
+      Array.isArray(item.categories) && item.categories.includes('facade'),
+      `${label} must be categorized as a facade`
+    )
+    assertSameStringSet(
+      itemStringArray(item, 'dependencies'),
+      contract.dependencies || [],
+      `${label} npm dependencies`
+    )
+    assertSameStringSet(
+      itemStringArray(item, 'registryDependencies'),
+      contract.registryDependencies,
+      `${label} registry dependencies`
+    )
+    assert(
+      item.files.length === 1 &&
+        item.files[0].path === contract.sourcePath &&
+        item.files[0].target === contract.target &&
+        item.files[0].type === 'registry:component',
+      `${label} source or installation target differs from its reviewed contract`
+    )
+    assert(
+      !(item.meta && item.meta.upstream),
+      `${label} must not claim to be pinned upstream source`
+    )
+    const compatibility = item.meta && item.meta.compatibility
+    const migrationStatus = compatibility && compatibility.migrationStatus
+    const unresolvedProps = compatibility && compatibility.unresolvedProps
+    assert(
+      migrationStatus === undefined || migrationStatus === 'testing',
+      `${label} has an invalid compatibility migrationStatus`
+    )
+    if (migrationStatus === 'testing') {
+      assert(
+        Array.isArray(unresolvedProps) &&
+          unresolvedProps.length > 0 &&
+          unresolvedProps.every(
+            (propName) => typeof propName === 'string' && propName.length > 0
+          ),
+        `${label} must list unresolvedProps while migrationStatus is testing`
+      )
+    } else {
+      assert(
+        unresolvedProps === undefined,
+        `${label} must use migrationStatus testing when unresolvedProps are listed`
+      )
+    }
+    assert(
+      JSON.stringify(
+        (item.meta && item.meta.build && item.meta.build.publicExports) || []
+      ) === JSON.stringify(contract.publicExports || []),
+      `${label} public barrel exports differ from its reviewed contract`
+    )
+  }
+
   for (const [name, pinnedItem] of snapshot.itemsByName) {
-    const manifestItem = itemsByName.get(name)
-    const label = `source registry item ${name}`
+    const manifestName = manifestNameForPinnedItem(name)
+    const manifestItem = itemsByName.get(manifestName)
+    const label = `source registry item ${manifestName}`
 
     assert(
       manifestItem.type === pinnedItem.type,
@@ -844,7 +1141,7 @@ function validateSourceManifest(manifest, snapshot) {
     )
     assertSameStringSet(
       itemStringArray(manifestItem, 'registryDependencies'),
-      pinnedItem.registryDependencies,
+      manifestDependenciesForPinnedItem(pinnedItem),
       `${label} registryDependencies`
     )
 
@@ -866,6 +1163,25 @@ function validateSourceManifest(manifest, snapshot) {
         upstream.upstreamSha256 === pinnedItem.upstreamSha256,
       `${label} upstream metadata must match the snapshot`
     )
+
+    const internalName = INTERNAL_UPSTREAM_ITEM_NAMES.get(name)
+    if (internalName) {
+      assert(
+        manifestItem.meta.status === 'internal',
+        `${label} must retain internal status`
+      )
+      assert(
+        Array.isArray(manifestItem.categories) &&
+          manifestItem.categories.includes('internal'),
+        `${label} must be categorized as internal`
+      )
+      assert(
+        manifestItem.files.length === 1 &&
+          manifestItem.files[0].target ===
+            `@components/applique/internal/${name}.tsx`,
+        `${label} must install under the Applique internal directory`
+      )
+    }
   }
 
   for (const item of manifest.items) {
@@ -1087,13 +1403,13 @@ function validateCurrentPublishedSet(
     validatePublishedContract(
       standaloneItem,
       sourceItem,
-      snapshot.itemsByName.get(name),
+      pinnedItemForSourceItem(snapshot, name, sourceItem),
       `${location}${itemFile}`
     )
     validatePublishedContract(
       catalogItem,
       sourceItem,
-      snapshot.itemsByName.get(name),
+      pinnedItemForSourceItem(snapshot, name, sourceItem),
       `${location}registry.json item ${name}`
     )
     assert(
@@ -1214,7 +1530,7 @@ if (require.main === module) {
       { manifest, snapshot, sourceManifest }
     )
     console.log(
-      `[registry] valid: ${sourceManifest.items} current items (${snapshot.installableUiItems}/${snapshot.uiItems} pinned UI sources installable, ${snapshot.supportHooks}/${EXPECTED_SUPPORT_HOOKS} support hook installable, ${EXPECTED_FOUNDATION_ENTRIES} registry foundations); ${result.items} published item documents in ${result.catalogs} catalogs (${result.files} JSON files)`
+      `[registry] valid: ${sourceManifest.items} current items (${snapshot.installableUiItems}/${snapshot.uiItems} pinned UI sources installable, ${snapshot.supportHooks}/${EXPECTED_SUPPORT_HOOKS} support hook installable, ${EXPECTED_FOUNDATION_ENTRIES} registry foundations, ${EXPECTED_OWNED_FACADE_ENTRIES} owned facade); ${result.items} published item documents in ${result.catalogs} catalogs (${result.files} JSON files)`
     )
   } catch (error) {
     console.error(`[registry] validation failed: ${error.message}`)

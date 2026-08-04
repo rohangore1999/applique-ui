@@ -53,6 +53,14 @@ const APPLIQUE_SEMANTIC_COLOR_VARS = [
   'accent-foreground',
   'destructive',
   'destructive-foreground',
+  'applique-info-background',
+  'applique-info-foreground',
+  'applique-success-background',
+  'applique-success-foreground',
+  'applique-warning-background',
+  'applique-warning-foreground',
+  'applique-error-background',
+  'applique-error-foreground',
   'border',
   'input',
   'outline-border',
@@ -762,7 +770,38 @@ function writeFileAtomically(filePath, content) {
   fs.renameSync(temporaryPath, filePath)
 }
 
-function writeOutputs(outputDir, files) {
+function managedOutputFiles(outputDir, version) {
+  const candidates = []
+  const directories = [outputDir, path.join(outputDir, `v${version}`)]
+
+  for (const directory of directories) {
+    if (!fs.existsSync(directory)) continue
+
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.endsWith('.json')) continue
+      candidates.push(path.join(directory, entry.name))
+    }
+  }
+
+  return candidates
+}
+
+function staleOutputFiles(outputDir, files, version) {
+  const expected = new Set(
+    [...files.keys()].map((relativePath) => path.resolve(outputDir, relativePath))
+  )
+
+  return managedOutputFiles(outputDir, version).filter(
+    (filePath) => !expected.has(path.resolve(filePath))
+  )
+}
+
+function writeOutputs(outputDir, files, version) {
+  for (const staleFile of staleOutputFiles(outputDir, files, version)) {
+    fs.unlinkSync(staleFile)
+    console.log(`[registry] removed ${path.relative(repoDir, staleFile)}`)
+  }
+
   for (const [relativePath, content] of files) {
     const destination = path.join(outputDir, relativePath)
     writeFileAtomically(destination, content)
@@ -770,7 +809,7 @@ function writeOutputs(outputDir, files) {
   }
 }
 
-function checkOutputs(outputDir, files) {
+function checkOutputs(outputDir, files, version) {
   const differences = []
 
   for (const [relativePath, expected] of files) {
@@ -785,6 +824,10 @@ function checkOutputs(outputDir, files) {
     if (actual !== expected) {
       differences.push(`${relativePath} is stale`)
     }
+  }
+
+  for (const staleFile of staleOutputFiles(outputDir, files, version)) {
+    differences.push(`${path.relative(outputDir, staleFile)} is unexpected`)
   }
 
   assert(
@@ -823,9 +866,9 @@ function main() {
   const files = expectedOutputFiles(manifest, items, context)
 
   if (options.check) {
-    checkOutputs(outputDir, files)
+    checkOutputs(outputDir, files, version)
   } else {
-    writeOutputs(outputDir, files)
+    writeOutputs(outputDir, files, version)
     console.log(
       `[registry] built ${items.length} items for v${version} (${baseUrl})`
     )

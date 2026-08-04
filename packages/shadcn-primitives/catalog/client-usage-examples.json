@@ -1,0 +1,313 @@
+{
+  "alert": {
+    "exports": ["Alert", "AlertAction", "AlertDescription", "AlertTitle"],
+    "jsx": "<Alert>\n  <AlertTitle>Heads up</AlertTitle>\n  <AlertDescription>Your changes are ready to review.</AlertDescription>\n</Alert>"
+  },
+  "alert-dialog": {
+    "exports": ["AlertDialog", "AlertDialogAction", "AlertDialogCancel", "AlertDialogContent", "AlertDialogDescription", "AlertDialogFooter", "AlertDialogHeader", "AlertDialogMedia", "AlertDialogOverlay", "AlertDialogPortal", "AlertDialogTitle", "AlertDialogTrigger"],
+    "jsx": "<AlertDialog>\n  <AlertDialogTrigger render={<button type=\"button\" />}>Delete</AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Delete this item?</AlertDialogTitle>\n      <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancel</AlertDialogCancel>\n      <AlertDialogAction>Delete</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+  },
+  "aspect-ratio": {
+    "exports": ["AspectRatio"],
+    "jsx": "<AspectRatio ratio={16 / 9}>\n  <img alt=\"Product\" className=\"h-full w-full object-cover\" src=\"/product.jpg\" />\n</AspectRatio>"
+  },
+  "attachment": {
+    "exports": ["Attachment", "AttachmentAction", "AttachmentActions", "AttachmentContent", "AttachmentDescription", "AttachmentGroup", "AttachmentMedia", "AttachmentTitle", "AttachmentTrigger"],
+    "jsx": "<Attachment>\n  <AttachmentContent>\n    <AttachmentTitle>catalog.csv</AttachmentTitle>\n    <AttachmentDescription>CSV · 24 KB</AttachmentDescription>\n  </AttachmentContent>\n  <AttachmentActions>\n    <AttachmentAction aria-label=\"Remove catalog.csv\">Remove</AttachmentAction>\n  </AttachmentActions>\n</Attachment>"
+  },
+  "breadcrumb": {
+    "exports": ["Breadcrumb", "BreadcrumbEllipsis", "BreadcrumbItem", "BreadcrumbLink", "BreadcrumbList", "BreadcrumbPage", "BreadcrumbSeparator"],
+    "jsx": "<Breadcrumb>\n  <BreadcrumbList>\n    <BreadcrumbItem><BreadcrumbLink href=\"/\">Home</BreadcrumbLink></BreadcrumbItem>\n    <BreadcrumbSeparator />\n    <BreadcrumbItem><BreadcrumbPage>Orders</BreadcrumbPage></BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+  },
+  "bubble": {
+    "exports": ["Bubble", "BubbleContent", "BubbleGroup", "BubbleReactions"],
+    "jsx": "<Bubble align=\"end\" variant=\"tinted\">\n  <BubbleContent>Can we publish this update?</BubbleContent>\n</Bubble>"
+  },
+  "calendar": {
+    "exports": ["Calendar", "CalendarDayButton"],
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const [date, setDate] = React.useState<Date | undefined>(new Date())",
+    "jsx": "<Calendar mode=\"single\" selected={date} onSelect={setDate} />"
+  },
+  "card": {
+    "exports": ["Card", "CardAction", "CardContent", "CardDescription", "CardFooter", "CardHeader", "CardTitle"],
+    "jsx": "<Card>\n  <CardHeader>\n    <CardTitle>Order summary</CardTitle>\n    <CardDescription>Two items selected</CardDescription>\n  </CardHeader>\n  <CardContent>Total: ₹1,299</CardContent>\n</Card>"
+  },
+  "carousel": {
+    "exports": ["Carousel", "CarouselContent", "CarouselItem", "CarouselNext", "CarouselPrevious", "useCarousel", "CarouselApi"],
+    "jsx": "<Carousel>\n  <CarouselContent>\n    <CarouselItem>First slide</CarouselItem>\n    <CarouselItem>Second slide</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />\n  <CarouselNext />\n</Carousel>"
+  },
+  "chart": {
+    "exports": ["ChartContainer", "ChartLegend", "ChartLegendContent", "ChartStyle", "ChartTooltip", "ChartTooltipContent", "ChartConfig"],
+    "externalImports": ["import { Bar, BarChart, CartesianGrid, XAxis } from \"recharts\""],
+    "setup": "const chartData = [{ month: \"Jan\", orders: 120 }, { month: \"Feb\", orders: 180 }]\nconst chartConfig = { orders: { label: \"Orders\", color: \"var(--chart-1)\" } }",
+    "jsx": "<ChartContainer config={chartConfig}>\n  <BarChart data={chartData}>\n    <CartesianGrid vertical={false} />\n    <XAxis dataKey=\"month\" />\n    <Bar dataKey=\"orders\" fill=\"var(--color-orders)\" />\n  </BarChart>\n</ChartContainer>"
+  },
+  "checkbox": {
+    "exports": ["Checkbox"],
+    "jsx": "<label className=\"flex items-center gap-2\">\n  <Checkbox defaultChecked />\n  Receive email updates\n</label>"
+  },
+  "collapsible": {
+    "exports": ["Collapsible", "CollapsibleContent", "CollapsibleTrigger"],
+    "jsx": "<Collapsible defaultOpen>\n  <CollapsibleTrigger>Show details</CollapsibleTrigger>\n  <CollapsibleContent>Additional order information</CollapsibleContent>\n</Collapsible>"
+  },
+  "combobox": {
+    "exports": ["Combobox", "ComboboxChip", "ComboboxChips", "ComboboxChipsInput", "ComboboxCollection", "ComboboxContent", "ComboboxEmpty", "ComboboxGroup", "ComboboxInput", "ComboboxItem", "ComboboxLabel", "ComboboxList", "ComboboxSeparator", "ComboboxTrigger", "ComboboxValue", "useComboboxAnchor"],
+    "setup": "const frameworks = [\"Next.js\", \"Remix\", \"Astro\"]",
+    "jsx": "<Combobox items={frameworks}>\n  <ComboboxInput placeholder=\"Select a framework\" />\n  <ComboboxContent>\n    <ComboboxEmpty>No results found.</ComboboxEmpty>\n    <ComboboxList>\n      {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}\n    </ComboboxList>\n  </ComboboxContent>\n</Combobox>"
+  },
+  "command": {
+    "exports": ["Command", "CommandDialog", "CommandEmpty", "CommandGroup", "CommandInput", "CommandItem", "CommandList", "CommandSeparator", "CommandShortcut"],
+    "jsx": "<Command>\n  <CommandInput placeholder=\"Search commands...\" />\n  <CommandList>\n    <CommandEmpty>No results found.</CommandEmpty>\n    <CommandGroup heading=\"Actions\">\n      <CommandItem>Create order</CommandItem>\n      <CommandItem>View reports</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+  },
+  "context-menu": {
+    "exports": ["ContextMenu", "ContextMenuCheckboxItem", "ContextMenuContent", "ContextMenuGroup", "ContextMenuItem", "ContextMenuLabel", "ContextMenuPortal", "ContextMenuRadioGroup", "ContextMenuRadioItem", "ContextMenuSeparator", "ContextMenuShortcut", "ContextMenuSub", "ContextMenuSubContent", "ContextMenuSubTrigger", "ContextMenuTrigger"],
+    "jsx": "<ContextMenu>\n  <ContextMenuTrigger className=\"rounded-lg border p-8\">Right-click here</ContextMenuTrigger>\n  <ContextMenuContent>\n    <ContextMenuItem>Copy</ContextMenuItem>\n    <ContextMenuItem>Rename</ContextMenuItem>\n  </ContextMenuContent>\n</ContextMenu>"
+  },
+  "dialog": {
+    "exports": ["Dialog", "DialogClose", "DialogContent", "DialogDescription", "DialogFooter", "DialogHeader", "DialogOverlay", "DialogPortal", "DialogTitle", "DialogTrigger"],
+    "jsx": "<Dialog>\n  <DialogTrigger render={<button type=\"button\" />}>Edit profile</DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Edit profile</DialogTitle>\n      <DialogDescription>Update your account details.</DialogDescription>\n    </DialogHeader>\n  </DialogContent>\n</Dialog>"
+  },
+  "direction": {
+    "exports": ["DirectionProvider", "useDirection"],
+    "jsx": "<DirectionProvider direction=\"rtl\">\n  <div dir=\"rtl\">إعدادات الحساب</div>\n</DirectionProvider>"
+  },
+  "drawer": {
+    "exports": ["Drawer", "DrawerClose", "DrawerContent", "DrawerDescription", "DrawerFooter", "DrawerHeader", "DrawerOverlay", "DrawerPortal", "DrawerSwipeHandle", "DrawerTitle", "DrawerTrigger"],
+    "jsx": "<Drawer>\n  <DrawerTrigger render={<button type=\"button\" />}>Open drawer</DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Order filters</DrawerTitle>\n      <DrawerDescription>Choose filters to apply.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerFooter><DrawerClose>Close</DrawerClose></DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+  },
+  "dropdown-menu": {
+    "exports": ["DropdownMenu", "DropdownMenuCheckboxItem", "DropdownMenuContent", "DropdownMenuGroup", "DropdownMenuItem", "DropdownMenuLabel", "DropdownMenuPortal", "DropdownMenuRadioGroup", "DropdownMenuRadioItem", "DropdownMenuSeparator", "DropdownMenuShortcut", "DropdownMenuSub", "DropdownMenuSubContent", "DropdownMenuSubTrigger", "DropdownMenuTrigger"],
+    "jsx": "<DropdownMenu>\n  <DropdownMenuTrigger render={<button type=\"button\" />}>Actions</DropdownMenuTrigger>\n  <DropdownMenuContent>\n    <DropdownMenuLabel>Order</DropdownMenuLabel>\n    <DropdownMenuItem>Edit</DropdownMenuItem>\n    <DropdownMenuItem>Duplicate</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Delete</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+  },
+  "empty": {
+    "exports": ["Empty", "EmptyContent", "EmptyDescription", "EmptyHeader", "EmptyMedia", "EmptyTitle"],
+    "jsx": "<Empty>\n  <EmptyHeader>\n    <EmptyTitle>No orders found</EmptyTitle>\n    <EmptyDescription>Try changing your search or filters.</EmptyDescription>\n  </EmptyHeader>\n</Empty>"
+  },
+  "field": {
+    "exports": ["Field", "FieldContent", "FieldDescription", "FieldError", "FieldGroup", "FieldLabel", "FieldLegend", "FieldSeparator", "FieldSet", "FieldTitle"],
+    "jsx": "<Field>\n  <FieldLabel htmlFor=\"email\">Email</FieldLabel>\n  <input id=\"email\" name=\"email\" type=\"email\" />\n  <FieldDescription>We will send the receipt here.</FieldDescription>\n</Field>"
+  },
+  "form": {
+    "unavailableReason": "The pinned shadcn catalogue has deprecated this registry item.",
+    "replacement": "field"
+  },
+  "hover-card": {
+    "exports": ["HoverCard", "HoverCardContent", "HoverCardTrigger"],
+    "jsx": "<HoverCard>\n  <HoverCardTrigger render={<a href=\"/team/applique\" />}>@applique</HoverCardTrigger>\n  <HoverCardContent>Shared UI components for Myntra dashboards.</HoverCardContent>\n</HoverCard>"
+  },
+  "input": {
+    "exports": ["Input"],
+    "jsx": "<Input name=\"email\" type=\"email\" placeholder=\"name@example.com\" />"
+  },
+  "input-group": {
+    "exports": ["InputGroup", "InputGroupAddon", "InputGroupButton", "InputGroupInput", "InputGroupText", "InputGroupTextarea"],
+    "jsx": "<InputGroup>\n  <InputGroupAddon><InputGroupText>₹</InputGroupText></InputGroupAddon>\n  <InputGroupInput aria-label=\"Price\" placeholder=\"0.00\" />\n</InputGroup>"
+  },
+  "input-otp": {
+    "exports": ["InputOTP", "InputOTPGroup", "InputOTPSeparator", "InputOTPSlot"],
+    "jsx": "<InputOTP maxLength={6}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+  },
+  "item": {
+    "exports": ["Item", "ItemActions", "ItemContent", "ItemDescription", "ItemFooter", "ItemGroup", "ItemHeader", "ItemMedia", "ItemSeparator", "ItemTitle"],
+    "jsx": "<Item variant=\"outline\">\n  <ItemContent>\n    <ItemTitle>Inventory sync</ItemTitle>\n    <ItemDescription>Last updated five minutes ago.</ItemDescription>\n  </ItemContent>\n  <ItemActions><button type=\"button\">Refresh</button></ItemActions>\n</Item>"
+  },
+  "kbd": {
+    "exports": ["Kbd", "KbdGroup"],
+    "jsx": "<KbdGroup>\n  <Kbd>Ctrl</Kbd>\n  <span>+</span>\n  <Kbd>K</Kbd>\n</KbdGroup>"
+  },
+  "label": {
+    "exports": ["Label"],
+    "jsx": "<div className=\"grid gap-2\">\n  <Label htmlFor=\"username\">Username</Label>\n  <input id=\"username\" name=\"username\" />\n</div>"
+  },
+  "marker": {
+    "exports": ["Marker", "MarkerContent", "MarkerIcon", "markerVariants"],
+    "jsx": "<Marker role=\"status\">\n  <MarkerContent>Syncing catalogue data...</MarkerContent>\n</Marker>"
+  },
+  "menubar": {
+    "exports": ["Menubar", "MenubarCheckboxItem", "MenubarContent", "MenubarGroup", "MenubarItem", "MenubarLabel", "MenubarMenu", "MenubarPortal", "MenubarRadioGroup", "MenubarRadioItem", "MenubarSeparator", "MenubarShortcut", "MenubarSub", "MenubarSubContent", "MenubarSubTrigger", "MenubarTrigger"],
+    "jsx": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New order <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarItem>Export</MenubarItem>\n    </MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+  },
+  "message": {
+    "exports": ["Message", "MessageAvatar", "MessageContent", "MessageFooter", "MessageGroup", "MessageHeader"],
+    "jsx": "<Message>\n  <MessageContent>\n    <MessageHeader>Applique assistant</MessageHeader>\n    The registry update is ready to review.\n    <MessageFooter>Just now</MessageFooter>\n  </MessageContent>\n</Message>"
+  },
+  "message-scroller": {
+    "unavailableReason": "The upstream component requires React 19, while this registry currently supports React 18.",
+    "replacement": "message"
+  },
+  "native-select": {
+    "exports": ["NativeSelect", "NativeSelectOptGroup", "NativeSelectOption"],
+    "jsx": "<NativeSelect defaultValue=\"india\" aria-label=\"Country\">\n  <NativeSelectOption value=\"india\">India</NativeSelectOption>\n  <NativeSelectOption value=\"singapore\">Singapore</NativeSelectOption>\n</NativeSelect>"
+  },
+  "navigation-menu": {
+    "exports": ["NavigationMenu", "NavigationMenuContent", "NavigationMenuIndicator", "NavigationMenuItem", "NavigationMenuLink", "NavigationMenuList", "NavigationMenuPositioner", "NavigationMenuTrigger", "navigationMenuTriggerStyle"],
+    "jsx": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink render={<a href=\"/orders\" />}>Orders</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Reports</NavigationMenuTrigger>\n      <NavigationMenuContent>Sales and inventory reports</NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n</NavigationMenu>"
+  },
+  "pagination": {
+    "exports": ["Pagination", "PaginationContent", "PaginationEllipsis", "PaginationItem", "PaginationLink", "PaginationNext", "PaginationPrevious"],
+    "jsx": "<Pagination>\n  <PaginationContent>\n    <PaginationItem><PaginationPrevious href=\"?page=1\" /></PaginationItem>\n    <PaginationItem><PaginationLink href=\"?page=1\">1</PaginationLink></PaginationItem>\n    <PaginationItem><PaginationLink href=\"?page=2\" isActive>2</PaginationLink></PaginationItem>\n    <PaginationItem><PaginationNext href=\"?page=3\" /></PaginationItem>\n  </PaginationContent>\n</Pagination>"
+  },
+  "popover": {
+    "exports": ["Popover", "PopoverContent", "PopoverDescription", "PopoverHeader", "PopoverTitle", "PopoverTrigger"],
+    "jsx": "<Popover>\n  <PopoverTrigger render={<button type=\"button\" />}>View details</PopoverTrigger>\n  <PopoverContent>\n    <PopoverHeader>\n      <PopoverTitle>Order details</PopoverTitle>\n      <PopoverDescription>Created today at 10:30 AM.</PopoverDescription>\n    </PopoverHeader>\n  </PopoverContent>\n</Popover>"
+  },
+  "progress": {
+    "exports": ["Progress", "ProgressIndicator", "ProgressLabel", "ProgressTrack", "ProgressValue"],
+    "jsx": "<Progress value={64}>\n  <ProgressLabel>Upload progress</ProgressLabel>\n  <ProgressValue />\n</Progress>"
+  },
+  "radio-group": {
+    "exports": ["RadioGroup", "RadioGroupItem"],
+    "jsx": "<RadioGroup defaultValue=\"standard\" aria-label=\"Delivery speed\">\n  <label><RadioGroupItem value=\"standard\" /> Standard</label>\n  <label><RadioGroupItem value=\"express\" /> Express</label>\n</RadioGroup>"
+  },
+  "resizable": {
+    "exports": ["ResizableHandle", "ResizablePanel", "ResizablePanelGroup"],
+    "jsx": "<ResizablePanelGroup orientation=\"horizontal\" className=\"min-h-48 rounded-lg border\">\n  <ResizablePanel defaultSize=\"30%\">Sidebar</ResizablePanel>\n  <ResizableHandle withHandle />\n  <ResizablePanel defaultSize=\"70%\">Content</ResizablePanel>\n</ResizablePanelGroup>"
+  },
+  "scroll-area": {
+    "exports": ["ScrollArea", "ScrollBar"],
+    "setup": "const items = Array.from({ length: 20 }, (_, index) => `Item ${index + 1}`)",
+    "jsx": "<ScrollArea className=\"h-48 rounded-lg border p-4\">\n  {items.map((item) => <div key={item}>{item}</div>)}\n  <ScrollBar orientation=\"vertical\" />\n</ScrollArea>"
+  },
+  "select": {
+    "exports": ["Select", "SelectContent", "SelectGroup", "SelectItem", "SelectLabel", "SelectScrollDownButton", "SelectScrollUpButton", "SelectSeparator", "SelectTrigger", "SelectValue"],
+    "setup": "const fruits = [{ label: \"Select a fruit\", value: null }, { label: \"Apple\", value: \"apple\" }, { label: \"Banana\", value: \"banana\" }]",
+    "jsx": "<Select items={fruits}>\n  <SelectTrigger><SelectValue /></SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      {fruits.map((fruit) => <SelectItem key={fruit.value ?? \"empty\"} value={fruit.value}>{fruit.label}</SelectItem>)}\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+  },
+  "separator": {
+    "exports": ["Separator"],
+    "jsx": "<div>\n  <p>Account settings</p>\n  <Separator className=\"my-4\" />\n  <p>Notification preferences</p>\n</div>"
+  },
+  "sheet": {
+    "exports": ["Sheet", "SheetClose", "SheetContent", "SheetDescription", "SheetFooter", "SheetHeader", "SheetTitle", "SheetTrigger"],
+    "jsx": "<Sheet>\n  <SheetTrigger render={<button type=\"button\" />}>Open filters</SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Filters</SheetTitle>\n      <SheetDescription>Narrow the order list.</SheetDescription>\n    </SheetHeader>\n    <SheetFooter><SheetClose>Done</SheetClose></SheetFooter>\n  </SheetContent>\n</Sheet>"
+  },
+  "sidebar": {
+    "exports": ["Sidebar", "SidebarContent", "SidebarFooter", "SidebarGroup", "SidebarGroupAction", "SidebarGroupContent", "SidebarGroupLabel", "SidebarHeader", "SidebarInput", "SidebarInset", "SidebarMenu", "SidebarMenuAction", "SidebarMenuBadge", "SidebarMenuButton", "SidebarMenuItem", "SidebarMenuSkeleton", "SidebarMenuSub", "SidebarMenuSubButton", "SidebarMenuSubItem", "SidebarProvider", "SidebarRail", "SidebarSeparator", "SidebarTrigger", "useSidebar"],
+    "jsx": "<SidebarProvider>\n  <Sidebar>\n    <SidebarContent>\n      <SidebarGroup>\n        <SidebarGroupLabel>Dashboard</SidebarGroupLabel>\n        <SidebarGroupContent>\n          <SidebarMenu>\n            <SidebarMenuItem><SidebarMenuButton render={<a href=\"/orders\" />}>Orders</SidebarMenuButton></SidebarMenuItem>\n          </SidebarMenu>\n        </SidebarGroupContent>\n      </SidebarGroup>\n    </SidebarContent>\n  </Sidebar>\n  <SidebarInset><SidebarTrigger /><main>Dashboard content</main></SidebarInset>\n</SidebarProvider>"
+  },
+  "skeleton": {
+    "exports": ["Skeleton"],
+    "jsx": "<div className=\"flex items-center gap-3\">\n  <Skeleton className=\"size-10 rounded-full\" />\n  <Skeleton className=\"h-4 w-48\" />\n</div>"
+  },
+  "slider": {
+    "exports": ["Slider"],
+    "jsx": "<Slider aria-label=\"Volume\" defaultValue={50} min={0} max={100} step={1} />"
+  },
+  "sonner": {
+    "exports": ["Toaster"],
+    "externalImports": ["import { toast } from \"sonner\""],
+    "jsx": "<>\n  <button type=\"button\" onClick={() => toast.success(\"Saved\")}>Save</button>\n  <Toaster />\n</>"
+  },
+  "spinner": {
+    "exports": ["Spinner"],
+    "jsx": "<div role=\"status\" className=\"flex items-center gap-2\">\n  <Spinner />\n  Loading orders...\n</div>"
+  },
+  "switch": {
+    "exports": ["Switch"],
+    "jsx": "<label className=\"flex items-center gap-2\">\n  <Switch defaultChecked />\n  Email notifications\n</label>"
+  },
+  "table": {
+    "exports": ["Table", "TableBody", "TableCaption", "TableCell", "TableFooter", "TableHead", "TableHeader", "TableRow"],
+    "jsx": "<Table>\n  <TableCaption>Recent orders</TableCaption>\n  <TableHeader><TableRow><TableHead>Order</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>\n  <TableBody><TableRow><TableCell>#1001</TableCell><TableCell>Ready</TableCell></TableRow></TableBody>\n</Table>"
+  },
+  "textarea": {
+    "exports": ["Textarea"],
+    "jsx": "<Textarea name=\"notes\" placeholder=\"Add order notes\" rows={4} />"
+  },
+  "toast": {
+    "exports": ["Toast", "ToastAction", "ToastClose", "ToastContent", "ToastDescription", "Toaster", "ToastPortal", "ToastProvider", "ToastTitle", "ToastViewport", "useToastManager", "createToastManager", "toast"],
+    "jsx": "<>\n  <button type=\"button\" onClick={() => toast.add({ title: \"Saved\", description: \"Your changes were saved.\" })}>Save</button>\n  <Toaster />\n</>"
+  },
+  "toggle": {
+    "exports": ["Toggle", "toggleVariants"],
+    "jsx": "<Toggle aria-label=\"Toggle bold\" defaultPressed>Bold</Toggle>"
+  },
+  "toggle-group": {
+    "exports": ["ToggleGroup", "ToggleGroupItem"],
+    "jsx": "<ToggleGroup defaultValue={[\"list\"]} aria-label=\"View mode\">\n  <ToggleGroupItem value=\"grid\">Grid</ToggleGroupItem>\n  <ToggleGroupItem value=\"list\">List</ToggleGroupItem>\n</ToggleGroup>"
+  },
+  "accordion": {
+    "exports": ["Accordion", "AccordionItem", "AccordionControlIcons", "AccordionItemProps", "AccordionProps"],
+    "jsx": "<Accordion>\n  <Accordion.Item title=\"What is the registry?\">\n    It copies reviewed Applique source into the client project.\n  </Accordion.Item>\n</Accordion>",
+    "note": "This is the public Applique facade; its legacy multi-open behavior is preserved."
+  },
+  "avatar": {
+    "exports": ["Avatar", "AvatarProps"],
+    "jsx": "<Avatar name=\"Jane Doe\" size=\"medium\" />",
+    "note": "The public facade accepts Applique name and size props and builds the shadcn avatar internally."
+  },
+  "badge": {
+    "exports": ["Badge", "BadgeProps"],
+    "jsx": "<Badge type=\"success\" variant=\"solid\">Approved</Badge>"
+  },
+  "banner": {
+    "exports": ["Banner", "BannerActionable", "BannerActionableData", "BannerActionableProps", "BannerIcon", "BannerLink", "BannerProps", "BannerTone"],
+    "jsx": "<Banner color=\"warning\" title=\"Review required\" link={{ href: \"#review\", displayText: \"Review now\" }}>\n  Check the remaining catalogue fields.\n</Banner>"
+  },
+  "bread-crumb": {
+    "exports": ["BreadCrumb", "BreadCrumbItem", "BreadCrumbItemProps", "BreadCrumbProps"],
+    "jsx": "<BreadCrumb>\n  <BreadCrumb.Item><a href=\"/\">Home</a></BreadCrumb.Item>\n  <BreadCrumb.Item><a href=\"/orders\">Orders</a></BreadCrumb.Item>\n  <BreadCrumb.Item>Order #1001</BreadCrumb.Item>\n</BreadCrumb>"
+  },
+  "button": {
+    "exports": ["Button", "ButtonIcon", "ButtonLegacySize", "ButtonProps", "ButtonTransform", "ButtonVisualType"],
+    "jsx": "<Button type=\"primary\" loading={isSaving} autoFocus aria-label=\"Save changes\">\n  Save\n</Button>",
+    "setup": "const isSaving = false",
+    "note": "Applique props such as type and loading win over conflicting shadcn props; non-conflicting native props are forwarded."
+  },
+  "button-group": {
+    "exports": ["ButtonGroup", "ButtonGroupProps"],
+    "externalImports": ["import { Button } from \"@/components/applique/button\""],
+    "jsx": "<ButtonGroup aria-label=\"Form actions\">\n  <Button type=\"primary\">Save</Button>\n  <Button type=\"secondary\">Preview</Button>\n  <Button type=\"text\">Cancel</Button>\n</ButtonGroup>",
+    "note": "Use the public Applique Button as each child; Button is installed as a registry dependency."
+  },
+  "input-checkbox": {
+    "exports": ["InputCheckbox", "InputCheckboxProps"],
+    "jsx": "<InputCheckbox title=\"Accept terms\" value={accepted} onChange={setAccepted} />",
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const [accepted, setAccepted] = React.useState(true)",
+    "note": "onChange receives the next boolean value, not a browser event."
+  },
+  "input-number": {
+    "exports": ["InputNumber", "InputNumberProps"],
+    "jsx": "<InputNumber min={1} max={100} value={quantity} onChange={setQuantity} />",
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const [quantity, setQuantity] = React.useState(2)",
+    "note": "onChange receives a number; an empty or invalid value is reported as NaN."
+  },
+  "input-radio": {
+    "exports": ["InputRadio", "InputRadioOption", "InputRadioProps"],
+    "jsx": "<InputRadio aria-label=\"Delivery speed\" options={deliveryOptions} value={delivery} onChange={setDelivery} />",
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const deliveryOptions = [{ label: \"Standard\", value: \"standard\" }, { label: \"Express\", value: \"express\" }]\nconst [delivery, setDelivery] = React.useState(\"standard\")",
+    "note": "onChange receives the selected option value."
+  },
+  "input-text": {
+    "exports": ["InputText", "InputTextProps"],
+    "jsx": "<InputText id=\"name\" placeholder=\"Enter a name\" value={name} onChange={setName} />",
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const [name, setName] = React.useState(\"Jane Doe\")",
+    "note": "onChange receives the next string value, while non-conflicting native input props are forwarded."
+  },
+  "input-text-area": {
+    "exports": ["InputTextArea", "InputTextAreaFieldContext", "InputTextAreaProps"],
+    "jsx": "<InputTextArea id=\"notes\" rows={4} value={notes} onChange={setNotes} placeholder=\"Add notes\" />",
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const [notes, setNotes] = React.useState(\"\")",
+    "note": "onChange receives the next string value."
+  },
+  "section": {
+    "exports": ["Section", "SectionProps"],
+    "jsx": "<Section title=\"Order summary\">\n  <p>Two items selected</p>\n  <p>Total: ₹1,299</p>\n</Section>",
+    "note": "Direct public Applique Button children are automatically placed in the section header action area."
+  },
+  "tabs": {
+    "exports": ["Tab", "Tabs", "TabProps", "TabsProps"],
+    "jsx": "<Tabs defaultIndex={0} variant=\"line\">\n  <Tabs.Tab title=\"Overview\">Order overview</Tabs.Tab>\n  <Tabs.Tab title=\"History\">Order history</Tabs.Tab>\n</Tabs>"
+  },
+  "tooltip": {
+    "exports": ["Tooltip", "TooltipProps"],
+    "jsx": "<Tooltip position=\"up\" renderContent={() => \"Save changes\"}>\n  <button type=\"button\">Save</button>\n</Tooltip>",
+    "note": "The public facade keeps the Applique renderContent contract and composes the shadcn tooltip internally."
+  }
+}

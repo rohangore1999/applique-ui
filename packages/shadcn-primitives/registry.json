@@ -48,6 +48,14 @@
           "color-accent-foreground": "var(--accent-foreground)",
           "color-destructive": "var(--destructive)",
           "color-destructive-foreground": "var(--destructive-foreground)",
+          "color-applique-info-background": "var(--applique-info-background)",
+          "color-applique-info-foreground": "var(--applique-info-foreground)",
+          "color-applique-success-background": "var(--applique-success-background)",
+          "color-applique-success-foreground": "var(--applique-success-foreground)",
+          "color-applique-warning-background": "var(--applique-warning-background)",
+          "color-applique-warning-foreground": "var(--applique-warning-foreground)",
+          "color-applique-error-background": "var(--applique-error-background)",
+          "color-applique-error-foreground": "var(--applique-error-foreground)",
           "color-border": "var(--border)",
           "color-input": "var(--input)",
           "color-outline-border": "var(--outline-border)",
@@ -200,11 +208,12 @@
       }
     },
     {
-      "name": "accordion",
+      "name": "applique-internal-accordion",
       "type": "registry:ui",
-      "title": "Accordion",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Accordion Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -221,11 +230,11 @@
         {
           "path": "src/accordion.tsx",
           "type": "registry:ui",
-          "target": "@ui/accordion.tsx"
+          "target": "@components/applique/internal/accordion.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "863532b807b5dec6fa611904101604888953049337d53fa8e23042887d3a849b",
@@ -296,7 +305,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -317,7 +326,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
@@ -377,7 +386,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -398,17 +407,18 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
     },
     {
-      "name": "avatar",
+      "name": "applique-internal-avatar",
       "type": "registry:ui",
-      "title": "Avatar",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Avatar Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -424,11 +434,11 @@
         {
           "path": "src/avatar.tsx",
           "type": "registry:ui",
-          "target": "@ui/avatar.tsx"
+          "target": "@components/applique/internal/avatar.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "2645c89a27aa55e72d6d6b2ed5c7650ff4528c64dc3000537066cee71e5ba7fa",
@@ -444,11 +454,12 @@
       }
     },
     {
-      "name": "badge",
+      "name": "applique-internal-badge",
       "type": "registry:ui",
-      "title": "Badge",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Badge Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -465,11 +476,11 @@
         {
           "path": "src/badge.tsx",
           "type": "registry:ui",
-          "target": "@ui/badge.tsx"
+          "target": "@components/applique/internal/badge.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "cdcc140e4093e10ffbd23ac82d15d3f5edae457bf237aadaef4b63ee4dd544c4",
@@ -567,11 +578,12 @@
       }
     },
     {
-      "name": "button",
+      "name": "applique-internal-button",
       "type": "registry:ui",
-      "title": "Button",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Button Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -588,11 +600,11 @@
         {
           "path": "src/button.tsx",
           "type": "registry:ui",
-          "target": "@ui/button.tsx"
+          "target": "@components/applique/internal/button.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "f08fc96e66cc3a504ee0f5490702991c5142a2711e1819e7ced5ec716b9d4e9d",
@@ -608,11 +620,12 @@
       }
     },
     {
-      "name": "button-group",
+      "name": "applique-internal-button-group",
       "type": "registry:ui",
-      "title": "Button Group",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Button Group Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -630,11 +643,11 @@
         {
           "path": "src/button-group.tsx",
           "type": "registry:ui",
-          "target": "@ui/button-group.tsx"
+          "target": "@components/applique/internal/button-group.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "b3c843807568fd106385cf7dfdb41934c8b18f5f3963300b302ceb50b8c6c54e",
@@ -668,7 +681,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -689,7 +702,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
@@ -749,7 +762,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -770,7 +783,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
@@ -913,7 +926,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button",
+        "applique-internal-button",
         "input-group"
       ],
       "files": [
@@ -935,7 +948,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button",
+            "./button": "@/components/applique/internal/button",
             "./input-group": "@/components/ui/input-group"
           }
         }
@@ -1044,7 +1057,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -1065,7 +1078,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
@@ -1384,7 +1397,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button",
+        "applique-internal-button",
         "input",
         "textarea"
       ],
@@ -1407,7 +1420,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button",
+            "./button": "@/components/applique/internal/button",
             "./input": "@/components/ui/input",
             "./textarea": "@/components/ui/textarea"
           }
@@ -1821,7 +1834,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -1842,7 +1855,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
@@ -2145,7 +2158,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -2166,7 +2179,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
@@ -2190,12 +2203,12 @@
         "use-mobile",
         "utils",
         "applique-react18-compat",
-        "button",
+        "applique-internal-button",
         "input",
         "separator",
         "sheet",
         "skeleton",
-        "tooltip"
+        "applique-internal-tooltip"
       ],
       "files": [
         {
@@ -2217,12 +2230,12 @@
             "./use-mobile": "@/hooks/use-mobile",
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button",
+            "./button": "@/components/applique/internal/button",
             "./input": "@/components/ui/input",
             "./separator": "@/components/ui/separator",
             "./sheet": "@/components/ui/sheet",
             "./skeleton": "@/components/ui/skeleton",
-            "./tooltip": "@/components/ui/tooltip"
+            "./tooltip": "@/components/applique/internal/tooltip"
           }
         }
       }
@@ -2458,11 +2471,12 @@
       }
     },
     {
-      "name": "tabs",
+      "name": "applique-internal-tabs",
       "type": "registry:ui",
-      "title": "Tabs",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Tabs Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -2479,11 +2493,11 @@
         {
           "path": "src/tabs.tsx",
           "type": "registry:ui",
-          "target": "@ui/tabs.tsx"
+          "target": "@components/applique/internal/tabs.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "8cec5b5206dbbaf52a5bb3fc29be8cfa06cc59e7d6d50a35fbffb1880ae0fe15",
@@ -2553,7 +2567,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "files": [
         {
@@ -2574,7 +2588,7 @@
           "importMap": {
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat",
-            "./button": "@/components/ui/button"
+            "./button": "@/components/applique/internal/button"
           }
         }
       }
@@ -2664,11 +2678,12 @@
       }
     },
     {
-      "name": "tooltip",
+      "name": "applique-internal-tooltip",
       "type": "registry:ui",
-      "title": "Tooltip",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Tooltip Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -2684,11 +2699,11 @@
         {
           "path": "src/tooltip.tsx",
           "type": "registry:ui",
-          "target": "@ui/tooltip.tsx"
+          "target": "@components/applique/internal/tooltip.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "ed8a4e08445dc0f0fab43ecfc311112334d5f29ef657c429610561cc0e7da253",
@@ -2700,6 +2715,690 @@
             "./utils": "@/lib/utils",
             "./applique-react18-compat": "@/lib/applique-react18-compat"
           }
+        }
+      }
+    },
+    {
+      "name": "accordion",
+      "type": "registry:component",
+      "title": "Applique Accordion",
+      "description": "Applique-compatible compound accordion backed by the shadcn Accordion primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "disclosure"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-accordion"
+      ],
+      "files": [
+        {
+          "path": "src/facades/accordion.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/accordion.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Accordion",
+          "legacyPackage": "@applique-ui/accordion"
+        },
+        "build": {
+          "importMap": {
+            "../accordion": "@/components/applique/internal/accordion"
+          },
+          "publicExports": [
+            {
+              "name": "Accordion"
+            },
+            {
+              "name": "AccordionItem"
+            },
+            {
+              "name": "AccordionProps",
+              "type": true
+            },
+            {
+              "name": "AccordionItemProps",
+              "type": true
+            },
+            {
+              "name": "AccordionControlIcons",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "avatar",
+      "type": "registry:component",
+      "title": "Applique Avatar",
+      "description": "Applique-compatible initials avatar backed by the shadcn Avatar primitive.",
+      "categories": [
+        "applique",
+        "facade",
+        "data-display"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-avatar"
+      ],
+      "files": [
+        {
+          "path": "src/facades/avatar.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/avatar.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Avatar",
+          "legacyPackage": "@applique-ui/avatar"
+        },
+        "build": {
+          "importMap": {
+            "../avatar": "@/components/applique/internal/avatar"
+          },
+          "publicExports": [
+            {
+              "name": "Avatar"
+            },
+            {
+              "name": "AvatarProps",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:component",
+      "title": "Applique Badge",
+      "description": "Applique-compatible semantic badge backed by the shadcn Badge primitive.",
+      "categories": [
+        "applique",
+        "facade",
+        "data-display"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-badge"
+      ],
+      "files": [
+        {
+          "path": "src/facades/badge.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/badge.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Badge",
+          "legacyPackage": "@applique-ui/badge"
+        },
+        "build": {
+          "importMap": {
+            "../badge": "@/components/applique/internal/badge",
+            "../utils": "@/lib/utils"
+          },
+          "publicExports": [
+            {
+              "name": "Badge"
+            },
+            {
+              "name": "BadgeProps",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "banner",
+      "type": "registry:component",
+      "title": "Applique Banner",
+      "description": "Applique-compatible Banner and Actionable compositions backed by shadcn Alert and Button primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "feedback"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "registryDependencies": [
+        "alert",
+        "applique-internal-button"
+      ],
+      "files": [
+        {
+          "path": "src/facades/banner.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/banner.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Banner",
+          "legacyPackage": "@applique-ui/banner",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "Actionable.data.color",
+            "Actionable.data.icon",
+            "Actionable overlay semantics"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../alert": "@/components/ui/alert",
+            "../button": "@/components/applique/internal/button",
+            "../utils": "@/lib/utils"
+          },
+          "publicExports": [
+            {
+              "name": "Banner"
+            },
+            {
+              "name": "BannerActionable"
+            },
+            {
+              "name": "BannerProps",
+              "type": true
+            },
+            {
+              "name": "BannerActionableProps",
+              "type": true
+            },
+            {
+              "name": "BannerActionableData",
+              "type": true
+            },
+            {
+              "name": "BannerIcon",
+              "type": true
+            },
+            {
+              "name": "BannerLink",
+              "type": true
+            },
+            {
+              "name": "BannerTone",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "bread-crumb",
+      "type": "registry:component",
+      "title": "Applique Bread Crumb",
+      "description": "Applique-compatible breadcrumb composition backed by the shadcn Breadcrumb primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "navigation"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "breadcrumb"
+      ],
+      "files": [
+        {
+          "path": "src/facades/bread-crumb.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/bread-crumb.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "BreadCrumb",
+          "legacyPackage": "@applique-ui/bread-crumb"
+        },
+        "build": {
+          "importMap": {
+            "../breadcrumb": "@/components/ui/breadcrumb"
+          }
+        }
+      }
+    },
+    {
+      "name": "button",
+      "type": "registry:component",
+      "title": "Applique Button",
+      "description": "Applique-compatible Button composition backed by shadcn Button, Spinner, and Badge primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "action"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-badge",
+        "applique-internal-button",
+        "spinner"
+      ],
+      "files": [
+        {
+          "path": "src/facades/button.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/button.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Button",
+          "legacyPackage": "@applique-ui/button",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "color",
+            "to"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../badge": "@/components/applique/internal/badge",
+            "../button": "@/components/applique/internal/button",
+            "../spinner": "@/components/ui/spinner",
+            "../utils": "@/lib/utils"
+          },
+          "publicExports": [
+            {
+              "name": "Button"
+            },
+            {
+              "name": "ButtonProps",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "button-group",
+      "type": "registry:component",
+      "title": "Applique Button Group",
+      "description": "Applique-compatible ButtonGroup composition with legacy action sequencing and overflow behavior.",
+      "categories": [
+        "applique",
+        "facade",
+        "action"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "button",
+        "applique-internal-button",
+        "applique-internal-button-group",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "src/facades/button-group.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/button-group.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "ButtonGroup",
+          "legacyPackage": "@applique-ui/button-group",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "Button.color",
+            "Button.to"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../button": "@/components/applique/internal/button",
+            "../button-group": "@/components/applique/internal/button-group",
+            "../dropdown-menu": "@/components/ui/dropdown-menu"
+          },
+          "publicExports": [
+            {
+              "name": "ButtonGroup"
+            },
+            {
+              "name": "ButtonGroupProps",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "input-checkbox",
+      "type": "registry:component",
+      "title": "Applique Input Checkbox",
+      "description": "Applique-compatible boolean checkbox backed by the shadcn Checkbox primitive.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "checkbox"
+      ],
+      "files": [
+        {
+          "path": "src/facades/input-checkbox.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/input-checkbox.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "InputCheckbox",
+          "legacyPackage": "@applique-ui/input-checkbox"
+        },
+        "build": {
+          "importMap": {
+            "../checkbox": "@/components/ui/checkbox"
+          }
+        }
+      }
+    },
+    {
+      "name": "input-number",
+      "type": "registry:component",
+      "title": "Applique Input Number",
+      "description": "Applique-compatible numeric input backed by the shadcn Input primitive.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "input"
+      ],
+      "files": [
+        {
+          "path": "src/facades/input-number.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/input-number.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "InputNumber",
+          "legacyPackage": "@applique-ui/input-number"
+        },
+        "build": {
+          "importMap": {
+            "../input": "@/components/ui/input"
+          }
+        }
+      }
+    },
+    {
+      "name": "input-radio",
+      "type": "registry:component",
+      "title": "Applique Input Radio",
+      "description": "Applique-compatible radio options composed from the shadcn Radio Group primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "radio-group"
+      ],
+      "files": [
+        {
+          "path": "src/facades/input-radio.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/input-radio.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "InputRadio",
+          "legacyPackage": "@applique-ui/input-radio"
+        },
+        "build": {
+          "importMap": {
+            "../radio-group": "@/components/ui/radio-group"
+          }
+        }
+      }
+    },
+    {
+      "name": "input-text",
+      "type": "registry:component",
+      "title": "Applique Input Text",
+      "description": "Basic Applique-compatible text input backed by the shadcn Input primitive.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "input"
+      ],
+      "files": [
+        {
+          "path": "src/facades/input-text.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/input-text.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "InputText",
+          "legacyPackage": "@applique-ui/input-text",
+          "scope": "basic"
+        },
+        "build": {
+          "importMap": {
+            "../input": "@/components/ui/input"
+          }
+        }
+      }
+    },
+    {
+      "name": "input-text-area",
+      "type": "registry:component",
+      "title": "Applique Input Text Area",
+      "description": "Applique-compatible text area composition backed by the shadcn Textarea primitive.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "textarea"
+      ],
+      "files": [
+        {
+          "path": "src/facades/input-text-area.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/input-text-area.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "InputTextArea",
+          "legacyPackage": "@applique-ui/input-text-area"
+        },
+        "build": {
+          "importMap": {
+            "../textarea": "@/components/ui/textarea",
+            "../utils": "@/lib/utils"
+          }
+        }
+      }
+    },
+    {
+      "name": "section",
+      "type": "registry:component",
+      "title": "Applique Section",
+      "description": "Applique-compatible semantic Section composition backed by shadcn Card and the Applique Button facade.",
+      "categories": [
+        "applique",
+        "facade",
+        "layout"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "button",
+        "card"
+      ],
+      "files": [
+        {
+          "path": "src/facades/section.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/section.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Section",
+          "legacyPackage": "@applique-ui/section",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "Button.color",
+            "Button.to"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../card": "@/components/ui/card",
+            "../utils": "@/lib/utils",
+            "./button": "@/components/applique/button"
+          },
+          "publicExports": [
+            {
+              "name": "Section"
+            },
+            {
+              "name": "SectionProps",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "tabs",
+      "type": "registry:component",
+      "title": "Applique Tabs",
+      "description": "Applique-compatible index-based tabs backed by the shadcn Tabs primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "navigation"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-tabs"
+      ],
+      "files": [
+        {
+          "path": "src/facades/tabs.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/tabs.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Tabs",
+          "legacyPackage": "@applique-ui/tabs",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "type",
+            "Tab.isActive"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../tabs": "@/components/applique/internal/tabs"
+          },
+          "publicExports": [
+            {
+              "name": "Tabs"
+            },
+            {
+              "name": "Tab"
+            },
+            {
+              "name": "TabsProps",
+              "type": true
+            },
+            {
+              "name": "TabProps",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:component",
+      "title": "Applique Tooltip",
+      "description": "Applique-compatible tooltip composition backed by the shadcn Tooltip primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "overlay"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-tooltip"
+      ],
+      "files": [
+        {
+          "path": "src/facades/tooltip.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/tooltip.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Tooltip",
+          "legacyPackage": "@applique-ui/tooltip",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "triggerOn"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../tooltip": "@/components/applique/internal/tooltip",
+            "../utils": "@/lib/utils"
+          },
+          "publicExports": [
+            {
+              "name": "Tooltip"
+            },
+            {
+              "name": "TooltipProps",
+              "type": true
+            }
+          ]
         }
       }
     }

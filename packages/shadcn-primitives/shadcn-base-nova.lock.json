@@ -63,7 +63,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/alert-dialog.tsx",
       "sourceSha256": "01321ec2562f6081d0562c295378592db241a89d1b880a7303a14a9c9a2ecf79",
@@ -97,7 +97,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/attachment.tsx",
       "sourceSha256": "3822403a9ff1a3179d573979adcf4b5eb1d6d8a9209c4c159151f152bd747d90",
@@ -225,7 +225,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/calendar.tsx",
       "sourceSha256": "7db7252f20df02f3513daaf7f1e9a874714ac5922a8e36c8f6e287c21e51541d",
@@ -259,7 +259,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/carousel.tsx",
       "sourceSha256": "d52be689356ac84113a340a7779292f5b0aab3bbb21141be490233d85aabdd0a",
@@ -331,7 +331,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button",
+        "applique-internal-button",
         "input-group"
       ],
       "sourcePath": "src/combobox.tsx",
@@ -389,7 +389,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/dialog.tsx",
       "sourceSha256": "6705b9634c484b82cc36f0eaf8786f08cb9291c0254882001568edace5ec6ed3",
@@ -538,7 +538,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button",
+        "applique-internal-button",
         "input",
         "textarea"
       ],
@@ -724,7 +724,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/pagination.tsx",
       "sourceSha256": "cfce92639e9353f7559a2f0ab9c69afb23efbdde2ce65da157270067cca499bf",
@@ -863,7 +863,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/sheet.tsx",
       "sourceSha256": "4fe13da3c4ab4f9c7435261730350dfed991905941a328cd906e5b952aee9d77",
@@ -884,12 +884,12 @@
         "use-mobile",
         "utils",
         "applique-react18-compat",
-        "button",
+        "applique-internal-button",
         "input",
         "separator",
         "sheet",
         "skeleton",
-        "tooltip"
+        "applique-internal-tooltip"
       ],
       "sourcePath": "src/sidebar.tsx",
       "sourceSha256": "8f9560c90bb33be706bcb4782bca0224582fe107b25cb6787ee1cee8877d8b68",
@@ -1039,7 +1039,7 @@
         "applique-theme",
         "utils",
         "applique-react18-compat",
-        "button"
+        "applique-internal-button"
       ],
       "sourcePath": "src/toast.tsx",
       "sourceSha256": "58ebfb6b7a57d75f859f446db8c1ef23a1cfd72cba13d7292da328a378a5c31f",

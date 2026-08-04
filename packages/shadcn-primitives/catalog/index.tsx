@@ -7,10 +7,13 @@ import {
   CatalogueComponent,
   CatalogueMapping,
   CataloguePropMapping,
+  CatalogueResolvedProp,
   MappingKind,
   PropMappingKind,
   catalogueComponents,
   catalogueMappings,
+  cataloguePropDefinitions,
+  catalogueRegistryVersion,
   catalogueSource,
   findComponent,
 } from './components'
@@ -122,7 +125,10 @@ function registryUrl(slug: string) {
   const pageUrl = new URL(window.location.href)
   pageUrl.hash = ''
 
-  return new URL(`../registry/${slug}.json`, pageUrl).toString()
+  return new URL(
+    `../registry/v${catalogueRegistryVersion}/${slug}.json`,
+    pageUrl
+  ).toString()
 }
 
 function useCatalogueRoute() {
@@ -143,21 +149,55 @@ function useCatalogueRoute() {
   return route
 }
 
+function componentStatusLabel(component: CatalogueComponent) {
+  return component.availability === 'deprecated'
+    ? 'Deprecated'
+    : component.availability === 'incompatible'
+    ? 'Requires React 19'
+    : component.registryStatus === 'ready'
+    ? 'Registry ready'
+    : component.registryStatus === 'testing'
+    ? 'Test only'
+    : 'Source unavailable'
+}
+
 function StatusBadge({ component }: { component: CatalogueComponent }) {
-  const label =
-    component.availability === 'deprecated'
-      ? 'Deprecated'
-      : component.availability === 'incompatible'
-      ? 'Requires React 19'
-      : component.registryStatus === 'ready'
-      ? 'Registry ready'
-      : 'Source unavailable'
+  const label = componentStatusLabel(component)
 
   return (
     <span className={`status-badge status-badge--${component.registryStatus}`}>
       <span aria-hidden="true" className="status-badge__dot" />
       {label}
     </span>
+  )
+}
+
+function CopyableCode({ code }: { code: string }) {
+  const [copied, setCopied] = React.useState(false)
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1800)
+    } catch {
+      setCopied(false)
+    }
+  }
+
+  return (
+    <div className="client-usage-code">
+      <button
+        aria-label="Copy basic usage example"
+        onClick={copy}
+        type="button"
+      >
+        {copied ? 'Copied' : 'Copy'}
+      </button>
+      <pre>
+        <code>{code}</code>
+      </pre>
+    </div>
   )
 }
 
@@ -186,6 +226,109 @@ function CopyCommand({ command }: { command: string }) {
         {copied ? 'Copied' : 'Copy'}
       </button>
     </div>
+  )
+}
+
+function ClientContract({
+  component,
+  rawUrl,
+}: {
+  component: CatalogueComponent
+  rawUrl: string
+}) {
+  const isFacade = component.upstream.base === 'applique'
+  const installCommand = component.sourceAvailable
+    ? `npx shadcn@${SHADCN_CLI_VERSION} add ${rawUrl}`
+    : null
+  const contract = component.clientContract
+  const propContract = !component.sourceAvailable
+    ? 'No React 18 client API is published for this entry.'
+    : isFacade
+    ? 'Applique props plus non-conflicting shadcn and native props. Applique props win when both control the same behavior.'
+    : 'shadcn props directly. Applique tokens control the visual baseline; legacy Applique props are not adapted.'
+
+  return (
+    <section className="panel client-contract">
+      <div className="panel__header">
+        <div>
+          <p className="eyebrow">Client-side contract</p>
+          <h2>How clients use {component.name}</h2>
+        </div>
+        <span className="token-note">
+          {component.sourceAvailable
+            ? isFacade
+              ? 'Applique facade'
+              : 'shadcn primitive'
+            : 'No client API'}
+        </span>
+      </div>
+
+      <dl className="client-contract__facts">
+        <div>
+          <dt>Default import</dt>
+          <dd>
+            {contract.importPath ? (
+              <code>{contract.importPath}</code>
+            ) : (
+              'Not available'
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt>Status</dt>
+          <dd>{componentStatusLabel(component)}</dd>
+        </div>
+        <div>
+          <dt>Accepted props</dt>
+          <dd>{propContract}</dd>
+        </div>
+        <div>
+          <dt>Ownership and updates</dt>
+          <dd>
+            Installed source belongs to the client. Future registry changes are
+            accepted explicitly through a reviewed source diff.
+          </dd>
+        </div>
+      </dl>
+
+      {contract.basicUsage ? (
+        <div className="client-contract__section">
+          <div>
+            <h3>Basic usage</h3>
+            <p>
+              Uses the default aliases configured for the client application.
+            </p>
+          </div>
+          <CopyableCode code={contract.basicUsage} />
+          {contract.note ? (
+            <p className="client-contract__note">{contract.note}</p>
+          ) : null}
+        </div>
+      ) : (
+        <div className="client-contract__section client-contract__unavailable">
+          <div>
+            <h3>No usage example</h3>
+            <p>{contract.unavailableReason}</p>
+            {contract.replacement ? (
+              <a href={`#/components/${contract.replacement}`}>
+                Use {findComponent(contract.replacement)?.name ?? contract.replacement}{' '}
+                instead
+              </a>
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {installCommand ? (
+        <div className="client-contract__section client-contract__install">
+          <div>
+            <h3>Install or update</h3>
+            <p>Run on a branch, review the copied source, then test and commit.</p>
+          </div>
+          <CopyCommand command={installCommand} />
+        </div>
+      ) : null}
+    </section>
   )
 }
 
@@ -247,118 +390,938 @@ function ComponentPreview({ component }: { component: CatalogueComponent }) {
   )
 }
 
-function ExportApi({
+type UnifiedPropSource = 'applique' | 'shadcn'
+type UnifiedPropHandling = PropMappingKind | 'pending-audit'
+type UnifiedPropStatus =
+  | 'available'
+  | 'supported'
+  | 'facade-available'
+  | 'approved'
+  | 'proposed'
+  | 'pending-audit'
+  | 'needs-review'
+  | 'unsupported'
+
+interface UnifiedPropRow {
+  behavior: string
+  defaultValue?: unknown
+  description?: string
+  handling: UnifiedPropHandling
+  hasDefault: boolean
+  key: string
+  name: string
+  optional?: boolean
+  source: UnifiedPropSource
+  sourceLabel: string
+  status: UnifiedPropStatus
+  targets: string[]
+  type: string
+}
+
+const unifiedPropStatusLabels: Record<UnifiedPropStatus, string> = {
+  available: 'Available',
+  supported: 'Supported',
+  'facade-available': 'Facade available',
+  approved: 'Approved mapping',
+  proposed: 'Proposed',
+  'pending-audit': 'Pending audit',
+  'needs-review': 'Needs review',
+  unsupported: 'Unsupported',
+}
+
+const unifiedPropHandlingDetails: Record<
+  UnifiedPropHandling,
+  { label: string; shortLabel: string }
+> = {
+  ...propMappingKindDetails,
+  'pending-audit': {
+    label: 'Pending prop audit',
+    shortLabel: 'Pending',
+  },
+}
+
+// Compact semantic fallback for components whose useful public state comes
+// from a primitive or dependency. Generic DOM, ARIA, style, and event props stay
+// out of the catalogue unless a component explicitly curates them.
+const mainInheritedPropNames = new Set([
+  'align',
+  'alignOffset',
+  'autoComplete',
+  'checked',
+  'children',
+  'closeDelay',
+  'defaultChecked',
+  'defaultMonth',
+  'defaultOpen',
+  'defaultPressed',
+  'defaultSelected',
+  'defaultValue',
+  'delay',
+  'disabled',
+  'disableHoverablePopup',
+  'forceMount',
+  'form',
+  'indeterminate',
+  'isItemEqualToValue',
+  'items',
+  'itemToStringLabel',
+  'itemToStringValue',
+  'keepMounted',
+  'loop',
+  'loopFocus',
+  'max',
+  'min',
+  'minStepsBetweenValues',
+  'modal',
+  'mode',
+  'month',
+  'multiple',
+  'name',
+  'numberOfMonths',
+  'onCheckedChange',
+  'onMonthChange',
+  'onOpenChange',
+  'onOpenChangeComplete',
+  'onPressedChange',
+  'onSelect',
+  'onSelectedChange',
+  'onValueChange',
+  'onValueCommitted',
+  'open',
+  'orientation',
+  'pressed',
+  'readOnly',
+  'required',
+  'selected',
+  'side',
+  'sideOffset',
+  'step',
+  'trackCursorAxis',
+  'value',
+])
+
+function formatDefaultValue(value: unknown) {
+  if (value === null || typeof value === 'undefined') return '—'
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value)
+  }
+
+  try {
+    return JSON.stringify(value)
+  } catch {
+    return String(value)
+  }
+}
+
+function displayName(slug: string) {
+  return slug
+    .split('-')
+    .map((part) => `${part[0].toUpperCase()}${part.slice(1)}`)
+    .join('')
+}
+
+const anatomyRoleOverrides: Record<string, string> = {
+  'accordion:AccordionItem':
+    'Declarative item configuration read by Accordion.',
+  'alert-dialog:AlertDialogAction': 'Confirms the dialog action.',
+  'alert-dialog:AlertDialogCancel': 'Cancels and closes the dialog.',
+  'alert-dialog:AlertDialogMedia': 'Icon or media region.',
+  'alert:AlertAction': 'Holds action buttons or links.',
+  'attachment:AttachmentAction': 'One attachment action button.',
+  'attachment:AttachmentActions': 'Groups attachment action buttons.',
+  'attachment:AttachmentTrigger': 'Interactive attachment target.',
+  'banner:BannerActionable': 'Actionable status banner.',
+  'bread-crumb:BreadCrumbItem':
+    'Declarative breadcrumb item read by BreadCrumb.',
+  'breadcrumb:BreadcrumbPage': 'Current non-clickable page.',
+  'card:CardAction': 'Slot for an action in the card header.',
+  'command:CommandDialog': 'Command palette presented inside a dialog.',
+  'drawer:DrawerSwipeHandle': 'Visual handle for the drawer swipe gesture.',
+  'native-select:NativeSelectOptGroup': 'Groups related native options.',
+  'sidebar:SidebarGroupAction': 'Action associated with a sidebar group.',
+  'sidebar:SidebarMenuAction': 'Action associated with a sidebar item.',
+  'sidebar:SidebarMenuButton': 'Primary control for a sidebar item.',
+  'sidebar:SidebarMenuSubButton': 'Control for a nested sidebar item.',
+  'tabs:Tab': 'Declarative tab and panel configuration read by Tabs.',
+  'table:TableHead': 'One table header cell.',
+  'table:TableHeader': 'Table header row group.',
+  'toast:Toaster': 'Renders and manages the Base UI toast viewport.',
+  'toast:ToastViewport': 'Placement region for the toast stack.',
+  AlertAction: 'Holds action buttons or links.',
+  CalendarDayButton: 'Interactive button for one calendar day.',
+  ChartContainer: 'Provides chart sizing, configuration and theme variables.',
+  ChartLegend: 'Connects a Recharts legend to the chart contract.',
+  ChartLegendContent: 'Renders the visible chart legend.',
+  ChartStyle: 'Injects chart-specific colour variables.',
+  ChartTooltip: 'Connects a Recharts tooltip to the chart contract.',
+  ChartTooltipContent: 'Renders the visible chart tooltip.',
+  DirectionProvider: 'Provides left-to-right or right-to-left direction.',
+  InputOTPGroup: 'Groups related one-time-password slots.',
+  InputOTPSeparator: 'Visually separates one-time-password groups.',
+  InputOTPSlot: 'Displays one character of the one-time password.',
+  NavigationMenuIndicator: 'Shows which navigation item is active.',
+  NavigationMenuPositioner: 'Positions navigation overlay content.',
+  ResizableHandle: 'Drag handle between resizable panels.',
+  ResizablePanel: 'One resizable content panel.',
+  ResizablePanelGroup: 'Coordinates a set of resizable panels.',
+  ScrollBar: 'Optional scrollbar for the scroll area.',
+  SidebarInset: 'Main content area displayed beside the sidebar.',
+  SidebarRail: 'Compact edge control for the sidebar.',
+  Tab: 'One selectable tab and its panel content.',
+  Toaster: 'Renders the notification viewport.',
+}
+
+const anatomyRoleSuffixes: Array<[string, string]> = [
+  ['ScrollDownButton', 'Scrolls the available options down.'],
+  ['ScrollUpButton', 'Scrolls the available options up.'],
+  ['GroupContent', 'Content region for a related group.'],
+  ['GroupLabel', 'Label for a related group.'],
+  ['SubContent', 'Content for a nested submenu.'],
+  ['SubTrigger', 'Opens a nested submenu.'],
+  ['SubItem', 'One item in a nested collection.'],
+  ['Sub', 'Coordinates a nested submenu.'],
+  ['OptGroup', 'Groups related options.'],
+  ['Description', 'Supporting description or help text.'],
+  ['Positioner', 'Positions floating content.'],
+  ['Indicator', 'Displays the current visual state.'],
+  ['Separator', 'Visually separates related content.'],
+  ['Previous', 'Moves to the previous item or page.'],
+  ['Next', 'Moves to the next item or page.'],
+  ['Ellipsis', 'Represents omitted items or pages.'],
+  ['CheckboxItem', 'One checkbox option in the collection.'],
+  ['RadioItem', 'One radio option in the collection.'],
+  ['Shortcut', 'Displays an associated keyboard shortcut.'],
+  ['Provider', 'Provides shared state to its descendants.'],
+  ['Trigger', 'Opens, closes or toggles the related content.'],
+  ['Overlay', 'Backdrop behind floating content.'],
+  ['Backdrop', 'Backdrop behind floating content.'],
+  ['Portal', 'Renders content outside the normal DOM hierarchy.'],
+  ['Content', 'Main content region.'],
+  ['Collection', 'Collection of available items.'],
+  ['Container', 'Layout and behavior container.'],
+  ['Panel', 'One content panel.'],
+  ['Actions', 'Groups related action controls.'],
+  ['Action', 'Holds or performs an action.'],
+  ['Header', 'Header region.'],
+  ['Footer', 'Footer or action region.'],
+  ['Title', 'Heading for the component.'],
+  ['Legend', 'Label for a grouped set of controls or data.'],
+  ['Caption', 'Caption or supporting summary.'],
+  ['Text', 'Supporting text content.'],
+  ['Label', 'Accessible or visible label.'],
+  ['Input', 'User input control.'],
+  ['Textarea', 'Multiline user input control.'],
+  ['Button', 'Interactive button control.'],
+  ['Link', 'Navigation link.'],
+  ['Close', 'Closes the related content.'],
+  ['Cancel', 'Cancels the current action.'],
+  ['Value', 'Displays the current or selected value.'],
+  ['Option', 'One selectable option.'],
+  ['Item', 'One item in the collection.'],
+  ['List', 'Container for a collection of items.'],
+  ['Group', 'Groups related items.'],
+  ['Menu', 'Menu composition root.'],
+  ['Media', 'Visual or icon region.'],
+  ['Image', 'Displays the component image.'],
+  ['Avatar', 'Avatar or identity region.'],
+  ['Icon', 'Icon region.'],
+  ['Badge', 'Compact status or count.'],
+  ['Empty', 'Displayed when no items are available.'],
+  ['Error', 'Displays validation or loading errors.'],
+  ['Fallback', 'Fallback shown when primary content is unavailable.'],
+  ['Skeleton', 'Loading placeholder.'],
+  ['Viewport', 'Visible viewport for scrollable content.'],
+  ['Track', 'Track that displays a value range.'],
+  ['Handle', 'Interactive drag or resize handle.'],
+  ['Thumb', 'Draggable control on a track.'],
+  ['Cell', 'One table or grid cell.'],
+  ['Row', 'One table or grid row.'],
+  ['Head', 'Header cell or heading region.'],
+  ['Body', 'Main body region.'],
+  ['Addon', 'Content attached to an input.'],
+  ['Chips', 'Container for selected value chips.'],
+  ['Chip', 'One selected value chip.'],
+  ['Slot', 'One value or content slot.'],
+  ['Set', 'Groups related controls or values.'],
+  ['Style', 'Provides generated component styling.'],
+  ['Reactions', 'Reaction controls for the item.'],
+  ['Actionable', 'Actionable version of the component.'],
+  ['Bar', 'Scrollbar or compact bar control.'],
+  ['Rail', 'Compact edge or navigation rail.'],
+  ['Inset', 'Content region offset by a surrounding layout.'],
+]
+
+function componentExportRole({
+  component,
+  compound,
   item,
-  index,
+  primary,
 }: {
+  component: CatalogueComponent
+  compound: boolean
   item: CatalogueApiExport
-  index: number
+  primary: boolean
 }) {
-  const hasPropSurface =
-    item.ownedProps.length > 0 || item.propSources.length > 0
+  const override =
+    anatomyRoleOverrides[`${component.slug}:${item.name}`] ||
+    anatomyRoleOverrides[item.name]
+  if (override) return override
+  if (primary) {
+    return compound
+      ? `Main ${component.name} component and composition root.`
+      : `Main ${component.name} component.`
+  }
+
+  const suffix = anatomyRoleSuffixes.find(([name]) =>
+    item.name.endsWith(name)
+  )
+  return (
+    suffix?.[1] || `Supporting part of the ${component.name} composition.`
+  )
+}
+
+function anatomyCustomProps(item: CatalogueApiExport) {
+  const names = new Set(item.ownedProps.map((prop) => prop.name))
+
+  for (const id of item.acceptedPropIds) {
+    const prop = cataloguePropDefinitions[id]
+    if (!prop) continue
+    if (prop.origin === 'applique' || prop.origin === 'shadcn') {
+      names.add(prop.name)
+    }
+  }
+
+  return Array.from(names)
+}
+
+function inheritedPropContracts(
+  item: CatalogueApiExport,
+  facadeAvailable: boolean
+) {
+  const labels = new Set<string>()
+
+  for (const source of item.propSources) {
+    const native = source.match(
+      /(?:React\.|useRender\.)ComponentProps(?:WithRef|WithoutRef)?<["']([a-z0-9-]+)["']>/
+    )
+    if (native) {
+      labels.add(`Standard <${native[1]}> props`)
+      continue
+    }
+
+    const component = source.match(
+      /React\.ComponentProps(?:WithRef|WithoutRef)?<typeof ([A-Za-z0-9_.]+)>/
+    )
+    if (component) {
+      const sourceName = component[1]
+      labels.add(
+        facadeAvailable
+          ? 'Non-conflicting shadcn and HTML props'
+          : sourceName.includes('Primitive') || sourceName.includes('Internal')
+          ? 'shadcn primitive props'
+          : `${sourceName.split('.').pop()} props`
+      )
+      continue
+    }
+
+    if (source.includes('Primitive') || /\.Props\b/.test(source)) {
+      labels.add(
+        facadeAvailable
+          ? 'Non-conflicting shadcn and HTML props'
+          : 'shadcn primitive props'
+      )
+    } else if (source.includes('Internal') || source.includes('Native')) {
+      labels.add(
+        facadeAvailable
+          ? 'Non-conflicting shadcn/native props'
+          : 'Component props'
+      )
+    }
+  }
+
+  if (labels.size === 0) {
+    const acceptedOrigins = new Set(
+      item.acceptedPropIds
+        .map((id) => cataloguePropDefinitions[id]?.origin)
+        .filter(Boolean)
+    )
+    if (acceptedOrigins.has('native')) labels.add('Standard React DOM props')
+    if (acceptedOrigins.has('primitive')) {
+      labels.add(
+        facadeAvailable
+          ? 'Non-conflicting shadcn and HTML props'
+          : 'shadcn primitive props'
+      )
+    }
+    if (acceptedOrigins.has('dependency')) {
+      labels.add('Underlying library props')
+    }
+  }
+
+  if (labels.size === 0 && item.propSources.length > 0) {
+    labels.add(
+      facadeAvailable
+        ? 'Non-conflicting shadcn and HTML props'
+        : 'Underlying component props'
+    )
+  }
+
+  return Array.from(labels)
+}
+
+function targetLabel(target: CataloguePropMapping['targets'][number]) {
+  return target.prop ? `${target.component}.${target.prop}` : target.component
+}
+
+function exactPropMapping(mapping: CatalogueMapping, propName: string) {
+  return (mapping.propMappings || []).find((propMapping) =>
+    propMapping.from.includes(propName)
+  )
+}
+
+function legacyPropStatus(
+  facadeAvailable: boolean,
+  mapping: CatalogueMapping,
+  propMapping?: CataloguePropMapping
+): UnifiedPropStatus {
+  if (!propMapping) return 'pending-audit'
+  if (propMapping.kind === 'needs-review') return 'needs-review'
+  if (propMapping.kind === 'unsupported') return 'unsupported'
+  if (facadeAvailable) return 'supported'
+  if (findComponent(mapping.id)) return 'facade-available'
+  return mapping.review === 'approved' ? 'approved' : 'proposed'
+}
+
+function unifiedPropRows({
+  acceptedProps,
+  facadeAvailable,
+  mappings,
+}: {
+  acceptedProps: CatalogueResolvedProp[]
+  facadeAvailable: boolean
+  mappings: CatalogueMapping[]
+}) {
+  const rows: UnifiedPropRow[] = []
+  const appliquePropNames = new Set<string>()
+  const seenAppliqueComponents = new Set<string>()
+
+  for (const mapping of mappings) {
+    for (const api of mapping.appliqueApi || []) {
+      if (seenAppliqueComponents.has(api.component)) continue
+      seenAppliqueComponents.add(api.component)
+
+      for (const prop of api.props) {
+        appliquePropNames.add(prop.name)
+        const propMapping = exactPropMapping(mapping, prop.name)
+
+        rows.push({
+          behavior:
+            propMapping?.summary ||
+            'Adapter mapping has not been audited for this prop yet.',
+          defaultValue: prop.default,
+          description: prop.description,
+          handling: propMapping?.kind || 'pending-audit',
+          hasDefault: true,
+          key: `applique-${mapping.id}-${api.component}-${prop.name}`,
+          name: prop.name,
+          source: 'applique',
+          sourceLabel: `Applique ${displayName(api.component)}`,
+          status: legacyPropStatus(facadeAvailable, mapping, propMapping),
+          targets: (propMapping?.targets || []).map(targetLabel),
+          type: prop.type,
+        })
+      }
+    }
+  }
+
+  const curatedShadcnNames = Array.from(
+    new Set(mappings.flatMap((mapping) => mapping.mainShadcnProps || []))
+  )
+  const candidateNames =
+    curatedShadcnNames.length > 0
+      ? curatedShadcnNames
+      : acceptedProps
+          .filter(
+            (prop) =>
+              prop.origin === 'shadcn' ||
+              ((prop.origin === 'primitive' || prop.origin === 'dependency') &&
+                mainInheritedPropNames.has(prop.name))
+          )
+          .map((prop) => prop.name)
+  const propsByName = new Map(acceptedProps.map((prop) => [prop.name, prop]))
+  const usedInheritedFallback =
+    curatedShadcnNames.length === 0 &&
+    candidateNames.some((name) => propsByName.get(name)?.origin !== 'shadcn')
+
+  for (const propName of candidateNames) {
+    if (appliquePropNames.has(propName)) continue
+    const prop = propsByName.get(propName)
+    if (!prop) continue
+
+    const exactMappings = mappings.flatMap((mapping) => {
+      const propMapping = exactPropMapping(mapping, propName)
+      return propMapping ? [{ mapping, propMapping }] : []
+    })
+    const controllingMappings = mappings.flatMap((mapping) =>
+      (mapping.propMappings || [])
+        .filter(
+          (propMapping) =>
+            !propMapping.from.includes(propName) &&
+            propMapping.targets.some((target) => target.prop === propName)
+        )
+        .map((propMapping) => ({ mapping, propMapping }))
+    )
+    const exact = exactMappings[0]?.propMapping
+    const controllingProps = Array.from(
+      new Set(
+        controllingMappings.flatMap(({ propMapping }) =>
+          propMapping.from.filter((name) => appliquePropNames.has(name))
+        )
+      )
+    )
+    const behavior = exact
+      ? exact.summary
+      : controllingProps.length > 0
+      ? `Forwarded when Applique ${controllingProps.join(', ')} ${
+          controllingProps.length === 1 ? 'is' : 'are'
+        } not supplied. The Applique mapping takes precedence.`
+      : 'Forwarded unchanged to the registry component.'
+    const targets = exact
+      ? exact.targets
+      : controllingMappings.flatMap(({ propMapping }) =>
+          propMapping.targets.filter((target) => target.prop === propName)
+        )
+
+    rows.push({
+      behavior,
+      description: prop.description,
+      handling: 'forwarded',
+      hasDefault: false,
+      key: `shadcn-${prop.name}`,
+      name: prop.name,
+      optional: prop.optional,
+      source: 'shadcn',
+      sourceLabel: 'shadcn',
+      status: facadeAvailable ? 'supported' : 'available',
+      targets: Array.from(new Set(targets.map(targetLabel))),
+      type: prop.type,
+    })
+  }
+
+  return {
+    auditPending:
+      mappings.some(
+        (mapping) => (mapping.mainShadcnProps || []).length === 0
+      ) || usedInheritedFallback,
+    rows,
+  }
+}
+
+function ResolvedPropSurface({
+  facadeAvailable,
+  item,
+  mappings,
+}: {
+  facadeAvailable: boolean
+  item: CatalogueApiExport
+  mappings: CatalogueMapping[]
+}) {
+  const [query, setQuery] = React.useState('')
+  const acceptedProps = React.useMemo(
+    () =>
+      item.acceptedPropIds
+        .map((id) => cataloguePropDefinitions[id])
+        .filter((prop): prop is CatalogueResolvedProp => Boolean(prop)),
+    [item.acceptedPropIds]
+  )
+  const { auditPending, rows } = React.useMemo(
+    () => unifiedPropRows({ acceptedProps, facadeAvailable, mappings }),
+    [acceptedProps, facadeAvailable, mappings]
+  )
+  const normalizedQuery = query.trim().toLowerCase()
+  const filteredRows = normalizedQuery
+    ? rows.filter((row) =>
+        [
+          row.name,
+          row.type,
+          row.description || '',
+          row.sourceLabel,
+          unifiedPropHandlingDetails[row.handling].label,
+          row.behavior,
+          unifiedPropStatusLabels[row.status],
+          ...row.targets,
+        ]
+          .join(' ')
+          .toLowerCase()
+          .includes(normalizedQuery)
+      )
+    : rows
+
+  if (rows.length === 0) {
+    const inherited = inheritedPropContracts(item, facadeAvailable)
+
+    return (
+      <p className="api-empty">
+        No component-specific props.
+        {inherited.length > 0
+          ? ` Accepts ${inherited.join(' and ')}.`
+          : ' No inherited prop contract is declared.'}
+      </p>
+    )
+  }
 
   return (
-    <details className="api-export" open={index === 0}>
+    <div className="api-subsection api-accepted-props">
+      <div className="api-accepted-props__header">
+        <div>
+          <h4>
+            {facadeAvailable
+              ? 'Unified prop contract'
+              : mappings.length > 0
+              ? 'Unified prop comparison'
+              : 'Main props'}
+          </h4>
+          <p>
+            {facadeAvailable
+              ? 'Applique props appear first, followed by additional shadcn props in the same table.'
+              : mappings.length > 0
+              ? 'Existing Applique props and selected raw shadcn props are compared in one table.'
+              : 'Main source-declared and semantic inherited props are listed in one table.'}
+          </p>
+        </div>
+        <label>
+          <span className="sr-only">Search {item.name} props</span>
+          <input
+            onChange={(event) => setQuery(event.currentTarget.value)}
+            placeholder="Search props"
+            type="search"
+            value={query}
+          />
+        </label>
+      </div>
+
+      {filteredRows.length > 0 ? (
+        <>
+          <div
+            aria-label={`${item.name} prop reference. Scroll horizontally to view every column.`}
+            className="api-props-scroll api-props-scroll--unified"
+            role="region"
+            tabIndex={0}
+          >
+            <table className="api-props api-props--unified">
+              <thead>
+                <tr>
+                  <th scope="col">Prop</th>
+                  <th scope="col">Source</th>
+                  <th scope="col">Type / default</th>
+                  <th scope="col">Handling</th>
+                  <th scope="col">Registry behavior</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRows.map((row, index) => {
+                  const startsShadcnRows =
+                    row.source === 'shadcn' &&
+                    filteredRows[index - 1]?.source === 'applique'
+
+                  return (
+                    <tr
+                      className={
+                        startsShadcnRows ? 'api-prop-row--source-break' : ''
+                      }
+                      key={row.key}
+                    >
+                      <th scope="row">
+                        <code>
+                          {row.name}
+                          {row.optional ? '?' : ''}
+                        </code>
+                        {row.description ? (
+                          <small>{row.description}</small>
+                        ) : null}
+                      </th>
+                      <td>
+                        <span
+                          className={`api-prop-source api-prop-source--${row.source}`}
+                        >
+                          {row.sourceLabel}
+                        </span>
+                      </td>
+                      <td>
+                        <code>{row.type}</code>
+                        {row.hasDefault ? (
+                          <small>
+                            Default:{' '}
+                            <code>{formatDefaultValue(row.defaultValue)}</code>
+                          </small>
+                        ) : null}
+                      </td>
+                      <td>
+                        <span
+                          className={`prop-count prop-count--${row.handling}`}
+                        >
+                          {unifiedPropHandlingDetails[row.handling].shortLabel}
+                        </span>
+                      </td>
+                      <td>
+                        {row.targets.length > 0 ? (
+                          <div className="api-prop-targets">
+                            {row.targets.map((target) => (
+                              <code key={`${row.key}-${target}`}>{target}</code>
+                            ))}
+                          </div>
+                        ) : null}
+                        <p>{row.behavior}</p>
+                      </td>
+                      <td>
+                        <span
+                          className={`api-prop-status api-prop-status--${row.status}`}
+                        >
+                          {unifiedPropStatusLabels[row.status]}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+          {auditPending ? (
+            <p className="prop-audit-pending">
+              Main shadcn prop audit pending. The compact semantic fallback is
+              shown until the reviewed component-specific list is completed.
+            </p>
+          ) : null}
+        </>
+      ) : (
+        <p className="api-empty">No props match “{query}”.</p>
+      )}
+    </div>
+  )
+}
+
+function compatibilityMappingsFor(component: CatalogueComponent) {
+  if (component.upstream.base === 'applique') {
+    const exact = catalogueMappings.find(
+      (mapping) =>
+        mapping.id === component.slug && mapping.applique.length > 0
+    )
+
+    return exact ? [exact] : []
+  }
+
+  const exact = catalogueMappings.find(
+    (mapping) =>
+      mapping.id === component.slug &&
+      mapping.applique.length > 0 &&
+      mapping.shadcn.includes(component.slug)
+  )
+
+  const directMappings = catalogueMappings.filter(
+    (mapping) =>
+      mapping.kind === 'direct' &&
+      mapping.applique.length > 0 &&
+      mapping.shadcn.includes(component.slug)
+  )
+
+  return Array.from(
+    new Map(
+      [...(exact ? [exact] : []), ...directMappings].map((mapping) => [
+        mapping.id,
+        mapping,
+      ])
+    ).values()
+  )
+}
+
+function ComponentAnatomy({
+  component,
+  primaryComponentIndex,
+}: {
+  component: CatalogueComponent
+  primaryComponentIndex: number
+}) {
+  const facadeAvailable = component.upstream.base === 'applique'
+  const componentExports = component.api.exports
+    .map((item, index) => ({ index, item }))
+    .filter(({ item }) => item.kind === 'component')
+
+  if (componentExports.length === 0) {
+    return (
+      <p className="api-empty api-empty--standalone">
+        No component anatomy is available because this entry has no published
+        source API.
+      </p>
+    )
+  }
+
+  return (
+    <div className="api-anatomy">
+      <div>
+        <h3>Component anatomy</h3>
+        <p>
+          Each row explains what the part does, its own props, and any standard
+          or shadcn props it also accepts.
+        </p>
+      </div>
+
+      <div
+        aria-label={`${component.name} component anatomy. Scroll horizontally to view every column.`}
+        className="api-anatomy__scroll"
+        role="region"
+        tabIndex={0}
+      >
+        <table className="api-anatomy__table">
+          <thead>
+            <tr>
+              <th scope="col">Part</th>
+              <th scope="col">Used for</th>
+              <th scope="col">Own props</th>
+              <th scope="col">Also accepts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {componentExports.map(({ index, item }) => {
+              const mainProps = anatomyCustomProps(item)
+              const inherited = inheritedPropContracts(item, facadeAvailable)
+
+              return (
+                <tr key={`${component.slug}-anatomy-${item.name}`}>
+                  <th scope="row">
+                    <code>{item.name}</code>
+                  </th>
+                  <td>
+                    {componentExportRole({
+                      component,
+                      compound: componentExports.length > 1,
+                      item,
+                      primary: index === primaryComponentIndex,
+                    })}
+                  </td>
+                  <td>
+                    {mainProps.length > 0 ? (
+                      <div className="api-anatomy__chips">
+                        {mainProps.map((prop) => (
+                          <code key={`${item.name}-${prop}`}>{prop}</code>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="api-anatomy__none">None</span>
+                    )}
+                  </td>
+                  <td>
+                    {inherited.length > 0 ? (
+                      <div className="api-anatomy__contracts">
+                        {inherited.map((contract) => (
+                          <span key={`${item.name}-${contract}`}>{contract}</span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="api-anatomy__none">Nothing extra</span>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function TechnicalSignatures({ component }: { component: CatalogueComponent }) {
+  if (component.api.exports.length === 0) return null
+
+  return (
+    <details className="api-technical">
       <summary>
         <span>
-          <code>{item.name}</code>
-          <small>{item.kind}</small>
+          <strong>Technical signatures</strong>
+          <small>
+            {component.api.exports.length}{' '}
+            {component.api.exports.length === 1 ? 'export' : 'exports'}
+          </small>
         </span>
         <span aria-hidden="true">⌄</span>
       </summary>
-      <div className="api-export__body">
-        <code className="api-signature">{item.signature}</code>
-
-        {item.ownedProps.length > 0 ? (
-          <div className="api-subsection">
-            <h4>Declared props</h4>
-            <div className="api-props-scroll">
-              <table className="api-props">
-                <thead>
-                  <tr>
-                    <th scope="col">Prop</th>
-                    <th scope="col">Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {item.ownedProps.map((prop) => (
-                    <tr key={`${item.name}-${prop.name}`}>
-                      <th scope="row">
-                        <code>
-                          {prop.name}
-                          {prop.optional ? '?' : ''}
-                        </code>
-                      </th>
-                      <td>
-                        <code>{prop.type}</code>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      <div className="api-technical__list">
+        {component.api.exports.map((item) => (
+          <div key={`${component.slug}-signature-${item.name}`}>
+            <span className="api-technical__name">
+              <code>{item.name}</code>
+              <small>{item.kind}</small>
+            </span>
+            <code className="api-signature">{item.signature}</code>
           </div>
-        ) : null}
-
-        {item.propSources.length > 0 ? (
-          <div className="api-subsection">
-            <h4>Inherited or forwarded prop surfaces</h4>
-            <p>
-              These exact upstream types are accepted by composition. They are
-              intentionally not expanded into fabricated local props.
-            </p>
-            <ul className="type-sources">
-              {item.propSources.map((source) => (
-                <li key={`${item.name}-${source}`}>
-                  <code>{source}</code>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
-
-        {!hasPropSurface ? (
-          <p className="api-empty">
-            This export does not declare a separate local prop contract in the
-            checked-in module.
-          </p>
-        ) : null}
+        ))}
       </div>
     </details>
   )
 }
 
 function ApiSection({ component }: { component: CatalogueComponent }) {
+  const mappings = compatibilityMappingsFor(component)
+  const facadeAvailable = component.upstream.base === 'applique'
+  const expectedRootExport = displayName(component.slug).toLowerCase()
+  const primaryExportOverrides: Record<string, string> = {
+    resizable: 'ResizablePanelGroup',
+  }
+  const preferredExport = primaryExportOverrides[component.slug]
+  const rootExportIndex = component.api.exports.findIndex(
+    (item) =>
+      item.kind === 'component' &&
+      (item.name === preferredExport ||
+        (!preferredExport && item.name.toLowerCase() === expectedRootExport))
+  )
+  const primaryComponentIndex =
+    rootExportIndex >= 0
+      ? rootExportIndex
+      : component.api.exports.findIndex((item) => item.kind === 'component')
+  const primaryComponent = component.api.exports[primaryComponentIndex]
+
   return (
     <section className="panel api-panel">
       <div className="panel__header">
         <div>
           <p className="eyebrow">API reference</p>
-          <h2>Exported surface</h2>
+          <h2>Component anatomy and props</h2>
         </div>
-        <span className="token-note">Generated from checked-in TypeScript</span>
+        <span className="token-note">
+          {mappings.length > 0
+            ? 'Legacy docs + registry source'
+            : 'API extracted from registry source'}
+        </span>
       </div>
 
       <p className="supporting-copy">
-        Signatures, explicitly declared props, and inherited primitive surfaces
-        are read from the source module. Runtime behavior remains defined by
-        Base UI and React.
+        {facadeAvailable
+          ? 'This facade exposes the documented Applique contract plus selected shadcn additions. Exact duplicate names appear only under Applique, and the mapping rules define precedence.'
+          : mappings.length > 0
+          ? 'This page compares the existing Applique contract with the registry component for adapter planning. The raw shadcn component does not accept the Applique props.'
+          : 'This page lists the main props exposed by the checked-in registry component.'}{' '}
+        Only selected semantic inherited props are included.
       </p>
 
-      <div className="api-exports">
-        {component.api.exports.length > 0 ? (
-          component.api.exports.map((item, index) => (
-            <ExportApi
-              index={index}
-              item={item}
-              key={`${component.slug}-${item.name}`}
+      <div className="api-reference__body">
+        <ComponentAnatomy
+          component={component}
+          primaryComponentIndex={primaryComponentIndex}
+        />
+
+        {primaryComponent ? (
+          <div className="api-primary-contract">
+            <ResolvedPropSurface
+              facadeAvailable={facadeAvailable}
+              item={primaryComponent}
+              mappings={mappings}
             />
-          ))
-        ) : (
-          <p className="api-empty api-empty--standalone">
-            No source API is published for this entry.
-          </p>
-        )}
+          </div>
+        ) : null}
+
+        <TechnicalSignatures component={component} />
       </div>
     </section>
   )
@@ -423,7 +1386,7 @@ function RegistrySource({
       <div className="panel__header">
         <div>
           <p className="eyebrow">Source metadata</p>
-          <h2>Pinned implementation</h2>
+          <h2>Registry implementation</h2>
         </div>
         <span className="token-note">{component.previewProvenance}</span>
       </div>
@@ -436,23 +1399,29 @@ function RegistrySource({
           </dd>
         </div>
         <div>
-          <dt>Upstream</dt>
+          <dt>Ownership</dt>
           <dd>
             <code>
-              {component.upstream.base}-{component.upstream.style}
+              {component.upstream.base === 'applique'
+                ? 'Applique-owned facade'
+                : `${component.upstream.base}-${component.upstream.style}`}
             </code>
           </dd>
         </div>
         <div>
           <dt>Snapshot</dt>
           <dd>
-            <a
-              href={`https://github.com/shadcn-ui/ui/commit/${component.upstream.commit}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <code>{component.upstream.commit.slice(0, 12)}</code>
-            </a>
+            {component.upstream.base === 'applique' ? (
+              <code>Handwritten and reviewed</code>
+            ) : (
+              <a
+                href={`https://github.com/shadcn-ui/ui/commit/${component.upstream.commit}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <code>{component.upstream.commit.slice(0, 12)}</code>
+              </a>
+            )}
           </dd>
         </div>
         <div>
@@ -879,7 +1848,6 @@ function IncompatiblePage({ component }: { component: CatalogueComponent }) {
 
 function ComponentPage({ component }: { component: CatalogueComponent }) {
   const rawUrl = registryUrl(component.slug)
-  const installCommand = `npx shadcn@${SHADCN_CLI_VERSION} add ${rawUrl}`
 
   return (
     <main className="content" id="main-content">
@@ -895,12 +1863,24 @@ function ComponentPage({ component }: { component: CatalogueComponent }) {
         <StatusBadge component={component} />
       </header>
 
+      <ClientContract component={component} rawUrl={rawUrl} />
+
       {component.availability === 'deprecated' ? (
         <DeprecatedPage component={component} />
       ) : component.availability === 'incompatible' ? (
         <IncompatiblePage component={component} />
-      ) : component.registryStatus === 'ready' ? (
+      ) : component.registryStatus !== 'unavailable' ? (
         <>
+          {component.registryStatus === 'testing' ? (
+            <section className="testing-notice" role="note">
+              <strong>Installable for testing, not migration-ready.</strong>
+              <span>
+                This facade still has unresolved legacy behaviour. Use it to
+                validate the registry integration, but do not treat it as an
+                approved production migration yet.
+              </span>
+            </section>
+          ) : null}
           <ComponentPreview component={component} />
           <ApiSection component={component} />
           <RegistrySource
@@ -908,21 +1888,6 @@ function ComponentPage({ component }: { component: CatalogueComponent }) {
             key={component.slug}
             rawUrl={rawUrl}
           />
-
-          <section className="panel install-panel">
-            <div className="panel__header">
-              <div>
-                <p className="eyebrow">Registry</p>
-                <h2>Install source</h2>
-              </div>
-            </div>
-            <p className="supporting-copy">
-              Run this inside a configured shadcn application. The source and
-              Applique theme are copied into that application for the client
-              team to own.
-            </p>
-            <CopyCommand command={installCommand} />
-          </section>
         </>
       ) : (
         <section className="panel empty-state">
@@ -956,6 +1921,9 @@ function App() {
   )
   const readyCount = catalogueComponents.filter(
     ({ registryStatus }) => registryStatus === 'ready'
+  ).length
+  const testingCount = catalogueComponents.filter(
+    ({ registryStatus }) => registryStatus === 'testing'
   ).length
 
   return (
@@ -1000,7 +1968,10 @@ function App() {
 
         <div className="sidebar__summary">
           <span>{catalogueComponents.length} components</span>
-          <span>{readyCount} ready</span>
+          <span>
+            {readyCount} ready
+            {testingCount > 0 ? ` · ${testingCount} testing` : ''}
+          </span>
         </div>
 
         <nav aria-label="Component catalogue" className="component-nav">
@@ -1025,6 +1996,8 @@ function App() {
                   aria-label={
                     component.registryStatus === 'ready'
                       ? 'Registry ready'
+                      : component.registryStatus === 'testing'
+                      ? 'Test only'
                       : component.availability === 'deprecated'
                       ? 'Deprecated'
                       : component.availability === 'incompatible'
