@@ -1,38 +1,39 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "button-group",
-  "type": "registry:ui",
-  "title": "Button Group",
-  "description": "Official shadcn base-nova component with Applique theme tokens.",
-  "dependencies": [
-    "@base-ui/react@1.6.0",
-    "class-variance-authority@0.7.1"
-  ],
+  "type": "registry:component",
+  "title": "Applique Button Group",
+  "description": "Applique-compatible ButtonGroup composition with legacy action sequencing and overflow behavior.",
+  "dependencies": [],
   "categories": [
-    "primitive",
-    "base-ui"
+    "applique",
+    "facade",
+    "action"
   ],
   "registryDependencies": [
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/separator.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-internal-button.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-internal-button-group.json",
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/dropdown-menu.json"
   ],
   "files": [
     {
-      "path": "ui/button-group.tsx",
-      "content": "import { mergeProps } from \"@base-ui/react/merge-props\"\nimport { useRender } from \"@base-ui/react/use-render\"\nimport { cva, type VariantProps } from \"class-variance-authority\"\n\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\nimport { Separator } from \"@/components/ui/separator\"\n\nconst buttonGroupVariants = cva(\n  \"flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-lg [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1\",\n  {\n    variants: {\n      orientation: {\n        horizontal:\n          \"*:data-slot:rounded-r-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-r-lg! [&>[data-slot]~[data-slot]]:rounded-l-none [&>[data-slot]~[data-slot]]:border-l-0\",\n        vertical:\n          \"flex-col *:data-slot:rounded-b-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-b-lg! [&>[data-slot]~[data-slot]]:rounded-t-none [&>[data-slot]~[data-slot]]:border-t-0\",\n      },\n    },\n    defaultVariants: {\n      orientation: \"horizontal\",\n    },\n  }\n)\n\nfunction ButtonGroupImpl({\n  className,\n  orientation,\n  ...props\n}: React.ComponentProps<\"div\"> & VariantProps<typeof buttonGroupVariants>) {\n  return (\n    <div\n      role=\"group\"\n      data-slot=\"button-group\"\n      data-orientation={orientation}\n      className={cn(buttonGroupVariants({ orientation }), className)}\n      {...props}\n    />\n  )\n}\n\nfunction ButtonGroupTextImpl({\n  className,\n  render,\n  ...props\n}: useRender.ComponentProps<\"div\">) {\n  return useRender({\n    defaultTagName: \"div\",\n    props: mergeProps<\"div\">(\n      {\n        className: cn(\n          \"flex items-center gap-2 rounded-lg border bg-muted px-2.5 text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4\",\n          className\n        ),\n      },\n      props\n    ),\n    render,\n    state: {\n      slot: \"button-group-text\",\n    },\n  })\n}\n\nfunction ButtonGroupSeparatorImpl({\n  className,\n  orientation = \"vertical\",\n  ...props\n}: React.ComponentProps<typeof Separator>) {\n  return (\n    <Separator\n      data-slot=\"button-group-separator\"\n      orientation={orientation}\n      className={cn(\n        \"relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nconst ButtonGroup = withReact18Ref(ButtonGroupImpl)\nconst ButtonGroupText = withReact18Ref(ButtonGroupTextImpl)\nconst ButtonGroupSeparator = withReact18Ref(ButtonGroupSeparatorImpl)\n\nexport {\n  ButtonGroup,\n  ButtonGroupSeparator,\n  ButtonGroupText,\n  buttonGroupVariants,\n}\n",
-      "type": "registry:ui",
-      "target": "@ui/button-group.tsx"
+      "path": "components/applique/button-group.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport { Button as InternalButton } from '@/components/applique/internal/button'\nimport { ButtonGroup as InternalButtonGroup } from '@/components/applique/internal/button-group'\nimport {\n  DropdownMenu,\n  DropdownMenuContent,\n  DropdownMenuItem,\n  DropdownMenuTrigger,\n} from '@/components/ui/dropdown-menu'\n\ntype InternalButtonGroupProps = React.ComponentPropsWithoutRef<\n  typeof InternalButtonGroup\n>\ntype InternalButtonProps = React.ComponentPropsWithoutRef<typeof InternalButton>\n\ntype LegacyButtonType = 'primary' | 'secondary' | 'tertiary' | 'link' | 'text'\n\ninterface ButtonActionProps {\n  children?: React.ReactNode\n  type?: LegacyButtonType\n  variant?: InternalButtonProps['variant']\n}\n\ntype ButtonAction = React.ReactElement<ButtonActionProps>\n\nexport interface ButtonGroupProps {\n  /** Accessible name forwarded to the shadcn ButtonGroup root. */\n  'aria-label'?: InternalButtonGroupProps['aria-label']\n  /**\n   * Applique Button actions to sequence and, when necessary, overflow.\n   *\n   * This contract requires the Applique Button facade, which is installed as a\n   * registry dependency. Its `type` is visual; a raw shadcn Button uses `type`\n   * as the native HTML button type and must not be used as a legacy child.\n   */\n  children?: React.ReactNode\n  /** Class name forwarded to the shadcn ButtonGroup root. */\n  className?: string\n  /** Optional shadcn layout extension. */\n  orientation?: InternalButtonGroupProps['orientation']\n  /**\n   * Keeps the matching first action visible and moves every later action into\n   * the overflow menu. A non-matching structure retains the normal sequencing\n   * behavior, matching the legacy runtime.\n   */\n  structure?: 'primary-group' | 'secondary-group' | 'link-group'\n}\n\nconst nextType: Partial<Record<LegacyButtonType, LegacyButtonType>> = {\n  primary: 'secondary',\n  secondary: 'text',\n}\n\nconst variantForType: Record<\n  LegacyButtonType,\n  InternalButtonProps['variant']\n> = {\n  primary: 'default',\n  secondary: 'outline',\n  tertiary: 'ghost',\n  link: 'link',\n  text: 'link',\n}\n\nfunction actionType(action: ButtonAction): LegacyButtonType {\n  return action.props.type ?? 'secondary'\n}\n\nfunction withType(\n  action: ButtonAction,\n  type: LegacyButtonType = actionType(action)\n): ButtonAction {\n  // The child remains responsible for its full Button behavior. ButtonGroup\n  // only owns hierarchy, so it supplies the legacy visual type and its\n  // matching shadcn variant; the legacy type wins over a conflicting variant.\n  return React.cloneElement(action, {\n    type,\n    variant: variantForType[type],\n  })\n}\n\nfunction buttonActions(children: React.ReactNode): ButtonAction[] {\n  const nodes = React.Children.toArray(children)\n\n  if (!nodes.every(React.isValidElement)) {\n    throw new Error('ButtonGroup children must be Button elements')\n  }\n\n  return nodes as ButtonAction[]\n}\n\nfunction splitActions(\n  actions: ButtonAction[],\n  structure: ButtonGroupProps['structure']\n) {\n  const firstType = actions[0] ? actionType(actions[0]) : undefined\n  const usesStructure =\n    firstType !== undefined && structure === `${firstType}-group`\n\n  if (usesStructure) {\n    return {\n      overflow: actions.slice(1),\n      visible: actions.slice(0, 1),\n    }\n  }\n\n  const visible: ButtonAction[] = []\n  const typesFound: LegacyButtonType[] = []\n  let overflowStart: number | undefined\n\n  actions.every((action, index) => {\n    const type = actionType(action)\n    const followingType = nextType[type]\n    const repeatsHierarchy =\n      typesFound.includes(type) ||\n      (followingType !== undefined && typesFound.includes(followingType))\n\n    if (repeatsHierarchy) {\n      overflowStart = index\n      return false\n    }\n\n    visible.push(action)\n    typesFound.push(type)\n    return true\n  })\n\n  let overflow = overflowStart === undefined ? [] : actions.slice(overflowStart)\n\n  // Preserve the legacy special case for a single repeated action. With two\n  // actions it is promoted to the next type. With three, a repeated secondary\n  // is promoted to text. In other cases the last visible action joins overflow.\n  if (overflow.length === 1) {\n    if (actions.length >= 3) {\n      const promotedType = nextType[actionType(overflow[0])]\n\n      if (promotedType === 'text' && actions.length === 3) {\n        visible.push(withType(overflow[0], promotedType))\n        overflow = []\n      } else {\n        const lastVisible = visible.pop()\n        if (lastVisible) overflow.push(lastVisible)\n      }\n    } else {\n      const promotedType = nextType[actionType(visible[0])]\n\n      if (!promotedType) throw new Error('Not a correct sequence')\n\n      visible.push(withType(overflow[0], promotedType))\n      overflow = []\n    }\n  }\n\n  return { overflow, visible }\n}\n\nfunction MoreActionsIcon() {\n  return (\n    <svg\n      aria-hidden=\"true\"\n      focusable=\"false\"\n      viewBox=\"0 0 24 24\"\n      xmlns=\"http://www.w3.org/2000/svg\"\n    >\n      <circle cx=\"12\" cy=\"5\" r=\"1.75\" fill=\"currentColor\" />\n      <circle cx=\"12\" cy=\"12\" r=\"1.75\" fill=\"currentColor\" />\n      <circle cx=\"12\" cy=\"19\" r=\"1.75\" fill=\"currentColor\" />\n    </svg>\n  )\n}\n\nconst ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(\n  (\n    { 'aria-label': ariaLabel, children, className, orientation, structure },\n    ref\n  ) => {\n    const actions = buttonActions(children)\n\n    if (actions.length === 0) return null\n\n    const { overflow, visible } = splitActions(actions, structure)\n\n    return (\n      <InternalButtonGroup\n        ref={ref}\n        aria-label={ariaLabel}\n        className={className}\n        orientation={orientation}\n      >\n        {visible\n          .slice()\n          .reverse()\n          .map((action) => withType(action))}\n        {overflow.length > 0 ? (\n          <DropdownMenu>\n            <DropdownMenuTrigger\n              render={\n                <InternalButton\n                  aria-label=\"More actions\"\n                  size=\"icon\"\n                  variant=\"outline\"\n                />\n              }\n            >\n              <MoreActionsIcon />\n            </DropdownMenuTrigger>\n            <DropdownMenuContent align=\"end\">\n              {overflow.map((action, index) => (\n                <DropdownMenuItem\n                  key={action.key ?? index}\n                  render={withType(action, 'text')}\n                />\n              ))}\n            </DropdownMenuContent>\n          </DropdownMenu>\n        ) : null}\n      </InternalButtonGroup>\n    )\n  }\n)\n\nButtonGroup.displayName = 'ButtonGroup'\n\nexport { ButtonGroup }\n",
+      "type": "registry:component",
+      "target": "@components/applique/button-group.tsx"
     }
   ],
   "meta": {
-    "status": "experimental",
-    "upstream": {
-      "cliVersion": "4.16.0",
-      "sourceSha256": "b3c843807568fd106385cf7dfdb41934c8b18f5f3963300b302ceb50b8c6c54e",
-      "style": "base-nova",
-      "upstreamSha256": "bdf1184f2493cd8080bf9f0a889839f2790cb22c3febde576d3bf1fff79163cd"
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "ButtonGroup",
+      "legacyPackage": "@applique-ui/button-group",
+      "migrationStatus": "testing",
+      "unresolvedProps": [
+        "Button.color",
+        "Button.to"
+      ]
     },
     "registryVersion": "0.1.0"
   }

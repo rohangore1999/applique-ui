@@ -1,36 +1,31 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "avatar",
-  "type": "registry:ui",
-  "title": "Avatar",
-  "description": "Official shadcn base-nova component with Applique theme tokens.",
-  "dependencies": [
-    "@base-ui/react@1.6.0"
-  ],
+  "type": "registry:component",
+  "title": "Applique Avatar",
+  "description": "Applique-compatible initials avatar backed by the shadcn Avatar primitive.",
+  "dependencies": [],
   "categories": [
-    "primitive",
-    "base-ui"
+    "applique",
+    "facade",
+    "data-display"
   ],
   "registryDependencies": [
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-internal-avatar.json"
   ],
   "files": [
     {
-      "path": "ui/avatar.tsx",
-      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Avatar as AvatarPrimitive } from \"@base-ui/react/avatar\"\n\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nfunction AvatarImpl({\n  className,\n  size = \"default\",\n  ...props\n}: AvatarPrimitive.Root.Props & {\n  size?: \"default\" | \"sm\" | \"lg\"\n}) {\n  return (\n    <AvatarPrimitive.Root\n      data-slot=\"avatar\"\n      data-size={size}\n      className={cn(\n        \"group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 applique-dark:after:mix-blend-lighten\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nfunction AvatarImageImpl({ className, ...props }: AvatarPrimitive.Image.Props) {\n  return (\n    <AvatarPrimitive.Image\n      data-slot=\"avatar-image\"\n      className={cn(\n        \"aspect-square size-full rounded-full object-cover\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nfunction AvatarFallbackImpl({\n  className,\n  ...props\n}: AvatarPrimitive.Fallback.Props) {\n  return (\n    <AvatarPrimitive.Fallback\n      data-slot=\"avatar-fallback\"\n      className={cn(\n        \"flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nfunction AvatarBadgeImpl({ className, ...props }: React.ComponentProps<\"span\">) {\n  return (\n    <span\n      data-slot=\"avatar-badge\"\n      className={cn(\n        \"absolute right-0 bottom-0 z-10 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground bg-blend-color ring-2 ring-background select-none\",\n        \"group-data-[size=sm]/avatar:size-2 group-data-[size=sm]/avatar:[&>svg]:hidden\",\n        \"group-data-[size=default]/avatar:size-2.5 group-data-[size=default]/avatar:[&>svg]:size-2\",\n        \"group-data-[size=lg]/avatar:size-3 group-data-[size=lg]/avatar:[&>svg]:size-2\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nfunction AvatarGroupImpl({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"avatar-group\"\n      className={cn(\n        \"group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nfunction AvatarGroupCountImpl({\n  className,\n  ...props\n}: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"avatar-group-count\"\n      className={cn(\n        \"relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nconst Avatar = withReact18Ref(AvatarImpl)\nconst AvatarImage = withReact18Ref(AvatarImageImpl)\nconst AvatarFallback = withReact18Ref(AvatarFallbackImpl)\nconst AvatarBadge = withReact18Ref(AvatarBadgeImpl)\nconst AvatarGroup = withReact18Ref(AvatarGroupImpl)\nconst AvatarGroupCount = withReact18Ref(AvatarGroupCountImpl)\n\nexport {\n  Avatar,\n  AvatarImage,\n  AvatarFallback,\n  AvatarGroup,\n  AvatarGroupCount,\n  AvatarBadge,\n}\n",
-      "type": "registry:ui",
-      "target": "@ui/avatar.tsx"
+      "path": "components/applique/avatar.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport {\n  Avatar as InternalAvatar,\n  AvatarFallback as InternalAvatarFallback,\n} from '@/components/applique/internal/avatar'\n\ntype InternalAvatarProps = React.ComponentPropsWithoutRef<typeof InternalAvatar>\n\nexport interface AvatarProps extends Omit<InternalAvatarProps, 'size'> {\n  /** The name used to generate initials and the default accessible label. */\n  name: string\n  /** Preserves the existing Applique size vocabulary. */\n  size?: 'small' | 'medium' | 'large'\n}\n\nconst sizeMap = {\n  small: 'sm',\n  medium: 'default',\n  large: 'lg',\n} as const\n\nconst dimensionMap = {\n  small: '16px',\n  medium: '32px',\n  large: '64px',\n} as const\n\nconst initialsFontSizeMap = {\n  small: '9px',\n  medium: '18px',\n  large: '36px',\n} as const\n\nconst letterPattern = /^[a-z\\u00c0-\\u017f]/i\n\nfunction makeInitials(name: string) {\n  const nameTokens = name.toUpperCase().split(/[\\s+-]/)\n  const tokens: string[] = []\n  let initials = ''\n\n  for (const token of nameTokens) {\n    if (!letterPattern.test(token)) break\n    tokens.push(token)\n  }\n\n  if (tokens.length >= 1) initials += tokens[0].substring(0, 1)\n\n  if (tokens.length >= 2) {\n    const firstNonInitial = tokens.slice(1).find((token) => !token.match(/.\\./))\n    initials += (firstNonInitial || tokens[1]).substring(0, 1)\n  }\n\n  return initials\n}\n\nconst Avatar = React.forwardRef<HTMLElement, AvatarProps>(\n  (\n    {\n      'aria-label': ariaLabel,\n      children,\n      name,\n      role = 'img',\n      size,\n      style,\n      title,\n      ...internalProps\n    },\n    ref\n  ) => {\n    const normalizedName = name\n      .replace(\n        /([^ ])([A-Z])/g,\n        (_match, first, second) => `${first} ${second}`\n      )\n      .trim()\n    const dimensions = {\n      height: size ? dimensionMap[size] : '1em',\n      width: size ? dimensionMap[size] : '1em',\n    }\n    const resolvedStyle: InternalAvatarProps['style'] =\n      typeof style === 'function'\n        ? (state) => ({ ...dimensions, ...style(state) })\n        : { ...dimensions, ...style }\n\n    return (\n      <InternalAvatar\n        {...internalProps}\n        ref={ref}\n        aria-label={ariaLabel ?? name}\n        role={role}\n        size={sizeMap[size ?? 'small']}\n        style={resolvedStyle}\n        title={title ?? name}\n      >\n        {children === undefined ? (\n          <InternalAvatarFallback\n            aria-hidden=\"true\"\n            data-test-id=\"initials\"\n            style={{ fontSize: size ? initialsFontSizeMap[size] : '0.5625em' }}\n          >\n            {makeInitials(normalizedName)}\n          </InternalAvatarFallback>\n        ) : (\n          children\n        )}\n      </InternalAvatar>\n    )\n  }\n)\n\nAvatar.displayName = 'Avatar'\n\nexport { Avatar }\n",
+      "type": "registry:component",
+      "target": "@components/applique/avatar.tsx"
     }
   ],
   "meta": {
-    "status": "experimental",
-    "upstream": {
-      "cliVersion": "4.16.0",
-      "sourceSha256": "2645c89a27aa55e72d6d6b2ed5c7650ff4528c64dc3000537066cee71e5ba7fa",
-      "style": "base-nova",
-      "upstreamSha256": "11a8c54f7402e9a2f61512d2a59daccf43dbf4cd7661e76e204903589cd10aee"
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "Avatar",
+      "legacyPackage": "@applique-ui/avatar"
     },
     "registryVersion": "0.1.0"
   }

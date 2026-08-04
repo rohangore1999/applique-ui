@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-text",
+  "type": "registry:component",
+  "title": "Applique Input Text",
+  "description": "Basic Applique-compatible text input backed by the shadcn Input primitive.",
+  "dependencies": [],
+  "categories": [
+    "applique",
+    "facade",
+    "input"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input.json"
+  ],
+  "files": [
+    {
+      "path": "components/applique/input-text.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport { Input as InternalInput } from '@/components/ui/input'\n\ntype NativeInputProps = React.ComponentPropsWithoutRef<'input'>\n\nexport interface InputTextProps\n  extends Omit<\n    NativeInputProps,\n    'children' | 'defaultValue' | 'onChange' | 'type' | 'value'\n  > {\n  /** Sets the text format for the field. */\n  type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search'\n  /** Current value of the text field. Non-string values render as empty. */\n  value?: string\n  /** Receives the string value instead of the browser change event. */\n  onChange?(value: string): void\n}\n\nconst InputText = React.forwardRef<HTMLInputElement, InputTextProps>(\n  (\n    { onChange, placeholder = ' ', type = 'text', value, ...nativeProps },\n    ref\n  ) => (\n    <InternalInput\n      {...nativeProps}\n      ref={ref}\n      onChange={(event) => onChange?.(event.currentTarget.value)}\n      placeholder={placeholder}\n      type={type}\n      value={typeof value === 'string' ? value : ''}\n    />\n  )\n)\n\nInputText.displayName = 'InputText'\n\nexport { InputText }\n",
+      "type": "registry:component",
+      "target": "@components/applique/input-text.tsx"
+    }
+  ],
+  "meta": {
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "InputText",
+      "legacyPackage": "@applique-ui/input-text",
+      "scope": "basic"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-radio",
+  "type": "registry:component",
+  "title": "Applique Input Radio",
+  "description": "Applique-compatible radio options composed from the shadcn Radio Group primitives.",
+  "dependencies": [],
+  "categories": [
+    "applique",
+    "facade",
+    "input"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/radio-group.json"
+  ],
+  "files": [
+    {
+      "path": "components/applique/input-radio.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport {\n  RadioGroup as InternalRadioGroup,\n  RadioGroupItem as InternalRadioGroupItem,\n} from '@/components/ui/radio-group'\n\ntype InternalRadioGroupProps = React.ComponentPropsWithoutRef<\n  typeof InternalRadioGroup\n>\ntype InternalValueChange = NonNullable<InternalRadioGroupProps['onValueChange']>\ntype InternalChangeDetails = Parameters<InternalValueChange>[1]\n\nexport interface InputRadioOption {\n  value: string\n  /** Preferred option label. */\n  label?: string\n  /** Runtime-compatible alias used by older Applique examples. */\n  title?: string\n}\n\nexport interface InputRadioProps\n  extends Omit<\n    InternalRadioGroupProps,\n    'children' | 'defaultValue' | 'onChange' | 'onValueChange' | 'value'\n  > {\n  /** Options rendered as shadcn radio items. */\n  options: readonly InputRadioOption[]\n  /** Selected option value. */\n  value?: string\n  /** Optional shadcn uncontrolled initial value. */\n  defaultValue?: string\n  /** Preserves the Applique value-only callback. */\n  onChange?(value: string): void\n  /** Additional shadcn callback; it runs before the Applique callback. */\n  onValueChange?(value: string, details: InternalChangeDetails): void\n  /** Customizes the content beside each radio control. */\n  renderOption?(option: InputRadioOption): React.ReactNode\n}\n\nconst InputRadio = React.forwardRef<HTMLDivElement, InputRadioProps>(\n  (\n    {\n      defaultValue,\n      disabled,\n      onChange,\n      onValueChange,\n      options,\n      renderOption,\n      value,\n      ...internalProps\n    },\n    ref\n  ) => {\n    const generatedId = React.useId()\n    const usesPrimitiveUncontrolledState = React.useRef(\n      value === undefined &&\n        (defaultValue !== undefined ||\n          (onChange === undefined && onValueChange !== undefined))\n    ).current\n    const resolvedValue = usesPrimitiveUncontrolledState\n      ? undefined\n      : value !== undefined\n      ? value\n      : null\n\n    return (\n      <InternalRadioGroup\n        data-test-id=\"group\"\n        {...internalProps}\n        ref={ref}\n        defaultValue={usesPrimitiveUncontrolledState ? defaultValue : undefined}\n        disabled={disabled}\n        value={resolvedValue}\n        onValueChange={(nextValue, details) => {\n          onValueChange?.(String(nextValue), details)\n          if (!details.isCanceled) onChange?.(String(nextValue))\n        }}\n      >\n        {options.map((option, index) => {\n          const label = option.label || option.title || ''\n          const optionId = `${generatedId}-${index}`\n          const compatibilityOption = {\n            ...option,\n            label,\n            title: option.title || label,\n          }\n\n          return (\n            <label\n              className=\"flex cursor-pointer items-center gap-2 text-sm has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50\"\n              htmlFor={optionId}\n              key={option.value}\n            >\n              <InternalRadioGroupItem\n                data-test-id={option.value}\n                id={optionId}\n                value={option.value}\n              />\n              <span>\n                {renderOption\n                  ? renderOption(compatibilityOption)\n                  : compatibilityOption.label}\n              </span>\n            </label>\n          )\n        })}\n      </InternalRadioGroup>\n    )\n  }\n)\n\nInputRadio.displayName = 'InputRadio'\n\nexport { InputRadio }\n",
+      "type": "registry:component",
+      "target": "@components/applique/input-radio.tsx"
+    }
+  ],
+  "meta": {
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "InputRadio",
+      "legacyPackage": "@applique-ui/input-radio"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

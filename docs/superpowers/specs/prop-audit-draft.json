@@ -1,0 +1,4196 @@
+[
+  {
+    "id": "accordion",
+    "kind": "direct",
+    "applique": ["accordion"],
+    "shadcn": ["accordion"],
+    "mainShadcnProps": [
+      "value",
+      "defaultValue",
+      "onValueChange",
+      "onOpenChange",
+      "multiple",
+      "children",
+      "className"
+    ],
+    "summary": "Compose legacy Accordion.Item children from the shadcn Accordion parts and adapt item callbacks. The documented active prop says it controls the expanded item, but the legacy runtime never applies it, so controlled-state compatibility must be decided before implementation.",
+    "propMappings": [
+      {
+        "id": "active",
+        "kind": "needs-review",
+        "from": ["active"],
+        "targets": [
+          {
+            "component": "accordion",
+            "prop": "value"
+          }
+        ],
+        "summary": "Documentation defines an expanded-item index, but the legacy active getter is unused and each Accordion.Item keeps independent local state. Decide whether the facade should honor the documented single-item contract or reproduce the current runtime behavior."
+      },
+      {
+        "id": "on-change",
+        "kind": "mapped",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "accordion",
+            "prop": "onOpenChange"
+          }
+        ],
+        "summary": "Adapt each item open-state callback to the legacy onChange(itemIndex, active) signature."
+      },
+      {
+        "id": "control-icons",
+        "kind": "composition-owned",
+        "from": ["controlIcons"],
+        "targets": [
+          {
+            "component": "accordion",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render the root Accordion controlIcons in every composed AccordionTrigger instead of the primitive's fixed chevrons. The same prop is documented on Accordion.Item, but the legacy runtime ignores that item-level override, so the facade must not imply that it has separate behavior."
+      },
+      {
+        "id": "item-title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "accordion",
+            "prop": "children"
+          }
+        ],
+        "summary": "Move each legacy Accordion.Item title into AccordionTrigger children."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "accordion",
+            "prop": "children"
+          }
+        ],
+        "summary": "Transform every legacy Accordion.Item into AccordionItem, AccordionTrigger, and AccordionContent; the child tree cannot be forwarded unchanged."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "badge",
+    "kind": "direct",
+    "applique": ["badge"],
+    "shadcn": ["badge"],
+    "mainShadcnProps": ["variant", "render", "children", "className"],
+    "summary": "Preserve the legacy semantic type and size with Applique classes, map the fill style onto shadcn Badge variant, and compose optional icon and close controls inside the badge.",
+    "propMappings": [
+      {
+        "id": "type",
+        "kind": "composition-owned",
+        "from": ["type"],
+        "targets": [
+          {
+            "component": "badge",
+            "prop": "className"
+          }
+        ],
+        "summary": "Apply Applique info, success, warning, and error token classes because shadcn Badge does not expose the same semantic palette."
+      },
+      {
+        "id": "variant",
+        "kind": "mapped",
+        "from": ["variant"],
+        "targets": [
+          {
+            "component": "badge",
+            "prop": "variant"
+          }
+        ],
+        "valueMap": {
+          "solid": "default",
+          "outlined": "outline"
+        },
+        "summary": "Use the shadcn default and outline variants as the structural base, then retain the semantic color through Applique-owned classes."
+      },
+      {
+        "id": "size",
+        "kind": "composition-owned",
+        "from": ["size"],
+        "targets": [
+          {
+            "component": "badge",
+            "prop": "className"
+          }
+        ],
+        "summary": "Preserve small and regular dimensions through Applique classes because the shadcn Badge has no size prop."
+      },
+      {
+        "id": "icon",
+        "kind": "composition-owned",
+        "from": ["icon"],
+        "targets": [
+          {
+            "component": "badge",
+            "prop": "children"
+          }
+        ],
+        "summary": "Resolve the legacy IconName and render the icon before the badge label."
+      },
+      {
+        "id": "on-close",
+        "kind": "composition-owned",
+        "from": ["onClose"],
+        "targets": [
+          {
+            "component": "badge",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render an accessible dismiss control inside the Badge and invoke the legacy callback; Badge has no close prop."
+      },
+      {
+        "id": "children",
+        "kind": "forwarded",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "badge",
+            "prop": "children"
+          }
+        ],
+        "summary": "Forward the public string label to the Badge content."
+      },
+      {
+        "id": "class-name",
+        "kind": "forwarded",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "badge",
+            "prop": "className"
+          }
+        ],
+        "summary": "Forward the client class to the Badge root."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "bread-crumb",
+    "kind": "direct",
+    "applique": ["bread-crumb"],
+    "shadcn": ["breadcrumb"],
+    "mainShadcnProps": ["children", "className", "render"],
+    "summary": "The primary legacy docs expose no component-specific props. Preserve its BaseProps surface while converting BreadCrumb.Item children into the shadcn compound list and explicit separators.",
+    "propMappings": [
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "children"
+          }
+        ],
+        "summary": "Wrap legacy items in BreadcrumbList and BreadcrumbItem, represent the last item as the current page, and insert BreadcrumbSeparator elements that legacy CSS generated automatically."
+      },
+      {
+        "id": "class-name",
+        "kind": "forwarded",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "className"
+          }
+        ],
+        "summary": "Forward the client class from the legacy nav to the shadcn Breadcrumb nav."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "input-text-area",
+    "kind": "direct",
+    "applique": ["input-text-area"],
+    "shadcn": ["textarea"],
+    "mainShadcnProps": [
+      "value",
+      "defaultValue",
+      "onChange",
+      "disabled",
+      "rows",
+      "placeholder",
+      "readOnly",
+      "aria-invalid",
+      "className"
+    ],
+    "summary": "Wrap shadcn Textarea to preserve the legacy outer container, icon, variants, resize rules, controlled-value normalization, field context, and value-only callback.",
+    "propMappings": [
+      {
+        "id": "value",
+        "kind": "mapped",
+        "from": ["value"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "value"
+          }
+        ],
+        "summary": "Preserve the legacy controlled behavior that normalizes a missing or empty value to an empty string."
+      },
+      {
+        "id": "on-change",
+        "kind": "mapped",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "onChange"
+          }
+        ],
+        "summary": "Extract event.target.value before invoking the legacy value-only callback."
+      },
+      {
+        "id": "disabled",
+        "kind": "mapped",
+        "from": ["disabled"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "disabled"
+          }
+        ],
+        "summary": "Pass disabled to Textarea after combining it with the disabled value supplied through legacy field context."
+      },
+      {
+        "id": "rows",
+        "kind": "forwarded",
+        "from": ["rows"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "rows"
+          }
+        ],
+        "summary": "Forward rows to the native textarea, retaining the legacy default of one row."
+      },
+      {
+        "id": "no-resize",
+        "kind": "composition-owned",
+        "from": ["noResize"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "facade wrapper className"
+          }
+        ],
+        "summary": "Apply the no-resize rule to the facade wrapper; the legacy textarea itself is always non-resizable."
+      },
+      {
+        "id": "placeholder",
+        "kind": "forwarded",
+        "from": ["placeholder"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "placeholder"
+          }
+        ],
+        "summary": "Forward the native placeholder unchanged."
+      },
+      {
+        "id": "read-only",
+        "kind": "forwarded",
+        "from": ["readOnly"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "readOnly"
+          }
+        ],
+        "summary": "Forward the native read-only state unchanged."
+      },
+      {
+        "id": "icon",
+        "kind": "composition-owned",
+        "from": ["icon"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "facade wrapper children"
+          },
+          {
+            "component": "textarea",
+            "prop": "className"
+          }
+        ],
+        "summary": "Resolve the legacy IconName, render it beside Textarea in a wrapper, and retain the matching input spacing."
+      },
+      {
+        "id": "field-context",
+        "kind": "composition-owned",
+        "from": ["__fieldContext"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "disabled"
+          },
+          {
+            "component": "textarea",
+            "prop": "aria-invalid"
+          }
+        ],
+        "summary": "Keep the private legacy channel used by Field to add error and disabled state until Field and Textarea share a replacement coordination contract."
+      },
+      {
+        "id": "error",
+        "kind": "mapped",
+        "from": ["error"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "aria-invalid"
+          }
+        ],
+        "summary": "Combine the explicit and field-context errors, then expose the result through aria-invalid for accessibility and destructive styling."
+      },
+      {
+        "id": "variant",
+        "kind": "composition-owned",
+        "from": ["variant"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "facade wrapper className"
+          }
+        ],
+        "summary": "Preserve bordered and standard visuals with Applique wrapper and token classes because Textarea has one built-in appearance."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "textarea",
+            "prop": "facade wrapper className"
+          }
+        ],
+        "summary": "Keep the legacy class target on the outer facade container rather than forwarding it directly to the textarea element."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "tabs",
+    "kind": "direct",
+    "applique": ["tabs"],
+    "shadcn": ["tabs"],
+    "mainShadcnProps": [
+      "value",
+      "defaultValue",
+      "onValueChange",
+      "orientation",
+      "variant",
+      "disabled",
+      "children",
+      "className"
+    ],
+    "summary": "Transform legacy Tabs.Tab children into TabsTrigger and TabsContent parts and translate numeric selection to values. The generated legacy Tabs documentation incorrectly lists child Tab props instead of the root defaultIndex, activeIndex, and onChange contract; both surfaces are recorded here.",
+    "propMappings": [
+      {
+        "id": "default-index",
+        "kind": "mapped",
+        "from": ["defaultIndex"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "defaultValue"
+          }
+        ],
+        "summary": "Convert the uncontrolled numeric index into the corresponding tab value."
+      },
+      {
+        "id": "active-index",
+        "kind": "mapped",
+        "from": ["activeIndex"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "value"
+          }
+        ],
+        "summary": "Convert the controlled numeric index into the corresponding tab value while preserving disabled-index fallback behavior."
+      },
+      {
+        "id": "on-change",
+        "kind": "mapped",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "onValueChange"
+          }
+        ],
+        "summary": "Convert the selected tab value back to its legacy numeric index before invoking the callback."
+      },
+      {
+        "id": "type",
+        "kind": "needs-review",
+        "from": ["type"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "variant"
+          }
+        ],
+        "summary": "The legacy primary and secondary styles do not exactly match shadcn line and default variants, so the visual mapping needs confirmation."
+      },
+      {
+        "id": "tab-title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "children"
+          }
+        ],
+        "summary": "Move each documented Tabs.Tab title into TabsTrigger children."
+      },
+      {
+        "id": "tab-disabled",
+        "kind": "forwarded",
+        "from": ["disabled"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "disabled"
+          }
+        ],
+        "summary": "Forward each Tabs.Tab disabled state to its TabsTrigger."
+      },
+      {
+        "id": "documented-is-active",
+        "kind": "needs-review",
+        "from": ["isActive"],
+        "targets": [],
+        "summary": "The generated root documentation exposes this child-internal prop, but the Tabs runtime overwrites it from the selected index. It should not become a facade root prop without correcting the documentation contract."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "children"
+          }
+        ],
+        "summary": "Split every legacy Tabs.Tab into a trigger and a content panel; the legacy child tree cannot be forwarded unchanged."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "tabs",
+            "prop": "className"
+          },
+          {
+            "component": "tabs",
+            "prop": "TabsTrigger.className"
+          }
+        ],
+        "summary": "Keep Tabs className on the root and each Tabs.Tab className on its generated TabsTrigger; the compound child and root share the same legacy prop name but have different class targets."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "tooltip",
+    "kind": "direct",
+    "applique": ["tooltip"],
+    "shadcn": ["tooltip"],
+    "mainShadcnProps": [
+      "side",
+      "sideOffset",
+      "align",
+      "alignOffset",
+      "delay",
+      "closeDelay",
+      "open",
+      "defaultOpen",
+      "onOpenChange",
+      "children",
+      "className"
+    ],
+    "summary": "Compose Tooltip, TooltipTrigger, and TooltipContent; map placement, invoke the legacy content renderer, and preserve light/dark styling. Click-only triggering is not provided by the shadcn Tooltip interaction and needs a product-level decision.",
+    "propMappings": [
+      {
+        "id": "render-content",
+        "kind": "composition-owned",
+        "from": ["renderContent"],
+        "targets": [
+          {
+            "component": "tooltip",
+            "prop": "children"
+          }
+        ],
+        "summary": "Invoke the legacy render function and place its result inside TooltipContent."
+      },
+      {
+        "id": "position",
+        "kind": "mapped",
+        "from": ["position"],
+        "targets": [
+          {
+            "component": "tooltip",
+            "prop": "side"
+          }
+        ],
+        "valueMap": {
+          "up": "top",
+          "down": "bottom",
+          "left": "left",
+          "right": "right"
+        },
+        "summary": "Translate the legacy direction names to TooltipContent side values."
+      },
+      {
+        "id": "trigger-on",
+        "kind": "needs-review",
+        "from": ["triggerOn"],
+        "targets": [],
+        "summary": "Hover and focus match tooltip behavior, but the active legacy click mode would require a different interaction such as Popover; Tooltip has no equivalent trigger selector."
+      },
+      {
+        "id": "dark",
+        "kind": "composition-owned",
+        "from": ["dark"],
+        "targets": [
+          {
+            "component": "tooltip",
+            "prop": "className"
+          }
+        ],
+        "summary": "Apply Applique light or dark content and arrow classes because the checked-in TooltipContent is dark by default and has no variant prop."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "tooltip",
+            "prop": "children"
+          }
+        ],
+        "summary": "Place the first legacy child inside TooltipTrigger, wrapping non-elements when needed; it cannot be passed directly to Tooltip root."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "tooltip",
+            "prop": "facade wrapper className"
+          }
+        ],
+        "summary": "Preserve the legacy class target on the composed tooltip wrapper instead of silently moving it to TooltipContent."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "banner",
+    "kind": "composition",
+    "applique": ["banner"],
+    "shadcn": ["alert", "button", "dialog"],
+    "mainShadcnProps": [
+      "variant",
+      "className",
+      "children",
+      "onClick"
+    ],
+    "summary": "Compose Alert and Button while preserving Banner's semantic colors and icons, conditional title/body layout, optional external link, and dismiss behavior.",
+    "propMappings": [
+      {
+        "id": "semantic-color",
+        "kind": "composition-owned",
+        "from": ["color", "type"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "variant"
+          },
+          {
+            "component": "alert",
+            "prop": "className"
+          }
+        ],
+        "summary": "Reproduce the legacy compatibility rule: if either color or deprecated type is info (or the old out-of-type primary value), resolve info; otherwise use color, then type, then info. Retain the resolved semantic state through Alert variant plus Applique token classes."
+      },
+      {
+        "id": "icon",
+        "kind": "composition-owned",
+        "from": ["icon"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render the explicit legacy icon, derive the default from the semantic color when undefined, and preserve null as the opt-out."
+      },
+      {
+        "id": "content",
+        "kind": "composition-owned",
+        "from": ["title", "children"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "children"
+          }
+        ],
+        "summary": "When title exists, render it as AlertTitle and children as AlertDescription; without title, render children as the heading exactly as the legacy runtime does."
+      },
+      {
+        "id": "on-close",
+        "kind": "composition-owned",
+        "from": ["onClose"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "children"
+          },
+          {
+            "component": "button",
+            "prop": "onClick"
+          }
+        ],
+        "summary": "Render a dismiss Button in the alert action area and wire it to the legacy callback."
+      },
+      {
+        "id": "link",
+        "kind": "composition-owned",
+        "from": ["link"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "children"
+          },
+          {
+            "component": "button",
+            "prop": "render"
+          }
+        ],
+        "summary": "Validate href and displayText together, then compose the legacy external action link with its trailing icon."
+      },
+      {
+        "id": "actionable-data",
+        "kind": "composition-owned",
+        "from": [
+          "data.header",
+          "data.subHeader",
+          "data.feedback",
+          "data.entityName",
+          "data.entityId",
+          "data.actionToTake",
+          "data.actionButtonText",
+          "data.onActionClick",
+          "data.onClose"
+        ],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "children"
+          },
+          {
+            "component": "button",
+            "prop": "children"
+          },
+          {
+            "component": "button",
+            "prop": "onClick"
+          }
+        ],
+        "summary": "Compose Banner.Actionable: render nothing when data is absent; otherwise render header, subheader, feedback, entity and action content, and optional action and close Buttons. The legacy Actionable className is ignored. Its color, null-icon, and full-screen interaction differences remain separate review items."
+      },
+      {
+        "id": "actionable-color-compatibility",
+        "kind": "needs-review",
+        "from": ["data.color", "data.type"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "variant and semantic classes"
+          }
+        ],
+        "summary": "The compiled legacy ternary accidentally resolves every truthy data.color to info. The test facade uses the documented semantic color instead; approve that correction or reproduce the bug before migration."
+      },
+      {
+        "id": "actionable-icon-null",
+        "kind": "needs-review",
+        "from": ["data.icon"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "children"
+          }
+        ],
+        "summary": "The regular Banner treats null as an icon opt-out, but the legacy Actionable renders an empty icon shell. The test facade applies the clean opt-out consistently; approve that correction before migration."
+      },
+      {
+        "id": "actionable-overlay-semantics",
+        "kind": "needs-review",
+        "from": ["data"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "focus, inert background, Escape, and modal naming"
+          }
+        ],
+        "summary": "Actionable is a fixed full-screen takeover. Decide whether to preserve the legacy Alert-only behavior or adopt Dialog semantics with focus management, an inert background, Escape handling, and an accessible modal name."
+      },
+      {
+        "id": "class-name",
+        "kind": "forwarded",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "alert",
+            "prop": "className"
+          }
+        ],
+        "summary": "Forward the client class from the legacy root to Alert."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "field",
+    "kind": "composition",
+    "applique": ["field"],
+    "shadcn": ["field", "label"],
+    "mainShadcnProps": [
+      "orientation",
+      "children",
+      "errors",
+      "htmlFor",
+      "className"
+    ],
+    "summary": "Compose Field and Label parts for title and prioritized error, success, or description metadata, while retaining required and disabled visuals and the legacy child-context propagation contract. The documented info prop is not consumed by the current runtime and needs clarification.",
+    "propMappings": [
+      {
+        "id": "title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "children"
+          },
+          {
+            "component": "label",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render the legacy title through FieldLabel while preserving arbitrary ReactNode content."
+      },
+      {
+        "id": "description",
+        "kind": "composition-owned",
+        "from": ["description"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render FieldDescription only when neither error nor success is present, preserving legacy metadata priority."
+      },
+      {
+        "id": "error",
+        "kind": "composition-owned",
+        "from": ["error"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "children"
+          },
+          {
+            "component": "field",
+            "prop": "data-invalid"
+          }
+        ],
+        "summary": "Render FieldError, join array messages as the legacy component does, mark the field invalid, style the label, and propagate error state to compatible children."
+      },
+      {
+        "id": "required",
+        "kind": "composition-owned",
+        "from": ["required"],
+        "targets": [
+          {
+            "component": "label",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render the legacy visual asterisk in FieldLabel; the existing Field does not automatically set required on its child control."
+      },
+      {
+        "id": "disabled",
+        "kind": "composition-owned",
+        "from": ["disabled"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "data-disabled"
+          }
+        ],
+        "summary": "Set the Field disabled state for styling and propagate disabled through the legacy __fieldContext contract to compatible child controls."
+      },
+      {
+        "id": "field-info",
+        "kind": "composition-owned",
+        "from": ["fieldInfo"],
+        "targets": [
+          {
+            "component": "label",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render a valid React element beside the title inside FieldLabel."
+      },
+      {
+        "id": "success",
+        "kind": "composition-owned",
+        "from": ["success"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render an Applique-styled success message when there is no error, ahead of the ordinary description."
+      },
+      {
+        "id": "info",
+        "kind": "needs-review",
+        "from": ["info"],
+        "targets": [],
+        "summary": "The prop is documented as an info-icon toggle, but the legacy Field implementation never reads or renders it and only spreads it to the root div. Confirm whether the facade should implement the documentation or preserve runtime behavior."
+      },
+      {
+        "id": "html-for",
+        "kind": "forwarded",
+        "from": ["htmlFor"],
+        "targets": [
+          {
+            "component": "label",
+            "prop": "htmlFor"
+          }
+        ],
+        "summary": "Forward the label association and continue using it to derive metadata element IDs."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render the controls and preserve legacy cloning that supplies combined error and disabled context to compatible children."
+      },
+      {
+        "id": "class-name",
+        "kind": "forwarded",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "className"
+          }
+        ],
+        "summary": "Forward the client class to the Field root."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "form",
+    "kind": "composition",
+    "applique": ["form"],
+    "shadcn": [
+      "field",
+      "input",
+      "select",
+      "checkbox",
+      "radio-group",
+      "textarea",
+      "button",
+      "button-group"
+    ],
+    "mainShadcnProps": [
+      "value",
+      "defaultValue",
+      "onValueChange",
+      "checked",
+      "defaultChecked",
+      "onCheckedChange",
+      "disabled",
+      "children",
+      "className"
+    ],
+    "summary": "Rebuild the native form wrapper, aggregate object-value coordination, responsive field layout, and action row. Legacy Form.Text, Select, Checkbox/CheckBox, Date, Masked, Number, Radio, TextArea, and File children are delegated to their separately audited facades; the checked-in shadcn Form item has no implementation.",
+    "propMappings": [
+      {
+        "id": "value",
+        "kind": "composition-owned",
+        "from": ["value"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "value"
+          },
+          {
+            "component": "select",
+            "prop": "value"
+          },
+          {
+            "component": "checkbox",
+            "prop": "checked"
+          },
+          {
+            "component": "radio-group",
+            "prop": "value"
+          },
+          {
+            "component": "textarea",
+            "prop": "value"
+          }
+        ],
+        "summary": "Read each named field from the aggregate object, including nested dot paths, and provide the corresponding primitive value or checked state."
+      },
+      {
+        "id": "on-change",
+        "kind": "composition-owned",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "onChange"
+          },
+          {
+            "component": "select",
+            "prop": "onValueChange"
+          },
+          {
+            "component": "checkbox",
+            "prop": "onCheckedChange"
+          },
+          {
+            "component": "radio-group",
+            "prop": "onValueChange"
+          },
+          {
+            "component": "textarea",
+            "prop": "onChange"
+          }
+        ],
+        "summary": "Adapt each control callback, write the next value at its field path, and invoke the client with a new aggregate object."
+      },
+      {
+        "id": "on-submit",
+        "kind": "composition-owned",
+        "from": ["onSubmit"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "facade native form onSubmit"
+          }
+        ],
+        "summary": "Own the native form element, prevent its default submission, and then invoke the legacy FormEvent callback; no checked-in shadcn Form primitive implements this."
+      },
+      {
+        "id": "title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "facade native form heading"
+          }
+        ],
+        "summary": "Render the optional form heading above the field layout."
+      },
+      {
+        "id": "default-field-size",
+        "kind": "composition-owned",
+        "from": ["defaultFieldSize"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "facade field-grid className"
+          }
+        ],
+        "summary": "Preserve the Grid column-width default and each field's override using Applique layout classes, including the legacy mobile full-width behavior."
+      },
+      {
+        "id": "actions",
+        "kind": "composition-owned",
+        "from": ["actions"],
+        "targets": [
+          {
+            "component": "button-group",
+            "prop": "children"
+          },
+          {
+            "component": "field",
+            "prop": "facade action-row className"
+          }
+        ],
+        "summary": "Apply the left, right, or centered class to the facade-owned action row and place collected Form.Action, Button, and existing ButtonGroup children into the composed ButtonGroup."
+      },
+      {
+        "id": "disabled",
+        "kind": "composition-owned",
+        "from": ["disabled"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "disabled"
+          },
+          {
+            "component": "select",
+            "prop": "disabled"
+          },
+          {
+            "component": "checkbox",
+            "prop": "disabled"
+          },
+          {
+            "component": "radio-group",
+            "prop": "disabled"
+          },
+          {
+            "component": "textarea",
+            "prop": "disabled"
+          },
+          {
+            "component": "button",
+            "prop": "disabled"
+          }
+        ],
+        "summary": "Fan the form disabled state out to every composed field and action; the legacy runtime does not disable a form element directly."
+      },
+      {
+        "id": "row-gap",
+        "kind": "composition-owned",
+        "from": ["rowGap"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "facade field-grid className"
+          }
+        ],
+        "summary": "Translate the numeric Grid row gap into the facade's field-layout spacing."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "field",
+            "prop": "children"
+          },
+          {
+            "component": "button-group",
+            "prop": "children"
+          }
+        ],
+        "summary": "Classify Form.Text, Select, Checkbox/CheckBox, Date, Masked, Number, Radio, TextArea, and File as field children delegated to their own facades; collect Form.Action, Button, and ButtonGroup as actions; preserve other valid field children and per-field props."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "input",
+    "kind": "composition",
+    "applique": ["input"],
+    "shadcn": ["input", "input-group"],
+    "mainShadcnProps": [
+      "placeholder",
+      "disabled",
+      "readOnly",
+      "required",
+      "name",
+      "autoComplete",
+      "autoFocus"
+    ],
+    "summary": "Compose Input and InputGroup to preserve the legacy wrapper, icon, adornment, validation state, and read-only behavior.",
+    "propMappings": [
+      {
+        "id": "type",
+        "kind": "forwarded",
+        "from": ["type"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "type"
+          }
+        ],
+        "summary": "Forward the native input type unchanged."
+      },
+      {
+        "id": "value",
+        "kind": "forwarded",
+        "from": ["value"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "value"
+          }
+        ],
+        "summary": "Forward the controlled value unchanged."
+      },
+      {
+        "id": "disabled",
+        "kind": "forwarded",
+        "from": ["disabled"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "disabled"
+          }
+        ],
+        "summary": "Forward the disabled state; legacy Field context may additionally force it."
+      },
+      {
+        "id": "read-only",
+        "kind": "mapped",
+        "from": ["readOnly"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "readOnly"
+          }
+        ],
+        "summary": "Preserve explicit readOnly and the legacy runtime rule that an input without onChange is read-only."
+      },
+      {
+        "id": "placeholder",
+        "kind": "forwarded",
+        "from": ["placeholder"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "placeholder"
+          }
+        ],
+        "summary": "Forward placeholder and retain the legacy single-space default."
+      },
+      {
+        "id": "error",
+        "kind": "mapped",
+        "from": ["error"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "aria-invalid"
+          }
+        ],
+        "summary": "Map the legacy visual error state to aria-invalid and invalid token styling."
+      },
+      {
+        "id": "icon",
+        "kind": "composition-owned",
+        "from": ["icon"],
+        "targets": [
+          {
+            "component": "input-group",
+            "prop": "InputGroupAddon.children"
+          }
+        ],
+        "summary": "Render the Applique icon inside a leading InputGroupAddon."
+      },
+      {
+        "id": "adornment",
+        "kind": "composition-owned",
+        "from": ["adornment"],
+        "targets": [
+          {
+            "component": "input-group",
+            "prop": "InputGroupAddon.children"
+          }
+        ],
+        "summary": "Render the string or element inside an InputGroupAddon."
+      },
+      {
+        "id": "adornment-position",
+        "kind": "mapped",
+        "from": ["adornmentPosition"],
+        "targets": [
+          {
+            "component": "input-group",
+            "prop": "align"
+          }
+        ],
+        "valueMap": {
+          "start": "inline-start",
+          "end": "inline-end"
+        },
+        "summary": "Translate start/end into the InputGroupAddon alignment values."
+      },
+      {
+        "id": "variant",
+        "kind": "mapped",
+        "from": ["variant"],
+        "targets": [
+          {
+            "component": "input-group",
+            "prop": "className"
+          }
+        ],
+        "valueMap": {
+          "bordered": "bordered InputGroup recipe",
+          "standard": "standard wrapper recipe"
+        },
+        "summary": "Recreate the bordered and standard wrapper styles with Applique classes."
+      },
+      {
+        "id": "active",
+        "kind": "composition-owned",
+        "from": ["active"],
+        "targets": [
+          {
+            "component": "input-group",
+            "prop": "className"
+          }
+        ],
+        "summary": "Preserve the forced active visual state on the composed wrapper; native focus alone is not equivalent."
+      },
+      {
+        "id": "field-context",
+        "kind": "needs-review",
+        "from": ["__fieldContext"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "disabled/aria-invalid"
+          }
+        ],
+        "summary": "Runtime uses this internal Field prop to override disabled and error; decide whether the new Field facade supplies it or replaces it with context."
+      },
+      {
+        "id": "class-name",
+        "kind": "mapped",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "input-group",
+            "prop": "className"
+          }
+        ],
+        "summary": "Keep className on the legacy outer wrapper rather than moving it to the input element."
+      },
+      {
+        "id": "native-input-props",
+        "kind": "forwarded",
+        "from": ["non-conflicting native input attributes"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "non-conflicting native input attributes"
+          }
+        ],
+        "summary": "Forward form, accessibility, data, and input event attributes to the internal Input."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "input-file",
+    "kind": "composition",
+    "applique": ["input-file"],
+    "shadcn": ["input", "button", "attachment"],
+    "mainShadcnProps": ["accept", "multiple", "disabled", "required", "name"],
+    "summary": "Compose a hidden file Input, browse action, and clickable Attachment display while retaining FileList callbacks and client-side validation.",
+    "propMappings": [
+      {
+        "id": "placeholder",
+        "kind": "composition-owned",
+        "from": ["placeholder"],
+        "targets": [
+          {
+            "component": "attachment",
+            "prop": "AttachmentTitle.children"
+          }
+        ],
+        "summary": "Show placeholder text in the composed display when the controlled FileList is empty."
+      },
+      {
+        "id": "actions",
+        "kind": "composition-owned",
+        "from": ["actions"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "children/render"
+          },
+          {
+            "component": "attachment",
+            "prop": "AttachmentActions.children"
+          },
+          {
+            "component": "attachment",
+            "prop": "AttachmentTrigger.render/onClick"
+          }
+        ],
+        "summary": "Call the render function with browse(); the default result is the legacy Browse button. Independently keep the filename preview clickable so it also opens the native file chooser."
+      },
+      {
+        "id": "on-change",
+        "kind": "mapped",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "onChange"
+          }
+        ],
+        "summary": "Read event.currentTarget.files, validate it, then emit FileList instead of the native event."
+      },
+      {
+        "id": "value",
+        "kind": "composition-owned",
+        "from": ["value"],
+        "targets": [
+          {
+            "component": "attachment",
+            "prop": "AttachmentTitle.children"
+          }
+        ],
+        "summary": "Use the controlled FileList only to render comma-separated filenames; it cannot be assigned to the native file input value."
+      },
+      {
+        "id": "on-error",
+        "kind": "composition-owned",
+        "from": ["onError"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "onChange validation error path"
+          }
+        ],
+        "summary": "Call onError when a validation throws, matching the existing runtime."
+      },
+      {
+        "id": "validations",
+        "kind": "composition-owned",
+        "from": ["validations"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "onChange validation pipeline"
+          }
+        ],
+        "summary": "Run one or more FileList validators before the Applique onChange callback."
+      },
+      {
+        "id": "variant",
+        "kind": "needs-review",
+        "from": ["variant"],
+        "targets": [
+          {
+            "component": "attachment",
+            "prop": "className"
+          }
+        ],
+        "summary": "The legacy bordered/standard preview styles need an explicit Attachment recipe; there is no equivalent primitive variant."
+      },
+      {
+        "id": "icon",
+        "kind": "composition-owned",
+        "from": ["icon"],
+        "targets": [
+          {
+            "component": "attachment",
+            "prop": "AttachmentMedia.children"
+          }
+        ],
+        "summary": "Render the legacy icon in the filename display."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [],
+        "summary": "BaseProps accepts className, but the current hidden input overwrites it; choose a facade root or hidden-input target explicitly."
+      },
+      {
+        "id": "native-file-input-props",
+        "kind": "forwarded",
+        "from": ["non-conflicting native file input attributes"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "non-conflicting native file input attributes"
+          }
+        ],
+        "summary": "Forward accept, multiple, disabled, required, name, and accessibility attributes to the hidden file Input."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "input-month",
+    "kind": "composition",
+    "applique": ["input-month"],
+    "shadcn": ["popover", "input", "button"],
+    "mainShadcnProps": [
+      "disabled",
+      "readOnly",
+      "name",
+      "autoComplete",
+      "autoFocus",
+      "modal",
+      "align",
+      "sideOffset"
+    ],
+    "summary": "Compose a formatted text Input and Popover containing Applique-owned month/year buttons; the pinned day Calendar is not a month-picker equivalent.",
+    "propMappings": [
+      {
+        "id": "value",
+        "kind": "mapped",
+        "from": ["value"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "value"
+          },
+          {
+            "component": "button",
+            "prop": "aria-pressed/className"
+          }
+        ],
+        "summary": "Format {month, year} for the Input and mark the matching month and year buttons selected."
+      },
+      {
+        "id": "on-change",
+        "kind": "composition-owned",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "onChange"
+          },
+          {
+            "component": "button",
+            "prop": "onClick"
+          }
+        ],
+        "summary": "Parse typed text and combine month/year button selections before emitting the legacy object shape."
+      },
+      {
+        "id": "min-date",
+        "kind": "composition-owned",
+        "from": ["minDate"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "year range"
+          }
+        ],
+        "summary": "Feed the lower bound into the legacy current-date year-window calculation; do not expand it into an unrestricted min-to-max list."
+      },
+      {
+        "id": "max-date",
+        "kind": "composition-owned",
+        "from": ["maxDate"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "year range"
+          }
+        ],
+        "summary": "Feed the upper bound into the legacy current-date year-window calculation, which remains capped around the default five-year range."
+      },
+      {
+        "id": "highlight",
+        "kind": "composition-owned",
+        "from": ["highlight"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "className/data-state"
+          }
+        ],
+        "summary": "Apply info, danger, warning, success, or disabled as visual state. Legacy disabled highlighting is visual only and does not prevent selection."
+      },
+      {
+        "id": "render-month",
+        "kind": "composition-owned",
+        "from": ["renderMonth"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "children"
+          }
+        ],
+        "summary": "Use the callback to render month button content."
+      },
+      {
+        "id": "format",
+        "kind": "composition-owned",
+        "from": ["format"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "value/onChange"
+          }
+        ],
+        "summary": "Runtime supports this formatting string with MMM/yyyy as default even though the public Props declaration omits it; the facade must make that contract explicit."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [],
+        "summary": "BaseProps accepts className, but InputMonth overwrites the picker class and does not forward it to the trigger; choose the new target explicitly."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "pagination",
+    "kind": "composition",
+    "applique": ["pagination"],
+    "shadcn": ["pagination", "select", "input"],
+    "mainShadcnProps": ["className", "aria-label", "aria-describedby"],
+    "summary": "Compose presentational Pagination links, a page-size Select, and a numeric jump Input around the legacy {page, size} state contract.",
+    "propMappings": [
+      {
+        "id": "page",
+        "kind": "composition-owned",
+        "from": ["page"],
+        "targets": [
+          {
+            "component": "pagination",
+            "prop": "PaginationLink.isActive"
+          }
+        ],
+        "summary": "Drive the active link and previous/next range from the current page."
+      },
+      {
+        "id": "on-change",
+        "kind": "composition-owned",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "pagination",
+            "prop": "onClick"
+          },
+          {
+            "component": "select",
+            "prop": "onValueChange"
+          },
+          {
+            "component": "input",
+            "prop": "onKeyDown"
+          }
+        ],
+        "summary": "Aggregate link, page-size, and Enter-key changes into one {page, size} callback, converting the shadcn Select string value back to a number first."
+      },
+      {
+        "id": "size",
+        "kind": "composition-owned",
+        "from": ["size"],
+        "targets": [
+          {
+            "component": "select",
+            "prop": "value"
+          },
+          {
+            "component": "pagination",
+            "prop": "page-count calculation"
+          }
+        ],
+        "summary": "Control page size and use it with total to calculate page count."
+      },
+      {
+        "id": "total",
+        "kind": "composition-owned",
+        "from": ["total"],
+        "targets": [
+          {
+            "component": "pagination",
+            "prop": "rendered link range"
+          }
+        ],
+        "summary": "Use total and size to calculate links and ellipses."
+      },
+      {
+        "id": "sizes",
+        "kind": "composition-owned",
+        "from": ["sizes"],
+        "targets": [
+          {
+            "component": "select",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render the allowed numeric sizes as Select items."
+      },
+      {
+        "id": "hide-size",
+        "kind": "composition-owned",
+        "from": ["hideSize"],
+        "targets": [
+          {
+            "component": "select",
+            "prop": "conditional rendering"
+          }
+        ],
+        "summary": "Omit the page-size Select when true."
+      },
+      {
+        "id": "page-input-disabled",
+        "kind": "mapped",
+        "from": ["pageInputDisabled"],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "disabled"
+          }
+        ],
+        "summary": "Disable the always-rendered jump Input. The legacy docs say hide, but the current runtime only disables it."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [],
+        "summary": "The prop is declared private and passed to Pages, but Pages ignores it at runtime; define a new root target before preserving it."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "button-group",
+    "kind": "composition",
+    "applique": ["button-group"],
+    "shadcn": ["button-group", "button", "dropdown-menu"],
+    "mainShadcnProps": ["orientation", "aria-label"],
+    "summary": "Use ButtonGroup for visible actions and preserve the legacy variant-sequencing and overflow rules with Button and DropdownMenu.",
+    "propMappings": [
+      {
+        "id": "structure",
+        "kind": "composition-owned",
+        "from": ["structure"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "variant"
+          },
+          {
+            "component": "dropdown-menu",
+            "prop": "children"
+          }
+        ],
+        "summary": "Keep the matching first button visible and move remaining actions into overflow; without structure, preserve the legacy variant sequencing rules."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "button-group",
+            "prop": "children"
+          },
+          {
+            "component": "dropdown-menu",
+            "prop": "children"
+          }
+        ],
+        "summary": "Inspect and clone Button children, rendering visible actions inline and overflow actions as text-style menu content."
+      },
+      {
+        "id": "class-name",
+        "kind": "forwarded",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "button-group",
+            "prop": "className"
+          }
+        ],
+        "summary": "Forward className to the group wrapper."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "fab",
+    "kind": "composition",
+    "applique": ["fab"],
+    "shadcn": ["button", "popover"],
+    "mainShadcnProps": ["align", "sideOffset", "modal"],
+    "summary": "Compose a positioned Button and Popover speed dial. Several documented legacy trigger props are currently ignored and require an explicit compatibility decision.",
+    "propMappings": [
+      {
+        "id": "direction",
+        "kind": "composition-owned",
+        "from": ["direction"],
+        "targets": [
+          {
+            "component": "popover",
+            "prop": "PopoverContent.side"
+          },
+          {
+            "component": "button",
+            "prop": "action ordering/className"
+          }
+        ],
+        "summary": "Map up/down/left/right to PopoverContent side, reverse action order for up/left, and apply the matching speed-dial layout and animation classes."
+      },
+      {
+        "id": "disabled",
+        "kind": "needs-review",
+        "from": ["disabled"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "disabled"
+          }
+        ],
+        "summary": "Docs promise a disabled trigger, but the current Fab destructures and ignores disabled; decide whether to restore the documented behavior."
+      },
+      {
+        "id": "trigger-on",
+        "kind": "composition-owned",
+        "from": ["triggerOn"],
+        "targets": [
+          {
+            "component": "popover",
+            "prop": "open/onOpenChange and trigger events"
+          }
+        ],
+        "summary": "Implement click, hover, or focus opening around Popover; only click is native to the primitive."
+      },
+      {
+        "id": "on-click",
+        "kind": "needs-review",
+        "from": ["onClick"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "onClick"
+          }
+        ],
+        "summary": "Docs promise a trigger callback, but the current runtime ignores it; decide whether to restore it while composing open-state handling."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "className"
+          },
+          {
+            "component": "popover",
+            "prop": "className"
+          }
+        ],
+        "summary": "The current runtime ignores className; choose whether it belongs on the floating wrapper or trigger."
+      },
+      {
+        "id": "icon",
+        "kind": "needs-review",
+        "from": ["icon"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "children"
+          }
+        ],
+        "summary": "The current trigger always renders an ellipsis and ignores the documented primary icon; decide whether to restore the documented icon."
+      },
+      {
+        "id": "secondary-icon",
+        "kind": "needs-review",
+        "from": ["secondaryIcon"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "children"
+          }
+        ],
+        "summary": "The documented open/closed icon toggle is not implemented by the current runtime and needs an explicit compatibility decision."
+      },
+      {
+        "id": "position",
+        "kind": "composition-owned",
+        "from": ["position"],
+        "targets": [
+          {
+            "component": "button",
+            "prop": "className"
+          },
+          {
+            "component": "popover",
+            "prop": "PopoverContent.className"
+          }
+        ],
+        "summary": "Apply the nine fixed viewport positions through an Applique-owned floating wrapper and coordinate the trigger and popover content placement."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "popover",
+            "prop": "children"
+          },
+          {
+            "component": "button",
+            "prop": "children"
+          }
+        ],
+        "summary": "Render at least two action children in the directional speed-dial content and preserve their text-button treatment."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "image",
+    "kind": "composition",
+    "applique": ["image"],
+    "shadcn": ["aspect-ratio", "skeleton"],
+    "mainShadcnProps": ["ratio", "className"],
+    "summary": "Retain native image preloading, intersection, the transparent placeholder image, and the failed-container state. Replacing that placeholder with Skeleton is a separate visual decision.",
+    "propMappings": [
+      {
+        "id": "src",
+        "kind": "composition-owned",
+        "from": ["src"],
+        "targets": [
+          {
+            "component": "aspect-ratio",
+            "prop": "children"
+          }
+        ],
+        "summary": "Preload src and render it on the internal img only after the load and intersection conditions are satisfied."
+      },
+      {
+        "id": "dimensions",
+        "kind": "composition-owned",
+        "from": ["height", "width"],
+        "targets": [
+          {
+            "component": "aspect-ratio",
+            "prop": "ratio"
+          }
+        ],
+        "summary": "Preserve height and width on the internal img; derive AspectRatio only when both values can safely produce a numeric ratio."
+      },
+      {
+        "id": "lazy-load",
+        "kind": "needs-review",
+        "from": ["lazyLoad"],
+        "targets": [
+          {
+            "component": "skeleton",
+            "prop": "conditional visual replacement"
+          },
+          {
+            "component": "aspect-ratio",
+            "prop": "children"
+          }
+        ],
+        "summary": "This deprecated prop is active, defaults to true, and takes precedence over lazy. Preserve the transparent placeholder by default; using Skeleton would be an approved visual replacement."
+      },
+      {
+        "id": "lazy",
+        "kind": "needs-review",
+        "from": ["lazy"],
+        "targets": [
+          {
+            "component": "skeleton",
+            "prop": "conditional visual replacement"
+          },
+          {
+            "component": "aspect-ratio",
+            "prop": "children"
+          }
+        ],
+        "summary": "This is the documented replacement, but defaulted lazyLoad currently shadows it. Define normalized precedence and treat Skeleton as an optional visual change, not legacy behavior."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "aspect-ratio",
+            "prop": "className"
+          }
+        ],
+        "summary": "Current runtime applies className only to the loaded img, not the placeholder; decide whether the facade preserves that target or styles the wrapper."
+      },
+      {
+        "id": "native-image-props",
+        "kind": "composition-owned",
+        "from": ["non-conflicting native image attributes"],
+        "targets": [
+          {
+            "component": "aspect-ratio",
+            "prop": "children img attributes"
+          }
+        ],
+        "summary": "Forward alt, title, loading hints, data attributes, and callbacks to the internal img without replacing Applique loading control."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "section",
+    "kind": "direct",
+    "applique": ["section"],
+    "shadcn": ["card"],
+    "mainShadcnProps": ["size"],
+    "summary": "Adapt the compound Card parts to preserve the legacy semantic Section header, actions, content, and padding contract.",
+    "propMappings": [
+      {
+        "id": "title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "card",
+            "prop": "CardTitle.children"
+          }
+        ],
+        "summary": "Render title in the Card header without inventing a divider. Although typed as required, runtime permits an action-only or absent header."
+      },
+      {
+        "id": "no-padding",
+        "kind": "mapped",
+        "from": ["noPadding"],
+        "targets": [
+          {
+            "component": "card",
+            "prop": "CardContent.className"
+          }
+        ],
+        "valueMap": {
+          "true": "p-0",
+          "false": "default CardContent padding"
+        },
+        "summary": "Remove content padding when true."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "card",
+            "prop": "children"
+          }
+        ],
+        "summary": "Move direct legacy Button children into CardAction and render all other truthy children in CardContent."
+      },
+      {
+        "id": "class-name",
+        "kind": "forwarded",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "card",
+            "prop": "className"
+          }
+        ],
+        "summary": "Keep a semantic section wrapper and forward className to that public root rather than moving it to the internal Card."
+      },
+      {
+        "id": "root-props",
+        "kind": "forwarded",
+        "from": ["native section attributes"],
+        "targets": [
+          {
+            "component": "card",
+            "prop": "native section attributes"
+          }
+        ],
+        "summary": "Keep a semantic section wrapper and forward native section attributes, events, style, data attributes, and the ref to it."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "table",
+    "kind": "composition",
+    "applique": ["table"],
+    "shadcn": ["table", "dropdown-menu"],
+    "mainShadcnProps": ["className", "aria-label", "aria-describedby"],
+    "summary": "Use shadcn Table as the shell; legacy declarative columns, rows, enhancers, editing, ordering, and virtualization remain Applique-owned. Pagination is not part of this component.",
+    "propMappings": [
+      {
+        "id": "data",
+        "kind": "composition-owned",
+        "from": ["data"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "TableBody.children"
+          }
+        ],
+        "summary": "Render row objects through the normalized legacy column and row definitions."
+      },
+      {
+        "id": "display-columns",
+        "kind": "needs-review",
+        "from": ["displayColumns"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "children"
+          }
+        ],
+        "summary": "The prop is documented but current Table does not use it and may leak it to the DOM; define intended visibility behavior before adapting it."
+      },
+      {
+        "id": "render-row",
+        "kind": "composition-owned",
+        "from": ["renderRow"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "TableRow.children"
+          }
+        ],
+        "summary": "Add the render function as a catch-all legacy row renderer."
+      },
+      {
+        "id": "appearance",
+        "kind": "needs-review",
+        "from": ["appearance"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "className"
+          }
+        ],
+        "summary": "The default/striped type is documented, but current renderers do not implement it; approve the visual recipe before exposing it."
+      },
+      {
+        "id": "virtualized",
+        "kind": "composition-owned",
+        "from": ["virtualized"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "rendering strategy"
+          }
+        ],
+        "summary": "Switch between semantic table rendering and the Applique virtual grid implementation; shadcn Table has no virtualization."
+      },
+      {
+        "id": "scroll-mode",
+        "kind": "composition-owned",
+        "from": ["scrollMode"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "scroll container behavior"
+          }
+        ],
+        "summary": "Apply container/window scrolling only to the virtualized renderer, matching runtime."
+      },
+      {
+        "id": "column-order",
+        "kind": "composition-owned",
+        "from": ["columnOrder"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "leaf cell order"
+          }
+        ],
+        "summary": "Preserve the current runtime behavior, which reorders normalized leaf cells only and does not reorder the declarative header tree."
+      },
+      {
+        "id": "on-sort",
+        "kind": "composition-owned",
+        "from": ["onSort"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "header controls"
+          },
+          {
+            "component": "dropdown-menu",
+            "prop": "onSelect"
+          }
+        ],
+        "summary": "Emit enhancer-managed {columnId, order} state from the composed header controls."
+      },
+      {
+        "id": "on-filter",
+        "kind": "composition-owned",
+        "from": ["onFilter"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "children/onSelect"
+          }
+        ],
+        "summary": "Emit the aggregate filter record from the legacy filter enhancer UI."
+      },
+      {
+        "id": "editable",
+        "kind": "composition-owned",
+        "from": ["editable"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "cell/editor rendering"
+          }
+        ],
+        "summary": "Show the legacy edit toggle and each column's arbitrary editor component in the non-virtual renderer; current virtual mode does not implement editing."
+      },
+      {
+        "id": "on-edit",
+        "kind": "composition-owned",
+        "from": ["onEdit"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "editor onChange adapter"
+          }
+        ],
+        "summary": "Clone the arbitrary editor supplied by the column and translate its changes into (value, rowIndex, key); Table does not provide a registry Input editor."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "children"
+          }
+        ],
+        "summary": "Normalize Table.Column, Table.Row, and enhancer children into shadcn headers, rows, and cells."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "table",
+            "prop": "className"
+          }
+        ],
+        "summary": "Legacy renderers apply className to an outer wrapper, while shadcn Table applies it to the table element; preserve the wrapper target explicitly."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "nav-bar",
+    "kind": "composition",
+    "applique": ["nav-bar"],
+    "shadcn": ["sidebar", "sheet", "navigation-menu"],
+    "mainShadcnProps": [
+      "defaultOpen",
+      "open",
+      "onOpenChange",
+      "side",
+      "variant",
+      "collapsible",
+      "value",
+      "onValueChange"
+    ],
+    "summary": "Rebuild the legacy responsive, nested, router-aware NavBar from Sidebar, Sheet, and NavigationMenu while preserving its active-path and deprecated compatibility behavior.",
+    "propMappings": [
+      {
+        "id": "title",
+        "kind": "needs-review",
+        "from": ["title"],
+        "targets": [],
+        "summary": "The prop is documented, but the depth-zero legacy NavBar.Group never renders it; decide whether the facade preserves that no-op or restores a visible application title."
+      },
+      {
+        "id": "current-path",
+        "kind": "composition-owned",
+        "from": ["currentPath"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.data-active"
+          }
+        ],
+        "summary": "Use the current route to calculate active links and groups."
+      },
+      {
+        "id": "is-active-path",
+        "kind": "composition-owned",
+        "from": ["isActivePath"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.data-active"
+          }
+        ],
+        "summary": "Preserve the client predicate that decides active link and group state."
+      },
+      {
+        "id": "need-overlay",
+        "kind": "composition-owned",
+        "from": ["needOverlay"],
+        "targets": [
+          {
+            "component": "sheet",
+            "prop": "SheetOverlay rendering"
+          }
+        ],
+        "summary": "Conditionally render the backdrop; the registry Sheet renders one by default, so the facade must own this difference."
+      },
+      {
+        "id": "overlay-click-handler",
+        "kind": "composition-owned",
+        "from": ["overlayClickHandler"],
+        "targets": [
+          {
+            "component": "sheet",
+            "prop": "onOpenChange"
+          }
+        ],
+        "summary": "Close the navigation and invoke the callback only for an outside/backdrop dismissal."
+      },
+      {
+        "id": "is-open",
+        "kind": "mapped",
+        "from": ["isOpen"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "open"
+          },
+          {
+            "component": "sheet",
+            "prop": "open"
+          }
+        ],
+        "summary": "Rename the legacy controlled state to the responsive SidebarProvider or Sheet open state."
+      },
+      {
+        "id": "render-link",
+        "kind": "composition-owned",
+        "from": ["renderLink"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.render"
+          }
+        ],
+        "summary": "Use the client renderer for router links while composing each navigation item."
+      },
+      {
+        "id": "on-nav-link-click",
+        "kind": "composition-owned",
+        "from": ["onNavLinkClick"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.onClick"
+          }
+        ],
+        "summary": "Invoke the legacy { to } callback when an item with a path is activated, then close the legacy navigation."
+      },
+      {
+        "id": "on-click",
+        "kind": "composition-owned",
+        "from": ["onClick"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "composed navigation root onClick"
+          }
+        ],
+        "summary": "Attach the callback to the composed outer navigation root so clicks from all nested content continue to bubble to it."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarMenu.children"
+          },
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuList.children"
+          }
+        ],
+        "summary": "Transform NavBar.Group and NavBar.Item children into nested registry menu structures."
+      },
+      {
+        "id": "expand",
+        "kind": "mapped",
+        "from": ["expand"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "open"
+          },
+          {
+            "component": "sheet",
+            "prop": "open"
+          }
+        ],
+        "valueMap": {
+          "open": "true",
+          "close": "false",
+          "auto": "defer to isOpen, otherwise internal state"
+        },
+        "summary": "Although deprecated, expand still takes precedence: open and close force the responsive state, while auto falls through to isOpen or internal state."
+      },
+      {
+        "id": "match",
+        "kind": "composition-owned",
+        "from": ["match"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.data-active"
+          }
+        ],
+        "summary": "Although deprecated, the runtime still adapts match({ href, currentPath }) as the active-path predicate."
+      },
+      {
+        "id": "on-change",
+        "kind": "composition-owned",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.onClick"
+          }
+        ],
+        "summary": "Although deprecated, the runtime still calls onChange(path) whenever a path-bearing item is activated."
+      },
+      {
+        "id": "on-header-click",
+        "kind": "needs-review",
+        "from": ["onHeaderClick"],
+        "targets": [],
+        "summary": "The public type exposes this callback, but the current header handler never invokes it; decide whether compatibility means preserving that no-op or fixing the documented escape hatch."
+      },
+      {
+        "id": "link-component",
+        "kind": "composition-owned",
+        "from": ["linkComponent"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.render"
+          }
+        ],
+        "summary": "Although deprecated, linkComponent still overrides renderLink at runtime and must remain a compatibility alias."
+      },
+      {
+        "id": "enable-back-navigation",
+        "kind": "composition-owned",
+        "from": ["enableBackNavigation"],
+        "targets": [
+          {
+            "component": "sheet",
+            "prop": "SheetHeader.children"
+          }
+        ],
+        "summary": "On mobile, replace the menu toggle with a control that calls window.history.back()."
+      },
+      {
+        "id": "theme",
+        "kind": "composition-owned",
+        "from": ["theme"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarHeader.children"
+          }
+        ],
+        "summary": "Preserve the actual legacy behavior: dark selects the white wordmark while light/default selects the compact logo; it does not theme the whole navigation."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "composed navigation root className"
+          }
+        ],
+        "summary": "Apply the class to the composed outer navigation root, matching the legacy nav element."
+      },
+      {
+        "id": "style",
+        "kind": "composition-owned",
+        "from": ["style"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "composed navigation root style"
+          }
+        ],
+        "summary": "Apply the inline style to the composed outer navigation root."
+      },
+      {
+        "id": "id",
+        "kind": "needs-review",
+        "from": ["id"],
+        "targets": [],
+        "summary": "The legacy NavBar replaces a caller id with its generated navigation id; decide whether the facade preserves that behavior or accepts the caller id."
+      },
+      {
+        "id": "nav-item-to",
+        "kind": "composition-owned",
+        "from": ["NavBar.Item.to"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.href/render"
+          }
+        ],
+        "summary": "Build the item destination through the configured router renderer and use it for active-path calculation."
+      },
+      {
+        "id": "nav-item-icon",
+        "kind": "composition-owned",
+        "from": ["NavBar.Item.icon"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.children"
+          }
+        ],
+        "summary": "Resolve and render the legacy leading icon inside the composed item."
+      },
+      {
+        "id": "nav-item-render-icon",
+        "kind": "composition-owned",
+        "from": ["NavBar.Item.renderIcon"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.children"
+          }
+        ],
+        "summary": "Invoke the custom icon renderer instead of the named icon when supplied."
+      },
+      {
+        "id": "nav-item-update-badge",
+        "kind": "composition-owned",
+        "from": ["NavBar.Item.showUpdateBadge"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.children"
+          }
+        ],
+        "summary": "Render the legacy update marker inside the item."
+      },
+      {
+        "id": "nav-item-class-name",
+        "kind": "composition-owned",
+        "from": ["NavBar.Item.className"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.className"
+          }
+        ],
+        "summary": "Apply the item class to the composed link/item target."
+      },
+      {
+        "id": "nav-item-style",
+        "kind": "composition-owned",
+        "from": ["NavBar.Item.style"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.style"
+          }
+        ],
+        "summary": "Apply the inline style to the composed item target."
+      },
+      {
+        "id": "nav-item-on-click",
+        "kind": "needs-review",
+        "from": ["NavBar.Item.onClick"],
+        "targets": [],
+        "summary": "A legacy BaseProps onClick overrides the item's internal navigation handler because of spread order; decide whether to preserve that bug or compose both callbacks."
+      },
+      {
+        "id": "nav-group-title",
+        "kind": "composition-owned",
+        "from": ["NavBar.Group.title"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarGroupLabel.children"
+          }
+        ],
+        "summary": "Render nested group titles while retaining the legacy expand/collapse interaction."
+      },
+      {
+        "id": "nav-group-to",
+        "kind": "composition-owned",
+        "from": ["NavBar.Group.to"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.data-active"
+          }
+        ],
+        "summary": "Use the optional group path for active-group matching; the legacy group does not turn it into a destination link."
+      },
+      {
+        "id": "nav-group-class-name",
+        "kind": "composition-owned",
+        "from": ["NavBar.Group.className"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarGroup.className"
+          }
+        ],
+        "summary": "Apply the class to the composed nested group container."
+      },
+      {
+        "id": "nav-group-icon",
+        "kind": "composition-owned",
+        "from": ["NavBar.Group.icon"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarMenuButton.children"
+          }
+        ],
+        "summary": "Resolve and render the inherited legacy leading icon for a nested group trigger."
+      },
+      {
+        "id": "nav-group-render-icon",
+        "kind": "composition-owned",
+        "from": ["NavBar.Group.renderIcon"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarMenuButton.children"
+          }
+        ],
+        "summary": "Invoke the inherited custom icon renderer for a nested group trigger."
+      },
+      {
+        "id": "nav-group-update-badge",
+        "kind": "composition-owned",
+        "from": ["NavBar.Group.showUpdateBadge"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarMenuBadge rendering"
+          }
+        ],
+        "summary": "Render the inherited update marker on a nested group trigger."
+      },
+      {
+        "id": "nav-group-style",
+        "kind": "needs-review",
+        "from": ["NavBar.Group.style"],
+        "targets": [],
+        "summary": "Nested legacy groups pass style to their trigger item, while the depth-zero group ignores it; choose an explicit facade target."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "page",
+    "kind": "composition",
+    "applique": ["page"],
+    "shadcn": ["sidebar", "breadcrumb", "navigation-menu"],
+    "mainShadcnProps": [
+      "defaultOpen",
+      "open",
+      "onOpenChange",
+      "variant",
+      "collapsible"
+    ],
+    "summary": "Keep Page as an Applique-owned shell that places navigation, header, and content around Sidebar primitives; renderNavBar and alwaysOpen work at runtime despite being omitted from the generated public docs.",
+    "propMappings": [
+      {
+        "id": "render-top-bar",
+        "kind": "composition-owned",
+        "from": ["renderTopBar"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarInset.children"
+          }
+        ],
+        "summary": "Invoke the documented render function and mount its result in the shell header."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarInset.children"
+          }
+        ],
+        "summary": "Render the documented page content inside the main inset region."
+      },
+      {
+        "id": "render-nav-bar",
+        "kind": "composition-owned",
+        "from": ["renderNavBar"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "children"
+          }
+        ],
+        "summary": "Preserve this undocumented-but-active runtime render slot for the left navigation."
+      },
+      {
+        "id": "always-open",
+        "kind": "needs-review",
+        "from": ["alwaysOpen"],
+        "targets": [],
+        "summary": "This undocumented-but-active prop applies a legacy layout class; choose whether the registry equivalent is collapsible=none or a hover-expand recipe before mapping it."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "composed page shell className"
+          }
+        ],
+        "summary": "Keep className on the outer page shell rather than moving it to the main content region."
+      },
+      {
+        "id": "style",
+        "kind": "composition-owned",
+        "from": ["style"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "composed page shell style"
+          }
+        ],
+        "summary": "Keep style on the outer page shell; the legacy component sends other remaining props to the inner main-content element."
+      },
+      {
+        "id": "id",
+        "kind": "composition-owned",
+        "from": ["id"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarInset main content id"
+          }
+        ],
+        "summary": "Preserve the legacy target by applying id to the inner main-content region, not the outer page shell."
+      },
+      {
+        "id": "on-click",
+        "kind": "composition-owned",
+        "from": ["onClick"],
+        "targets": [
+          {
+            "component": "sidebar",
+            "prop": "SidebarInset main content onClick"
+          }
+        ],
+        "summary": "Preserve the legacy target by attaching the BaseProps click handler to the inner main-content region."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "top-bar",
+    "kind": "composition",
+    "applique": ["top-bar"],
+    "shadcn": ["breadcrumb", "avatar", "dropdown-menu"],
+    "mainShadcnProps": ["src", "alt", "open", "onOpenChange", "side"],
+    "summary": "Compose the title, breadcrumbs, arbitrary body content, account identity, and TopBar.Item action menu in an Applique-owned header.",
+    "propMappings": [
+      {
+        "id": "title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "adjacent heading children"
+          }
+        ],
+        "summary": "Render title as the header heading; legacy BreadCrumb children remain a separate region beneath it on desktop."
+      },
+      {
+        "id": "user",
+        "kind": "composition-owned",
+        "from": ["user"],
+        "targets": [
+          {
+            "component": "avatar",
+            "prop": "children"
+          },
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuTrigger.children"
+          }
+        ],
+        "summary": "Build the photo/fallback avatar and account label from name, photo, and email; preserve the Login fallback when user is absent."
+      },
+      {
+        "id": "header-navigation-elem",
+        "kind": "composition-owned",
+        "from": ["headerNavigationElem"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "adjacent header slot"
+          }
+        ],
+        "summary": "Keep this arbitrary element in its own leading header slot rather than coercing it into a breadcrumb item."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "BreadcrumbList.children"
+          },
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuContent.children"
+          }
+        ],
+        "summary": "Preserve runtime partitioning: BreadCrumb children become breadcrumbs, TopBar.Item children become account actions, and other children remain in the central body."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "composed top bar root className"
+          }
+        ],
+        "summary": "Apply className to the composed outer header, matching the legacy TopBar root."
+      },
+      {
+        "id": "style",
+        "kind": "composition-owned",
+        "from": ["style"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "composed top bar root style"
+          }
+        ],
+        "summary": "Apply the inline style to the composed outer header."
+      },
+      {
+        "id": "id",
+        "kind": "composition-owned",
+        "from": ["id"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "composed top bar root id"
+          }
+        ],
+        "summary": "Apply id to the composed outer header, matching the legacy TopBar root."
+      },
+      {
+        "id": "on-click",
+        "kind": "composition-owned",
+        "from": ["onClick"],
+        "targets": [
+          {
+            "component": "breadcrumb",
+            "prop": "composed top bar root onClick"
+          }
+        ],
+        "summary": "Attach the BaseProps click handler to the composed outer header."
+      },
+      {
+        "id": "top-bar-item-icon",
+        "kind": "composition-owned",
+        "from": ["TopBar.Item.icon"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuItem.children"
+          }
+        ],
+        "summary": "Resolve and render the legacy action icon before the item content."
+      },
+      {
+        "id": "top-bar-item-alt-text",
+        "kind": "composition-owned",
+        "from": ["TopBar.Item.altText"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuItem icon accessible name"
+          }
+        ],
+        "summary": "Use the legacy icon description as the icon title or accessible label."
+      },
+      {
+        "id": "top-bar-item-children",
+        "kind": "composition-owned",
+        "from": ["TopBar.Item.children"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuItem.children"
+          }
+        ],
+        "summary": "Render the action content in the composed account menu item."
+      },
+      {
+        "id": "top-bar-item-class-name",
+        "kind": "composition-owned",
+        "from": ["TopBar.Item.className"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuItem.className"
+          }
+        ],
+        "summary": "Apply the class to the composed account action item."
+      },
+      {
+        "id": "top-bar-item-style",
+        "kind": "composition-owned",
+        "from": ["TopBar.Item.style"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuItem.style"
+          }
+        ],
+        "summary": "Apply the inline style to the composed account action item."
+      },
+      {
+        "id": "top-bar-item-id",
+        "kind": "composition-owned",
+        "from": ["TopBar.Item.id"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuItem.id"
+          }
+        ],
+        "summary": "Apply the legacy item id to the composed account action."
+      },
+      {
+        "id": "top-bar-item-on-click",
+        "kind": "composition-owned",
+        "from": ["TopBar.Item.onClick"],
+        "targets": [
+          {
+            "component": "dropdown-menu",
+            "prop": "DropdownMenuItem.onClick/onSelect"
+          }
+        ],
+        "summary": "Compose the legacy action callback with the menu item's selection and close behavior."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "top-nav",
+    "kind": "composition",
+    "applique": ["top-nav"],
+    "shadcn": ["navigation-menu", "sheet", "sidebar"],
+    "mainShadcnProps": [
+      "value",
+      "onValueChange",
+      "orientation",
+      "delay",
+      "closeDelay",
+      "open",
+      "onOpenChange",
+      "side",
+      "collapsible"
+    ],
+    "summary": "Rebuild the config-driven desktop menu and mobile side navigation while retaining Applique routing and active-level resolution; the declared config type says array, but runtime accesses navigationConfig as a keyed object.",
+    "propMappings": [
+      {
+        "id": "config",
+        "kind": "composition-owned",
+        "from": ["config"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuList.children"
+          },
+          {
+            "component": "sidebar",
+            "prop": "SidebarMenu.children"
+          }
+        ],
+        "summary": "Transform logo, navigationConfig, quickLinks, and quickLinksSideNav into desktop and mobile structures; support the keyed-object shape the runtime actually reads."
+      },
+      {
+        "id": "dispatch-function",
+        "kind": "composition-owned",
+        "from": ["dispatchFunction"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.onClick"
+          },
+          {
+            "component": "sidebar",
+            "prop": "SidebarMenuButton.onClick"
+          }
+        ],
+        "summary": "Invoke the existing routing dispatcher from every desktop and mobile item activation."
+      },
+      {
+        "id": "additional-header",
+        "kind": "composition-owned",
+        "from": ["additionalHeader"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "adjacent header slot"
+          }
+        ],
+        "summary": "Render the arbitrary additional header content beside the composed navigation."
+      },
+      {
+        "id": "hamburger",
+        "kind": "composition-owned",
+        "from": ["hamburger"],
+        "targets": [
+          {
+            "component": "sheet",
+            "prop": "SheetTrigger.children"
+          }
+        ],
+        "summary": "Render the supplied legacy icon in the mobile navigation trigger."
+      },
+      {
+        "id": "close",
+        "kind": "composition-owned",
+        "from": ["close"],
+        "targets": [
+          {
+            "component": "sheet",
+            "prop": "SheetClose.children"
+          }
+        ],
+        "summary": "Render the supplied legacy icon in the mobile close control."
+      },
+      {
+        "id": "navigation-key",
+        "kind": "composition-owned",
+        "from": ["navigationKey"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.data-active"
+          }
+        ],
+        "summary": "Read this routingInfo field while building the value-to-menu-level lookup."
+      },
+      {
+        "id": "current-navigation-value",
+        "kind": "composition-owned",
+        "from": ["currentNavigationValue"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "NavigationMenuLink.data-active"
+          }
+        ],
+        "summary": "Resolve and highlight the active L1/L2/L3 route across desktop and mobile navigation."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "navigation-menu",
+            "prop": "adjacent content slot"
+          },
+          {
+            "component": "sidebar",
+            "prop": "adjacent content slot"
+          }
+        ],
+        "summary": "The runtime forwards BaseProps children to both responsive implementations even though generated docs omit it."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [],
+        "summary": "BaseProps permits className, but TopNav currently drops it; decide whether the facade preserves that no-op or adds an intentional outer-shell class target."
+      },
+      {
+        "id": "style",
+        "kind": "needs-review",
+        "from": ["style"],
+        "targets": [],
+        "summary": "BaseProps permits style, but TopNav currently drops it; decide whether the facade preserves that no-op or applies it to the outer shell."
+      },
+      {
+        "id": "id",
+        "kind": "needs-review",
+        "from": ["id"],
+        "targets": [],
+        "summary": "BaseProps permits id, but TopNav currently drops it; decide whether the facade applies it to the outer shell."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "input-select",
+    "kind": "ambiguous",
+    "applique": ["input-select"],
+    "shadcn": ["select", "combobox", "native-select"],
+    "mainShadcnProps": [
+      "items",
+      "value",
+      "onValueChange",
+      "multiple",
+      "disabled",
+      "readOnly",
+      "required",
+      "inputValue",
+      "onInputValueChange",
+      "filter",
+      "virtualized",
+      "placeholder",
+      "side"
+    ],
+    "summary": "Use Select for a simple non-searchable field, Combobox for searchable or multiple behavior, and NativeSelect only when native DOM semantics are explicitly wanted; the facade must preserve the legacy option model and value-only callbacks.",
+    "propMappings": [
+      {
+        "id": "options",
+        "kind": "composition-owned",
+        "from": ["options"],
+        "targets": [
+          {
+            "component": "select",
+            "prop": "items"
+          },
+          {
+            "component": "combobox",
+            "prop": "items"
+          },
+          {
+            "component": "native-select",
+            "prop": "children"
+          }
+        ],
+        "summary": "Transform the data array into items/options using labelKey and valueKey."
+      },
+      {
+        "id": "value",
+        "kind": "composition-owned",
+        "from": ["value"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "value"
+          },
+          {
+            "component": "select",
+            "prop": "value"
+          },
+          {
+            "component": "native-select",
+            "prop": "value"
+          }
+        ],
+        "summary": "Resolve legacy scalar value(s) against options by valueKey when the Base UI target uses option objects; preserve scalar values only for a target built from scalar items."
+      },
+      {
+        "id": "on-change",
+        "kind": "composition-owned",
+        "from": ["onChange"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "onValueChange"
+          },
+          {
+            "component": "select",
+            "prop": "onValueChange"
+          },
+          {
+            "component": "native-select",
+            "prop": "onChange"
+          }
+        ],
+        "summary": "Convert selected option object(s) back to legacy scalar value(s) through valueKey, then call the value-only callback and discard primitive event details."
+      },
+      {
+        "id": "on-search",
+        "kind": "mapped",
+        "from": ["onSearch"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "onInputValueChange"
+          }
+        ],
+        "summary": "Call the legacy text-only search callback when the Combobox input value changes."
+      },
+      {
+        "id": "render-option",
+        "kind": "needs-review",
+        "from": ["renderOption"],
+        "targets": [],
+        "summary": "This is documented, but the current InputSelect runtime never calls it and always renders item[labelKey]; decide whether the facade restores the documented renderer."
+      },
+      {
+        "id": "render-empty-state",
+        "kind": "composition-owned",
+        "from": ["renderEmptyState"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "ComboboxEmpty.children"
+          }
+        ],
+        "summary": "Invoke the render function for the Combobox empty-state content."
+      },
+      {
+        "id": "placeholder",
+        "kind": "composition-owned",
+        "from": ["placeholder"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "ComboboxValue/Input rendering"
+          },
+          {
+            "component": "select",
+            "prop": "SelectValue placeholder"
+          },
+          {
+            "component": "native-select",
+            "prop": "placeholder option children"
+          }
+        ],
+        "summary": "Preserve the legacy selected-value placeholder separately from the editable search input, which uses a blank placeholder while the overlay is active."
+      },
+      {
+        "id": "multiple",
+        "kind": "composition-owned",
+        "from": ["multiple"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "multiple"
+          },
+          {
+            "component": "native-select",
+            "prop": "multiple"
+          }
+        ],
+        "summary": "Use Base UI multiple selection for the Combobox path or native multiple selection when NativeSelect is deliberately chosen; shadcn Select remains single-value."
+      },
+      {
+        "id": "disabled",
+        "kind": "composition-owned",
+        "from": ["disabled"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "disabled"
+          },
+          {
+            "component": "select",
+            "prop": "disabled"
+          },
+          {
+            "component": "native-select",
+            "prop": "disabled"
+          }
+        ],
+        "summary": "Apply the disabled state to whichever target the usage audit selects."
+      },
+      {
+        "id": "read-only",
+        "kind": "composition-owned",
+        "from": ["readOnly"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "readOnly"
+          },
+          {
+            "component": "select",
+            "prop": "readOnly"
+          }
+        ],
+        "summary": "Preserve preview-only selection behavior on the selected Base UI target; native select has no readOnly attribute and needs wrapper-level enforcement."
+      },
+      {
+        "id": "required",
+        "kind": "needs-review",
+        "from": ["required"],
+        "targets": [],
+        "summary": "Legacy required suppresses the reset control but is not forwarded to the input; decide whether the facade preserves that behavior or restores the documented native required constraint."
+      },
+      {
+        "id": "is-loading",
+        "kind": "composition-owned",
+        "from": ["isLoading"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "ComboboxInput end adornment"
+          }
+        ],
+        "summary": "Replace the trigger chevron with a loading indicator while options are loading."
+      },
+      {
+        "id": "searchable",
+        "kind": "needs-review",
+        "from": ["searchable"],
+        "targets": [],
+        "summary": "The runtime toggles an editable search input; for migration it also decides whether Select or Combobox is the appropriate target."
+      },
+      {
+        "id": "searchable-keys",
+        "kind": "composition-owned",
+        "from": ["searchableKeys"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "filter"
+          }
+        ],
+        "summary": "Build a filter that searches labelKey plus each configured object field."
+      },
+      {
+        "id": "label-key",
+        "kind": "composition-owned",
+        "from": ["labelKey"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "itemToStringLabel"
+          }
+        ],
+        "summary": "Use the configured field for item labels and selected-value display."
+      },
+      {
+        "id": "value-key",
+        "kind": "composition-owned",
+        "from": ["valueKey"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "itemToStringValue"
+          },
+          {
+            "component": "combobox",
+            "prop": "isItemEqualToValue"
+          }
+        ],
+        "summary": "Use the configured field for form serialization and stable object comparison; itemToStringValue alone does not convert the controlled value shape."
+      },
+      {
+        "id": "filter-options",
+        "kind": "mapped",
+        "from": ["filterOptions"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "filter"
+          }
+        ],
+        "summary": "Wrap the one-argument legacy predicate in the Combobox filter signature; legacy runs it only after text search."
+      },
+      {
+        "id": "no-results-placeholder",
+        "kind": "composition-owned",
+        "from": ["noResultsPlaceholder"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "ComboboxEmpty.children"
+          }
+        ],
+        "summary": "Although deprecated, this value is still active and takes precedence over renderEmptyState at runtime."
+      },
+      {
+        "id": "icon",
+        "kind": "composition-owned",
+        "from": ["icon"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "ComboboxInput start adornment"
+          }
+        ],
+        "summary": "Render the legacy icon before both the editable input and selected-value display."
+      },
+      {
+        "id": "up",
+        "kind": "composition-owned",
+        "from": ["up"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "side"
+          },
+          {
+            "component": "select",
+            "prop": "side"
+          }
+        ],
+        "summary": "Translate true/false to top/bottom on the selected popup target; NativeSelect has no floating side."
+      },
+      {
+        "id": "field-context",
+        "kind": "composition-owned",
+        "from": ["__fieldContext"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "disabled"
+          },
+          {
+            "component": "combobox",
+            "prop": "aria-invalid"
+          }
+        ],
+        "summary": "Preserve the active internal Field behavior that merges parent disabled and error state."
+      },
+      {
+        "id": "error",
+        "kind": "mapped",
+        "from": ["error"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "aria-invalid"
+          }
+        ],
+        "summary": "Expose the visual error state through aria-invalid and Applique error styling."
+      },
+      {
+        "id": "variant",
+        "kind": "needs-review",
+        "from": ["variant"],
+        "targets": [],
+        "summary": "The runtime defaults this nominally required prop to bordered and applies bordered/standard classes; approve the registry class target and tokens."
+      },
+      {
+        "id": "adornment",
+        "kind": "composition-owned",
+        "from": ["adornment"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "ComboboxInput adornment children"
+          }
+        ],
+        "summary": "Render arbitrary adornment content around the Combobox input."
+      },
+      {
+        "id": "adornment-position",
+        "kind": "composition-owned",
+        "from": ["adornmentPosition"],
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "ComboboxInput adornment placement"
+          }
+        ],
+        "summary": "Preserve the undocumented-but-active start/end placement, whose runtime default is end."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [],
+        "summary": "BaseProps permits className, but the current InputSelect implementation does not forward it; choose an intentional facade class target."
+      },
+      {
+        "id": "style",
+        "kind": "needs-review",
+        "from": ["style"],
+        "targets": [],
+        "summary": "The current InputSelect drops style; choose whether to preserve that no-op or apply it to the composed field root."
+      },
+      {
+        "id": "id",
+        "kind": "needs-review",
+        "from": ["id"],
+        "targets": [],
+        "summary": "The current InputSelect drops a client id and generates internal ids; define whether the facade id belongs on the input, trigger, or composed field root."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "list",
+    "kind": "ambiguous",
+    "applique": ["list"],
+    "shadcn": ["item", "command", "checkbox", "radio-group"],
+    "mainShadcnProps": ["value", "onValueChange", "disabled", "className"],
+    "summary": "Choose Item for display, Command for command-style keyboard navigation, RadioGroup for one selected value, or Checkbox composition for multiple values; no one target preserves the full legacy list.",
+    "propMappings": [
+      {
+        "id": "items",
+        "kind": "composition-owned",
+        "from": ["items"],
+        "targets": [
+          {
+            "component": "item",
+            "prop": "ItemGroup.children"
+          },
+          {
+            "component": "command",
+            "prop": "CommandList.children"
+          }
+        ],
+        "summary": "Map the legacy data array into the chosen target's item children."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "item",
+            "prop": "children"
+          },
+          {
+            "component": "command",
+            "prop": "CommandItem.children"
+          }
+        ],
+        "summary": "Invoke the per-item render function with index, id, and item."
+      },
+      {
+        "id": "value",
+        "kind": "needs-review",
+        "from": ["value"],
+        "targets": [],
+        "summary": "The target depends on usage: RadioGroup owns a scalar value, while multiple selection needs individually controlled Checkboxes."
+      },
+      {
+        "id": "on-change",
+        "kind": "needs-review",
+        "from": ["onChange"],
+        "targets": [],
+        "summary": "Adapt to RadioGroup onValueChange, Checkbox onCheckedChange, or CommandItem onSelect only after the selection intent is known."
+      },
+      {
+        "id": "id-for-item",
+        "kind": "composition-owned",
+        "from": ["idForItem"],
+        "targets": [
+          {
+            "component": "command",
+            "prop": "CommandItem.value"
+          }
+        ],
+        "summary": "Use the accessor for stable keys, item values, and selected-value comparisons."
+      },
+      {
+        "id": "is-item-disabled",
+        "kind": "composition-owned",
+        "from": ["isItemDisabled"],
+        "targets": [
+          {
+            "component": "command",
+            "prop": "CommandItem.disabled"
+          },
+          {
+            "component": "checkbox",
+            "prop": "disabled"
+          },
+          {
+            "component": "radio-group",
+            "prop": "RadioGroupItem.disabled"
+          }
+        ],
+        "summary": "Evaluate the predicate for every rendered target item."
+      },
+      {
+        "id": "multiple",
+        "kind": "needs-review",
+        "from": ["multiple"],
+        "targets": [],
+        "summary": "This changes value shape, enables select-all, and usually decides between RadioGroup and a Checkbox composition."
+      },
+      {
+        "id": "virtualized",
+        "kind": "needs-review",
+        "from": ["virtualized"],
+        "targets": [],
+        "summary": "VirtualList is active legacy behavior; none of the shortlisted registry wrappers replaces it directly, so retain a virtualization layer or approve its removal per usage."
+      },
+      {
+        "id": "class-name",
+        "kind": "needs-review",
+        "from": ["className"],
+        "targets": [],
+        "summary": "The chosen display, command, or selection root determines where the legacy list class belongs."
+      },
+      {
+        "id": "style",
+        "kind": "needs-review",
+        "from": ["style"],
+        "targets": [],
+        "summary": "The legacy renderContainer overwrites a caller style with its layout style; decide whether the facade preserves that bug or restores an intentional root style target."
+      },
+      {
+        "id": "id",
+        "kind": "needs-review",
+        "from": ["id"],
+        "targets": [],
+        "summary": "The legacy id lands on the listbox, but the chosen registry target determines whether it belongs on ItemGroup, CommandList, or a selection-group root."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "loader",
+    "kind": "ambiguous",
+    "applique": ["loader"],
+    "shadcn": ["spinner", "progress"],
+    "mainShadcnProps": ["className"],
+    "summary": "Use Spinner for the legacy spinner appearance and an indeterminate Progress composition for the bar appearance; preserve the runtime differences around isLoading instead of treating Loader as measurable progress.",
+    "propMappings": [
+      {
+        "id": "type",
+        "kind": "needs-review",
+        "from": ["type"],
+        "targets": [],
+        "summary": "inline, small, and large control both size and surrounding layout; map them only after choosing Spinner or Progress and approving equivalent dimensions."
+      },
+      {
+        "id": "current-color",
+        "kind": "needs-review",
+        "from": ["currentColor"],
+        "targets": [],
+        "summary": "The prop is documented but ignored by the current Loader runtime; decide whether the facade should restore the intended currentColor behavior."
+      },
+      {
+        "id": "appearance",
+        "kind": "mapped",
+        "from": ["appearance"],
+        "targets": [
+          {
+            "component": "spinner",
+            "prop": "component"
+          },
+          {
+            "component": "progress",
+            "prop": "component"
+          }
+        ],
+        "valueMap": {
+          "spinner": "spinner",
+          "bar": "progress"
+        },
+        "summary": "Select Spinner or an indeterminate Progress rendering from the legacy appearance."
+      },
+      {
+        "id": "is-loading",
+        "kind": "needs-review",
+        "from": ["isLoading"],
+        "targets": [],
+        "summary": "Legacy bar animation stops when false, but legacy spinner animation does not; choose whether compatibility preserves this inconsistency or normalizes both."
+      },
+      {
+        "id": "text",
+        "kind": "composition-owned",
+        "from": ["text"],
+        "targets": [
+          {
+            "component": "spinner",
+            "prop": "adjacent label children"
+          },
+          {
+            "component": "progress",
+            "prop": "ProgressLabel.children"
+          }
+        ],
+        "summary": "Render the visible loading text beside the selected indicator."
+      },
+      {
+        "id": "text-position",
+        "kind": "needs-review",
+        "from": ["textPosition"],
+        "targets": [],
+        "summary": "This is documented but ignored by the current runtime, and its TypeScript declaration is one combined string literal rather than four values."
+      },
+      {
+        "id": "children",
+        "kind": "unsupported",
+        "from": ["children"],
+        "targets": [],
+        "summary": "Loader explicitly declares children as never; use text for the supported visible label."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "spinner",
+            "prop": "adjacent loader wrapper className"
+          },
+          {
+            "component": "progress",
+            "prop": "adjacent loader wrapper className"
+          }
+        ],
+        "summary": "Keep className on the outer loader wrapper rather than moving it onto only the indicator."
+      },
+      {
+        "id": "style",
+        "kind": "needs-review",
+        "from": ["style"],
+        "targets": [],
+        "summary": "BaseProps permits style, but the current Loader drops it; decide whether the facade applies it to the outer wrapper."
+      },
+      {
+        "id": "id",
+        "kind": "needs-review",
+        "from": ["id"],
+        "targets": [],
+        "summary": "BaseProps permits id, but the current Loader drops it; decide whether the facade applies it to the outer wrapper."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "modal",
+    "kind": "ambiguous",
+    "applique": ["modal"],
+    "shadcn": ["dialog", "alert-dialog", "drawer", "sheet"],
+    "mainShadcnProps": [
+      "open",
+      "defaultOpen",
+      "onOpenChange",
+      "disablePointerDismissal",
+      "modal",
+      "showCloseButton",
+      "side",
+      "swipeDirection"
+    ],
+    "summary": "Use Dialog for the desktop modal, Drawer for the mobile drawer, Sheet for the side drawer, and AlertDialog only when call-site intent is a confirmation; runtime supports SIDE_DRAWER even though the public type and generated docs omit it.",
+    "propMappings": [
+      {
+        "id": "trigger",
+        "kind": "composition-owned",
+        "from": ["trigger"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "DialogTrigger.children"
+          },
+          {
+            "component": "drawer",
+            "prop": "DrawerTrigger.children"
+          },
+          {
+            "component": "sheet",
+            "prop": "SheetTrigger.children"
+          }
+        ],
+        "summary": "Preserve string-trigger button creation and clone/custom-trigger activation in the chosen compound overlay."
+      },
+      {
+        "id": "is-open",
+        "kind": "mapped",
+        "from": ["isOpen"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "open"
+          },
+          {
+            "component": "drawer",
+            "prop": "open"
+          },
+          {
+            "component": "sheet",
+            "prop": "open"
+          }
+        ],
+        "summary": "Rename the controlled legacy state to open on the selected overlay root."
+      },
+      {
+        "id": "hide-close",
+        "kind": "composition-owned",
+        "from": ["hideClose"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "showCloseButton"
+          },
+          {
+            "component": "sheet",
+            "prop": "showCloseButton"
+          },
+          {
+            "component": "drawer",
+            "prop": "composed close control"
+          }
+        ],
+        "summary": "Invert the legacy hide flag; Drawer needs an explicitly composed close control."
+      },
+      {
+        "id": "on-open",
+        "kind": "composition-owned",
+        "from": ["onOpen"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "onOpenChange"
+          },
+          {
+            "component": "drawer",
+            "prop": "onOpenChange"
+          },
+          {
+            "component": "sheet",
+            "prop": "onOpenChange"
+          }
+        ],
+        "summary": "Compose the selected root's state callback and invoke onOpen only for an internal transition to open; external isOpen prop changes must not call it."
+      },
+      {
+        "id": "render",
+        "kind": "composition-owned",
+        "from": ["render"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "DialogContent.children"
+          },
+          {
+            "component": "drawer",
+            "prop": "DrawerContent.children"
+          },
+          {
+            "component": "sheet",
+            "prop": "SheetContent.children"
+          }
+        ],
+        "summary": "Call the custom layout renderer with title, actions, children, onClose, and type."
+      },
+      {
+        "id": "title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "DialogTitle.children"
+          },
+          {
+            "component": "drawer",
+            "prop": "DrawerTitle.children"
+          },
+          {
+            "component": "sheet",
+            "prop": "SheetTitle.children"
+          }
+        ],
+        "summary": "Render the title in the selected overlay's accessible title component."
+      },
+      {
+        "id": "actions",
+        "kind": "composition-owned",
+        "from": ["actions"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "DialogFooter.children"
+          },
+          {
+            "component": "drawer",
+            "prop": "DrawerFooter.children"
+          },
+          {
+            "component": "sheet",
+            "prop": "SheetFooter.children"
+          }
+        ],
+        "summary": "Render action nodes in the footer and preserve the function form that receives the close callback."
+      },
+      {
+        "id": "close-on-click-away",
+        "kind": "composition-owned",
+        "from": ["closeOnClickAway"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "disablePointerDismissal"
+          },
+          {
+            "component": "drawer",
+            "prop": "disablePointerDismissal"
+          },
+          {
+            "component": "sheet",
+            "prop": "disablePointerDismissal"
+          },
+          {
+            "component": "dialog",
+            "prop": "onOpenChange event reason"
+          },
+          {
+            "component": "drawer",
+            "prop": "onOpenChange event reason"
+          },
+          {
+            "component": "sheet",
+            "prop": "onOpenChange event reason"
+          }
+        ],
+        "summary": "Invert the flag for pointer dismissal and inspect close reasons so Escape does not introduce an undocumented close path when strict legacy behavior is required."
+      },
+      {
+        "id": "on-close",
+        "kind": "composition-owned",
+        "from": ["onClose"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "onOpenChange"
+          },
+          {
+            "component": "drawer",
+            "prop": "onOpenChange"
+          },
+          {
+            "component": "sheet",
+            "prop": "onOpenChange"
+          }
+        ],
+        "summary": "Compose the selected root's state callback and invoke onClose only for an accepted internal close transition."
+      },
+      {
+        "id": "type",
+        "kind": "mapped",
+        "from": ["type"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "component"
+          },
+          {
+            "component": "drawer",
+            "prop": "component"
+          },
+          {
+            "component": "sheet",
+            "prop": "component"
+          }
+        ],
+        "valueMap": {
+          "DESKTOP": "dialog",
+          "MOBILE_DRAWER": "drawer",
+          "SIDE_DRAWER": "sheet"
+        },
+        "summary": "Select the overlay composition; SIDE_DRAWER is active runtime behavior missing from the declared public union."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "DialogContent.children"
+          },
+          {
+            "component": "drawer",
+            "prop": "DrawerContent.children"
+          },
+          {
+            "component": "sheet",
+            "prop": "SheetContent.children"
+          }
+        ],
+        "summary": "Render body content in the selected overlay content component."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "composed modal root className"
+          },
+          {
+            "component": "drawer",
+            "prop": "composed modal root className"
+          },
+          {
+            "component": "sheet",
+            "prop": "composed modal root className"
+          }
+        ],
+        "summary": "Keep className on the outer modal wrapper that contains both backdrop and body, matching the legacy target."
+      },
+      {
+        "id": "style",
+        "kind": "composition-owned",
+        "from": ["style"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "composed modal root style"
+          },
+          {
+            "component": "drawer",
+            "prop": "composed modal root style"
+          },
+          {
+            "component": "sheet",
+            "prop": "composed modal root style"
+          }
+        ],
+        "summary": "Apply the inline style to the outer modal wrapper, where legacy remaining props are spread."
+      },
+      {
+        "id": "id",
+        "kind": "composition-owned",
+        "from": ["id"],
+        "targets": [
+          {
+            "component": "dialog",
+            "prop": "composed modal root id"
+          },
+          {
+            "component": "drawer",
+            "prop": "composed modal root id"
+          },
+          {
+            "component": "sheet",
+            "prop": "composed modal root id"
+          }
+        ],
+        "summary": "Apply the id to the outer modal wrapper rather than silently moving it to only the dialog body."
+      }
+    ],
+    "review": "proposed"
+  },
+  {
+    "id": "progress",
+    "kind": "ambiguous",
+    "applique": ["progress"],
+    "shadcn": ["progress", "spinner"],
+    "mainShadcnProps": [
+      "value",
+      "min",
+      "max",
+      "format",
+      "getAriaValueText",
+      "locale",
+      "className"
+    ],
+    "summary": "Use Progress for the numeric bar and a custom Progress/SVG composition for the numeric circle. Spinner remains only a usage-review alternative for call sites that used Progress as an indeterminate loader and do not rely on its numeric contract.",
+    "propMappings": [
+      {
+        "id": "type",
+        "kind": "needs-review",
+        "from": ["type"],
+        "targets": [],
+        "summary": "bar maps to Progress and circle needs a custom determinate SVG; use Spinner only after a call-site audit confirms the numeric value and progress semantics are irrelevant."
+      },
+      {
+        "id": "value",
+        "kind": "composition-owned",
+        "from": ["value"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "value"
+          },
+          {
+            "component": "progress",
+            "prop": "custom circular SVG value"
+          }
+        ],
+        "summary": "Send the numeric completion value to the Progress root for bars or to the custom determinate SVG calculation for circles."
+      },
+      {
+        "id": "show-value",
+        "kind": "composition-owned",
+        "from": ["showValue"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "ProgressValue rendering"
+          }
+        ],
+        "summary": "Conditionally render the percentage label for both bar and circle presentations."
+      },
+      {
+        "id": "appearance",
+        "kind": "needs-review",
+        "from": ["appearance"],
+        "targets": [],
+        "summary": "success, info, warning, and danger are active semantic colors; approve their token classes on ProgressIndicator and the custom circle stroke."
+      },
+      {
+        "id": "title",
+        "kind": "composition-owned",
+        "from": ["title"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "ProgressLabel.children"
+          }
+        ],
+        "summary": "Although deprecated, title remains an active fallback label when children is absent."
+      },
+      {
+        "id": "size",
+        "kind": "needs-review",
+        "from": ["size"],
+        "targets": [],
+        "summary": "small, medium, and large change bar height or circle diameter by different legacy scales; approve separate mappings before implementation."
+      },
+      {
+        "id": "types",
+        "kind": "composition-owned",
+        "from": ["types"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "ProgressIndicator.className"
+          }
+        ],
+        "summary": "Preserve the active regular/stripes rendering with indicator classes rather than marking stripes unsupported."
+      },
+      {
+        "id": "movement",
+        "kind": "composition-owned",
+        "from": ["movement"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "ProgressIndicator.className"
+          }
+        ],
+        "summary": "Preserve continuous/static animation when the striped bar presentation is selected."
+      },
+      {
+        "id": "children",
+        "kind": "composition-owned",
+        "from": ["children"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "ProgressLabel.children"
+          }
+        ],
+        "summary": "Use children as the bar label and retain it beside the custom circular presentation."
+      },
+      {
+        "id": "class-name",
+        "kind": "composition-owned",
+        "from": ["className"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "className"
+          },
+          {
+            "component": "spinner",
+            "prop": "adjacent progress wrapper className"
+          }
+        ],
+        "summary": "Apply className to the selected bar/circle root; an explicitly approved Spinner alternative keeps it on the surrounding compatibility wrapper."
+      },
+      {
+        "id": "style",
+        "kind": "composition-owned",
+        "from": ["style"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "style"
+          },
+          {
+            "component": "spinner",
+            "prop": "adjacent progress wrapper style"
+          }
+        ],
+        "summary": "Preserve the legacy root inline style on the selected determinate root or approved compatibility wrapper."
+      },
+      {
+        "id": "id",
+        "kind": "composition-owned",
+        "from": ["id"],
+        "targets": [
+          {
+            "component": "progress",
+            "prop": "id"
+          },
+          {
+            "component": "spinner",
+            "prop": "adjacent progress wrapper id"
+          }
+        ],
+        "summary": "Preserve the legacy root id on the selected determinate root or approved compatibility wrapper."
+      }
+    ],
+    "review": "proposed"
+  }
+]

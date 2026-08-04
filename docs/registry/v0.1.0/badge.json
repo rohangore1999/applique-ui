@@ -1,37 +1,31 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "badge",
-  "type": "registry:ui",
-  "title": "Badge",
-  "description": "Official shadcn base-nova component with Applique theme tokens.",
-  "dependencies": [
-    "@base-ui/react@1.6.0",
-    "class-variance-authority@0.7.1"
-  ],
+  "type": "registry:component",
+  "title": "Applique Badge",
+  "description": "Applique-compatible semantic badge backed by the shadcn Badge primitive.",
+  "dependencies": [],
   "categories": [
-    "primitive",
-    "base-ui"
+    "applique",
+    "facade",
+    "data-display"
   ],
   "registryDependencies": [
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-theme.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/utils.json",
-    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-react18-compat.json"
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/applique-internal-badge.json"
   ],
   "files": [
     {
-      "path": "ui/badge.tsx",
-      "content": "import { mergeProps } from \"@base-ui/react/merge-props\"\nimport { useRender } from \"@base-ui/react/use-render\"\nimport { cva, type VariantProps } from \"class-variance-authority\"\n\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nconst badgeVariants = cva(\n  \"group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 applique-dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!\",\n  {\n    variants: {\n      variant: {\n        default: \"bg-primary text-primary-foreground [a]:hover:bg-primary/80\",\n        secondary:\n          \"bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80\",\n        destructive:\n          \"bg-destructive/10 text-destructive focus-visible:ring-destructive/20 applique-dark:bg-destructive/20 applique-dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20\",\n        outline:\n          \"border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground\",\n        ghost:\n          \"hover:bg-muted hover:text-muted-foreground applique-dark:hover:bg-muted/50\",\n        link: \"text-primary underline-offset-4 hover:underline\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n    },\n  }\n)\n\nfunction BadgeImpl({\n  className,\n  variant = \"default\",\n  render,\n  ...props\n}: useRender.ComponentProps<\"span\"> & VariantProps<typeof badgeVariants>) {\n  return useRender({\n    defaultTagName: \"span\",\n    props: mergeProps<\"span\">(\n      {\n        className: cn(badgeVariants({ variant }), className),\n      },\n      props\n    ),\n    render,\n    state: {\n      slot: \"badge\",\n      variant,\n    },\n  })\n}\n\nconst Badge = withReact18Ref(BadgeImpl)\n\nexport { Badge, badgeVariants }\n",
-      "type": "registry:ui",
-      "target": "@ui/badge.tsx"
+      "path": "components/applique/badge.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport { Badge as InternalBadge } from '@/components/applique/internal/badge'\nimport { cn } from '@/lib/utils'\n\ntype InternalBadgeProps = React.ComponentPropsWithoutRef<typeof InternalBadge>\ntype IconName = string | React.ReactNode | React.ComponentType<any>\ntype BadgeType = 'info' | 'success' | 'warning' | 'error'\ntype BadgeVariant = 'solid' | 'outlined'\n\nfunction renderIcon(name: IconName): React.ReactNode {\n  let icon: React.ReactNode\n\n  if (typeof name === 'string') {\n    icon = (\n      <svg xmlns=\"http://www.w3.org/2000/svg\">\n        <use href={`#uikit-i-${name}`} xlinkHref={`#uikit-i-${name}`} />\n      </svg>\n    )\n  } else if (typeof name === 'function') {\n    const IconComponent = name as React.ComponentType\n    icon = <IconComponent />\n  } else {\n    icon = name\n  }\n\n  return (\n    <span\n      aria-hidden=\"true\"\n      className=\"-ml-1 mr-0.5 inline-flex shrink-0 items-center [&>svg]:size-3\"\n      data-test-id=\"icon\"\n    >\n      {icon}\n    </span>\n  )\n}\n\nconst internalVariantMap = {\n  solid: 'default',\n  outlined: 'outline',\n} as const\n\nconst typeClassNameMap: Record<BadgeType, string> = {\n  info:\n    'bg-[var(--applique-info-background)] text-[var(--applique-info-foreground)]',\n  success:\n    'bg-[var(--applique-success-background)] text-[var(--applique-success-foreground)]',\n  warning:\n    'bg-[var(--applique-warning-background)] text-[var(--applique-warning-foreground)]',\n  error:\n    'bg-[var(--applique-error-background)] text-[var(--applique-error-foreground)]',\n}\n\nconst solidBorderClassNameMap: Record<BadgeType, string> = {\n  info: 'border-[var(--applique-info-background)]',\n  success: 'border-[var(--applique-success-background)]',\n  warning: 'border-[var(--applique-warning-background)]',\n  error: 'border-[var(--applique-error-background)]',\n}\n\nconst outlinedBorderClassNameMap: Record<BadgeType, string> = {\n  info: 'border-[var(--applique-info-foreground)]',\n  success: 'border-[var(--applique-success-foreground)]',\n  warning: 'border-[var(--applique-warning-foreground)]',\n  error: 'border-[var(--applique-error-foreground)]',\n}\n\nconst sizeClassNameMap = {\n  small: 'h-auto leading-none',\n  regular: 'h-auto leading-6',\n} as const\n\nexport interface BadgeProps\n  extends Omit<InternalBadgeProps, 'children' | 'variant'> {\n  /** The public legacy API accepts a string label. */\n  children: string\n  /** Semantic color intent. */\n  type?: BadgeType\n  /** Fill or outlined presentation. */\n  variant?: BadgeVariant\n  /** Legacy compact or regular line-height. */\n  size?: 'small' | 'regular'\n  /** Optional leading legacy icon. */\n  icon?: IconName\n  /** Adds an accessible dismiss control. */\n  onClose?: () => void\n}\n\nconst Badge = React.forwardRef<HTMLElement, BadgeProps>(\n  (\n    {\n      children,\n      className,\n      icon,\n      onClose,\n      render,\n      size = 'regular',\n      type = 'info',\n      variant = 'solid',\n      ...internalProps\n    },\n    ref\n  ) => {\n    const borderClassName =\n      variant === 'outlined'\n        ? outlinedBorderClassNameMap[type]\n        : solidBorderClassNameMap[type]\n\n    return (\n      <InternalBadge\n        {...internalProps}\n        ref={ref}\n        // A dismiss button cannot be nested inside an interactive render root\n        // such as an anchor. The Applique onClose contract therefore keeps the\n        // legacy div root and takes precedence over the shadcn render extension.\n        render={onClose ? <div /> : render ?? <div />}\n        variant={internalVariantMap[variant]}\n        className={cn(\n          className,\n          'rounded-xs px-2 py-0.5 text-xs font-normal max-md:text-[10px]',\n          typeClassNameMap[type],\n          sizeClassNameMap[size],\n          borderClassName\n        )}\n      >\n        {icon ? renderIcon(icon) : null}\n        {children}\n        {onClose ? (\n          <button\n            type=\"button\"\n            aria-label=\"Close\"\n            className=\"-mr-1 ml-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-xs text-current outline-none focus-visible:ring-2 focus-visible:ring-current/40\"\n            data-test-id=\"close\"\n            onClick={onClose}\n          >\n            <svg\n              aria-hidden=\"true\"\n              className=\"size-2\"\n              focusable=\"false\"\n              viewBox=\"0 0 352 512\"\n              xmlns=\"http://www.w3.org/2000/svg\"\n            >\n              <path\n                fill=\"currentColor\"\n                d=\"M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z\"\n              />\n            </svg>\n          </button>\n        ) : null}\n      </InternalBadge>\n    )\n  }\n)\n\nBadge.displayName = 'Badge'\n\nexport { Badge }\n",
+      "type": "registry:component",
+      "target": "@components/applique/badge.tsx"
     }
   ],
   "meta": {
-    "status": "experimental",
-    "upstream": {
-      "cliVersion": "4.16.0",
-      "sourceSha256": "cdcc140e4093e10ffbd23ac82d15d3f5edae457bf237aadaef4b63ee4dd544c4",
-      "style": "base-nova",
-      "upstreamSha256": "30d746fd399d053e7443f9c69ebe48790f881f1a445bc83c8608db5f3f15b5f6"
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "Badge",
+      "legacyPackage": "@applique-ui/badge"
     },
     "registryVersion": "0.1.0"
   }

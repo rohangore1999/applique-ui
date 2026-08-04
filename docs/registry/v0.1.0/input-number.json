@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-number",
+  "type": "registry:component",
+  "title": "Applique Input Number",
+  "description": "Applique-compatible numeric input backed by the shadcn Input primitive.",
+  "dependencies": [],
+  "categories": [
+    "applique",
+    "facade",
+    "input"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input.json"
+  ],
+  "files": [
+    {
+      "path": "components/applique/input-number.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport { Input } from '@/components/ui/input'\n\ntype NativeInputProps = React.ComponentPropsWithoutRef<'input'>\n\nexport interface InputNumberProps\n  extends Omit<\n    NativeInputProps,\n    'children' | 'defaultValue' | 'onChange' | 'type' | 'value'\n  > {\n  /** Keeps the existing Applique numeric-input contract. */\n  type?: 'number'\n  /** Current value. Invalid numeric strings are displayed as an empty value. */\n  value?: string | number\n  /** Receives the parsed number instead of the browser change event. */\n  onChange?(value: number): void\n}\n\nconst InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(\n  ({ onChange, type: _type, value, ...primitiveProps }, ref) => {\n    const parsedValue = Number.parseFloat(String(value))\n\n    return (\n      <Input\n        {...primitiveProps}\n        ref={ref}\n        type=\"number\"\n        value={Number.isNaN(parsedValue) ? '' : value}\n        onChange={(event) =>\n          onChange?.(Number.parseFloat(event.currentTarget.value))\n        }\n      />\n    )\n  }\n)\n\nInputNumber.displayName = 'InputNumber'\n\nexport { InputNumber }\n",
+      "type": "registry:component",
+      "target": "@components/applique/input-number.tsx"
+    }
+  ],
+  "meta": {
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "InputNumber",
+      "legacyPackage": "@applique-ui/input-number"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

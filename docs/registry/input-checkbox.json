@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-checkbox",
+  "type": "registry:component",
+  "title": "Applique Input Checkbox",
+  "description": "Applique-compatible boolean checkbox backed by the shadcn Checkbox primitive.",
+  "dependencies": [],
+  "categories": [
+    "applique",
+    "facade",
+    "input"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/checkbox.json"
+  ],
+  "files": [
+    {
+      "path": "components/applique/input-checkbox.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport { Checkbox as InternalCheckbox } from '@/components/ui/checkbox'\n\ntype InternalCheckboxProps = React.ComponentPropsWithoutRef<\n  typeof InternalCheckbox\n>\n\nexport interface InputCheckboxProps\n  extends Omit<\n    InternalCheckboxProps,\n    'children' | 'className' | 'title' | 'value'\n  > {\n  /** Applique controlled checked state. It takes precedence over checked. */\n  value?: boolean\n  /** Preserves the Applique boolean-only callback. */\n  onChange?(value: boolean): void\n  /** Maps to the hidden checkbox input's form value. */\n  htmlValue?: string\n  /** Content rendered beside the checkbox. */\n  title?: React.ReactNode\n  /** Renders a dash instead of a tick for the checked visual state. */\n  boxtype?: string\n  /** Preserves the legacy class target on the outer label. */\n  className?: string\n}\n\nconst dashboxClassName =\n  '[&_[data-slot=checkbox-indicator]>svg]:hidden [&_[data-slot=checkbox-indicator]]:before:h-0.5 [&_[data-slot=checkbox-indicator]]:before:w-2.5 [&_[data-slot=checkbox-indicator]]:before:rounded-full [&_[data-slot=checkbox-indicator]]:before:bg-current'\n\nconst InputCheckbox = React.forwardRef<HTMLElement, InputCheckboxProps>(\n  (\n    {\n      boxtype = 'checkbox',\n      checked,\n      className,\n      defaultChecked,\n      disabled,\n      htmlValue,\n      onChange,\n      onCheckedChange,\n      readOnly,\n      title,\n      value,\n      ...internalProps\n    },\n    ref\n  ) => {\n    const usesPrimitiveUncontrolledState = React.useRef(\n      value === undefined &&\n        checked === undefined &&\n        (defaultChecked !== undefined ||\n          (onChange === undefined && onCheckedChange !== undefined))\n    ).current\n    const resolvedChecked = usesPrimitiveUncontrolledState\n      ? undefined\n      : value !== undefined\n      ? value\n      : checked !== undefined\n      ? checked\n      : false\n    const resolvedReadOnly = Boolean(\n      readOnly ||\n        (!usesPrimitiveUncontrolledState && !onChange && !onCheckedChange)\n    )\n\n    return (\n      <label\n        className={[\n          'inline-flex items-center gap-2',\n          disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',\n          className,\n        ]\n          .filter(Boolean)\n          .join(' ')}\n        data-applique-checkbox=\"\"\n        data-disabled={disabled ? '' : undefined}\n      >\n        <InternalCheckbox\n          {...internalProps}\n          ref={ref}\n          checked={resolvedChecked}\n          className={boxtype === 'dashbox' ? dashboxClassName : undefined}\n          data-applique-boxtype={boxtype}\n          defaultChecked={\n            usesPrimitiveUncontrolledState ? defaultChecked : undefined\n          }\n          disabled={disabled}\n          readOnly={resolvedReadOnly}\n          value={htmlValue}\n          onCheckedChange={(nextChecked, details) => {\n            onCheckedChange?.(nextChecked, details)\n            if (!details.isCanceled) onChange?.(nextChecked)\n          }}\n        />\n        {title === undefined ? null : <span>{title}</span>}\n      </label>\n    )\n  }\n)\n\nInputCheckbox.displayName = 'InputCheckbox'\n\nexport { InputCheckbox }\n",
+      "type": "registry:component",
+      "target": "@components/applique/input-checkbox.tsx"
+    }
+  ],
+  "meta": {
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "InputCheckbox",
+      "legacyPackage": "@applique-ui/input-checkbox"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

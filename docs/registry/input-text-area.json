@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-text-area",
+  "type": "registry:component",
+  "title": "Applique Input Text Area",
+  "description": "Applique-compatible text area composition backed by the shadcn Textarea primitive.",
+  "dependencies": [],
+  "categories": [
+    "applique",
+    "facade",
+    "input"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/textarea.json"
+  ],
+  "files": [
+    {
+      "path": "components/applique/input-text-area.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport { Textarea } from '@/components/ui/textarea'\nimport { cn } from '@/lib/utils'\n\ntype NativeTextareaProps = React.ComponentPropsWithoutRef<'textarea'>\ntype IconName = string | React.ReactNode | React.ComponentType<any>\n\nexport interface InputTextAreaFieldContext {\n  error?: boolean\n  disabled?: boolean\n}\n\nexport interface InputTextAreaProps\n  extends Omit<\n    NativeTextareaProps,\n    'children' | 'className' | 'onChange' | 'value'\n  > {\n  /** Preserves the legacy class target on the outer container. */\n  className?: string\n  /** Current controlled value. Missing values remain controlled as an empty string. */\n  value?: string\n  /** Receives the string value instead of the browser change event. */\n  onChange?(value: string): void\n  /** Disables resizing of the outer legacy-compatible container. */\n  noResize?: boolean\n  /** Optional leading legacy icon. */\n  icon?: IconName\n  /** Private compatibility channel populated by the legacy Field component. */\n  __fieldContext?: InputTextAreaFieldContext\n  /** Explicit invalid state, combined with Field context. */\n  error?: boolean\n  /** Legacy visual treatment. */\n  variant?: 'bordered' | 'standard'\n}\n\nconst wrapperVariantClassName = {\n  bordered:\n    'rounded-xs border border-input bg-background p-2 hover:border-ring/40 focus-within:border-ring',\n  standard:\n    'rounded-none border-x-0 border-t-0 border-b border-input bg-background px-2 pt-2 pb-1 pl-0 hover:border-ring/40 focus-within:border-ring',\n} as const\n\nconst textareaCompatibilityClassName =\n  'min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent p-0 shadow-none focus-visible:border-transparent focus-visible:ring-0 disabled:bg-transparent disabled:opacity-100 applique-dark:bg-transparent applique-dark:disabled:bg-transparent'\n\nfunction renderIcon(name: IconName): React.ReactNode {\n  let icon: React.ReactNode\n\n  if (typeof name === 'string') {\n    icon = (\n      <svg xmlns=\"http://www.w3.org/2000/svg\">\n        <use href={`#uikit-i-${name}`} xlinkHref={`#uikit-i-${name}`} />\n      </svg>\n    )\n  } else if (typeof name === 'function') {\n    const IconComponent = name as React.ComponentType\n    icon = <IconComponent />\n  } else {\n    icon = name\n  }\n\n  return (\n    <span\n      aria-hidden=\"true\"\n      className=\"mt-1 mr-2 inline-flex shrink-0 [&>svg]:size-4\"\n      data-test-id=\"icon\"\n    >\n      {icon}\n    </span>\n  )\n}\n\nconst InputTextArea = React.forwardRef<HTMLTextAreaElement, InputTextAreaProps>(\n  (props, ref) => {\n    // `adornmentPosition` was destructured and ignored by the legacy runtime,\n    // despite never being part of its declared Props interface. Reading it here\n    // keeps JavaScript call sites from leaking it onto the DOM without adding a\n    // new public TypeScript prop.\n    const {\n      __fieldContext = {},\n      className,\n      defaultValue,\n      disabled,\n      error = false,\n      icon,\n      noResize = false,\n      onChange,\n      rows = 1,\n      value,\n      variant = 'bordered',\n      adornmentPosition: _adornmentPosition,\n      ...nativeProps\n    } = props as InputTextAreaProps & { adornmentPosition?: unknown }\n\n    const resolvedDisabled = Boolean(disabled || __fieldContext.disabled)\n    const resolvedError = Boolean(error || __fieldContext.error)\n    const usesNativeDefaultValue =\n      value === undefined && defaultValue !== undefined\n\n    return (\n      <div\n        className={cn(\n          className,\n          'relative flex overflow-auto',\n          wrapperVariantClassName[variant],\n          resolvedError && 'border-destructive',\n          resolvedDisabled && 'text-muted-foreground',\n          resolvedDisabled || noResize ? 'resize-none' : 'resize-y'\n        )}\n        data-applique-input-text-area=\"\"\n        data-disabled={resolvedDisabled ? '' : undefined}\n        data-filled={typeof value === 'string' && value ? '' : undefined}\n        data-invalid={resolvedError ? '' : undefined}\n        data-variant={variant}\n      >\n        {icon ? renderIcon(icon) : null}\n        <Textarea\n          {...nativeProps}\n          ref={ref}\n          aria-invalid={resolvedError || nativeProps['aria-invalid']}\n          className={textareaCompatibilityClassName}\n          defaultValue={usesNativeDefaultValue ? defaultValue : undefined}\n          disabled={resolvedDisabled}\n          rows={rows}\n          value={\n            usesNativeDefaultValue\n              ? undefined\n              : typeof value === 'string'\n              ? value\n              : ''\n          }\n          onChange={(event) => onChange?.(event.currentTarget.value)}\n        />\n      </div>\n    )\n  }\n)\n\nInputTextArea.displayName = 'InputTextArea'\n\nexport { InputTextArea }\n",
+      "type": "registry:component",
+      "target": "@components/applique/input-text-area.tsx"
+    }
+  ],
+  "meta": {
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "InputTextArea",
+      "legacyPackage": "@applique-ui/input-text-area"
+    },
+    "registryVersion": "0.1.0"
+  }
+}

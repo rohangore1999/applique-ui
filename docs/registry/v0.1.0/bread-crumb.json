@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bread-crumb",
+  "type": "registry:component",
+  "title": "Applique Bread Crumb",
+  "description": "Applique-compatible breadcrumb composition backed by the shadcn Breadcrumb primitives.",
+  "dependencies": [],
+  "categories": [
+    "applique",
+    "facade",
+    "navigation"
+  ],
+  "registryDependencies": [
+    "https://rohangore1999.github.io/applique-ui/registry/v0.1.0/breadcrumb.json"
+  ],
+  "files": [
+    {
+      "path": "components/applique/bread-crumb.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\n\nimport {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbList,\n  BreadcrumbPage,\n  BreadcrumbSeparator,\n} from '@/components/ui/breadcrumb'\n\nexport interface BreadCrumbItemProps\n  extends React.ComponentPropsWithoutRef<'li'> {}\n\n/**\n * A declarative breadcrumb item. The root turns it into the matching shadcn\n * item and owns separators/current-page behavior.\n */\nfunction BreadCrumbItem(\n  _props: BreadCrumbItemProps\n): React.ReactElement | null {\n  return null\n}\n\nBreadCrumbItem.displayName = 'BreadCrumb.Item'\n\nexport interface BreadCrumbProps\n  extends React.ComponentPropsWithoutRef<'nav'> {}\n\nconst BreadCrumbRoot = React.forwardRef<HTMLElement, BreadCrumbProps>(\n  ({ children, ...props }, ref) => {\n    const childNodes = React.Children.toArray(children)\n    const itemNodes = childNodes.filter(isBreadCrumbItem)\n    const lastItem = itemNodes[itemNodes.length - 1]\n    let renderedItems = 0\n\n    return (\n      <Breadcrumb {...props} ref={ref}>\n        <BreadcrumbList>\n          {childNodes.map((child, index) => {\n            // Preserve non-marker children exactly as the legacy <ol> did.\n            if (!isBreadCrumbItem(child)) return child\n\n            const separator = renderedItems > 0\n            renderedItems += 1\n            const isCurrentPage = child === lastItem\n            const { children: itemChildren, ...itemProps } = child.props\n\n            return (\n              <React.Fragment key={child.key ?? index}>\n                {separator ? <BreadcrumbSeparator /> : null}\n                <BreadcrumbItem {...itemProps}>\n                  {isCurrentPage ? (\n                    <BreadcrumbPage>\n                      {getCurrentPageContent(itemChildren)}\n                    </BreadcrumbPage>\n                  ) : (\n                    itemChildren\n                  )}\n                </BreadcrumbItem>\n              </React.Fragment>\n            )\n          })}\n        </BreadcrumbList>\n      </Breadcrumb>\n    )\n  }\n)\n\nBreadCrumbRoot.displayName = 'BreadCrumb'\n\nfunction isBreadCrumbItem(\n  child: React.ReactNode\n): child is React.ReactElement<BreadCrumbItemProps> {\n  return React.isValidElement(child) && child.type === BreadCrumbItem\n}\n\n/**\n * Legacy examples commonly wrap the last label in a plain anchor. A current\n * page is not a navigation target, so retain the anchor's content rather than\n * its href. Custom link components remain intact because their behavior cannot\n * be inferred safely.\n */\nfunction getCurrentPageContent(children: React.ReactNode): React.ReactNode {\n  const nodes = React.Children.toArray(children)\n  const onlyChild = nodes.length === 1 ? nodes[0] : null\n\n  if (\n    React.isValidElement<{ children?: React.ReactNode }>(onlyChild) &&\n    onlyChild.type === 'a'\n  ) {\n    return onlyChild.props.children\n  }\n\n  return children\n}\n\nconst BreadCrumb = Object.assign(BreadCrumbRoot, { Item: BreadCrumbItem })\n\nexport { BreadCrumb, BreadCrumbItem }\n",
+      "type": "registry:component",
+      "target": "@components/applique/bread-crumb.tsx"
+    }
+  ],
+  "meta": {
+    "status": "facade",
+    "compatibility": {
+      "legacyComponent": "BreadCrumb",
+      "legacyPackage": "@applique-ui/bread-crumb"
+    },
+    "registryVersion": "0.1.0"
+  }
+}
