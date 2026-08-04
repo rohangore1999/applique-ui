@@ -5,6 +5,23 @@ import { Alert as ShadcnAlert } from '../alert'
 import { Button as ShadcnButton } from '../button'
 import { Banner, BannerActionable } from './banner'
 
+const knownLegacyIconNames = [
+  'arrow-to-bottom',
+  'barcode-scan',
+  'bomb',
+  'calendar',
+  'calender',
+  'check',
+  'chevron-right',
+  'download',
+  'info',
+  'search',
+  'spinner',
+  'spinnersolid',
+  'thumbs-down',
+  'thumbs-up',
+] as const
+
 function CustomIcon() {
   return <svg data-test-id="custom-icon" />
 }
@@ -118,15 +135,63 @@ it('splits title and body exactly when the legacy title is truthy', () => {
 it('derives, customizes, and removes the legacy icon', () => {
   const error = mount(<Banner color="error">Error</Banner>)
   const custom = mount(<Banner icon={CustomIcon}>Custom</Banner>)
-  const sprite = mount(<Banner icon="bomb">Sprite</Banner>)
+  const stringIcon = mount(<Banner icon="bomb">String icon</Banner>)
   const withoutIcon = mount(<Banner icon={null}>No icon</Banner>)
 
   expect(
     error.getDOMNode().querySelector('.lucide-triangle-alert')
   ).not.toBeNull()
   expect(custom.find('[data-test-id="custom-icon"]')).toHaveLength(1)
-  expect(sprite.find('use').prop('href')).toBe('#uikit-i-bomb')
+  expect(
+    stringIcon.getDOMNode().querySelector('[data-applique-icon="bomb"]')
+  ).not.toBeNull()
+  expect(stringIcon.getDOMNode().querySelector('use')).toBeNull()
   expect(withoutIcon.find('[data-test-id="icon"]')).toHaveLength(0)
+})
+
+it('renders every supported legacy icon name without an SVG sprite', () => {
+  for (const name of knownLegacyIconNames) {
+    const wrapper = mount(<Banner icon={name}>Known icon</Banner>)
+    const root = wrapper.getDOMNode()
+
+    expect(root.querySelector(`[data-applique-icon="${name}"]`)).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    wrapper.unmount()
+  }
+})
+
+it('warns and renders a visible fallback for an unknown legacy icon name', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+  try {
+    const wrapper = mount(<Banner icon="missing-banner-icon">Fallback</Banner>)
+    const root = wrapper.getDOMNode()
+
+    expect(
+      root.querySelector('[data-applique-icon-fallback="missing-banner-icon"]')
+    ).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    expect(warn).toHaveBeenCalledWith(
+      '[Applique Banner] Unknown legacy icon "missing-banner-icon". Rendering the fallback icon.'
+    )
+  } finally {
+    warn.mockRestore()
+  }
+})
+
+it('renders React element and forwardRef exotic icon inputs', () => {
+  const ForwardRefIcon = React.forwardRef<SVGSVGElement>((_props, ref) => (
+    <svg ref={ref} data-test-id="banner-forward-ref-icon" />
+  ))
+  const element = mount(
+    <Banner icon={<svg data-test-id="banner-element-icon" />}>Element</Banner>
+  )
+  const exotic = mount(<Banner icon={ForwardRefIcon}>Exotic</Banner>)
+
+  expect(element.find('[data-test-id="banner-element-icon"]')).toHaveLength(1)
+  expect(exotic.find('[data-test-id="banner-forward-ref-icon"]')).toHaveLength(
+    1
+  )
 })
 
 it('composes the legacy external link with a trailing icon', () => {
@@ -153,18 +218,18 @@ it('composes the legacy external link with a trailing icon', () => {
   ).toBe('link')
 })
 
-it('rejects a partial legacy link instead of silently rendering it', () => {
-  expect(() =>
-    mount(
-      <Banner link={{ href: '/details' } as any}>Missing display text</Banner>
-    )
-  ).toThrow("The Banner link also requires 'displayText'.")
+it('omits an incomplete legacy link without throwing during render', () => {
+  const missingText = mount(
+    <Banner link={{ href: '/details' } as any}>Missing display text</Banner>
+  ).getDOMNode()
+  const missingHref = mount(
+    <Banner link={{ displayText: 'Details' } as any}>Missing href</Banner>
+  ).getDOMNode()
 
-  expect(() =>
-    mount(
-      <Banner link={{ displayText: 'Details' } as any}>Missing href</Banner>
-    )
-  ).toThrow("The Banner link also requires 'href'.")
+  expect(missingText.getAttribute('data-applique-incomplete-link')).toBe('')
+  expect(missingText.querySelector('[data-test-id="link"]')).toBeNull()
+  expect(missingHref.getAttribute('data-applique-incomplete-link')).toBe('')
+  expect(missingHref.querySelector('[data-test-id="link"]')).toBeNull()
 })
 
 it('composes an accessible dismiss Button and invokes onClose', () => {
@@ -178,7 +243,7 @@ it('composes an accessible dismiss Button and invokes onClose', () => {
   expect(onClose).toHaveBeenCalledTimes(1)
 })
 
-it('forwards native Alert props and ref while retaining the legacy role', () => {
+it('forwards native Alert props, role, and ref', () => {
   const ref = React.createRef<HTMLDivElement>()
   const onClick = jest.fn()
   const wrapper = mount(
@@ -198,7 +263,7 @@ it('forwards native Alert props and ref while retaining the legacy role', () => 
   expect(root.getAttribute('id')).toBe('service-banner')
   expect(root.getAttribute('data-client')).toBe('orders')
   expect(root.getAttribute('aria-label')).toBe('Service status')
-  expect(root.getAttribute('role')).toBe('alert')
+  expect(root.getAttribute('role')).toBe('status')
   expect(ref.current).toBe(root)
   wrapper.find(ShadcnAlert).simulate('click')
   expect(onClick).toHaveBeenCalledTimes(1)
@@ -238,18 +303,16 @@ it('renders nothing when actionable data is absent', () => {
   expect(wrapper.html()).toBeNull()
 })
 
-it('uses the audited Actionable color instead of the active legacy ternary bug', () => {
+it('preserves the active legacy Actionable color behavior by default', () => {
   const wrapper = mount(<Banner.Actionable data={actionableData} />)
   const root = wrapper.getDOMNode()
 
   expect(root.getAttribute('data-applique-banner-actionable')).toBe('')
-  // The compiled legacy runtime resolved every truthy data.color to info.
-  // The audited contract intentionally restores the requested success tone.
-  expect(root.getAttribute('data-applique-banner-tone')).toBe('success')
+  expect(root.getAttribute('data-applique-banner-tone')).toBe('info')
   expect(root.className).toContain('fixed')
-  expect(root.className).toContain('bg-[var(--applique-success-background)]')
+  expect(root.className).toContain('bg-[var(--applique-info-background)]')
   expect(wrapper.find(ShadcnAlert).prop('variant')).toBe('default')
-  expect(root.querySelector('.lucide-circle-check')).not.toBeNull()
+  expect(root.querySelector('.lucide-circle-alert')).not.toBeNull()
   expect(wrapper.find('[data-test-id="header"]').text()).toContain(
     'Adding MasterBags'
   )
@@ -264,6 +327,17 @@ it('uses the audited Actionable color instead of the active legacy ternary bug',
   )
   expect(wrapper.find('button[data-test-id="action"]').text()).toBe('Okay')
 })
+
+it.each(['success', 'warning', 'error'] as const)(
+  'uses Actionable type=%s only when color is absent',
+  (type) => {
+    const root = mount(
+      <Banner.Actionable data={{ ...actionableData, color: undefined, type }} />
+    ).getDOMNode()
+
+    expect(root.getAttribute('data-applique-banner-tone')).toBe(type)
+  }
+)
 
 it('keeps the Actionable takeover Alert-based pending Dialog semantics', () => {
   const wrapper = mount(<Banner.Actionable data={actionableData} />)
@@ -297,6 +371,7 @@ it('keeps Actionable className ignored while forwarding other root props and ref
       className="legacy-client-class"
       data={actionableData}
       id="scanner-feedback"
+      role="status"
     />
   )
   const root = wrapper.getDOMNode()
@@ -304,6 +379,7 @@ it('keeps Actionable className ignored while forwarding other root props and ref
   expect(root.className).not.toContain('legacy-client-class')
   expect(root.getAttribute('id')).toBe('scanner-feedback')
   expect(root.getAttribute('aria-label')).toBe('Scanner feedback')
+  expect(root.getAttribute('role')).toBe('status')
   expect(ref.current).toBe(root)
 })
 

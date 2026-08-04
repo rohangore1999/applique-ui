@@ -3,6 +3,23 @@ import { mount } from 'enzyme'
 
 import { Badge } from './badge'
 
+const knownLegacyIconNames = [
+  'arrow-to-bottom',
+  'barcode-scan',
+  'bomb',
+  'calendar',
+  'calender',
+  'check',
+  'chevron-right',
+  'download',
+  'info',
+  'search',
+  'spinner',
+  'spinnersolid',
+  'thumbs-down',
+  'thumbs-up',
+] as const
+
 it('preserves the legacy defaults on a div-backed shadcn badge', () => {
   const root = mount(<Badge>Default</Badge>).getDOMNode()
 
@@ -74,10 +91,47 @@ it('renders a decorative leading icon before the label', () => {
   expect(icon.getDOMNode().nextSibling?.textContent).toContain('With icon')
 })
 
-it('retains the legacy sprite-id icon path without an Applique runtime import', () => {
-  const wrapper = mount(<Badge icon="check">Sprite</Badge>)
+it('renders known legacy icon names as self-contained lucide SVGs', () => {
+  for (const name of knownLegacyIconNames) {
+    const wrapper = mount(<Badge icon={name}>Known icon</Badge>)
+    const root = wrapper.getDOMNode()
 
-  expect(wrapper.find('use').prop('href')).toBe('#uikit-i-check')
+    expect(root.querySelector(`[data-applique-icon="${name}"]`)).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    wrapper.unmount()
+  }
+})
+
+it('warns and renders a visible fallback for an unknown legacy icon name', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+  try {
+    const wrapper = mount(<Badge icon="missing-badge-icon">Fallback</Badge>)
+    const root = wrapper.getDOMNode()
+
+    expect(
+      root.querySelector('[data-applique-icon-fallback="missing-badge-icon"]')
+    ).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    expect(warn).toHaveBeenCalledWith(
+      '[Applique Badge] Unknown legacy icon "missing-badge-icon". Rendering the fallback icon.'
+    )
+  } finally {
+    warn.mockRestore()
+  }
+})
+
+it('renders React element and forwardRef exotic icon inputs', () => {
+  const ForwardRefIcon = React.forwardRef<SVGSVGElement>((_props, ref) => (
+    <svg ref={ref} data-test-id="badge-forward-ref-icon" />
+  ))
+  const element = mount(
+    <Badge icon={<svg data-test-id="badge-element-icon" />}>Element</Badge>
+  )
+  const exotic = mount(<Badge icon={ForwardRefIcon}>Exotic</Badge>)
+
+  expect(element.find('[data-test-id="badge-element-icon"]')).toHaveLength(1)
+  expect(exotic.find('[data-test-id="badge-forward-ref-icon"]')).toHaveLength(1)
 })
 
 it('renders a sized accessible dismiss control and invokes onClose', () => {

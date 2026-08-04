@@ -2743,7 +2743,11 @@
         "status": "facade",
         "compatibility": {
           "legacyComponent": "Accordion",
-          "legacyPackage": "@applique-ui/accordion"
+          "legacyPackage": "@applique-ui/accordion",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "active"
+          ]
         },
         "build": {
           "importMap": {
@@ -2825,7 +2829,9 @@
         "facade",
         "data-display"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
       "registryDependencies": [
         "applique-internal-badge"
       ],
@@ -2890,7 +2896,6 @@
           "legacyPackage": "@applique-ui/banner",
           "migrationStatus": "testing",
           "unresolvedProps": [
-            "Actionable.data.color",
             "Actionable.data.icon",
             "Actionable overlay semantics"
           ]
@@ -2980,7 +2985,9 @@
         "facade",
         "action"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
       "registryDependencies": [
         "applique-internal-badge",
         "applique-internal-button",
@@ -3204,7 +3211,11 @@
         "compatibility": {
           "legacyComponent": "InputText",
           "legacyPackage": "@applique-ui/input-text",
-          "scope": "basic"
+          "scope": "basic",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "className"
+          ]
         },
         "build": {
           "importMap": {
@@ -3223,7 +3234,9 @@
         "facade",
         "input"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
       "registryDependencies": [
         "textarea"
       ],

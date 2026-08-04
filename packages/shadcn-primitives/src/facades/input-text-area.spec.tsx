@@ -4,6 +4,23 @@ import { Simulate } from 'react-dom/test-utils'
 
 import { InputTextArea } from './input-text-area'
 
+const knownLegacyIconNames = [
+  'arrow-to-bottom',
+  'barcode-scan',
+  'bomb',
+  'calendar',
+  'calender',
+  'check',
+  'chevron-right',
+  'download',
+  'info',
+  'search',
+  'spinner',
+  'spinnersolid',
+  'thumbs-down',
+  'thumbs-up',
+] as const
+
 it('keeps className on the wrapper and forwards native props to textarea', () => {
   const style = { letterSpacing: '1px' }
   const wrapper = mount(
@@ -121,6 +138,62 @@ it('renders a decorative icon before the textarea', () => {
   expect(icon.prop('aria-hidden')).toBe('true')
   expect(icon.find('[data-test-id="notes-icon"]').exists()).toBe(true)
   expect(icon.getDOMNode().nextSibling?.nodeName).toBe('TEXTAREA')
+})
+
+it('renders every supported legacy icon name without an SVG sprite', () => {
+  for (const name of knownLegacyIconNames) {
+    const wrapper = mount(<InputTextArea icon={name} />)
+    const root = wrapper.getDOMNode()
+
+    expect(root.querySelector(`[data-applique-icon="${name}"]`)).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    wrapper.unmount()
+  }
+})
+
+it('maps the legacy SpinnerSolid string example without a sprite', () => {
+  const root = mount(<InputTextArea icon="SpinnerSolid" />).getDOMNode()
+
+  expect(
+    root.querySelector('[data-applique-icon="spinnersolid"]')
+  ).not.toBeNull()
+  expect(root.querySelector('use')).toBeNull()
+})
+
+it('warns and renders a visible fallback for an unknown legacy icon name', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+  try {
+    const wrapper = mount(<InputTextArea icon="missing-textarea-icon" />)
+    const root = wrapper.getDOMNode()
+
+    expect(
+      root.querySelector(
+        '[data-applique-icon-fallback="missing-textarea-icon"]'
+      )
+    ).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    expect(warn).toHaveBeenCalledWith(
+      '[Applique InputTextArea] Unknown legacy icon "missing-textarea-icon". Rendering the fallback icon.'
+    )
+  } finally {
+    warn.mockRestore()
+  }
+})
+
+it('renders React element and forwardRef exotic icon inputs', () => {
+  const ForwardRefIcon = React.forwardRef<SVGSVGElement>((_props, ref) => (
+    <svg ref={ref} data-test-id="textarea-forward-ref-icon" />
+  ))
+  const element = mount(
+    <InputTextArea icon={<svg data-test-id="textarea-element-icon" />} />
+  )
+  const exotic = mount(<InputTextArea icon={ForwardRefIcon} />)
+
+  expect(element.find('[data-test-id="textarea-element-icon"]')).toHaveLength(1)
+  expect(
+    exotic.find('[data-test-id="textarea-forward-ref-icon"]')
+  ).toHaveLength(1)
 })
 
 it('does not leak the legacy runtime-only adornmentPosition prop to the DOM', () => {

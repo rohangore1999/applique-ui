@@ -1,7 +1,22 @@
 'use client'
 
 import * as React from 'react'
-import { BellIcon } from 'lucide-react'
+import {
+  ArrowDownToLineIcon,
+  BellIcon,
+  BombIcon,
+  CalendarIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  CircleHelpIcon,
+  DownloadIcon,
+  InfoIcon,
+  LoaderCircleIcon,
+  ScanBarcodeIcon,
+  SearchIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from 'lucide-react'
 
 import { Badge as InternalBadge } from '../badge'
 import { Button as InternalButton } from '../button'
@@ -74,7 +89,7 @@ export interface ButtonProps
   transform?: ButtonTransform
   /** Browser anchor navigation. */
   href?: string
-  /** Client-router destination. Requires a render element integration. */
+  /** Client-router destination. Uses a supplied router render or a safe browser fallback. */
   to?: string | object
   /** Secondary text rendered only by the legacy large-button recipe. */
   caption?: string
@@ -118,6 +133,50 @@ const textButtonClassName =
 const inheritTextColorClassName =
   'text-inherit hover:text-inherit active:text-inherit disabled:text-inherit'
 
+const legacyStringIconMap: Record<string, React.ElementType> = {
+  'arrow-to-bottom': ArrowDownToLineIcon,
+  'barcode-scan': ScanBarcodeIcon,
+  bomb: BombIcon,
+  calendar: CalendarIcon,
+  calender: CalendarIcon,
+  check: CheckIcon,
+  'chevron-right': ChevronRightIcon,
+  download: DownloadIcon,
+  info: InfoIcon,
+  search: SearchIcon,
+  spinner: LoaderCircleIcon,
+  spinnersolid: LoaderCircleIcon,
+  'thumbs-down': ThumbsDownIcon,
+  'thumbs-up': ThumbsUpIcon,
+}
+
+const warnedUnknownIconNames = new Set<string>()
+
+function renderStringIcon(name: string): React.ReactNode {
+  const normalizedName = name.trim().toLowerCase()
+  const IconComponent = legacyStringIconMap[normalizedName]
+
+  if (IconComponent) {
+    return <IconComponent data-applique-icon={normalizedName} />
+  }
+
+  const environment = (globalThis as typeof globalThis & {
+    process?: { env?: { NODE_ENV?: string } }
+  }).process?.env?.NODE_ENV
+
+  if (
+    environment !== 'production' &&
+    !warnedUnknownIconNames.has(normalizedName)
+  ) {
+    warnedUnknownIconNames.add(normalizedName)
+    console.warn(
+      `[Applique Button] Unknown legacy icon "${name}". Rendering the fallback icon.`
+    )
+  }
+
+  return <CircleHelpIcon data-applique-icon-fallback={normalizedName} />
+}
+
 function renderLegacyIcon(
   name: ButtonIcon,
   position: 'inline-start' | 'inline-end',
@@ -126,11 +185,7 @@ function renderLegacyIcon(
   let icon: React.ReactNode
 
   if (typeof name === 'string') {
-    icon = (
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <use href={`#uikit-i-${name}`} xlinkHref={`#uikit-i-${name}`} />
-      </svg>
-    )
+    icon = renderStringIcon(name)
   } else if (
     typeof name === 'function' ||
     (typeof name === 'object' &&
@@ -159,12 +214,16 @@ function renderLegacyIcon(
   )
 }
 
-function resolveInternalSize(size: ButtonProps['size']): InternalButtonSize {
+function resolveInternalSize(
+  size: ButtonProps['size'],
+  isIconButton: boolean
+): InternalButtonSize {
   if (size === undefined || size === 'regular' || size === 'large') {
     return 'default'
   }
 
-  if (size === 'xs' || size === 'small') return legacySizeMap[size]
+  if (size === 'xs') return isIconButton ? legacySizeMap.xs : 'xs'
+  if (size === 'small') return legacySizeMap.small
 
   return size
 }
@@ -186,19 +245,47 @@ function mergeTransformStyle(
   }
 }
 
-function cloneLinkRender(
+function mergeLinkRender(
   render: ButtonProps['render'],
   linkProps: Record<string, unknown>
-) {
+): ButtonProps['render'] | null {
   if (render === undefined) return null
 
-  if (!React.isValidElement(render)) {
-    throw new Error(
-      'Applique Button link compatibility requires render to be a React element.'
-    )
+  if (typeof render === 'function') {
+    const renderFunction = render as (
+      props: Record<string, unknown>,
+      state: unknown
+    ) => React.ReactElement
+
+    return ((props: Record<string, unknown>, state: unknown) =>
+      renderFunction(
+        { ...props, ...linkProps },
+        state
+      )) as ButtonProps['render']
   }
 
+  if (!React.isValidElement(render)) return null
+
   return React.cloneElement(render as React.ReactElement<any>, linkProps)
+}
+
+function routerDestinationToHref(to: ButtonProps['to']): string | undefined {
+  if (typeof to === 'string') return to
+  if (!to || typeof to !== 'object') return undefined
+
+  const destination = to as {
+    hash?: unknown
+    pathname?: unknown
+    search?: unknown
+  }
+  const pathname =
+    typeof destination.pathname === 'string' ? destination.pathname : ''
+  const search =
+    typeof destination.search === 'string' ? destination.search : ''
+  const hash = typeof destination.hash === 'string' ? destination.hash : ''
+  const href = `${pathname}${search}${hash}`
+
+  return href || undefined
 }
 
 const Button = React.forwardRef<HTMLElement, ButtonProps>(
@@ -239,35 +326,20 @@ const Button = React.forwardRef<HTMLElement, ButtonProps>(
     },
     ref
   ) => {
-    if (href !== undefined && to !== undefined) {
-      throw new Error("The props 'to' and 'href' cannot coexist.")
-    }
-
     const resolvedLabel = children || label
     const isNotificationButton = typeof notifications === 'number'
     const notificationsActive = isNotificationButton && notifications > 0
     const isIconButton = !resolvedLabel || isNotificationButton
-
-    if (size === 'xs') {
-      if (!icon) {
-        throw new Error("The prop 'icon' is required when size is set to 'xs'.")
-      }
-
-      if (resolvedLabel) {
-        throw new Error(
-          "The props 'children' and 'label' cannot be used when size is set to 'xs'."
-        )
-      }
-    }
+    const isPlainEmptyButton = !resolvedLabel && !icon && !isNotificationButton
+    const hasLinkConflict = href !== undefined && to !== undefined
 
     const visualType = notificationsActive ? 'primary' : type
     const resolvedVariant = visualType
       ? visualTypeMap[visualType]
       : variant ?? visualTypeMap.secondary
-    const resolvedSize = resolveInternalSize(size)
+    const resolvedSize = resolveInternalSize(size, isIconButton)
     const isLargeButton = size === 'large'
     const usesTextRecipe = type === 'link' || type === 'text'
-    const isLinkButton = href !== undefined || to !== undefined
 
     const anchorProps = {
       download,
@@ -279,21 +351,35 @@ const Button = React.forwardRef<HTMLElement, ButtonProps>(
     }
 
     let resolvedRender = render
+    let usedRouterRender = false
+    let usedBrowserRouterFallback = false
+    let rendersLegacyLink = false
 
-    if (href !== undefined) {
-      resolvedRender = cloneLinkRender(render, { ...anchorProps, href }) ?? (
+    // Legacy Button chose `to` when both destinations were supplied. Preserve
+    // that precedence without throwing during render. A missing router render
+    // element falls back to normal browser navigation when a URL can be built.
+    if (to !== undefined) {
+      const routerRender = mergeLinkRender(render, { ...anchorProps, to })
+
+      if (routerRender) {
+        resolvedRender = routerRender
+        usedRouterRender = true
+        rendersLegacyLink = true
+      } else {
+        const fallbackHref = routerDestinationToHref(to)
+        if (fallbackHref !== undefined) {
+          resolvedRender = <a {...anchorProps} href={fallbackHref} />
+          usedBrowserRouterFallback = true
+          rendersLegacyLink = true
+        } else {
+          resolvedRender = undefined
+        }
+      }
+    } else if (href !== undefined) {
+      resolvedRender = mergeLinkRender(render, { ...anchorProps, href }) ?? (
         <a {...anchorProps} href={href} />
       )
-    } else if (to !== undefined) {
-      const routerRender = cloneLinkRender(render, { ...anchorProps, to })
-
-      if (!routerRender) {
-        throw new Error(
-          "The prop 'to' requires render={<RouterLink />} until the client router integration is configured."
-        )
-      }
-
-      resolvedRender = routerRender
+      rendersLegacyLink = true
     }
 
     const notificationBadge = notificationsActive ? (
@@ -307,7 +393,10 @@ const Button = React.forwardRef<HTMLElement, ButtonProps>(
         {notifications > 99 ? '99+' : notifications}
       </InternalBadge>
     ) : null
-    const leadingIconName = icon || (isIconButton ? BellIcon : undefined)
+    const usesLegacyBellFallback =
+      isNotificationButton || (size === 'xs' && !resolvedLabel)
+    const leadingIconName =
+      icon || (usesLegacyBellFallback ? BellIcon : undefined)
     const visualContent = (
       <>
         {leadingIconName
@@ -333,6 +422,8 @@ const Button = React.forwardRef<HTMLElement, ButtonProps>(
         ? notificationsActive
           ? `Notifications, ${notifications}`
           : 'Notifications'
+        : isPlainEmptyButton
+        ? 'Button'
         : undefined)
 
     return (
@@ -349,14 +440,25 @@ const Button = React.forwardRef<HTMLElement, ButtonProps>(
           isLargeButton &&
             '[&_[data-test-id=primary-icon]>svg]:mb-2 [&_[data-test-id=primary-icon]>svg]:size-7'
         )}
+        data-applique-empty-button={isPlainEmptyButton ? '' : undefined}
+        data-applique-link-conflict={hasLinkConflict ? '' : undefined}
+        data-applique-router-fallback={
+          to !== undefined && !usedRouterRender
+            ? usedBrowserRouterFallback
+              ? 'browser'
+              : 'button'
+            : undefined
+        }
         data-applique-unresolved-color={color || undefined}
         data-test-id="target"
         disabled={disabled || loading}
-        nativeButton={isLinkButton ? false : nativeButton}
+        nativeButton={rendersLegacyLink ? false : nativeButton}
         render={resolvedRender}
         size={resolvedSize}
         style={mergeTransformStyle(style, transform)}
-        type={isLinkButton ? undefined : htmlType}
+        type={
+          rendersLegacyLink || nativeButton === false ? undefined : htmlType
+        }
         variant={resolvedVariant}
         onClick={(event) => {
           if (disabled || loading) {

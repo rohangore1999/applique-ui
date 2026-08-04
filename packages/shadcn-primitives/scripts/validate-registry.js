@@ -121,6 +121,7 @@ const OWNED_FACADE_CONTRACTS = new Map([
   [
     'badge',
     {
+      dependencies: ['lucide-react@1.28.0'],
       publicExports: [
         { name: 'Badge' },
         { name: 'BadgeProps', type: true },
@@ -160,6 +161,7 @@ const OWNED_FACADE_CONTRACTS = new Map([
   [
     'button',
     {
+      dependencies: ['lucide-react@1.28.0'],
       publicExports: [
         { name: 'Button' },
         { name: 'ButtonProps', type: true },
@@ -193,6 +195,7 @@ const OWNED_FACADE_CONTRACTS = new Map([
   [
     'input-text-area',
     {
+      dependencies: ['lucide-react@1.28.0'],
       registryDependencies: ['textarea'],
       sourcePath: 'src/facades/input-text-area.tsx',
       target: '@components/applique/input-text-area.tsx',

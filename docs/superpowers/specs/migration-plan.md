@@ -20,25 +20,27 @@ entry.
 
 | Batch               | Components                                                      | Notes                                                                                                  |
 | ------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Initial pilots      | Avatar, InputNumber, InputCheckbox, InputRadio, basic InputText | Existing pilot registry items remain installable. Full InputText compatibility is still separate work. |
-| Direct facade batch | Accordion, Badge, BreadCrumb, InputTextArea                     | Audited, integrated, previewed, and tested in TSX and JSX clients.                                      |
+| Initial pilots      | Avatar, InputNumber, InputCheckbox, InputRadio | Adapted, integrated, and covered by focused runtime tests. |
+| Direct facade batch | Badge, BreadCrumb, InputTextArea | Audited, integrated, previewed, and tested in TSX and JSX clients. |
 
-`Accordion.active` remains accepted but behavior-neutral because the verified
-legacy runtime never applied it. This is a compatibility decision, not a
-silently dropped behavior.
+There are seven technically ready adapted facades. Registry installation and
+technical readiness still require a representative client pilot before broad
+production migration.
 
 ### Installable test facades
 
 | Component | What works | Why it is not migration-ready |
 | --------- | ---------- | ----------------------------- |
+| Accordion | Compound children, multi-open state, item callbacks, control icons, and extensions | `active` remains accepted but behavior-neutral because the verified legacy runtime never applied it; that decision remains explicit. |
+| Basic InputText | String value/event conversion and native Input props | The `className` target differs between the legacy wrapper and registry input and still needs approval; full adornment/field compatibility is separate work. |
 | Tabs | Index-based selection, disabled tabs, child transformation, callbacks, and shadcn/native extensions | Legacy `type` changes the visual treatment and `Tab.isActive` affects state. Both still need an approved mapping. |
 | Tooltip | Content, position, light/dark appearance, delays, hover/focus behavior, and shadcn/native extensions | Legacy `triggerOn="click"` is active behavior and needs a Tooltip-versus-Popover decision. |
-| Button | Visual type and size mapping, icons, loading, notifications, captions, anchors, native props, and shadcn extensions | Arbitrary legacy `color` values need semantic mappings. `to` requires an explicit client RouterLink through `render` until a shared router integration exists. |
+| Button | Visual type and size mapping, self-contained icons, loading, notifications, captions, safe anchor/router fallbacks, native props, and shadcn extensions | Arbitrary legacy `color` values and the shared router policy still need approval; fallback behavior no longer throws during render. |
 | ButtonGroup | Legacy action sequencing, hierarchy promotion, structured groups, and overflow composition | Its behavior depends on the test-only Button contract, so it cannot be approved before Button's `color` and router gaps are resolved. |
-| Banner | Regular semantic banners, icons, title/body layout, links, dismissal, and the complete `Banner.Actionable` content composition | Actionable intentionally corrects a legacy color bug and null-icon behavior; its full-screen Alert also needs an Alert-versus-Dialog accessibility decision. |
-| Section | Semantic section root, native attributes, title, padding, Card layout, and direct Applique Button actions | Its own audited contract is complete, but it depends on the test-only Button facade and inherits that facade's `color` and router gaps. |
+| Banner | Regular semantic banners, self-contained icons, forwarded roles, safe partial-link omission, dismissal, and complete `Banner.Actionable` composition | Actionable preserves the active legacy truthy-color-to-info behavior; null-icon and full-screen Alert-versus-Dialog decisions remain. |
+| Section | Semantic section root, native attributes, title, padding, Card layout, direct Button promotion, and an explicit `actions` slot | It no longer reads React lazy internals, but it depends on the testing Button facade and inherits that facade's `color` and router gaps. |
 
-These six facades remain in the registry so teams can test the implemented
+These eight facades remain in the registry so teams can test the implemented
 surface. The catalogue must label them **Testing**, and production migration
 must wait until the active legacy behavior is mapped or deliberately removed.
 
@@ -61,6 +63,9 @@ must wait until the active legacy behavior is mapped or deliberately removed.
 6. **Ambiguous components require usage evidence first.** A name such as
    Dropdown does not identify whether the correct target is Select,
    DropdownMenu, or Popover.
+7. **String icons must be self-contained.** Button, Badge, Banner, and
+   InputTextArea map known legacy names to bundled Lucide components and render
+   a visible fallback for unknown names; clients do not supply an SVG sprite.
 
 ## Remaining implementation order
 
@@ -98,13 +103,14 @@ number.
 
 ## Next implementation slice
 
-1. Install the six test-only facades on a client branch without changing
+1. Install the eight testing facades on a client branch without changing
    existing `@applique-ui/uikit` imports.
-2. Exercise real Button/ButtonGroup color and router usage, Banner.Actionable,
-   and Section actions in one representative dashboard.
+2. Exercise Accordion `active`, InputText `className`, Button/ButtonGroup color
+   and router usage, remaining Banner.Actionable behavior, and Section actions
+   in one representative dashboard.
 3. Close or explicitly reject each documented gap: Button semantic colors and
-   RouterLink integration, Banner.Actionable compatibility/accessibility, and
-   the inherited Section dependency.
+   router policy, Banner.Actionable null-icon/accessibility behavior, and the
+   inherited Section dependency.
 4. Promote a facade only after its updated contract, visual checks, and client
    tests pass.
 5. Start Input as the next implementation item while the test-only facades are
@@ -114,6 +120,9 @@ number.
 
 - Audited legacy and shadcn prop surface is current.
 - Mapped, forwarded, composition-owned, and needs-review behavior is explicit.
+- `pnpm run validate:facade-contracts` passes mapping coverage, public
+  TypeScript API presence, testing status, and unresolved metadata alignment.
+  This structural gate does not replace the runtime assertions below.
 - No active legacy behavior remains unresolved; otherwise the item is labelled
   test-only and is not approved for production migration.
 - Conflict precedence and callback cancellation are tested.

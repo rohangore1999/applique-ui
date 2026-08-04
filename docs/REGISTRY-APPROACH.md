@@ -46,7 +46,7 @@ flowchart LR
     tokens["Design tokens + theme"]
     comps["Components<br/>(primitives + Applique tokens)"]
     facades["Adapter facades<br/>(Applique props win)"]
-    contract(["Contract + test kit"])
+    contract(["Contract gate + focused specs"])
     tokens --> comps --> facades
     contract -.enforces.-> facades
   end
@@ -305,14 +305,21 @@ Two rules make it predictable:
    (`aria-*`, `data-*`, `className`, …) are forwarded untouched, so clients keep
    their existing markup.
 
-In practice, every prop follows one of these simple paths:
+In practice, **every audited prop is sorted into one of five buckets.** This is the
+whole of "props migration" — nothing is left to chance, and nothing is dropped
+silently:
 
-| Adapter strategy | Example | What the facade does |
+| Bucket | Client writes | What the facade does |
 |---|---|---|
-| **Forward** | `autoFocus`, `aria-label` | Passes the prop to shadcn unchanged |
-| **Map** | Button `type="primary"` | Converts it to shadcn `variant="default"` |
-| **Convert an event** | InputNumber `onChange(value)` | Converts the browser event into the Applique callback shape |
-| **Compose behavior** | Button `loading` | Adds Spinner, disables the Button, and sets `aria-busy` |
+| **Forward** | `className`, `aria-label`, `autoFocus` | Passes it to shadcn unchanged — the client's markup just works |
+| **Map** | Badge `variant="solid"`; InputNumber `type` | Renames or converts a value; InputNumber always resolves the native type to `number` |
+| **Compose** | `<BreadCrumb>` items, Button `loading` | Builds the extra structure/behavior the single prop implies (separators, a Spinner) |
+| **Unsupported** | An obsolete styling escape hatch | Explicitly excluded with a documented client migration requirement |
+| **Needs-review** | Dropdown target | Parked for a human decision on the right shadcn target |
+
+The first two are the common, cheap cases. The last two are the honest escape
+hatches: a migrating client gets an explicit, short list of "change these," rather
+than mystery breakage.
 
 For example, the client can write:
 
@@ -350,6 +357,44 @@ InputNumber follows the same approach. The client keeps writing:
 `type="number"`, normalizing an invalid value to empty, and converting the DOM
 event into the number the client's handler expects.
 
+### When one Applique component becomes several shadcn pieces
+
+The "Compose" bucket is where the real work lives. An Applique component is often
+*one* thing to the client but *several* pieces underneath. The facade owns
+assembling them, so the client never sees the seams.
+
+**Example — BreadCrumb.** Old Applique drew the `/` dividers with CSS; shadcn
+needs an explicit `<BreadcrumbSeparator>` element between items. The client keeps
+writing a plain list:
+
+```tsx
+<BreadCrumb>
+  <BreadCrumb.Item><a href="/">Home</a></BreadCrumb.Item>
+  <BreadCrumb.Item>Orders</BreadCrumb.Item>
+</BreadCrumb>
+```
+
+…and the facade renders the shadcn structure, inserting a separator between every
+pair for them:
+
+```tsx
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
+    <BreadcrumbSeparator />          {/* facade adds this */}
+    <BreadcrumbItem>Orders</BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+**Example — Button.** `<Button loading notifications={3}>Save</Button>` is really
+three shadcn pieces glued together: the shadcn **Button**, a **Spinner** (only
+while loading), and a **Badge** for the "3" (capped at "99+"). One Applique prop,
+several primitives — all hidden inside the facade.
+
+This is why we do **not** try to auto-generate adapters from a table: most props
+compose structure or coordinate state, which is real code, not data.
+
 **Each adapter is a plain, self-contained component; the precedence rule is
 inlined, not shared at runtime.** We considered a single universal engine that
 would build every adapter from a data spec, but rejected it after review: most
@@ -362,9 +407,11 @@ stays fully readable on its own, which is the whole point of owning the source.
 
 The one thing we *do* keep shared is **data, not code**: a reviewed contract
 (`component-mappings.json`) that records, per prop, its fate — forward, rename,
-transform, force a constant, compose, or deliberately drop — plus a build-time
-test kit (never shipped to clients) that checks every adapter honors that
-contract. Full design:
+compose, or deliberately drop. A build-time structural gate checks that the
+mapping, the matching public component export, and registry release blockers
+agree. Focused component specs still test runtime behavior such as precedence,
+events, accessibility, and defaults. None of this test infrastructure is shipped
+to clients. Full design:
 [the adapter toolkit spec](./superpowers/specs/2026-08-04-applique-prop-adapter-engine-design.md).
 
 The practical result for a client migrating a screen:
@@ -381,14 +428,41 @@ The practical result for a client migrating a screen:
 3. **The ownership model** — `applique/` is registry-managed, `app-ui/` is team-owned.
 4. **Tailwind CSS 4** as the client build requirement.
 5. **Phased, adapter-backed migration** rather than an all-at-once rewrite.
+6. **The facade as our exit ramp** — if we ever move off shadcn, clients change
+   nothing; we rewrite facade internals once, centrally (see §10).
 
-Fifteen adapters now exist with passing tests. Nine are technical migration
-pilots: InputNumber, Avatar, Basic InputText, InputRadio, InputCheckbox,
-BreadCrumb, Accordion, InputTextArea, and Badge. Six are deliberately labelled
-**Test only**: Tabs, Tooltip, Button, ButtonGroup, Banner, and Section. They
-install and compile, but still have documented active or inherited legacy
-behavior to resolve before production migration. Banner.Actionable needs
-compatibility and full-screen accessibility decisions; Section inherits the
-test-only Button dependency. The next step is to validate both groups in one
-representative dashboard, close the observed gaps, and then start Input based
-on real usage.
+Fifteen adapters now exist with passing tests. Seven are technically ready for a
+client pilot: InputNumber, Avatar, InputRadio, InputCheckbox, BreadCrumb,
+InputTextArea, and Badge. Eight are deliberately labelled **Testing**:
+Accordion, Basic InputText, Tabs, Tooltip, Button, ButtonGroup, Banner, and
+Section. They install and compile, but still have documented active or inherited
+legacy behavior to resolve before production migration. Banner.Actionable now
+preserves its active legacy color behavior; its null-icon and full-screen
+accessibility decisions remain. Section inherits the testing Button dependency.
+The next step is to validate both groups in one representative dashboard, close
+the observed gaps, and then start Input based on real usage.
+
+## 10. What if we move off shadcn later?
+
+The facade is also our insurance against being locked to shadcn. Because clients
+depend on the **Applique facade API**, not on shadcn, we could swap the library
+underneath — even to a completely different one (MUI, Radix, React Aria) — and:
+
+- **Clients change nothing.** Their `<Button type="primary" loading>` and imports
+  stay exactly the same. The swap is invisible to them.
+- **We rewrite the inside of each facade, once, centrally.** That is real work —
+  roughly an initial rebuild — but it lands on one team, not every dashboard. The
+  contract data and the behavior tests act as the checklist and safety net.
+
+Two honest limits, so we don't oversell it:
+
+- **The new library must be able to do it.** If it can't do something Applique
+  offers today, that prop gets marked `unsupported` — a small, visible change for
+  the few components that use it.
+- **Don't tie our prop types to shadcn.** A few facades still borrow shadcn's
+  types. The behaviour is safe, but the types would break on a swap — so define
+  Applique's prop types on their own. Cheap now, saves pain later.
+
+The takeaway: swapping libraries is a central rebuild, but never a client rewrite.
+Keeping facades thin, the contract enforced, and public types independent is what
+keeps that rebuild small.

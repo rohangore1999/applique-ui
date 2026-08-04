@@ -1,26 +1,91 @@
 'use client'
 
 import * as React from 'react'
+import {
+  ArrowDownToLineIcon,
+  BombIcon,
+  CalendarIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  CircleHelpIcon,
+  DownloadIcon,
+  InfoIcon,
+  LoaderCircleIcon,
+  ScanBarcodeIcon,
+  SearchIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from 'lucide-react'
 
 import { Badge as InternalBadge } from '../badge'
 import { cn } from '../utils'
 
 type InternalBadgeProps = React.ComponentPropsWithoutRef<typeof InternalBadge>
-type IconName = string | React.ReactNode | React.ComponentType<any>
+type IconName =
+  | string
+  | React.ReactNode
+  | React.ComponentType<any>
+  | React.ExoticComponent<any>
 type BadgeType = 'info' | 'success' | 'warning' | 'error'
 type BadgeVariant = 'solid' | 'outlined'
+
+const legacyStringIconMap: Record<string, React.ElementType> = {
+  'arrow-to-bottom': ArrowDownToLineIcon,
+  'barcode-scan': ScanBarcodeIcon,
+  bomb: BombIcon,
+  calendar: CalendarIcon,
+  calender: CalendarIcon,
+  check: CheckIcon,
+  'chevron-right': ChevronRightIcon,
+  download: DownloadIcon,
+  info: InfoIcon,
+  search: SearchIcon,
+  spinner: LoaderCircleIcon,
+  spinnersolid: LoaderCircleIcon,
+  'thumbs-down': ThumbsDownIcon,
+  'thumbs-up': ThumbsUpIcon,
+}
+
+const warnedUnknownIconNames = new Set<string>()
+
+function renderStringIcon(name: string): React.ReactNode {
+  const normalizedName = name.trim().toLowerCase()
+  const IconComponent = legacyStringIconMap[normalizedName]
+
+  if (IconComponent) {
+    return <IconComponent data-applique-icon={normalizedName} />
+  }
+
+  const environment = (globalThis as typeof globalThis & {
+    process?: { env?: { NODE_ENV?: string } }
+  }).process?.env?.NODE_ENV
+
+  if (
+    environment !== 'production' &&
+    !warnedUnknownIconNames.has(normalizedName)
+  ) {
+    warnedUnknownIconNames.add(normalizedName)
+    console.warn(
+      `[Applique Badge] Unknown legacy icon "${name}". Rendering the fallback icon.`
+    )
+  }
+
+  return <CircleHelpIcon data-applique-icon-fallback={normalizedName} />
+}
 
 function renderIcon(name: IconName): React.ReactNode {
   let icon: React.ReactNode
 
   if (typeof name === 'string') {
-    icon = (
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <use href={`#uikit-i-${name}`} xlinkHref={`#uikit-i-${name}`} />
-      </svg>
-    )
-  } else if (typeof name === 'function') {
-    const IconComponent = name as React.ComponentType
+    icon = renderStringIcon(name)
+  } else if (
+    typeof name === 'function' ||
+    (typeof name === 'object' &&
+      name !== null &&
+      !React.isValidElement(name) &&
+      '$$typeof' in name)
+  ) {
+    const IconComponent = name as React.ElementType
     icon = <IconComponent />
   } else {
     icon = name

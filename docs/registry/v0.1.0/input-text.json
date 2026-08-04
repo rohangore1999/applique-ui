@@ -26,7 +26,11 @@
     "compatibility": {
       "legacyComponent": "InputText",
       "legacyPackage": "@applique-ui/input-text",
-      "scope": "basic"
+      "scope": "basic",
+      "migrationStatus": "testing",
+      "unresolvedProps": [
+        "className"
+      ]
     },
     "registryVersion": "0.1.0"
   }

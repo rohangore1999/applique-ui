@@ -5,22 +5,58 @@ the architectural decision, registry lifecycle, design-token delivery,
 component migration model, prop strategy, client integration, maintenance,
 testing, versioning, and manual GitHub Pages publishing.
 
-The most important distinction is:
+For a presentation, start with the executive summary below and use the detailed
+sections as supporting material or an appendix.
 
-- the **registry primitive layer is implemented**;
-- fifteen **Applique facade items are implemented and installable**. Nine are
-  technical migration pilots: Accordion, Avatar, Badge, BreadCrumb,
-  InputCheckbox, InputNumber, InputRadio, Basic InputText, and InputTextArea;
-- Tabs, Tooltip, Button, ButtonGroup, Banner, and Section are installable for
-  focused testing only. Tabs does not yet
-  preserve the active legacy `type` and child `isActive` behavior, and Tooltip
-  does not yet preserve `triggerOn="click"`. Button still needs semantic
-  `color` mappings and a shared router integration for standalone `to`;
-- ButtonGroup now depends on the Applique Button facade and inherits its
-  test-only status. Banner.Actionable has unresolved legacy-bug and full-screen
-  accessibility decisions. Section's own mapping is complete, but it also
-  depends on the test-only Button facade;
-- existing Applique package imports are not migrated automatically.
+## Executive summary
+
+The decision is to publish a **versioned shadcn source registry with Applique
+tokens**. Clients install source code into their own repositories. Existing
+Applique components migrate through selective, handwritten facades that keep
+useful Applique props while forwarding non-conflicting shadcn and native props.
+
+| Presentation question | Current answer |
+| --------------------- | -------------- |
+| Delivery model | Versioned source registry, not a runtime Applique npm package |
+| Client experience | Run `shadcn add`, review copied source, then import local components |
+| Client prerequisites | React 18, Tailwind CSS 4, and Node `>=20.18.1` for install/update |
+| Current facade status | 15 installable adapters: seven technically ready and eight explicitly testing |
+| Production status | Installation and tests alone do not production-approve any facade |
+| Existing screens | Existing `@applique-ui/*` imports remain unchanged until explicitly migrated |
+| Next blockers | Animation CSS delivery, durable host, representative dashboard pilot, and resolution of known compatibility gaps |
+
+### Component accounting
+
+These counts answer three different questions and should not be added together
+without considering their scope:
+
+| Outcome | Count | Meaning | Included in the 70-entry public catalogue? |
+| ------- | ----: | ------- | :----------------------------------------: |
+| Applique components with implemented adapters | 15 | Seven technically ready facades plus eight testing facades | Yes |
+| Raw shadcn components exposed directly | 53 | Applique tokens are applied, but clients use the shadcn prop API | Yes |
+| Unavailable upstream entries | 2 | Form is fileless/deprecated; Message Scroller requires React 19 | Yes, for discovery only |
+| Applique-only components retained in the existing library | 13 | No selected shadcn equivalent; they are not yet new registry items | No |
+
+Therefore, the public catalogue calculation is:
+
+```text
+70 entries = 15 Applique facades + 53 raw shadcn components + 2 unavailable entries
+```
+
+The 13 retained Applique-only capabilities are:
+
+> click-away, error-boundary, grid, icon, input-masked, layout, measure,
+> portal, schema-form, stepper, text, virtual-grid, virtual-list.
+
+Separately, migration metadata identifies 25 shadcn-only capabilities. Twenty-four
+are installable in the React 18 baseline; Message Scroller is the unavailable
+React 19 exception. These are a subset of the shadcn catalogue entries above,
+not an additional 25 components.
+
+In this document, **installable** or catalogue **ready** means the registry
+source graph passes its technical gates. It does not by itself mean that a
+facade is approved for production migration or that UX has accepted every
+behavioral and visual difference.
 
 ## Contents
 
@@ -55,21 +91,25 @@ The most important distinction is:
 Use a **versioned shadcn source registry with Applique tokens**, and add
 **Applique-owned facade components only where migration requires them**.
 
-The architecture has two product-facing layers:
+The architecture exposes two client-facing API modes:
 
-1. **Registry primitives**
+1. **Raw registry components**
   - pinned shadcn Base/Nova source;
   - Applique design tokens;
   - copied into each client repository;
-  - normal shadcn API;
+  - normal shadcn API under the client's configured `ui` alias;
+  - used where no Applique facade owns the public component name;
   - implemented today.
 2. **Applique facades**
   - stable Applique-owned API;
-  - imports local registry primitives;
+  - installed under `@/components/applique/*`;
+  - imports local registry primitives, including hidden internal dependencies
+    when the facade and primitive have the same name;
   - forwards, maps, composes, or rejects props;
   - added component by component with explicit prop contracts and tests;
-  - fifteen installable items exist: nine technical migration pilots and six
-    test-only facades (Tabs, Tooltip, Button, ButtonGroup, Banner, and Section);
+  - fifteen installable items exist: seven technically ready facades and eight
+    testing facades (Accordion, Basic InputText, Tabs, Tooltip, Button,
+    ButtonGroup, Banner, and Section);
   - registry installation and passing tests do not by themselves mean that a
     facade is production- or UX-approved.
 
@@ -107,11 +147,11 @@ APIs or implementation-specific extension props may need changes.
 | React 18 compatibility         | Implemented        | Separate Applique-owned compatibility helper            |
 | TS/TSX and JS/JSX installation | Implemented        | Selected by the client's `components.json`              |
 | Static component catalogue     | Implemented        | Component previews, API, install URLs, migration view   |
-| Installable primitive maturity | Experimental       | All 60 source-bearing UI items have experimental status |
+| Installable primitive maturity | Experimental       | 53 public raw capabilities are experimental; seven same-named facade dependencies are internal |
 | Base/Nova animation delivery   | Known gap          | Registry clients do not yet receive all animation CSS   |
-| Component relationship mapping | Partially implemented | All 12 direct families plus Button, ButtonGroup, and Banner have installable facade items; other composition and ambiguous mappings remain proposals |
-| Prop audit                     | Partially reviewed | Full InputText, Tabs `type`/`isActive`, Tooltip click triggering, Button colors/router behavior, and Banner.Actionable decisions remain unresolved |
-| Applique facade components     | 15 installable     | Nine technical migration pilots; Tabs, Tooltip, Button, ButtonGroup, Banner, and Section are explicitly test-only |
+| Component relationship mapping | Partially implemented | 15 relationships have installable facades, but all 37 mapping records still await UX and production approval |
+| Prop audit                     | Partially reviewed | Accordion `active`, InputText `className`, Tabs `type`/`isActive`, Tooltip click triggering, Button color/router policy, and remaining Banner.Actionable overlay/null-icon decisions are unresolved |
+| Applique facade components     | 15 installable     | Seven technically ready; Accordion, Basic InputText, Tabs, Tooltip, Button, ButtonGroup, Banner, and Section are explicitly testing |
 | Automatic legacy migration     | Not implemented    | Migration is explicit and component-by-component        |
 
 
@@ -146,10 +186,10 @@ package's `0.2.0` version.
 
 Of the 60 installable pinned UI sources, 53 distinct shadcn capabilities are
 marked `experimental` and seven same-named facade dependencies are marked
-`internal`. Of the 15 facade items, nine are technical migration pilots and
-Tabs, Tooltip, Button, ButtonGroup, Banner, and Section are test-only. These
-statuses mean the source graph passes the registry gates; none of them alone
-means production or UX approval.
+`internal`. Of the 15 facade items, seven are technically ready and Accordion,
+Basic InputText, Tabs, Tooltip, Button, ButtonGroup, Banner, and Section are
+testing. These statuses mean the source graph passes the registry gates; none
+of them alone means production or UX approval.
 
 The current `rohangore1999.github.io` Pages domain is an evaluation host. An
 organization-owned durable host and owner must be agreed before production
@@ -157,7 +197,9 @@ adoption because absolute host URLs are embedded in registry dependencies.
 
 ### UI coverage
 
-The 60 installable UI entries are:
+The 60 installable pinned upstream source families are listed below. In the
+public registry, 53 keep these raw names and seven same-named facade
+dependencies are published only under `applique-internal-*` names:
 
 > accordion, alert, alert-dialog, aspect-ratio, attachment, avatar, badge,
 > breadcrumb, bubble, button, button-group, calendar, card, carousel, chart,
@@ -167,6 +209,10 @@ The 60 installable UI entries are:
 > navigation-menu, pagination, popover, progress, radio-group, resizable,
 > scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner,
 > spinner, switch, table, tabs, textarea, toast, toggle, toggle-group, tooltip.
+
+The seven internalized raw families are Accordion, Avatar, Badge, Button,
+ButtonGroup, Tabs, and Tooltip. Clients install their public Applique facades;
+the CLI pulls the hidden raw source only as an implementation dependency.
 
 Two official entries are retained for complete discovery but are not
 installable:
@@ -349,12 +395,21 @@ library and hook targets as `.js` and component targets as `.jsx`.
 
 ```mermaid
 flowchart TD
-  Client["Install button.json"] --> Button["Button source"]
-  Client --> Theme["applique-theme"]
-  Client --> Utils["utils"]
-  Client --> Compat["applique-react18-compat"]
-  Button --> BaseUI["@base-ui/react 1.6.0"]
-  Button --> CVA["class-variance-authority 0.7.1"]
+  Client["Install button.json"] --> Facade["Public Applique Button facade"]
+  Facade --> Badge["Hidden Badge primitive"]
+  Facade --> Button["Hidden Button primitive"]
+  Facade --> Spinner["Spinner"]
+  Badge --> Foundations["Theme + utils + React 18 compatibility"]
+  Button --> Foundations
+  Spinner --> Foundations
+  Badge --> BaseUI["@base-ui/react 1.6.0"]
+  Button --> BaseUI
+  Badge --> CVA["class-variance-authority 0.7.1"]
+  Button --> CVA
+  Spinner --> Lucide["lucide-react 1.28.0"]
+  Foundations --> Theme["applique-theme"]
+  Foundations --> Utils["utils"]
+  Foundations --> Compat["applique-react18-compat"]
   Theme --> Font["@fontsource-variable/hanken-grotesk 5.3.0"]
   Utils --> Clsx["clsx 2.1.1"]
   Utils --> Merge["tailwind-merge 3.6.0"]
@@ -408,7 +463,7 @@ utilities:
 > menubar, navigation-menu, popover, select, tooltip.
 
 Those utilities normally come from `shadcn/tailwind.css` and
-`tw-animate-css`. The workspace package build imports both, but the current
+`tw-animate-css`. The package CSS entry and CSS build path import both, but the current
 `applique-theme` registry item does not install or import them, and the registry
 smoke test does not assert that those utilities are emitted. A copied component
 can therefore compile while silently missing part of its motion styling.
@@ -634,14 +689,14 @@ relationships.
 
 | Classification    | Current count | Simple meaning                                                                                   | Example                                               |
 | ----------------- | ------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| **Direct**        | 11            | One Applique component maps to one shadcn component family. Prop adaptation may still be needed. | InputText → Input                                     |
-| **Composition**   | 18            | Multiple shadcn primitives plus Applique-owned behavior are required.                            | InputDate → Calendar + Popover + Input + Button       |
+| **Direct**        | 12            | One shadcn component family is the primary target. Prop adaptation or structural wrapping may still be needed. | InputText → Input                                     |
+| **Composition**   | 17            | Multiple shadcn component families plus Applique-owned behavior are required.                    | InputDate → Calendar + Popover + Input + Button       |
 | **No equivalent** | 38            | The capability exists only on one side.                                                          | VirtualList is Applique-only; Carousel is shadcn-only |
 | **Ambiguous**     | 6             | Real usage must be checked before choosing the replacement.                                      | Dropdown → Select, DropdownMenu, or Popover           |
 
 
 The catalogue tabs show 73 classified capabilities/display entries:
-`11 + 18 + 38 + 6 = 73`. The source metadata contains 37 records because the
+`12 + 17 + 38 + 6 = 73`. The source metadata contains 37 records because the
 38 no-equivalent components are grouped into two directional records.
 
 All 37 classifications remain proposal-level for UX and production approval.
@@ -671,48 +726,62 @@ flowchart TD
 
 | Applique      | Registry family | Current facade scope |
 | ------------- | --------------- | -------------------- |
-| Accordion     | Accordion       | Installable technical migration pilot |
-| Avatar        | Avatar          | Installable technical migration pilot |
-| Badge         | Badge           | Installable technical migration pilot |
-| BreadCrumb    | Breadcrumb      | Installable technical migration pilot |
-| InputCheckbox | Checkbox        | Installable technical migration pilot |
-| InputNumber   | Input           | Installable technical migration pilot |
-| InputRadio    | RadioGroup      | Installable technical migration pilot |
-| InputText     | Input           | Installable basic pilot; adornments, validation context, wrapper styling, and full compatibility remain deferred |
-| InputTextArea | Textarea        | Installable technical migration pilot |
+| Accordion     | Accordion       | Installable for testing; `active` compatibility remains explicit |
+| Avatar        | Avatar          | Technically ready adapted facade |
+| Badge         | Badge           | Technically ready adapted facade |
+| BreadCrumb    | Breadcrumb      | Technically ready adapted facade |
+| InputCheckbox | Checkbox        | Technically ready adapted facade |
+| InputNumber   | Input           | Technically ready adapted facade |
+| InputRadio    | RadioGroup      | Technically ready adapted facade |
+| InputText     | Input           | Installable for testing; `className` target and full compatibility remain deferred |
+| InputTextArea | Textarea        | Technically ready adapted facade |
 | Tabs          | Tabs            | Installable for testing only; legacy `type` and child `isActive` behavior remains unresolved |
 | Tooltip       | Tooltip         | Installable for testing only; legacy `triggerOn="click"` behavior remains unresolved |
+| Section       | Card            | Installable for testing; explicit `actions` avoids React internals, but the Button dependency remains testing |
 
 
 Direct does not mean identical props. For example, InputText's legacy
 `onChange(value)` must adapt the registry Input's DOM event.
 
-Installable also does not mean migration-approved. Tabs and Tooltip are
-deliberately available so their unresolved behavior can be tested in a real
-dashboard, but production screens should not migrate to them until those
+Installable also does not mean migration-approved. All eight testing facades
+are deliberately available so their unresolved behavior can be exercised in a
+real dashboard, but production screens should not migrate to them until those
 active legacy contracts are either preserved or intentionally changed.
+
+Section is classified Direct because Card is its primary shadcn family. Direct
+Applique Button children can still be promoted to its header, while lazy,
+memoized, wrapped, and application-owned controls use the explicit `actions`
+slot. Section no longer inspects private React lazy fields. Its facade remains
+testing because the Button dependency is not yet production-approved.
+
+```tsx
+const LazyOrderAction = React.lazy(() => import('./order-action'))
+
+<Section title="Orders" actions={<LazyOrderAction />}>
+  <OrdersTable />
+</Section>
+```
 
 ### Composition mappings
 
 
 | Applique    | Registry primitives and owned behavior         |
 | ----------- | ---------------------------------------------- |
-| Banner      | Alert + Button                                 |
+| Banner      | Alert + Button + Dialog                        |
 | Button      | Button + Spinner + Badge                       |
-| ButtonGroup | ButtonGroup + DropdownMenu                     |
-| FAB         | Button + DropdownMenu + Popover                |
+| ButtonGroup | ButtonGroup + Button + DropdownMenu            |
+| FAB         | Button + Popover                               |
 | Field       | Field + Label                                  |
-| Form        | Field + Input + Select + Checkbox + RadioGroup |
-| Image       | native image + AspectRatio + Skeleton          |
+| Form        | Field + Input + Select + Checkbox + RadioGroup + Textarea + Button + ButtonGroup |
+| Image       | AspectRatio + Skeleton around a native image   |
 | Input       | Input + InputGroup                             |
 | InputDate   | Calendar + Popover + Input + Button            |
 | InputFile   | Input + Button + Attachment                    |
-| InputMonth  | Calendar + Popover + Input                     |
+| InputMonth  | Popover + Input + Button                       |
 | NavBar      | Sidebar + Sheet + NavigationMenu               |
 | Page        | Sidebar + Breadcrumb + NavigationMenu          |
 | Pagination  | Pagination + Select + Input                    |
-| Section     | Card + Applique Button                         |
-| Table       | Table + Input + DropdownMenu + Pagination      |
+| Table       | Table + DropdownMenu                           |
 | TopBar      | Breadcrumb + Avatar + DropdownMenu             |
 | TopNav      | NavigationMenu + Sheet + Sidebar               |
 
@@ -720,17 +789,20 @@ active legacy contracts are either preserved or intentionally changed.
 Composition means the facade renders several primitives and owns their
 coordination, state, accessibility, formatting, or router integration.
 
-Button and ButtonGroup are now published together as test-only registry items.
+Button and ButtonGroup are now published together as testing registry items.
 ButtonGroup depends on the Applique Button item, so its cloned legacy visual
 `type` never leaks into the native HTML `type` of the raw shadcn Button. Neither
-is migration-ready until Button's remaining color and router behavior is
-resolved and tested in a client.
+is migration-ready until Button's remaining color semantics and shared router
+policy are resolved and tested in a client. The current Button is nevertheless
+safe to exercise: `to` uses a supplied RouterLink when available, otherwise a
+string or pathname-like destination becomes a normal anchor. An unresolvable
+object destination remains a button, and `to` keeps legacy precedence when
+`href` is also present; none of these cases throws during render.
 
-Banner and Section are also published for focused testing. Regular Banner
-behavior is mapped, while Banner.Actionable still needs explicit decisions for
-its legacy color bug, null-icon behavior, and full-screen accessibility model.
-Section preserves its semantic root and audited layout contract, but depends on
-the test-only Applique Button facade for direct header actions.
+Banner is also published for focused testing. Its regular behavior is mapped,
+and Actionable now deliberately preserves the active legacy rule that every
+truthy `data.color` renders as `info`. Remaining decisions concern null-icon
+compatibility and the full-screen Alert-versus-Dialog accessibility model.
 
 ### Ambiguous mappings
 
@@ -808,12 +880,44 @@ Current audit coverage:
 
 - 35 audited relationships covering all Direct, Composition, and Ambiguous
   records;
-- 370 mapping rules assessing 391 source-prop occurrences (188 distinct names);
-- 41 forwarded;
+- 374 mapping rules assessing 404 source-prop occurrences (200 distinct names);
+- 43 forwarded;
 - 57 mapped;
-- 206 composition-owned;
+- 207 composition-owned;
 - 4 unsupported;
-- 62 needing review.
+- 63 needing review.
+
+### Mapping-driven structural contract gate
+
+`pnpm run validate:facade-contracts` connects the audit data to the checked-in
+registry and facade source. It fails when:
+
+- a registered facade has no component mapping or prop contract;
+- a documented legacy prop is absent from that contract;
+- a resolved mapped prop is absent from its matching TypeScript-derived
+  callable facade export;
+- a non-testing facade still contains `needs-review`; or
+- registry `unresolvedProps` no longer correspond to local or direct-facade
+  mapping blockers.
+
+This is an honest **structural** gate. It proves that the declared artifacts
+agree; it cannot prove that the runtime implementation applies precedence in
+the correct order, composes callbacks correctly, targets the correct DOM node,
+or preserves absent/default values. Focused component specs remain mandatory
+for those behaviors. `validate:registry` runs this structural gate as part of
+the normal registry validation command.
+
+### Compatibility hardening from implementation review
+
+| Reviewed risk | Implemented result |
+| ------------- | ------------------ |
+| String icons depended on a hidden Applique SVG sprite | Button, Badge, Banner, and InputTextArea map known names to bundled Lucide SVGs; unknown names warn in development and render a visible fallback |
+| Banner.Actionable changed the active legacy color result | Every truthy `data.color` again resolves to `info`, preserving the verified legacy runtime |
+| Contract data was not connected to a release gate | `validate:facade-contracts` now checks structural mapping, source API, status, and blocker consistency; runtime meaning remains in specs |
+| Plain empty Button invented a Bell | Plain `<Button />` stays visually empty with a neutral accessible name; Bell is limited to notifications and the legacy empty `xs` fallback |
+| Button and Banner validation could throw during render | Button uses safe `to`/`href` and `xs` fallbacks; Banner omits incomplete links and marks them for diagnostics |
+| Banner discarded a caller-supplied ARIA role | Both regular and Actionable Banner forward `role`, with `alert` only as the default |
+| Section inspected private React lazy fields | Direct Applique Buttons are promoted by public component identity; all lazy, wrapped, or app-owned actions use the explicit `actions` slot |
 
 The two grouped No-equivalent records do not have adapter prop contracts. A
 **Prop audit pending** message elsewhere means the contract has not been
@@ -913,7 +1017,8 @@ ambiguous contracts require usage review.
 
 ### Why Button is composition
 
-The registry Button provides the basic interactive primitive and variants.
+The hidden pinned shadcn Button primitive provides the basic interaction and
+variants used inside the public Applique Button facade.
 Legacy Applique Button also owns:
 
 - loading UI and click suppression;
@@ -944,7 +1049,7 @@ Those behaviors must be rebuilt around Button, Spinner, and Badge.
 | `loading`          | Composition-owned        | Spinner, disabled, click guard, `aria-busy`     |
 | `notifications`    | Composition-owned        | bell/count Badge and `99+` behavior             |
 | `href`             | Composition-owned        | polymorphic anchor rendering                    |
-| `to`               | Composition-owned        | client supplies `render={<RouterLink />}`        |
+| `to`               | Needs review with safe fallback | use supplied RouterLink; otherwise anchor when a URL can be derived, or retain button semantics |
 | `caption`          | Composition-owned        | secondary text in large recipe                  |
 | runtime `label`    | Composition-owned        | fallback when children is absent                |
 | `color`            | Needs review             | UX must define semantic tones                   |
@@ -971,7 +1076,7 @@ Implemented size mapping:
 
 | Legacy `size` | Registry behavior                          |
 | ------------- | ------------------------------------------ |
-| `xs`          | `icon-xs`                                  |
+| `xs`          | `icon-xs` for icon-only use; safe `xs` button when labelled |
 | `small`       | `sm`                                       |
 | `regular`     | `default`                                  |
 | `large`       | Applique-owned full-width captioned recipe |
@@ -996,24 +1101,39 @@ composes the Spinner, forces disabled and `aria-busy` while loading, and
 forwards non-conflicting native props such as `autoFocus` and `aria-label`.
 An explicit Applique `type` wins over a conflicting shadcn `variant`.
 
-The technical facade also covers legacy size validation, leading and trailing
+The technical facade also covers legacy size handling, leading and trailing
 icons, the large caption layout, notifications with a `99+` cap, transforms,
 inherited text color, `href` anchors, refs, and shadcn/native extensions.
+
+String icon names are self-contained. Known legacy names, including the
+documented InputTextArea `SpinnerSolid` example, are mapped to bundled Lucide
+SVG components; an unknown name renders a visible fallback and warns in
+development. Button, Badge, Banner, and InputTextArea therefore do not rely on
+a page-level `<symbol id="uikit-i-*">` sprite. React elements and component
+icons remain supported.
+
+A plain empty `<Button />` no longer invents a Bell; it receives the neutral
+accessible name `Button` and a diagnostic data attribute. The Bell fallback is
+limited to notification buttons and the legacy empty `size="xs"` path. Invalid
+link combinations and `xs` combinations are handled without render-time
+exceptions and expose diagnostic `data-applique-*` attributes for tests.
 
 It remains **test-only** because:
 
 - arbitrary legacy `color` values are recorded for auditing but do not yet
   change the visual recipe;
-- `to` requires `render={<RouterLink />}` supplied by the client; it throws a
-  clear error when no router element is configured;
+- a supplied `render={<RouterLink />}` remains the preferred client-router
+  integration; without it, string and pathname-like `to` values safely use
+  browser navigation, while unresolvable objects remain buttons;
 - the undocumented 100 ms click cooldown, static `Button.Link` and
   `Button.RouterLink` members, and class-instance refs are not reproduced;
 - runtime `state` is deliberately unsupported, and callers must provide an
   accessible label for non-notification icon-only buttons.
 
 These gaps must be accepted, mapped, or explicitly removed before production
-migration approval. The focused facade suite covers 33 Button behaviors, and
-the registry smoke installs the same source in both TSX and JSX clients.
+migration approval. The focused facade suite covers the mapped behavior and
+safe fallbacks, and the registry smoke installs the same source in both TSX and
+JSX clients.
 
 ### Import path during phased migration
 
@@ -1027,17 +1147,17 @@ import Button from '@applique-ui/button'
 The installable facades use one public client namespace:
 
 ```tsx
-import { Accordion, AccordionItem } from '@/components/applique/accordion'
 import { Avatar } from '@/components/applique/avatar'
 import { Badge } from '@/components/applique/badge'
 import { BreadCrumb } from '@/components/applique/bread-crumb'
 import { InputCheckbox } from '@/components/applique/input-checkbox'
 import { InputNumber } from '@/components/applique/input-number'
 import { InputRadio } from '@/components/applique/input-radio'
-import { InputText } from '@/components/applique/input-text'
 import { InputTextArea } from '@/components/applique/input-text-area'
 
 // Test-only until active legacy behavior is resolved.
+import { Accordion, AccordionItem } from '@/components/applique/accordion'
+import { InputText } from '@/components/applique/input-text'
 import { Button } from '@/components/applique/button'
 import { ButtonGroup } from '@/components/applique/button-group'
 import { Banner } from '@/components/applique/banner'
@@ -1160,18 +1280,16 @@ The configured CSS entry must be loaded by the application and contain:
 @import 'tailwindcss';
 ```
 
-### Install the nine technical migration pilots
+### Install the seven technically ready adapted facades
 
 Use the pinned CLI and versioned registry URLs on a client branch:
 
 ```sh
 npx shadcn@4.16.0 add \
-  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/accordion.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input-number.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/avatar.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/badge.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/bread-crumb.json \
-  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input-text.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input-text-area.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input-radio.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input-checkbox.json
@@ -1183,14 +1301,16 @@ same-named implementation primitive under `@/components/applique/internal`.
 It also installs exact npm dependencies and updates the configured global CSS
 with Applique tokens. Existing legacy imports are unaffected.
 
-### Install the six test-only facades
+### Install the eight testing facades
 
-Tabs, Tooltip, Button, ButtonGroup, Banner, and Section are registry-installable
-so teams can evaluate the remaining compatibility gaps without waiting for a
-later registry release:
+Accordion, Basic InputText, Tabs, Tooltip, Button, ButtonGroup, Banner, and
+Section are registry-installable so teams can evaluate the remaining
+compatibility gaps without waiting for a later registry release:
 
 ```sh
 npx shadcn@4.16.0 add \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/accordion.json \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input-text.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button-group.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/banner.json \
@@ -1201,18 +1321,25 @@ npx shadcn@4.16.0 add \
 
 Do not treat this command as production migration approval:
 
+- Accordion accepts `active`, but the verified legacy runtime did not apply it;
+  that compatibility decision remains explicit rather than silently hidden.
+- Basic InputText still needs approval for whether `className` targets the
+  legacy wrapper or the registry input element.
 - Tabs currently accepts legacy `type` and child `isActive` props without
   reproducing their active legacy visual/state behavior.
 - Tooltip currently accepts `triggerOn`, but click-triggered behavior is not
   reproduced.
-- Button does not yet map arbitrary `color`; `to` requires a client-supplied
-  RouterLink through the `render` extension.
+- Button does not yet map arbitrary `color`; a client-supplied RouterLink is
+  preferred for `to`, while the safe fallback prevents render-time crashes.
 - ButtonGroup preserves grouping and overflow behavior but inherits Button's
   unresolved color and router contract.
-- Banner's regular surface is implemented, but Actionable's legacy color bug,
-  null-icon behavior, and Alert-versus-Dialog accessibility model are pending.
-- Section's own semantic mapping is implemented, but it inherits the test-only
-  Button dependency for header actions.
+- Banner forwards an explicit `role`, defaults it to `alert`, and omits partial
+  links without throwing. Actionable preserves the legacy truthy-color-to-info
+  behavior; null-icon and Alert-versus-Dialog decisions remain pending.
+- Section uses an explicit `actions` slot for lazy, memoized, wrapped, or
+  application-owned header actions. Direct Applique Button children are still
+  promoted, without reading undocumented React internals. Section continues to
+  inherit the testing Button dependency.
 
 Use these items only for focused dashboard testing until the compatibility
 contract is resolved and covered by the production acceptance gates.
@@ -1241,7 +1368,9 @@ With `"tsx": true`, the public and internal result is typically:
 
 ```text
 src/components/applique/button.tsx
+src/components/applique/internal/badge.tsx
 src/components/applique/internal/button.tsx
+src/components/ui/spinner.tsx
 src/lib/applique-react18-compat.ts
 src/lib/utils.ts
 src/index.css
@@ -1284,10 +1413,13 @@ size vocabulary:
 
 ### Install multiple components
 
+This example installs two Applique facades (`button` and `input-checkbox`) plus
+one raw shadcn capability (`dialog`):
+
 ```sh
 npx shadcn@4.16.0 add \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/button.json \
-  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/checkbox.json \
+  https://rohangore1999.github.io/applique-ui/registry/v0.1.0/input-checkbox.json \
   https://rohangore1999.github.io/applique-ui/registry/v0.1.0/dialog.json
 ```
 
@@ -1469,8 +1601,10 @@ New or migrated screen
   - implement a clearly scoped technical facade with unresolved behavior
     marked `needs-review` or unsupported;
   - test it in a dashboard, then use the evidence for UX and production approval.
-3. **Implement selected compositions**
-  - Button, Banner, InputDate, and similar components;
+3. **Validate and extend selected compositions**
+  - validate the implemented test-only Button, ButtonGroup, and Banner facades;
+  - implement Input next after reviewing real usage, then sequence InputDate and
+    other larger compositions;
   - write explicit state and accessibility behavior;
   - test interactions rather than only types.
 4. **Audit ambiguous components**
@@ -1525,9 +1659,9 @@ The catalogue provides:
 
 - left-side component navigation;
 - lazy live previews for source-bearing components;
-- source-derived exports and owned props;
-- inherited/forwarded primitive type surfaces;
-- current-alias install commands for exploration;
+- a client-side contract and basic usage example for every public entry;
+- simplified component anatomy plus source-derived prop information;
+- versioned install commands;
 - raw registry JSON on demand;
 - unavailable states for Form and Message Scroller;
 - Direct, Composition, No equivalent, and Ambiguous migration tabs;
@@ -1547,9 +1681,10 @@ component/prop references, and legacy component coverage.
 - Similar names are never used to infer compatibility automatically.
 - A mapping remains `proposed` until UX and real usage are reviewed.
 
-The catalogue currently copies the mutable root item URL. For a reproducible
-client adoption, replace it with the approved host's versioned path before
-running the command.
+The catalogue currently copies a versioned `v0.1.0` URL from the personal
+evaluation host. Before production adoption, select the approved durable host,
+regenerate the registry and catalogue with that host, and keep the version path
+immutable after the first client adopts it.
 
 ### Regenerate catalogue metadata
 
@@ -1617,9 +1752,10 @@ upstream addition or change:
 The 15 current facade items exercise the facade infrastructure. Applique-owned
 items now survive upstream sync, validate separately from the fixed 62 upstream
 entries, appear in the catalogue, install under `@components/applique`, and run
-through both TypeScript and JavaScript consumer smoke tests. Nine are technical
-migration pilots. Tabs, Tooltip, Button, ButtonGroup, Banner, and Section remain
-test-only until their active or inherited legacy behavior gaps are resolved.
+through both TypeScript and JavaScript consumer smoke tests. Seven are
+technically ready. Accordion, Basic InputText, Tabs, Tooltip, Button,
+ButtonGroup, Banner, and Section remain testing until their active or inherited
+legacy behavior gaps are resolved.
 
 ButtonGroup now declares `button` as a registry dependency. This keeps
 its legacy child `type` values inside the Applique facade boundary rather than
@@ -1658,6 +1794,7 @@ second supported client API.
 From `packages/shadcn-primitives`:
 
 ```sh
+pnpm run validate:facade-contracts
 pnpm run validate:registry
 pnpm exec tsc --noEmit -p tsconfig.json
 pnpm exec tsc --noEmit -p catalog/tsconfig.json
@@ -1670,13 +1807,15 @@ pnpm run smoke:registry
 
 | Gate                 | Protects                                                                                                                                        |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `validate:registry`  | generated parity, schemas, path safety, exact pins, source hashes, counts, statuses, dependency graph, current/versioned parity, theme contract |
+| `validate:facade-contracts` | mapping coverage, documented-prop presence, TypeScript facade API presence, and testing/unresolved metadata alignment; not runtime semantics |
+| `validate:registry`  | generated parity, schemas, path safety, exact pins, source hashes, counts, statuses, dependency graph, current/versioned parity, theme contract; also runs the facade structural gate |
 | package TypeScript   | normalized source and public exports                                                                                                            |
 | catalogue TypeScript | catalogue source, previews, and metadata use                                                                                                    |
-| `smoke:react18`      | real React 18 Button/Input/Calendar refs and Calendar focus behavior                                                                            |
+| `smoke:react18`      | React 18 mounting and ref behavior for all 15 facades plus raw Button, Input, and Calendar; InputNumber/InputText event conversion; Calendar focus behavior |
 | `smoke:registry`     | actual CLI install of all 60 source-bearing upstream UI entries and all 15 facade items in isolated React 18/Tailwind 4 TSX and JSX clients |
 
-For Tabs, Tooltip, Button, ButtonGroup, Banner, and Section, passing
+For Accordion, Basic InputText, Tabs, Tooltip, Button, ButtonGroup, Banner, and
+Section, passing
 `smoke:registry` proves only that the test-only source installs, resolves, and
 compiles. It does not prove legacy behavior parity or authorize a production
 migration.
@@ -1687,7 +1826,7 @@ The full registry smoke also verifies:
 - TypeScript compilation;
 - JavaScript/JSX conversion and parsing without a TypeScript client dependency;
 - Tailwind CSS compilation in both output modes;
-- exact npm dependencies;
+- installation of the manifest-declared npm dependencies, with selected installed-version assertions;
 - token and font installation;
 - scoped dark behavior;
 - component dependency resolution;
@@ -1739,18 +1878,17 @@ docs/
 ### Publish
 
 1. Use Node.js `>=20.18.1` and install locked workspace dependencies.
-2. If normalized source or mapping inputs changed, regenerate catalogue
-  metadata from the repository root:
-   For upstream example refreshes, use the separate `--examples-dir` or
-   `--fetch-missing` flow in section 14. A direct edit to an existing preview
-   needs a catalogue rebuild, not `--metadata-only`.
-3. On `shadcn-components-integration`, generate with the final evaluation URL:
+2. On `shadcn-components-integration`, generate the registry and catalogue with
+   the final evaluation URL. `build:pages` also regenerates catalogue metadata:
   ```sh
    cd packages/shadcn-primitives
    APPLIQUE_REGISTRY_BASE_URL=https://rohangore1999.github.io/applique-ui/registry \
      pnpm run build:pages
   ```
-4. Run:
+   For upstream example refreshes, use the separate `--examples-dir` or
+   `--fetch-missing` flow in section 14 before this build. A direct edit to an
+   existing preview needs the full catalogue rebuild shown above.
+3. Run:
   ```sh
    pnpm run validate:registry
    pnpm exec tsc --noEmit -p tsconfig.json
@@ -1758,14 +1896,14 @@ docs/
    pnpm run smoke:react18
    pnpm run smoke:registry
   ```
-5. Inspect the catalogue locally.
-6. Commit source plus all generated `docs/registry` and `docs/catalog` changes.
-7. Push `shadcn-components-integration`.
-8. In GitHub **Settings → Pages**, choose:
+4. Inspect the catalogue locally.
+5. Commit source plus all generated `docs/registry` and `docs/catalog` changes.
+6. Push `shadcn-components-integration`.
+7. In GitHub **Settings → Pages**, choose:
   - **Deploy from a branch**;
   - branch `shadcn-components-integration`;
   - folder `/docs`.
-9. Verify:
+8. Verify:
   ```text
    https://rohangore1999.github.io/applique-ui/
    https://rohangore1999.github.io/applique-ui/catalog/
@@ -1947,17 +2085,18 @@ the registry.
 
 Do not present all 15 installable facade items as production-ready. First make
 the primitive delivery path complete, select its durable host, and test the
-nine technical migration pilots in one representative client. Tabs, Tooltip,
-Button, ButtonGroup, Banner, and Section should be installed only for focused
-testing of their documented or inherited gaps. UX and engineering decisions
-can then use observed behavior instead of assumptions.
+seven technically ready adapted facades in one representative client.
+Accordion, Basic InputText, Tabs, Tooltip, Button, ButtonGroup, Banner, and
+Section should be installed only for focused testing of their documented or
+inherited gaps. UX and engineering decisions can then use observed behavior
+instead of assumptions.
 
 ### Recommended execution order
 
 1. Complete and test the primitive styling/dependency graph.
 2. Finalize the distribution contract: host, version policy, and install URLs.
-3. Install and test the nine technical migration pilots in one representative React 18 dashboard.
-4. Separately evaluate Tabs `type`/`isActive`, Tooltip click triggering, Button/ButtonGroup color and router behavior, Banner.Actionable, and Section actions with the six test-only facades.
+3. Install and test the seven technically ready adapted facades in one representative React 18 dashboard.
+4. Separately evaluate Accordion `active`, InputText `className`, Tabs `type`/`isActive`, Tooltip click triggering, Button/ButtonGroup color and router policy, remaining Banner.Actionable behavior, and Section actions with the eight testing facades.
 5. Record behavioral, visual, and client-CSS differences from real screens.
 6. Resolve the observed gaps before production approval.
 7. Start Input as the next composition implementation while the test-only items are evaluated.
@@ -1971,16 +2110,16 @@ can then use observed behavior instead of assumptions.
 | P0.1 | Before pilot         | Deliver `shadcn/tailwind.css` and `tw-animate-css` through the registry theme/dependency graph            | Applique engineering          | A clean client receives the required CSS automatically and smoke tests assert representative animation utilities                                        |
 | P0.2 | Before pilot         | Test the recommended `@/components/applique-shadcn` alias with a complex recursive component              | Applique engineering          | The smoke fixture installs and type-checks a component such as Dialog or Sidebar under the custom alias                                                 |
 | P0.3 | Before adoption      | Choose an organization-owned durable HTTPS host                                                           | Applique owner + platform     | Host, owner, retention policy, and support route are recorded; generated dependency URLs use that host                                                  |
-| P0.4 | Before adoption      | Make catalogue install commands versioned                                                                 | Applique engineering          | Copying an install command uses the approved host and immutable release path rather than the root alias                                                 |
+| P0.4 | Technical implementation complete; host pending | Use versioned catalogue install commands | Applique engineering | The catalogue copies `v0.1.0` URLs today; regenerate them against the approved durable host before adoption |
 | P0.5 | Before adoption      | Decide when `v0.1.0` becomes immutable and record its consumers                                           | Applique owner + pilot team   | First adoption is recorded and later changes require a new version                                                                                      |
 | P0.6 | Before pilot         | Select one pilot dashboard and named engineering/client owners                                            | Product team                  | One team accepts source ownership, update responsibility, and technical success criteria                                                                |
 | P0.7 | After dashboard test | Review the experimental primitive and facade baseline with UX                                             | UX + Applique                 | Observed tokens, typography, states, and intentional Base/Nova differences are accepted or converted into follow-up work                                |
 | P1.1 | Complete             | Extend sync, validation, catalogue generation, and registry smoke to support Applique-owned facade items  | Applique engineering          | All 15 registered facades survive sync, validate, appear in the catalogue, install, and are tested                                                       |
-| P1.2 | Technical implementation complete | Implement the 12 direct facade items | Applique engineering | Nine migration pilots and three explicitly test-only direct items have source, registry items, previews, mappings, and tests                             |
+| P1.2 | Technical implementation complete | Implement the 12 direct facade items | Applique engineering | Seven technically ready and five explicitly testing direct items have source, registry items, previews, mappings, and tests                             |
 | P1.3 | After dashboard test | Review pilot gaps and decide the production compatibility contract, including Tabs `type`/`isActive` and Tooltip click triggering | Applique engineering + UX | Observed differences are accepted, mapped, composed, or explicitly unsupported; test-only items are either approved or remain blocked                    |
-| P1.4 | Technical implementation complete; approval pending | Resolve Button-specific open decisions | UX + client teams | Color semantics, router integration, icon-only labels, click cooldown, and removed static/class APIs are accepted, mapped, or explicitly unsupported |
+| P1.4 | Technical implementation complete; approval pending | Resolve Button-specific open decisions | UX + client teams | Color semantics, shared router policy, click cooldown, and removed static/class APIs are accepted, mapped, or explicitly unsupported; safe fallback behavior remains tested |
 | P1.5 | Technical implementation complete; approval pending | Validate ButtonGroup through its Applique Button dependency | Applique engineering + client teams | ButtonGroup grouping/overflow and inherited Button behavior pass real client visual and interaction checks |
-| P1.6 | Technical implementation complete; approval pending | Resolve Banner.Actionable compatibility and overlay decisions | UX + accessibility + client teams | Color/null-icon corrections and Alert-versus-Dialog behavior are approved and tested |
+| P1.6 | Technical implementation complete; approval pending | Resolve remaining Banner.Actionable compatibility and overlay decisions | UX + accessibility + client teams | Preserved truthy-color behavior plus null-icon and Alert-versus-Dialog behavior are approved and tested |
 | P1.7 | Mapping completeness | Classify Collapsible and reconcile deprecated Form coverage                                               | Applique engineering + UX     | Every registry capability has an intentional migration classification or explicit exception                                                             |
 | P2.1 | Operating model      | Define registry release notes, contribution ownership, client update cadence, and intentional-fork policy | Applique owner + client teams | Each release has an owner and clients know how and when to review updates                                                                               |
 | P2.2 | Hardening            | Automate historical version immutability                                                                  | Applique engineering          | CI rejects changes to adopted version directories using a release ledger or trusted hashes                                                              |
@@ -1989,25 +2128,28 @@ can then use observed behavior instead of assumptions.
 
 ### Recommended pilot scope
 
-Use one client dashboard and install the nine technical migration pilots:
+Use one client dashboard and install the seven technically ready adapted
+facades:
 
 - **InputNumber** for numeric value/event conversion;
 - **Avatar** for size mapping, initials composition, and accessibility;
-- **Basic InputText** for string value/event conversion and native props;
 - **InputRadio** for options-to-items composition and controlled state;
 - **InputCheckbox** for boolean mapping, label composition, and dashbox behavior;
-- **Accordion** for compound-child transformation and item callbacks;
 - **Badge** for semantic status, size, icon, and close behavior;
 - **BreadCrumb** for separator and current-page composition;
 - **InputTextArea** for wrapper, resize, variant, icon, and value-event behavior.
 
-Install **Tabs**, **Tooltip**, **Button**, **ButtonGroup**, **Banner**, and
-**Section** only in a separate gap-focused test. Tabs must
+Install **Accordion**, **Basic InputText**, **Tabs**, **Tooltip**, **Button**,
+**ButtonGroup**, **Banner**, and **Section** only in a separate gap-focused
+test. Accordion must not be approved until the `active` compatibility decision
+is accepted, and InputText must not be approved until its `className` target is
+accepted. Tabs must
 not be approved until legacy `type` and child `isActive` behavior is resolved;
 Tooltip must not be approved until `triggerOn="click"` is resolved. Button and
 ButtonGroup and Section must not be approved until semantic colors and router
-behavior are resolved. Banner must not be approved until Actionable's legacy
-bug corrections and full-screen accessibility model are agreed.
+policy are resolved. Banner already preserves the active legacy truthy-color
+behavior, but must not be approved until its remaining null-icon and full-screen
+accessibility decisions are agreed.
 
 Also install **Dialog** only as a registry-infrastructure check for recursive
 dependencies, portals, focus behavior, and the animation pipeline. Existing
@@ -2020,8 +2162,8 @@ new `@/components/applique/*` facades during the test.
 - [ ] The custom alias installs all nested files in the intended locations.
 - [ ] Existing client `utils.ts` or `utils.js` remains intact.
 - [ ] Tailwind, Applique tokens, Hanken Grotesk, and animation utilities compile.
-- [ ] All nine technical migration pilots pass build, interaction, accessibility, and visual checks.
-- [ ] Tabs, Tooltip, Button, ButtonGroup, Banner, and Section gap-focused results are recorded without treating installation as migration approval.
+- [ ] All seven technically ready adapted facades pass build, interaction, accessibility, and visual checks.
+- [ ] Accordion, Basic InputText, Tabs, Tooltip, Button, ButtonGroup, Banner, and Section gap-focused results are recorded without treating installation as migration approval.
 - [ ] Dialog passes the recursive dependency, portal, focus, and animation checks.
 - [ ] Existing Applique imports and screens remain unchanged.
 - [ ] The team records any local source customization and who owns future merges.
@@ -2040,9 +2182,10 @@ Update this table when the team chooses the next milestone:
 | Pilot dashboard/team    | TBD                                    |
 | Durable registry host   | TBD                                    |
 | First immutable release | TBD                                    |
-| Facade pilot scope      | Accordion, Avatar, Badge, BreadCrumb, InputCheckbox, InputNumber, InputRadio, Basic InputText, and InputTextArea implemented and installable |
-| Test-only facade scope  | Tabs (`type`/`isActive`), Tooltip (`triggerOn="click"`), Button (`color`/router), ButtonGroup and Section (inherit Button gaps), and Banner (Actionable decisions) |
-| Registered compositions | Button, ButtonGroup, Banner, and Section are installable for focused testing; ButtonGroup and Section depend on the Applique Button facade |
+| Facade pilot scope      | Avatar, Badge, BreadCrumb, InputCheckbox, InputNumber, InputRadio, and InputTextArea are technically ready and installable |
+| Testing facade scope  | Accordion (`active`), Basic InputText (`className` target), Tabs (`type`/`isActive`), Tooltip (`triggerOn="click"`), Button (`color`/router policy), ButtonGroup and Section (inherit Button gaps), and Banner (remaining Actionable decisions) |
+| Registered compositions | Button, ButtonGroup, and Banner are installable for focused testing; ButtonGroup depends on the Applique Button facade |
+| Test-only Direct facade | Section is classified Direct with Card as its primary family, but its header actions depend on the test-only Applique Button facade |
 | Deferred compositions  | Remaining composition/ambiguous facades; full InputText compatibility also remains deferred |
 
 

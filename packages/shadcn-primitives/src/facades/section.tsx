@@ -24,29 +24,23 @@ export interface SectionProps
   noPadding?: boolean
   /** Direct Applique Button children become header actions; other content stays in the body. */
   children?: React.ReactNode
+  /**
+   * Explicit header actions. Use this slot for lazy, memoized, wrapped, or
+   * application-owned action components that Section cannot identify safely.
+   */
+  actions?: React.ReactNode
   /** Non-conflicting shadcn Card density extension. */
   size?: InternalCardProps['size']
 }
 
 function isAppliqueButton(node: React.ReactNode): node is ButtonChild {
-  if (!React.isValidElement(node)) return false
-  if (node.type === Button) return true
-
-  const nodeType = node.type as unknown
-
-  // Retain the legacy lazy-component compatibility without classifying raw
-  // shadcn buttons as Section actions.
-  return (
-    typeof nodeType === 'object' &&
-    nodeType !== null &&
-    '_result' in nodeType &&
-    (nodeType as { _result?: unknown })._result === Button
-  )
+  return React.isValidElement(node) && node.type === Button
 }
 
 const Section = React.forwardRef<HTMLElement, SectionProps>(
   (
     {
+      actions: explicitActions,
       children,
       className,
       noPadding = false,
@@ -56,18 +50,20 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
     },
     ref
   ) => {
-    const actions: ButtonChild[] = []
+    const promotedActions: ButtonChild[] = []
     const content: React.ReactNode[] = []
 
     React.Children.forEach(children, (child) => {
       if (isAppliqueButton(child)) {
-        actions.push(child)
+        promotedActions.push(child)
       } else if (child) {
         content.push(child)
       }
     })
 
-    const hasHeader = Boolean(title || actions.length)
+    const providedActions = React.Children.toArray(explicitActions)
+    const headerActions = [...promotedActions, ...providedActions]
+    const hasHeader = Boolean(title || headerActions.length)
 
     return (
       <section
@@ -88,9 +84,9 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
                   </h3>
                 </InternalCardTitle>
               ) : null}
-              {actions.length ? (
+              {headerActions.length ? (
                 <InternalCardAction className="flex justify-end">
-                  {actions}
+                  {headerActions}
                 </InternalCardAction>
               ) : null}
             </InternalCardHeader>

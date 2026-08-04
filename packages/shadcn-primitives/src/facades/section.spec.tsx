@@ -78,6 +78,26 @@ it('recognizes the public Applique Button facade rather than a raw button', () =
   )
 })
 
+it('renders wrapped actions through the explicit actions slot without inspecting React internals', () => {
+  const WrappedAction = React.memo(function WrappedAction() {
+    return <Button>Wrapped action</Button>
+  })
+  const wrapper = mount(
+    <Section actions={<WrappedAction />} title="Order details">
+      <Button>Direct action</Button>
+      <p>Line items</p>
+    </Section>
+  )
+  const action = wrapper.find('[data-slot="card-action"]')
+  const content = wrapper.find('[data-slot="card-content"]')
+
+  expect(action.find('button')).toHaveLength(2)
+  expect(action.text()).toContain('Direct action')
+  expect(action.text()).toContain('Wrapped action')
+  expect(content.find('p').text()).toBe('Line items')
+  expect(content.find('button')).toHaveLength(0)
+})
+
 it('only promotes direct Applique Button children, matching the legacy structure', () => {
   const wrapper = mount(
     <Section>

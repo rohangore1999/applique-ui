@@ -1,8 +1,9 @@
 # Applique prop-adapter toolkit — design
 
-> **Status:** Proposed (revised after engineering review). Not yet approved for
-> full rollout; the near-term commitment is the contract data + test kit +
-> InputNumber pilot only.
+> **Status:** Partially implemented after engineering review. Contract data and
+> a structural build-time gate cover all 15 registered facades; runtime
+> semantics remain enforced by focused component specs. Seven facades are
+> technically ready and eight are explicitly testing.
 > **Date:** 2026-08-04
 > **Supersedes:** the earlier "universal engine + generators" draft of this doc,
 > which was withdrawn after review (see §2).
@@ -22,7 +23,8 @@ We want three things, and we are deliberate about which layer each lives in:
 1. **One reviewed description of every prop's fate** — forward / map / constant /
    compose / unsupported / needs-review, with notes. This is **data**.
 2. **A common "Applique wins" precedence rule** and consistent callback handling.
-3. **Confidence that facades honor the contract** — coverage + precedence tests.
+3. **Confidence that facades honor the contract** — a structural consistency
+   gate plus focused runtime behavior tests.
 
 ## 2. What changed from the previous draft, and why
 
@@ -56,10 +58,11 @@ Adapter contract (DATA)      ← the durable, shared artifact
    component-mappings.json (extended)
         │
         ├─→ catalogue / docs        (generated from the data)
-        └─→ shared TEST KIT         (build-time only; NEVER shipped to clients)
+        └─→ structural contract gate (build-time only; NEVER shipped to clients)
 
 Runtime facades (CODE)       ← plain, self-contained; logic INLINED
    src/facades/*.tsx          (no shared runtime import)
+        └─→ focused component specs (runtime semantics)
 ```
 
 The key decision: **there is no shared runtime module.** The precedence rule and
@@ -69,11 +72,11 @@ facade**. Consequences:
 - **Objection 6 disappears** — nothing shared is copied into client repos, so
   nothing can be overwritten or version-skewed.
 - Each installed facade is fully readable on its own — the registry's core value.
-- The only shared, durable thing is the **contract data**; the only other shared
-  thing is the **test kit**, which runs in *our* repo and is never distributed.
+- The only shared, durable thing is the **contract data**; the build-time
+  structural gate runs in *our* repo and is never distributed.
 
-The inlining trade-off (duplication / drift risk) is neutralized by the test kit
-(§6), which enforces the convention without a shared runtime.
+The inlining trade-off (duplication / drift risk) is reduced by the structural
+gate and focused specs (§6), without introducing a shared client runtime.
 
 ## 4. Two independent axes: category vs mode
 
@@ -118,7 +121,7 @@ close to what exists):
 }
 ```
 
-Add two component-level fields the review's model requires:
+The earlier design proposed two additional component-level fields:
 
 ```jsonc
 {
@@ -130,26 +133,33 @@ Add two component-level fields the review's model requires:
 }
 ```
 
-This data is the single source of truth consumed by the catalogue and the tests.
-It does **not** generate runtime code.
+The current checked-in contract uses the existing migration `kind` and per-prop
+rules; `mode` and `callbackPolicy` have not been added because the structural
+gate does not need them. They should be introduced only when a concrete runtime
+test or catalogue consumer justifies them. The data does **not** generate
+runtime code.
 
-## 6. The shared test kit (build-time only)
+## 6. Build-time enforcement: what exists and what does not
 
-A test helper in our repo (not a registry item) that every facade's test imports.
-For each component it asserts, against the contract data:
+`pnpm run validate:facade-contracts` is implemented as a repository-only
+structural gate. It consumes `component-mappings.json`, `registry.json`, legacy
+API documentation, and TypeScript-derived facade prop surfaces. It asserts:
 
-1. **Coverage** — every legacy prop appears in the contract (nothing silently
-   missing).
-2. **No release-blockers** — zero `needs-review` for a component marked shippable.
-3. **Precedence** — when a native/shadcn prop and an Applique-owned prop target
-   the same primitive prop, the Applique value wins.
-4. **Callback composition** — where `callbackPolicy: compose`, both the shadcn
-   and Applique handlers fire, and the Applique one is skipped on
-   `details.isCanceled` (the existing checkbox/radio behavior).
-5. **Value/absent contract** — declared input→output cases hold, *including the
-   absent-value case* (e.g. InputNumber stays controlled with `""`).
+1. **Mapping coverage** — every registered facade has a prop contract and every
+   documented legacy prop appears in it.
+2. **API presence** — a prop declared as resolved is present on the public
+   facade TypeScript surface.
+3. **No hidden release blockers** — a non-testing facade cannot contain
+   `needs-review`.
+4. **Metadata alignment** — testing status and `unresolvedProps` agree with
+   local or direct-facade mapping blockers.
 
-This kit is how we get consistency without a shared runtime module.
+The gate intentionally does **not** infer runtime behavior from JSON. It cannot
+prove precedence order, callback composition/cancellation, DOM targets,
+accessibility behavior, or absent/default values. Those remain explicit tests
+in each facade spec. This is narrower than the originally proposed universal
+test kit, but it is honest and useful: contract drift fails centrally while
+behavior remains readable beside the handwritten implementation.
 
 ## 7. Rules to agree before writing code
 
@@ -161,32 +171,37 @@ defaults.
 | **Both Applique and shadcn callbacks provided** | Run shadcn handler first; if not `isCanceled`, run Applique handler. Never overwrite the client's shadcn callback. (Matches current checkbox/radio.) |
 | **Authoritative legacy prop list** | The `Props` interface in `node_modules/@applique-ui/<c>/dist/*.d.ts`; where no dist exists, `src/*.tsx`. Recorded per component in the contract. |
 | **Absent / default values** | Explicit per prop in the contract. A props-only facade must state its absent-value behavior (e.g. `value` absent → `""`, controlled). No implicit skipping. |
-| **Release-blockers** | Any `needs-review` prop blocks that component from "shippable" (enforced by the test kit). |
+| **Release-blockers** | Any `needs-review` prop blocks a facade from technically ready status; the structural gate requires it to be labelled `testing` with aligned unresolved metadata. |
 | **Shared registry helper versioning** | N/A — decided: **no shared runtime module**. Logic is inlined per facade. |
 
 ## 8. Implementation plan (small, sequential — no big-bang)
 
-1. **Contract + test kit first (additive, low-risk).**
-   - Finalize the per-prop + component-level contract shape in
-     `component-mappings.json` (add `mode`, `callbackPolicy`).
-   - Build the build-time test kit (§6).
-   - Fold in the completed first-pass audit (13 components already drafted) after
-     human review. Neither step touches shipped runtime.
+1. **Contract + structural gate — implemented.**
+   - `component-mappings.json` classifies the audited prop surface.
+   - `validate:facade-contracts` checks registry, mapping, legacy-doc, and source
+     API consistency and is included in `validate:registry`.
+   - Runtime semantics continue to use focused facade specs.
 
-2. **Pilot InputNumber as the one props-only reference.**
+2. **Pilot InputNumber as the one props-only reference — implemented.**
    - Keep it handwritten but make it the canonical "props-only" example.
-   - Its existing tests must pass unchanged; add the kit assertions (esp. the
-     absent-value/controlled case, objection 5).
+   - Its focused spec covers the absent-value/controlled case from objection 5.
 
-3. **Try basic InputText as the second props-only case.**
+3. **Try basic InputText as the second props-only case — implemented for
+   testing.**
    - If InputNumber + InputText share a genuinely clear shape, *only then*
      consider extracting a tiny `createSimpleFacade` — the rule of three. Not
      before.
 
 4. **Leave Avatar, Checkbox, Radio, and all composition facades handwritten.**
-   - They already work. They adopt the contract + kit; no runtime refactor.
+   - They use the shared structural gate plus their own focused specs; no
+     runtime refactor.
 
-5. **Generators later.**
+5. **Keep runtime hardening incremental.**
+   - Current status is seven technically ready facades and eight testing
+     facades; close their declared blockers with focused specs and client
+     evidence rather than broad runtime generation.
+
+6. **Generators later.**
    - Catalogue generation from the contract, then optional `.d.ts` for JS
      consumers — only after two or three adapters prove the contract shape.
 
@@ -199,11 +214,14 @@ defaults.
 
 ## 10. Acceptance criteria
 
-- Contract data carries `category`, `mode`, `callbackPolicy`, and a classified
-  entry for **every** legacy prop; catalogue renders from it.
-- Test kit enforces coverage, precedence, callback composition, and the
-  absent-value contract; `needs-review` blocks shippable.
-- InputNumber pilot: existing tests pass unchanged, kit assertions added.
+- Contract data has a classified entry for every documented legacy prop on a
+  registered facade; catalogue renders from it. `mode` and `callbackPolicy`
+  remain possible schema extensions, not implemented facts.
+- The structural gate enforces mapping/API coverage and blocker metadata;
+  focused specs enforce precedence, callback composition, accessibility, and
+  absent-value behavior.
+- InputNumber remains the props-only reference and keeps its absent-value
+  behavior covered by a focused runtime spec.
 - No shared runtime module exists in the registry output; each facade is
   self-contained and readable.
 - A `createSimpleFacade` is introduced **only** if a third genuine props-only

@@ -989,6 +989,9 @@
         "className"
       ],
       "summary": "Transform legacy Tabs.Tab children into TabsTrigger and TabsContent parts and translate numeric selection to values. The generated legacy Tabs documentation incorrectly lists child Tab props instead of the root defaultIndex, activeIndex, and onChange contract; both surfaces are recorded here.",
+      "legacyDocumentationExportAliases": {
+        "Tabs": "Tab"
+      },
       "propMappings": [
         {
           "id": "default-index",
@@ -1279,7 +1282,7 @@
               "prop": "render"
             }
           ],
-          "summary": "Validate href and displayText together, then compose the legacy external action link with its trailing icon."
+          "summary": "Compose the legacy external action link with its trailing icon only when both href and displayText exist; mark and omit incomplete runtime input instead of throwing during render."
         },
         {
           "id": "actionable-data",
@@ -1309,11 +1312,11 @@
               "prop": "onClick"
             }
           ],
-          "summary": "Compose Banner.Actionable: render nothing when data is absent; otherwise render header, subheader, feedback, entity and action content, and optional action and close Buttons. The legacy Actionable className is ignored. Its color, null-icon, and full-screen interaction differences remain separate review items."
+          "summary": "Compose Banner.Actionable: render nothing when data is absent; otherwise render header, subheader, feedback, entity and action content, and optional action and close Buttons. The legacy Actionable className is ignored. Null-icon and full-screen interaction differences remain separate review items."
         },
         {
           "id": "actionable-color-compatibility",
-          "kind": "needs-review",
+          "kind": "composition-owned",
           "from": ["data.color", "data.type"],
           "targets": [
             {
@@ -1321,7 +1324,7 @@
               "prop": "variant and semantic classes"
             }
           ],
-          "summary": "The compiled legacy ternary accidentally resolves every truthy data.color to info. The test facade uses the documented semantic color instead; approve that correction or reproduce the bug before migration."
+          "summary": "Preserve the active legacy runtime: every truthy data.color resolves to info, while data.type is used only when color is absent. A semantic correction requires an explicit future migration decision."
         },
         {
           "id": "actionable-icon-null",
@@ -1559,7 +1562,7 @@
         },
         {
           "id": "to",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["to"],
           "targets": [
             {
@@ -1567,7 +1570,7 @@
               "prop": "render"
             }
           ],
-          "summary": "Render the client router Link through an agreed router integration; keep the href and to conflict check."
+          "summary": "Use an explicit client router render integration when supplied. Otherwise derive a browser href for string or location-like destinations; when href and to coexist, preserve legacy to precedence without throwing during render. Router-native behavior still needs a shared integration decision."
         },
         {
           "id": "caption",
@@ -3582,6 +3585,18 @@
             }
           ],
           "summary": "Move direct legacy Button children into CardAction and render all other truthy children in CardContent."
+        },
+        {
+          "id": "actions-extension",
+          "kind": "composition-owned",
+          "from": ["actions"],
+          "targets": [
+            {
+              "component": "card",
+              "prop": "CardAction.children"
+            }
+          ],
+          "summary": "Expose an explicit facade extension for lazy, memoized, wrapped, or application-owned header actions without inspecting React internals."
         },
         {
           "id": "class-name",

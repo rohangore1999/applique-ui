@@ -2,9 +2,21 @@
 
 import * as React from 'react'
 import {
+  ArrowDownToLineIcon,
+  BombIcon,
+  CalendarIcon,
+  CheckIcon,
   ChevronRightIcon,
   CircleAlertIcon,
   CircleCheckIcon,
+  CircleHelpIcon,
+  DownloadIcon,
+  InfoIcon,
+  LoaderCircleIcon,
+  ScanBarcodeIcon,
+  SearchIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
   TriangleAlertIcon,
   XIcon,
 } from 'lucide-react'
@@ -59,11 +71,7 @@ export interface BannerProps
 export interface BannerActionableData {
   /** Deprecated legacy semantic intent. `color` takes precedence. */
   type?: BannerTone
-  /**
-   * Legacy semantic intent. The facade follows the audited color contract;
-   * the active legacy ternary accidentally rendered every truthy color as
-   * info, so this correction must be validated before migration approval.
-   */
+  /** Legacy input. To preserve the active runtime, every truthy value resolves to info. */
   color?: BannerTone
   icon?: BannerIcon | null
   header?: string
@@ -112,6 +120,50 @@ const iconClassNameMap: Record<BannerTone, string> = {
   error: 'text-[var(--applique-error-foreground)]',
 }
 
+const legacyStringIconMap: Record<string, React.ElementType> = {
+  'arrow-to-bottom': ArrowDownToLineIcon,
+  'barcode-scan': ScanBarcodeIcon,
+  bomb: BombIcon,
+  calendar: CalendarIcon,
+  calender: CalendarIcon,
+  check: CheckIcon,
+  'chevron-right': ChevronRightIcon,
+  download: DownloadIcon,
+  info: InfoIcon,
+  search: SearchIcon,
+  spinner: LoaderCircleIcon,
+  spinnersolid: LoaderCircleIcon,
+  'thumbs-down': ThumbsDownIcon,
+  'thumbs-up': ThumbsUpIcon,
+}
+
+const warnedUnknownIconNames = new Set<string>()
+
+function renderStringIcon(name: string): React.ReactNode {
+  const normalizedName = name.trim().toLowerCase()
+  const IconComponent = legacyStringIconMap[normalizedName]
+
+  if (IconComponent) {
+    return <IconComponent data-applique-icon={normalizedName} />
+  }
+
+  const environment = (globalThis as typeof globalThis & {
+    process?: { env?: { NODE_ENV?: string } }
+  }).process?.env?.NODE_ENV
+
+  if (
+    environment !== 'production' &&
+    !warnedUnknownIconNames.has(normalizedName)
+  ) {
+    warnedUnknownIconNames.add(normalizedName)
+    console.warn(
+      `[Applique Banner] Unknown legacy icon "${name}". Rendering the fallback icon.`
+    )
+  }
+
+  return <CircleHelpIcon data-applique-icon-fallback={normalizedName} />
+}
+
 function isBackwardCompatibleInfo(value: unknown) {
   return value === 'primary' || value === 'info'
 }
@@ -137,17 +189,22 @@ function resolveLegacyTone(color: unknown, type: unknown): BannerTone {
   return 'info'
 }
 
+/** Preserve the active Actionable runtime, where every truthy color became info. */
+function resolveLegacyActionableTone(
+  color: unknown,
+  type: unknown
+): BannerTone {
+  if (color) return 'info'
+  return resolveLegacyTone(undefined, type)
+}
+
 function variantForTone(tone: BannerTone): ShadcnAlertProps['variant'] {
   return tone === 'error' ? 'destructive' : 'default'
 }
 
 function renderIconContent(icon: BannerIcon): React.ReactNode {
   if (typeof icon === 'string') {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <use href={`#uikit-i-${icon}`} xlinkHref={`#uikit-i-${icon}`} />
-      </svg>
-    )
+    return renderStringIcon(icon)
   }
 
   if (
@@ -211,7 +268,7 @@ const BannerRoot = React.forwardRef<HTMLDivElement, BannerProps>(
       link,
       noFill: _ignoredNoFill,
       onClose,
-      role: _role,
+      role = 'alert',
       solid: _ignoredSolid,
       title,
       type,
@@ -220,14 +277,6 @@ const BannerRoot = React.forwardRef<HTMLDivElement, BannerProps>(
     },
     ref
   ) => {
-    if (link?.href && !link.displayText) {
-      throw new Error("The Banner link also requires 'displayText'.")
-    }
-
-    if (!link?.href && link?.displayText) {
-      throw new Error("The Banner link also requires 'href'.")
-    }
-
     // These props were destructured but never applied by the legacy runtime.
     void _ignoredNoFill
     void _ignoredSolid
@@ -243,6 +292,7 @@ const BannerRoot = React.forwardRef<HTMLDivElement, BannerProps>(
     const resolvedIcon = icon === undefined ? defaultIconMap[iconTone] : icon
     const heading = title || children
     const body = title ? children : null
+    const completeLink = link?.href && link.displayText ? link : undefined
 
     return (
       <ShadcnAlert
@@ -255,7 +305,8 @@ const BannerRoot = React.forwardRef<HTMLDivElement, BannerProps>(
           usesLegacyTone && toneClassNameMap[tone]
         )}
         data-applique-banner-tone={usesLegacyTone ? tone : undefined}
-        role="alert"
+        data-applique-incomplete-link={link && !completeLink ? '' : undefined}
+        role={role}
         variant={usesLegacyTone ? variantForTone(tone) : variant}
       >
         {resolvedIcon ? (
@@ -273,16 +324,16 @@ const BannerRoot = React.forwardRef<HTMLDivElement, BannerProps>(
               {body}
             </ShadcnAlertDescription>
           ) : null}
-          {link?.href ? (
+          {completeLink ? (
             <ShadcnButton
               className="mt-1 h-auto justify-start gap-1 p-0 text-current hover:bg-transparent hover:text-current"
               data-test-id="link"
               nativeButton={false}
-              render={<a href={link.href} target="_blank" />}
+              render={<a href={completeLink.href} target="_blank" />}
               size="sm"
               variant="link"
             >
-              {link.displayText}
+              {completeLink.displayText}
               <ChevronRightIcon aria-hidden="true" data-icon="inline-end" />
             </ShadcnButton>
           ) : null}
@@ -302,99 +353,102 @@ BannerRoot.displayName = 'Banner'
 const BannerActionable = React.forwardRef<
   HTMLDivElement,
   BannerActionableProps
->(({ className: _ignoredClassName, data, role: _role, ...alertProps }, ref) => {
-  // The active legacy runtime intentionally discarded this class target.
-  void _ignoredClassName
+>(
+  (
+    { className: _ignoredClassName, data, role = 'alert', ...alertProps },
+    ref
+  ) => {
+    // The active legacy runtime intentionally discarded this class target.
+    void _ignoredClassName
 
-  if (!data) return null
+    if (!data) return null
 
-  const {
-    actionButtonText,
-    actionToTake,
-    color,
-    entityId,
-    entityName,
-    feedback,
-    header,
-    icon,
-    onActionClick,
-    onClose,
-    subHeader,
-    type,
-  } = data
-  // Follow the audited semantic contract instead of reproducing the active
-  // legacy ternary bug that collapsed every truthy data.color to `info`.
-  const tone = resolveLegacyTone(color, type)
-  const resolvedIcon = icon === undefined ? defaultIconMap[tone] : icon
+    const {
+      actionButtonText,
+      actionToTake,
+      color,
+      entityId,
+      entityName,
+      feedback,
+      header,
+      icon,
+      onActionClick,
+      onClose,
+      subHeader,
+      type,
+    } = data
+    const tone = resolveLegacyActionableTone(color, type)
+    const resolvedIcon = icon === undefined ? defaultIconMap[tone] : icon
 
-  // Actionable remains an Alert-based full-screen takeover, matching the
-  // audited Alert + Button composition. It does not invent Dialog focus trap,
-  // inert-background, or Escape behavior; those semantics require approval.
-  return (
-    <ShadcnAlert
-      {...alertProps}
-      ref={ref}
-      className={cn(
-        'fixed inset-0 z-50 block h-dvh w-screen rounded-none border-0 px-8 py-6',
-        toneClassNameMap[tone]
-      )}
-      data-applique-banner-actionable=""
-      data-applique-banner-tone={tone}
-      role="alert"
-      variant={variantForTone(tone)}
-    >
-      <div className="ml-8" data-test-id="header">
-        <ShadcnAlertTitle className="text-lg font-semibold">
-          {header}
-        </ShadcnAlertTitle>
-        <ShadcnAlertDescription className="text-inherit">
-          {subHeader}
-        </ShadcnAlertDescription>
-      </div>
-      {onClose ? (
-        <ShadcnAlertAction className="right-4 top-3">
-          <DismissButton onClose={onClose} />
-        </ShadcnAlertAction>
-      ) : null}
-      <div
-        className="mt-[20vh] flex items-start gap-5"
-        data-test-id="actionable-content"
+    // Actionable remains an Alert-based full-screen takeover, matching the
+    // audited Alert + Button composition. It does not invent Dialog focus trap,
+    // inert-background, or Escape behavior; those semantics require approval.
+    return (
+      <ShadcnAlert
+        {...alertProps}
+        ref={ref}
+        className={cn(
+          'fixed inset-0 z-50 block h-dvh w-screen rounded-none border-0 px-8 py-6',
+          toneClassNameMap[tone]
+        )}
+        data-applique-banner-actionable=""
+        data-applique-banner-tone={tone}
+        role={role}
+        variant={variantForTone(tone)}
       >
-        {resolvedIcon ? (
-          <BannerIconView icon={resolvedIcon} tone={tone} />
-        ) : null}
-        <div className="flex min-w-0 flex-col">
-          <h1 className="text-2xl font-semibold" data-test-id="feedback">
-            {feedback}
-          </h1>
-          <p className="font-medium" data-test-id="entity-name">
-            {entityName}
-          </p>
-          <h2 className="text-xl font-semibold" data-test-id="entity-id">
-            {entityId}
-          </h2>
-          <h3
-            className="mt-7 w-[70vw] border-t border-current pt-2 text-lg font-semibold"
-            data-test-id="action-to-take"
-          >
-            {actionToTake}
-          </h3>
-          {actionButtonText ? (
-            <ShadcnButton
-              className="mt-5 min-w-24 self-start"
-              data-test-id="action"
-              type="button"
-              variant="secondary"
-              onClick={onActionClick}
-            >
-              {actionButtonText}
-            </ShadcnButton>
-          ) : null}
+        <div className="ml-8" data-test-id="header">
+          <ShadcnAlertTitle className="text-lg font-semibold">
+            {header}
+          </ShadcnAlertTitle>
+          <ShadcnAlertDescription className="text-inherit">
+            {subHeader}
+          </ShadcnAlertDescription>
         </div>
-      </div>
-    </ShadcnAlert>
-  )
-})
+        {onClose ? (
+          <ShadcnAlertAction className="right-4 top-3">
+            <DismissButton onClose={onClose} />
+          </ShadcnAlertAction>
+        ) : null}
+        <div
+          className="mt-[20vh] flex items-start gap-5"
+          data-test-id="actionable-content"
+        >
+          {resolvedIcon ? (
+            <BannerIconView icon={resolvedIcon} tone={tone} />
+          ) : null}
+          <div className="flex min-w-0 flex-col">
+            <h1 className="text-2xl font-semibold" data-test-id="feedback">
+              {feedback}
+            </h1>
+            <p className="font-medium" data-test-id="entity-name">
+              {entityName}
+            </p>
+            <h2 className="text-xl font-semibold" data-test-id="entity-id">
+              {entityId}
+            </h2>
+            <h3
+              className="mt-7 w-[70vw] border-t border-current pt-2 text-lg font-semibold"
+              data-test-id="action-to-take"
+            >
+              {actionToTake}
+            </h3>
+            {actionButtonText ? (
+              <ShadcnButton
+                className="mt-5 min-w-24 self-start"
+                data-test-id="action"
+                type="button"
+                variant="secondary"
+                onClick={onActionClick}
+              >
+                {actionButtonText}
+              </ShadcnButton>
+            ) : null}
+          </div>
+        </div>
+      </ShadcnAlert>
+    )
+  }
+)
 
 BannerActionable.displayName = 'Banner.Actionable'
 

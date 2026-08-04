@@ -1,12 +1,31 @@
 'use client'
 
 import * as React from 'react'
+import {
+  ArrowDownToLineIcon,
+  BombIcon,
+  CalendarIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  CircleHelpIcon,
+  DownloadIcon,
+  InfoIcon,
+  LoaderCircleIcon,
+  ScanBarcodeIcon,
+  SearchIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from 'lucide-react'
 
 import { Textarea } from '../textarea'
 import { cn } from '../utils'
 
 type NativeTextareaProps = React.ComponentPropsWithoutRef<'textarea'>
-type IconName = string | React.ReactNode | React.ComponentType<any>
+type IconName =
+  | string
+  | React.ReactNode
+  | React.ComponentType<any>
+  | React.ExoticComponent<any>
 
 export interface InputTextAreaFieldContext {
   error?: boolean
@@ -46,17 +65,63 @@ const wrapperVariantClassName = {
 const textareaCompatibilityClassName =
   'min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent p-0 shadow-none focus-visible:border-transparent focus-visible:ring-0 disabled:bg-transparent disabled:opacity-100 applique-dark:bg-transparent applique-dark:disabled:bg-transparent'
 
+const legacyStringIconMap: Record<string, React.ElementType> = {
+  'arrow-to-bottom': ArrowDownToLineIcon,
+  'barcode-scan': ScanBarcodeIcon,
+  bomb: BombIcon,
+  calendar: CalendarIcon,
+  calender: CalendarIcon,
+  check: CheckIcon,
+  'chevron-right': ChevronRightIcon,
+  download: DownloadIcon,
+  info: InfoIcon,
+  search: SearchIcon,
+  spinner: LoaderCircleIcon,
+  spinnersolid: LoaderCircleIcon,
+  'thumbs-down': ThumbsDownIcon,
+  'thumbs-up': ThumbsUpIcon,
+}
+
+const warnedUnknownIconNames = new Set<string>()
+
+function renderStringIcon(name: string): React.ReactNode {
+  const normalizedName = name.trim().toLowerCase()
+  const IconComponent = legacyStringIconMap[normalizedName]
+
+  if (IconComponent) {
+    return <IconComponent data-applique-icon={normalizedName} />
+  }
+
+  const environment = (globalThis as typeof globalThis & {
+    process?: { env?: { NODE_ENV?: string } }
+  }).process?.env?.NODE_ENV
+
+  if (
+    environment !== 'production' &&
+    !warnedUnknownIconNames.has(normalizedName)
+  ) {
+    warnedUnknownIconNames.add(normalizedName)
+    console.warn(
+      `[Applique InputTextArea] Unknown legacy icon "${name}". Rendering the fallback icon.`
+    )
+  }
+
+  return <CircleHelpIcon data-applique-icon-fallback={normalizedName} />
+}
+
 function renderIcon(name: IconName): React.ReactNode {
   let icon: React.ReactNode
 
   if (typeof name === 'string') {
-    icon = (
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <use href={`#uikit-i-${name}`} xlinkHref={`#uikit-i-${name}`} />
-      </svg>
-    )
-  } else if (typeof name === 'function') {
-    const IconComponent = name as React.ComponentType
+    icon = renderStringIcon(name)
+  } else if (
+    typeof name === 'function' ||
+    (typeof name === 'object' &&
+      name !== null &&
+      !React.isValidElement(name) &&
+      '$$typeof' in name)
+  ) {
+    const IconComponent = name as React.ElementType
     icon = <IconComponent />
   } else {
     icon = name

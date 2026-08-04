@@ -25,7 +25,11 @@
     "status": "facade",
     "compatibility": {
       "legacyComponent": "Accordion",
-      "legacyPackage": "@applique-ui/accordion"
+      "legacyPackage": "@applique-ui/accordion",
+      "migrationStatus": "testing",
+      "unresolvedProps": [
+        "active"
+      ]
     },
     "registryVersion": "0.1.0"
   }

@@ -3,7 +3,24 @@ import { mount } from 'enzyme'
 
 import { Button as InternalButton } from '../button'
 import { Spinner as InternalSpinner } from '../spinner'
-import { Button } from './button'
+import { Button, ButtonProps } from './button'
+
+const knownLegacyIconNames = [
+  'arrow-to-bottom',
+  'barcode-scan',
+  'bomb',
+  'calendar',
+  'calender',
+  'check',
+  'chevron-right',
+  'download',
+  'info',
+  'search',
+  'spinner',
+  'spinnersolid',
+  'thumbs-down',
+  'thumbs-up',
+] as const
 
 function StartIcon() {
   return <svg data-test-id="start-component" />
@@ -119,22 +136,30 @@ it('gives explicit legacy type precedence over the shadcn variant extension', ()
   expect(wrapper.find(InternalButton).prop('variant')).toBe('default')
 })
 
-it('preserves the xs icon-only runtime contract', () => {
-  expect(() => mount(<Button size="xs" />)).toThrow(
-    "The prop 'icon' is required when size is set to 'xs'."
+it('handles legacy xs misuse without throwing during render', () => {
+  const empty = mount(<Button size="xs" />)
+  const labelled = mount(
+    <Button icon={StartIcon} size="xs">
+      Labelled
+    </Button>
   )
-  expect(() =>
-    mount(
-      <Button icon={StartIcon} size="xs">
-        Invalid
-      </Button>
-    )
-  ).toThrow(
-    "The props 'children' and 'label' cannot be used when size is set to 'xs'."
-  )
+
+  expect(empty.find(InternalButton).prop('size')).toBe('icon-xs')
+  expect(empty.getDOMNode().querySelector('.lucide-bell')).not.toBeNull()
+  expect(labelled.find(InternalButton).prop('size')).toBe('xs')
+  expect(labelled.text()).toContain('Labelled')
+  expect(labelled.find('[data-test-id="start-component"]')).toHaveLength(1)
 })
 
-it('renders component, sprite, and trailing icons as decorative content', () => {
+it('does not invent a notification Bell for a plain empty Button', () => {
+  const root = mount(<Button />).getDOMNode()
+
+  expect(root.querySelector('.lucide-bell')).toBeNull()
+  expect(root.getAttribute('data-applique-empty-button')).toBe('')
+  expect(root.getAttribute('aria-label')).toBe('Button')
+})
+
+it('renders component and trailing string icons as decorative content', () => {
   const wrapper = mount(
     <Button icon={StartIcon} secondaryIcon="chevron-right">
       Continue
@@ -148,7 +173,55 @@ it('renders component, sprite, and trailing icons as decorative content', () => 
   expect(primary.find('[data-test-id="start-component"]').exists()).toBe(true)
   expect(secondary.prop('aria-hidden')).toBe('true')
   expect(secondary.prop('data-icon')).toBe('inline-end')
-  expect(secondary.find('use').prop('href')).toBe('#uikit-i-chevron-right')
+  expect(
+    secondary.getDOMNode().querySelector('[data-applique-icon="chevron-right"]')
+  ).not.toBeNull()
+  expect(secondary.getDOMNode().querySelector('use')).toBeNull()
+})
+
+it('renders every supported legacy icon name without an SVG sprite', () => {
+  for (const name of knownLegacyIconNames) {
+    const wrapper = mount(<Button icon={name}>Known icon</Button>)
+    const root = wrapper.getDOMNode()
+
+    expect(root.querySelector(`[data-applique-icon="${name}"]`)).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    wrapper.unmount()
+  }
+})
+
+it('warns and renders a visible fallback for an unknown legacy icon name', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+  try {
+    const wrapper = mount(<Button icon="missing-button-icon">Fallback</Button>)
+    const root = wrapper.getDOMNode()
+
+    expect(
+      root.querySelector('[data-applique-icon-fallback="missing-button-icon"]')
+    ).not.toBeNull()
+    expect(root.querySelector('use')).toBeNull()
+    expect(warn).toHaveBeenCalledWith(
+      '[Applique Button] Unknown legacy icon "missing-button-icon". Rendering the fallback icon.'
+    )
+  } finally {
+    warn.mockRestore()
+  }
+})
+
+it('renders React element and forwardRef exotic icon inputs', () => {
+  const ForwardRefIcon = React.forwardRef<SVGSVGElement>((_props, ref) => (
+    <svg ref={ref} data-test-id="button-forward-ref-icon" />
+  ))
+  const element = mount(
+    <Button icon={<svg data-test-id="button-element-icon" />}>Element</Button>
+  )
+  const exotic = mount(<Button icon={ForwardRefIcon}>Exotic</Button>)
+
+  expect(element.find('[data-test-id="button-element-icon"]')).toHaveLength(1)
+  expect(exotic.find('[data-test-id="button-forward-ref-icon"]')).toHaveLength(
+    1
+  )
 })
 
 it('preserves children over label and the legacy falsy-children fallback', () => {
@@ -377,6 +450,21 @@ it('merges href into an explicit shadcn render element', () => {
   expect(root.hasAttribute('data-custom-link')).toBe(true)
 })
 
+it('preserves a Base UI render function while adding legacy href', () => {
+  const render: ButtonProps['render'] = (props) => (
+    <a {...props} data-render-function="" />
+  )
+  const root = mount(
+    <Button href="/orders" render={render}>
+      Orders
+    </Button>
+  ).getDOMNode()
+
+  expect(root.tagName).toBe('A')
+  expect(root.getAttribute('href')).toBe('/orders')
+  expect(root.hasAttribute('data-render-function')).toBe(true)
+})
+
 it('maps to through an explicit client-router render element', () => {
   const destination = { pathname: '/orders', search: '?state=open' }
   const root = mount(
@@ -389,17 +477,75 @@ it('maps to through an explicit client-router render element', () => {
   expect(root.getAttribute('data-router-to')).toBe(JSON.stringify(destination))
 })
 
-it('fails clearly for unresolved router integration and conflicting links', () => {
-  expect(() => mount(<Button to="/orders">Orders</Button>)).toThrow(
-    "The prop 'to' requires render={<RouterLink />} until the client router integration is configured."
-  )
-  expect(() =>
-    mount(
-      <Button href="/orders" to="/orders">
-        Orders
-      </Button>
+it('preserves a client-router render function while adding legacy to', () => {
+  const render: ButtonProps['render'] = (props) => {
+    const { to, ...anchorProps } = props as typeof props & { to?: unknown }
+
+    return (
+      <a
+        {...anchorProps}
+        data-router-to={typeof to === 'string' ? to : JSON.stringify(to)}
+      />
     )
-  ).toThrow("The props 'to' and 'href' cannot coexist.")
+  }
+  const root = mount(
+    <Button render={render} to={{ pathname: '/orders' }}>
+      Orders
+    </Button>
+  ).getDOMNode()
+
+  expect(root.tagName).toBe('A')
+  expect(root.getAttribute('data-router-to')).toBe(
+    JSON.stringify({ pathname: '/orders' })
+  )
+})
+
+it('falls back to browser navigation when router integration is absent', () => {
+  const stringDestination = mount(
+    <Button to="/orders">Orders</Button>
+  ).getDOMNode()
+  const objectDestination = mount(
+    <Button to={{ pathname: '/orders', search: '?state=open' }}>Orders</Button>
+  ).getDOMNode()
+  const unresolvedDestination = mount(
+    <Button to={{ routeName: 'orders' }}>Orders</Button>
+  ).getDOMNode()
+
+  expect(stringDestination.tagName).toBe('A')
+  expect(stringDestination.getAttribute('href')).toBe('/orders')
+  expect(stringDestination.getAttribute('data-applique-router-fallback')).toBe(
+    'browser'
+  )
+  expect(objectDestination.tagName).toBe('A')
+  expect(objectDestination.getAttribute('href')).toBe('/orders?state=open')
+  expect(unresolvedDestination.tagName).toBe('BUTTON')
+  expect(
+    unresolvedDestination.getAttribute('data-applique-router-fallback')
+  ).toBe('button')
+})
+
+it('preserves legacy to precedence without crashing when href also exists', () => {
+  const root = mount(
+    <Button href="/fallback" to="/orders">
+      Orders
+    </Button>
+  ).getDOMNode()
+
+  expect(root.tagName).toBe('A')
+  expect(root.getAttribute('href')).toBe('/orders')
+  expect(root.getAttribute('data-applique-link-conflict')).toBe('')
+})
+
+it('does not use href when an unresolvable to object has precedence', () => {
+  const root = mount(
+    <Button href="/fallback" to={{ routeName: 'orders' }}>
+      Orders
+    </Button>
+  ).getDOMNode()
+
+  expect(root.tagName).toBe('BUTTON')
+  expect(root.getAttribute('data-applique-link-conflict')).toBe('')
+  expect(root.getAttribute('data-applique-router-fallback')).toBe('button')
 })
 
 it('forwards render when no legacy link prop owns polymorphism', () => {
@@ -411,6 +557,21 @@ it('forwards render when no legacy link prop owns polymorphism', () => {
 
   expect(root.tagName).toBe('DIV')
   expect(root.getAttribute('role')).toBe('button')
+})
+
+it('forwards a raw render function when no legacy link prop owns it', () => {
+  const render: ButtonProps['render'] = (props) => (
+    <a {...props} data-raw-render="" href="/raw" />
+  )
+  const root = mount(
+    <Button nativeButton={false} render={render}>
+      Raw extension
+    </Button>
+  ).getDOMNode()
+
+  expect(root.tagName).toBe('A')
+  expect(root.getAttribute('href')).toBe('/raw')
+  expect(root.hasAttribute('data-raw-render')).toBe(true)
 })
 
 it('marks arbitrary color as unresolved and drops the state escape hatch', () => {

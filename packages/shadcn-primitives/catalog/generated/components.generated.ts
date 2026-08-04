@@ -7104,7 +7104,7 @@ export const generatedCataloguePropDefinitions = [
   {"name":"size","type":"\"default\" | \"sm\" | \"lg\" | \"icon\" | \"icon-xs\" | \"icon-sm\" | \"icon-lg\" | ButtonLegacySize","optional":true,"origin":"applique","description":"Legacy sizes plus non-conflicting shadcn size extensions."},
   {"name":"state","type":"never","optional":true,"origin":"applique","description":"The legacy arbitrary CSS-state escape hatch is intentionally unsupported."},
   {"name":"style","type":"React.CSSProperties | ((state: ButtonState) => React.CSSProperties | undefined)","optional":true,"origin":"applique"},
-  {"name":"to","type":"string | object","optional":true,"origin":"applique","description":"Client-router destination. Requires a render element integration."},
+  {"name":"to","type":"string | object","optional":true,"origin":"applique","description":"Client-router destination. Uses a supplied router render or a safe browser fallback."},
   {"name":"transform","type":"ButtonTransform","optional":true,"origin":"applique","description":"Applies to style.textTransform and takes precedence over style."},
   {"name":"type","type":"ButtonVisualType","optional":true,"origin":"applique","description":"Legacy visual intent. When present, it takes precedence over variant."},
   {"name":"variant","type":"\"link\" | \"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\"","optional":true,"origin":"applique","description":"Non-conflicting shadcn visual extension. Legacy type takes precedence."},
@@ -7137,6 +7137,7 @@ export const generatedCataloguePropDefinitions = [
   {"name":"noResize","type":"boolean","optional":true,"origin":"applique","description":"Disables resizing of the outer legacy-compatible container."},
   {"name":"value","type":"string","optional":true,"origin":"applique","description":"Current controlled value. Missing values remain controlled as an empty string."},
   {"name":"variant","type":"\"bordered\" | \"standard\"","optional":true,"origin":"applique","description":"Legacy visual treatment."},
+  {"name":"actions","type":"React.ReactNode","optional":true,"origin":"applique","description":"Explicit header actions. Use this slot for lazy, memoized, wrapped, or application-owned action components that Section cannot identify safely."},
   {"name":"children","type":"React.ReactNode","optional":true,"origin":"applique","description":"Direct Applique Button children become header actions; other content stays in the body."},
   {"name":"noPadding","type":"boolean","optional":true,"origin":"applique","description":"Removes horizontal padding while retaining the section's vertical rhythm."},
   {"name":"size","type":"\"default\" | \"sm\"","optional":true,"origin":"applique","description":"Non-conflicting shadcn Card density extension."},
@@ -12498,7 +12499,7 @@ export const generatedCatalogueComponents = [
     "description": "Applique-compatible compound accordion backed by the shadcn Accordion primitives.",
     "name": "Accordion",
     "previewProvenance": "Applique-owned facade example",
-    "registryStatus": "ready",
+    "registryStatus": "testing",
     "slug": "accordion",
     "sourceAvailable": true,
     "sourcePath": "src/facades/accordion.tsx",
@@ -13822,7 +13823,7 @@ export const generatedCatalogueComponents = [
     "description": "Basic Applique-compatible text input backed by the shadcn Input primitive.",
     "name": "Input Text",
     "previewProvenance": "Applique-owned facade example",
-    "registryStatus": "ready",
+    "registryStatus": "testing",
     "slug": "input-text",
     "sourceAvailable": true,
     "sourcePath": "src/facades/input-text.tsx",
@@ -13993,7 +13994,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7136, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 7137, 1647, 1648, 1649, 1650, 1651, 1652, 1653, 1654, 1655, 1656, 1657, 1658, 1659, 1660, 1661, 1662, 1663, 1664, 1665, 1666, 1667, 1668, 1669, 1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677, 1678, 1679, 1680, 1681, 1682, 1683, 1684, 1685, 1686, 1687, 1688, 1689, 1690, 1691, 1692, 1693, 1694, 1695, 1696, 1697, 1698, 1699, 1700, 1701, 1702, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1711, 1712, 1713, 1714, 1715, 1716, 1717, 1718, 1719, 1720, 1721, 1722, 1723, 1724, 1725, 1726, 1727, 1728, 1729, 1730, 1731, 1732, 1733, 1734, 1735, 1736, 1737, 1738, 1739, 1740, 1741, 1742, 1743, 1744, 1745, 1746, 1747, 1748, 1749, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1758, 1759, 1760, 1761, 1762, 1763, 1764, 1765, 1766, 1767, 1768, 1769, 1770, 1771, 1772, 1773, 1774, 1775, 1776, 1777, 1778, 1779, 1780, 1781, 1782, 1783, 1784, 1785, 1786, 1787, 1788, 1789, 1790, 1791, 1792, 1793, 1794, 1795, 1796, 1797, 1798, 1799, 1800, 1801, 1802, 1803, 1804, 249, 250, 251, 252, 1805, 254, 256, 257, 258, 259, 260, 7138, 261, 262, 617, 264, 265, 266, 7139, 268, 269, 270, 272],
+          "acceptedPropIds": [0, 1, 7136, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7137, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 7138, 1647, 1648, 1649, 1650, 1651, 1652, 1653, 1654, 1655, 1656, 1657, 1658, 1659, 1660, 1661, 1662, 1663, 1664, 1665, 1666, 1667, 1668, 1669, 1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677, 1678, 1679, 1680, 1681, 1682, 1683, 1684, 1685, 1686, 1687, 1688, 1689, 1690, 1691, 1692, 1693, 1694, 1695, 1696, 1697, 1698, 1699, 1700, 1701, 1702, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1711, 1712, 1713, 1714, 1715, 1716, 1717, 1718, 1719, 1720, 1721, 1722, 1723, 1724, 1725, 1726, 1727, 1728, 1729, 1730, 1731, 1732, 1733, 1734, 1735, 1736, 1737, 1738, 1739, 1740, 1741, 1742, 1743, 1744, 1745, 1746, 1747, 1748, 1749, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1758, 1759, 1760, 1761, 1762, 1763, 1764, 1765, 1766, 1767, 1768, 1769, 1770, 1771, 1772, 1773, 1774, 1775, 1776, 1777, 1778, 1779, 1780, 1781, 1782, 1783, 1784, 1785, 1786, 1787, 1788, 1789, 1790, 1791, 1792, 1793, 1794, 1795, 1796, 1797, 1798, 1799, 1800, 1801, 1802, 1803, 1804, 249, 250, 251, 252, 1805, 254, 256, 257, 258, 259, 260, 7139, 261, 262, 617, 264, 265, 266, 7140, 268, 269, 270, 272],
           "kind": "component",
           "name": "Section",
           "ownedProps": [
@@ -14009,6 +14010,11 @@ export const generatedCatalogueComponents = [
             },
             {
               "name": "children",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "actions",
               "optional": true,
               "type": "React.ReactNode"
             },
@@ -14040,6 +14046,11 @@ export const generatedCatalogueComponents = [
             },
             {
               "name": "children",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "actions",
               "optional": true,
               "type": "React.ReactNode"
             },
@@ -14083,7 +14094,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6973, 61, 62, 63, 64, 65, 67, 7140, 69, 70, 71, 280, 281, 282, 283, 284, 285, 72, 74, 75, 76, 77, 7141, 78, 79, 80, 81, 82, 84, 85, 286, 287, 88, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 249, 250, 251, 252, 254, 6975, 256, 257, 258, 259, 260, 261, 262, 6976, 264, 265, 266, 7142, 268, 449, 269, 270, 272],
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6973, 61, 62, 63, 64, 65, 67, 7141, 69, 70, 71, 280, 281, 282, 283, 284, 285, 72, 74, 75, 76, 77, 7142, 78, 79, 80, 81, 82, 84, 85, 286, 287, 88, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 249, 250, 251, 252, 254, 6975, 256, 257, 258, 259, 260, 261, 262, 6976, 264, 265, 266, 7143, 268, 449, 269, 270, 272],
           "kind": "component",
           "name": "Tab",
           "ownedProps": [
@@ -14114,7 +14125,7 @@ export const generatedCatalogueComponents = [
           "signature": "function Tab(_props: TabProps): React.ReactElement | null"
         },
         {
-          "acceptedPropIds": [0, 1, 7143, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6961, 61, 62, 63, 64, 65, 7144, 6962, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 7145, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 7146, 242, 243, 244, 245, 246, 247, 6964, 249, 250, 251, 252, 616, 254, 6965, 256, 257, 258, 259, 260, 261, 262, 6966, 264, 265, 266, 267, 268, 7147, 269, 270, 6967, 7148, 272],
+          "acceptedPropIds": [0, 1, 7144, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6961, 61, 62, 63, 64, 65, 7145, 6962, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 7146, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 7147, 242, 243, 244, 245, 246, 247, 6964, 249, 250, 251, 252, 616, 254, 6965, 256, 257, 258, 259, 260, 261, 262, 6966, 264, 265, 266, 267, 268, 7148, 269, 270, 6967, 7149, 272],
           "kind": "component",
           "name": "Tabs",
           "ownedProps": [],
@@ -14222,7 +14233,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 3251, 3252, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7149, 7150, 7151, 61, 62, 63, 64, 7152, 65, 7030, 7153, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 7154, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 242, 243, 244, 245, 246, 247, 7037, 249, 7155, 250, 251, 252, 616, 254, 7050, 7156, 256, 257, 258, 259, 260, 3258, 3259, 261, 262, 7051, 264, 265, 266, 267, 268, 7157, 269, 270, 272],
+          "acceptedPropIds": [0, 1, 3251, 3252, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7150, 7151, 7152, 61, 62, 63, 64, 7153, 65, 7030, 7154, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 7155, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 242, 243, 244, 245, 246, 247, 7037, 249, 7156, 250, 251, 252, 616, 254, 7050, 7157, 256, 257, 258, 259, 260, 3258, 3259, 261, 262, 7051, 264, 265, 266, 267, 268, 7158, 269, 270, 272],
           "kind": "component",
           "name": "Tooltip",
           "ownedProps": [
@@ -15824,6 +15835,9 @@ export const generatedCatalogueMappings = [
       "className"
     ],
     "summary": "Transform legacy Tabs.Tab children into TabsTrigger and TabsContent parts and translate numeric selection to values. The generated legacy Tabs documentation incorrectly lists child Tab props instead of the root defaultIndex, activeIndex, and onChange contract; both surfaces are recorded here.",
+    "legacyDocumentationExportAliases": {
+      "Tabs": "Tab"
+    },
     "propMappings": [
       {
         "id": "default-index",
@@ -16228,7 +16242,7 @@ export const generatedCatalogueMappings = [
             "prop": "render"
           }
         ],
-        "summary": "Validate href and displayText together, then compose the legacy external action link with its trailing icon."
+        "summary": "Compose the legacy external action link with its trailing icon only when both href and displayText exist; mark and omit incomplete runtime input instead of throwing during render."
       },
       {
         "id": "actionable-data",
@@ -16258,11 +16272,11 @@ export const generatedCatalogueMappings = [
             "prop": "onClick"
           }
         ],
-        "summary": "Compose Banner.Actionable: render nothing when data is absent; otherwise render header, subheader, feedback, entity and action content, and optional action and close Buttons. The legacy Actionable className is ignored. Its color, null-icon, and full-screen interaction differences remain separate review items."
+        "summary": "Compose Banner.Actionable: render nothing when data is absent; otherwise render header, subheader, feedback, entity and action content, and optional action and close Buttons. The legacy Actionable className is ignored. Null-icon and full-screen interaction differences remain separate review items."
       },
       {
         "id": "actionable-color-compatibility",
-        "kind": "needs-review",
+        "kind": "composition-owned",
         "from": [
           "data.color",
           "data.type"
@@ -16273,7 +16287,7 @@ export const generatedCatalogueMappings = [
             "prop": "variant and semantic classes"
           }
         ],
-        "summary": "The compiled legacy ternary accidentally resolves every truthy data.color to info. The test facade uses the documented semantic color instead; approve that correction or reproduce the bug before migration."
+        "summary": "Preserve the active legacy runtime: every truthy data.color resolves to info, while data.type is used only when color is absent. A semantic correction requires an explicit future migration decision."
       },
       {
         "id": "actionable-icon-null",
@@ -16604,7 +16618,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "to",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "to"
         ],
@@ -16614,7 +16628,7 @@ export const generatedCatalogueMappings = [
             "prop": "render"
           }
         ],
-        "summary": "Render the client router Link through an agreed router integration; keep the href and to conflict check."
+        "summary": "Use an explicit client router render integration when supplied. Otherwise derive a browser href for string or location-like destinations; when href and to coexist, preserve legacy to precedence without throwing during render. Router-native behavior still needs a shared integration decision."
       },
       {
         "id": "caption",
@@ -19751,6 +19765,20 @@ export const generatedCatalogueMappings = [
           }
         ],
         "summary": "Move direct legacy Button children into CardAction and render all other truthy children in CardContent."
+      },
+      {
+        "id": "actions-extension",
+        "kind": "composition-owned",
+        "from": [
+          "actions"
+        ],
+        "targets": [
+          {
+            "component": "card",
+            "prop": "CardAction.children"
+          }
+        ],
+        "summary": "Expose an explicit facade extension for lazy, memoized, wrapped, or application-owned header actions without inspecting React internals."
       },
       {
         "id": "class-name",
