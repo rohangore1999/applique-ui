@@ -334,7 +334,10 @@ const BannerRoot = React.forwardRef<HTMLDivElement, BannerProps>(
               variant="link"
             >
               {completeLink.displayText}
-              <ChevronRightIcon aria-hidden="true" data-icon="inline-end" />
+              <ChevronRightIcon
+                aria-hidden="true"
+                data-applique-icon-position="inline-end"
+              />
             </ShadcnButton>
           ) : null}
         </div>

@@ -139,6 +139,11 @@ export function cn(...inputs) {
 const packageDir = path.resolve(__dirname, '..')
 const manifestPath = path.join(packageDir, 'registry.json')
 const generatorPath = path.join(__dirname, 'generate-registry.js')
+const hostileHostCssPath = path.join(
+  __dirname,
+  'fixtures',
+  'hostile-host.css'
+)
 const shadcnPackageDirectory = path.dirname(
   path.dirname(require.resolve('shadcn', { paths: [packageDir] }))
 )
@@ -181,6 +186,14 @@ function writeJson(filePath, value) {
 function writeText(filePath, value) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true })
   fs.writeFileSync(filePath, value)
+}
+
+function appendHostileHostCss(consumerDirectory) {
+  const hostileCss = fs.readFileSync(hostileHostCssPath, 'utf8')
+  fs.appendFileSync(
+    path.join(consumerDirectory, 'src/index.css'),
+    `\n${hostileCss}`
+  )
 }
 
 function run(command, args, options = {}) {
@@ -453,7 +466,8 @@ const inputRef = createRef()`
 
   writeText(
     path.join(consumerDirectory, mode.smokeFile),
-    `import { createRef } from 'react'
+    `import * as React from 'react'
+import { createRef } from 'react'
 import { Button as RefButton } from '@/components/applique/button'
 import { CalendarDayButton as RefCalendarDayButton } from '@/components/ui/calendar'
 import { Input as RefInput } from '@/components/ui/input'
@@ -494,7 +508,8 @@ function createFacadeOnlySmoke(consumerDirectory, mode) {
 
   writeText(
     path.join(consumerDirectory, mode.smokeFile),
-    `import { createRef } from 'react'
+    `import * as React from 'react'
+import { createRef } from 'react'
 import { Accordion } from '@/components/applique/accordion'
 import { Avatar } from '@/components/applique/avatar'
 import { Badge } from '@/components/applique/badge'
@@ -566,6 +581,35 @@ function filesWithin(directory) {
   return files
 }
 
+function nodeContainsJsx(node) {
+  if (!node || typeof node !== 'object') return false
+  if (node.type === 'JSXElement' || node.type === 'JSXFragment') return true
+
+  return Object.values(node).some((value) => {
+    if (Array.isArray(value)) return value.some(nodeContainsJsx)
+    return nodeContainsJsx(value)
+  })
+}
+
+function hasClassicReactBinding(program) {
+  return program.body.some((statement) => {
+    if (
+      statement.type !== 'ImportDeclaration' ||
+      statement.source.value !== 'react' ||
+      statement.importKind === 'type'
+    ) {
+      return false
+    }
+
+    return statement.specifiers.some(
+      (specifier) =>
+        (specifier.type === 'ImportDefaultSpecifier' ||
+          specifier.type === 'ImportNamespaceSpecifier') &&
+        specifier.local.name === 'React'
+    )
+  })
+}
+
 function assertJavaScriptSources(consumerDirectory) {
   const sourceDirectory = path.join(consumerDirectory, 'src')
   const sourceFiles = filesWithin(sourceDirectory).filter((filePath) =>
@@ -579,8 +623,10 @@ function assertJavaScriptSources(consumerDirectory) {
       `${relativePath} was not converted to JavaScript`
     )
 
+    let parsed
     try {
-      parseJavaScript(fs.readFileSync(filePath, 'utf8'), {
+      const source = fs.readFileSync(filePath, 'utf8')
+      parsed = parseJavaScript(source, {
         sourceType: 'module',
         plugins: ['jsx'],
       })
@@ -589,6 +635,11 @@ function assertJavaScriptSources(consumerDirectory) {
         `${relativePath} is not valid JavaScript/JSX: ${error.message}`
       )
     }
+
+    assert(
+      !nodeContainsJsx(parsed.program) || hasClassicReactBinding(parsed.program),
+      `${relativePath} contains JSX without a runtime React binding for classic clients`
+    )
   }
 
   const consumerPackage = readJson(path.join(consumerDirectory, 'package.json'))
@@ -651,6 +702,19 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
       !source.includes('dark: ".dark"') && !source.includes("dark: '.dark'"),
       `${relativePath} contains an unscoped .dark selector`
     )
+    assert(
+      !/data-icon=["']inline-(?:start|end)["']|\[icon=inline-(?:start|end)\]/.test(
+        source
+      ),
+      `${relativePath} contains a collision-prone icon-position attribute`
+    )
+
+    if (/(^|\s)data-slot=(?=["'{])/m.test(source)) {
+      assert(
+        source.includes('data-applique-component'),
+        `${relativePath} contains data-slot without the Applique host marker`
+      )
+    }
 
     if (
       relativePath.startsWith('src/components/ui/') ||
@@ -713,6 +777,25 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
     )
   }
 
+  const internalButtonPath = consumerPathForTarget(
+    '@components/applique/internal/button.tsx',
+    mode
+  )
+  const installedInternalButton = fs.readFileSync(
+    path.join(consumerDirectory, internalButtonPath),
+    'utf8'
+  )
+  for (const attribute of [
+    'data-applique-component',
+    'data-variant={variant}',
+    'data-size={size}',
+  ]) {
+    assert(
+      installedInternalButton.includes(attribute),
+      `installed Button is missing ${attribute}`
+    )
+  }
+
   const chartPath = consumerPathForTarget('@ui/chart.tsx', mode)
   const installedChart = fs.readFileSync(
     path.join(consumerDirectory, chartPath),
@@ -758,10 +841,10 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
     'shadcn did not install an inline Tailwind 4 theme'
   )
   for (const [themeVariable, semanticVariable] of [
-    ['color-primary', 'primary'],
-    ['color-primary-foreground', 'primary-foreground'],
-    ['color-outline-border', 'outline-border'],
-    ['color-sidebar-ring', 'sidebar-ring'],
+    ['color-primary', 'applique-primary'],
+    ['color-primary-foreground', 'applique-primary-foreground'],
+    ['color-outline-border', 'applique-outline-border'],
+    ['color-sidebar-ring', 'applique-sidebar-ring'],
   ]) {
     const mappingPattern = new RegExp(
       `--${themeVariable}\\s*:\\s*var\\(\\s*--${semanticVariable}\\s*\\)`,
@@ -773,8 +856,12 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
     )
   }
   assert(
-    /--primary\s*:\s*#5232d0\b/i.test(installedCss),
-    'installed CSS does not contain the exact Applique primary token'
+    /--applique-primary\s*:\s*#5232d0\b/i.test(installedCss),
+    'installed CSS does not contain the namespaced primary token'
+  )
+  assert(
+    !/(^|[;{]\s*)--primary\s*:/im.test(installedCss),
+    'installed CSS contains the collision-prone --primary variable'
   )
   assert(
     /--radius-md\s*:\s*8px\b/i.test(installedCss),
@@ -796,6 +883,25 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
     ),
     'installed CSS does not contain the scoped applique-dark variant'
   )
+  for (const selector of [
+    "[data-applique-component][data-slot='button']",
+    "input[data-applique-component][data-slot='input']",
+  ]) {
+    assert(
+      installedCss.includes(selector),
+      `installed CSS does not contain host compatibility selector ${selector}`
+    )
+  }
+  for (const hostileRule of [
+    'html {\n  font-size: 10px;',
+    '.border {\n  border: 1px solid red;',
+    '[data-icon]::before',
+  ]) {
+    assert(
+      installedCss.includes(hostileRule),
+      `hostile legacy CSS fixture was not loaded: ${hostileRule}`
+    )
+  }
   assert(
     fs.existsSync(
       path.join(
@@ -822,9 +928,14 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
     !/hsl\s*\(\s*var\s*\(/i.test(installedCss),
     'installed CSS contains an obsolete hsl(var(...)) wrapper'
   )
+  const circularThemeVariable = installedCss.match(
+    /--([a-z0-9-]+)\s*:\s*var\(\s*--\1\s*\)/i
+  )
   assert(
-    !/--([a-z0-9-]+)\s*:\s*var\(\s*--\1\s*\)/i.test(installedCss),
-    'installed CSS contains a circular Tailwind theme variable'
+    !circularThemeVariable,
+    `installed CSS contains a circular Tailwind theme variable: ${
+      circularThemeVariable?.[0] || 'unknown'
+    }`
   )
 
   const compiledCss = fs.readFileSync(
@@ -833,12 +944,16 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
   )
 
   for (const expectedCss of [
-    '--primary:#5232d0',
+    '--applique-primary:#5232d0',
+    '--spacing-8:32px',
+    '--text-sm:14px',
     '.bg-primary',
     '.text-primary-foreground',
     '.rounded-lg',
     'Hanken Grotesk Variable',
     '[data-applique-color-scheme=dark]',
+    '[data-applique-component][data-slot=button]',
+    'input[data-applique-component][data-slot=input]',
   ]) {
     assert(
       compiledCss.includes(expectedCss),
@@ -959,6 +1074,8 @@ async function main() {
           input: 'n\n',
         }
       )
+
+      appendHostileHostCss(consumerDirectory)
 
       if (mode.tsx) {
         await run(

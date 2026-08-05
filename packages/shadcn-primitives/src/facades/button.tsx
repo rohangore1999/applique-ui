@@ -202,8 +202,8 @@ function renderLegacyIcon(
   return (
     <span
       aria-hidden="true"
-      className="relative inline-flex shrink-0 items-center justify-center"
-      data-icon={position}
+      className="relative inline-flex shrink-0 items-center justify-center [&>svg:not([fill])]:fill-current"
+      data-applique-icon-position={position}
       data-test-id={
         position === 'inline-start' ? 'primary-icon' : 'secondary-icon'
       }
@@ -434,6 +434,7 @@ const Button = React.forwardRef<HTMLElement, ButtonProps>(
         aria-label={resolvedAriaLabel}
         className={cn(
           className,
+          loading && 'relative',
           usesTextRecipe && textButtonClassName,
           inheritTextColor && inheritTextColorClassName,
           isLargeButton && largeButtonClassName,

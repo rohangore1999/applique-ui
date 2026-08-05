@@ -19,6 +19,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const ts = require('typescript')
 
 const REGISTRY_SCHEMA = 'https://ui.shadcn.com/schema/registry.json'
 const REGISTRY_ITEM_SCHEMA = 'https://ui.shadcn.com/schema/registry-item.json'
@@ -80,6 +81,12 @@ const APPLIQUE_SEMANTIC_COLOR_VARS = [
   'chart-4',
   'chart-5',
 ]
+
+function canonicalSemanticColorVariable(variableName) {
+  return variableName.startsWith('applique-')
+    ? variableName
+    : `applique-${variableName}`
+}
 
 const packageDir = path.resolve(__dirname, '..')
 const repoDir = path.resolve(packageDir, '..', '..')
@@ -301,7 +308,7 @@ function validateManifest(manifest) {
         for (const variableName of build.themeVarsFromLight) {
           assert(
             typeof variableName === 'string' &&
-              /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(variableName),
+              /^[a-z0-9]+(?:-{1,2}[a-z0-9]+)*$/.test(variableName),
             `${item.name} has an invalid themeVarsFromLight entry: ${variableName}`
           )
           assert(
@@ -323,6 +330,25 @@ function validateManifest(manifest) {
           `${item.name}:${file.path} must declare a target`
         )
       }
+    }
+
+    if (build && build.cssFrom) {
+      assert(
+        item.type === 'registry:theme',
+        `${item.name} can only use cssFrom for a registry:theme item`
+      )
+      assert(
+        typeof build.cssFrom === 'string' && build.cssFrom.length > 0,
+        `${item.name} cssFrom must be a source JSON path`
+      )
+      const cssRules = readJson(resolveSourcePath(build.cssFrom))
+      assert(
+        cssRules &&
+          typeof cssRules === 'object' &&
+          !Array.isArray(cssRules) &&
+          Object.keys(cssRules).length > 0,
+        `${item.name} cssFrom must contain at least one CSS rule`
+      )
     }
 
     for (const dependency of item.registryDependencies || []) {
@@ -497,6 +523,138 @@ function applyImportMap(content, importMap, itemName) {
   return output
 }
 
+function sourceContainsJsx(sourceFile) {
+  let containsJsx = false
+
+  function visit(node) {
+    if (
+      ts.isJsxElement(node) ||
+      ts.isJsxSelfClosingElement(node) ||
+      ts.isJsxFragment(node)
+    ) {
+      containsJsx = true
+      return
+    }
+
+    ts.forEachChild(node, visit)
+  }
+
+  visit(sourceFile)
+  return containsJsx
+}
+
+function hasClassicReactBinding(sourceFile) {
+  return sourceFile.statements.some((statement) => {
+    if (
+      !ts.isImportDeclaration(statement) ||
+      !ts.isStringLiteral(statement.moduleSpecifier) ||
+      statement.moduleSpecifier.text !== 'react'
+    ) {
+      return false
+    }
+
+    const importClause = statement.importClause
+    if (!importClause || importClause.isTypeOnly) return false
+    if (importClause.name && importClause.name.text === 'React') return true
+
+    return Boolean(
+      importClause.namedBindings &&
+        ts.isNamespaceImport(importClause.namedBindings) &&
+        importClause.namedBindings.name.text === 'React'
+    )
+  })
+}
+
+function ensureClassicReactBinding(content, target) {
+  if (!target.endsWith('.tsx')) return content
+
+  const sourceFile = ts.createSourceFile(
+    target,
+    content,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX
+  )
+
+  if (!sourceContainsJsx(sourceFile) || hasClassicReactBinding(sourceFile)) {
+    return content
+  }
+
+  const newline = content.includes('\r\n') ? '\r\n' : '\n'
+  const lines = content.split(/\r?\n/)
+  let insertionIndex = lines[0] && lines[0].startsWith('#!') ? 1 : 0
+
+  while (
+    insertionIndex < lines.length &&
+    /^['"][^'"]+['"];?$/.test(lines[insertionIndex].trim())
+  ) {
+    insertionIndex += 1
+  }
+
+  if (insertionIndex > 0 && lines[insertionIndex] === '') {
+    insertionIndex += 1
+  }
+
+  lines.splice(insertionIndex, 0, 'import * as React from "react"')
+  return lines.join(newline)
+}
+
+function applyRegistryHostIsolation(content, target, itemName) {
+  if (!target.endsWith('.tsx')) return content
+
+  let output = content
+    // Every registry-owned primitive receives a collision-resistant marker.
+    // Keep this as a generated-source transform so the pinned upstream files
+    // remain byte-for-byte comparable with shadcn.
+    .replace(
+      /(\s)data-slot=(?=["'{])/g,
+      '$1data-applique-component=""$1data-slot='
+    )
+    // Base Nova uses this generic attribute for icon placement. Legacy Unity
+    // also renders [data-icon] through a pseudo-element, so namespace it.
+    .replace(/\bdata-icon=(?=["'{])/g, 'data-applique-icon-position=')
+    .replace(
+      /\[icon=(inline-(?:start|end))\]/g,
+      '[applique-icon-position=$1]'
+    )
+    // Preserve the reviewed size in clients that use html { font-size: 10px }.
+    .replace(/text-\[0\.8rem\]/g, 'text-[12.8px]')
+    // useRender creates data-slot from its state object rather than a literal
+    // JSX attribute, so add the same marker to that state contract.
+    .replace(
+      /(state:\s*\{\r?\n)(\s+)(slot:)/g,
+      "$1$2'applique-component': true,\n$2$3"
+    )
+
+  for (const variableName of [...APPLIQUE_SEMANTIC_COLOR_VARS]
+    .filter((name) => canonicalSemanticColorVariable(name) !== name)
+    .sort((left, right) => right.length - left.length)) {
+    const escapedVariableName = variableName.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      '\\$&'
+    )
+    output = output.replace(
+      new RegExp(`var\\(\\s*--${escapedVariableName}\\s*\\)`, 'g'),
+      `var(--${canonicalSemanticColorVariable(variableName)})`
+    )
+  }
+
+  if (itemName === 'applique-internal-button') {
+    const buttonRootPattern =
+      /(data-applique-component=""\s+data-slot="button"\r?\n)(\s+)(className=)/
+    assert(
+      buttonRootPattern.test(output),
+      `${itemName} host isolation could not find the Button root`
+    )
+    output = output.replace(
+      buttonRootPattern,
+      '$1$2data-variant={variant}\n$2data-size={size}\n$2$3'
+    )
+  }
+
+  return output
+}
+
 function targetToRegistryPath(target) {
   const aliases = {
     '@components/': 'components/',
@@ -583,6 +741,15 @@ function buildRegistryItem(item, context) {
       ...(configuredCssVars.light || {}),
       ...parseCssVariables(css, build.selector || ':root'),
     }
+
+    // Registry consumers receive only the namespaced semantic variables.
+    // The generic aliases remain in tokens.css solely for this package's
+    // source build; publishing them would allow host --primary/--border
+    // variables to leak back into copied components.
+    for (const variableName of APPLIQUE_SEMANTIC_COLOR_VARS) {
+      const canonicalVariable = canonicalSemanticColorVariable(variableName)
+      if (canonicalVariable !== variableName) delete lightCssVars[variableName]
+    }
     const themeVarsFromLight = {}
 
     for (const variableName of build.themeVarsFromLight || []) {
@@ -601,11 +768,24 @@ function buildRegistryItem(item, context) {
       },
       light: lightCssVars,
     }
+
+    if (build.cssFrom) {
+      generated.css = {
+        ...(generated.css || {}),
+        ...readJson(resolveSourcePath(build.cssFrom)),
+      }
+    }
   } else if (item.files.length > 0) {
     generated.files = item.files.map((file) => {
       const source = fs.readFileSync(resolveSourcePath(file.path), 'utf8')
-      const content = applyImportMap(source, build.importMap, item.name)
       const target = file.target
+      const mappedContent = applyImportMap(source, build.importMap, item.name)
+      const isolatedContent = applyRegistryHostIsolation(
+        mappedContent,
+        target,
+        item.name
+      )
+      const content = ensureClassicReactBinding(isolatedContent, target)
 
       return {
         path: validateTarget(target, item.name),
@@ -654,23 +834,37 @@ function validateGeneratedItem(item) {
       )
 
       for (const variableName of APPLIQUE_SEMANTIC_COLOR_VARS) {
+        const canonicalVariable = canonicalSemanticColorVariable(variableName)
         assert(
-          item.cssVars.light[variableName] !== undefined,
-          `applique-theme is missing exact light token "${variableName}"`
+          item.cssVars.light[canonicalVariable] !== undefined,
+          `applique-theme is missing namespaced light token "${canonicalVariable}"`
         )
         assert(
           item.cssVars.theme[`color-${variableName}`] ===
-            `var(--${variableName})`,
-          `applique-theme must map color-${variableName} to var(--${variableName})`
+            `var(--${canonicalVariable})`,
+          `applique-theme must map color-${variableName} to var(--${canonicalVariable})`
         )
+        assert(
+          /^#[0-9a-f]{6}$/i.test(item.cssVars.light[canonicalVariable]),
+          `applique-theme light token "${canonicalVariable}" must remain an exact hex color`
+        )
+
+        if (canonicalVariable !== variableName) {
+          assert(
+            item.cssVars.light[variableName] === undefined,
+            `applique-theme must not publish collision-prone --${variableName}`
+          )
+        }
       }
 
       for (const [variableName, value] of Object.entries(item.cssVars.light)) {
-        if (APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName)) {
-          assert(
-            /^#[0-9a-f]{6}$/i.test(value),
-            `applique-theme light token "${variableName}" must remain an exact hex color`
+        if (
+          APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName) ||
+          APPLIQUE_SEMANTIC_COLOR_VARS.some(
+            (semanticVariable) =>
+              canonicalSemanticColorVariable(semanticVariable) === variableName
           )
+        ) {
           continue
         }
 
@@ -709,6 +903,29 @@ function validateGeneratedItem(item) {
         `${item.name} must publish TypeScript source`
       )
       assert(file.target, `${item.name} generated file target is missing`)
+      assert(
+        !/(^|\s)data-slot=(?=["'{])/m.test(
+          file.content.replace(
+            /data-applique-component=""\s+data-slot=/g,
+            'data-applique-component="" '
+          )
+        ),
+        `${item.name} contains an unmarked data-slot attribute`
+      )
+      assert(
+        !/data-icon=["']inline-(?:start|end)["']|\[icon=inline-(?:start|end)\]/.test(
+          file.content
+        ),
+        `${item.name} contains a collision-prone icon-position attribute`
+      )
+      for (const variableName of APPLIQUE_SEMANTIC_COLOR_VARS) {
+        const canonicalVariable = canonicalSemanticColorVariable(variableName)
+        if (canonicalVariable === variableName) continue
+        assert(
+          !file.content.includes(`var(--${variableName})`),
+          `${item.name} contains unnamespaced var(--${variableName})`
+        )
+      }
     }
   }
 }

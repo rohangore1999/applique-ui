@@ -169,10 +169,15 @@ it('renders component and trailing string icons as decorative content', () => {
   const secondary = wrapper.find('[data-test-id="secondary-icon"]')
 
   expect(primary.prop('aria-hidden')).toBe('true')
-  expect(primary.prop('data-icon')).toBe('inline-start')
+  expect(primary.prop('data-applique-icon-position')).toBe('inline-start')
+  expect(primary.prop('data-icon')).toBeUndefined()
+  expect(primary.prop('className')).toContain(
+    '[&>svg:not([fill])]:fill-current'
+  )
   expect(primary.find('[data-test-id="start-component"]').exists()).toBe(true)
   expect(secondary.prop('aria-hidden')).toBe('true')
-  expect(secondary.prop('data-icon')).toBe('inline-end')
+  expect(secondary.prop('data-applique-icon-position')).toBe('inline-end')
+  expect(secondary.prop('data-icon')).toBeUndefined()
   expect(
     secondary.getDOMNode().querySelector('[data-applique-icon="chevron-right"]')
   ).not.toBeNull()
@@ -305,6 +310,7 @@ it('composes loading with disabled, aria-busy, hidden content, and Spinner', () 
 
   expect(internalButton.prop('disabled')).toBe(true)
   expect(internalButton.prop('aria-busy')).toBe(true)
+  expect(wrapper.getDOMNode().className).toContain('relative')
   expect(wrapper.find(InternalSpinner)).toHaveLength(1)
   expect(wrapper.find(InternalSpinner).prop('aria-hidden')).toBe('true')
   expect(

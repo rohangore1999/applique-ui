@@ -209,7 +209,10 @@ it('composes the legacy external link with a trailing icon', () => {
   expect(link?.getAttribute('href')).toBe('https://www.myntra.com')
   expect(link?.getAttribute('target')).toBe('_blank')
   expect(link?.textContent).toContain('See more')
-  expect(link?.querySelector('[data-icon="inline-end"]')).not.toBeNull()
+  expect(
+    link?.querySelector('[data-applique-icon-position="inline-end"]')
+  ).not.toBeNull()
+  expect(link?.querySelector('[data-icon]')).toBeNull()
   expect(
     wrapper
       .find(ShadcnButton)

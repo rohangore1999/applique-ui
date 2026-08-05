@@ -298,6 +298,12 @@ const APPLIQUE_SEMANTIC_COLOR_VARS = [
   'chart-5',
 ]
 
+function canonicalSemanticColorVariable(variableName) {
+  return variableName.startsWith('applique-')
+    ? variableName
+    : `applique-${variableName}`
+}
+
 function assert(condition, message) {
   if (!condition) throw new Error(message)
 }
@@ -553,31 +559,61 @@ function validateAppliqueTheme(item, label, options = {}) {
       ],
     `${label} must install the font import and scoped dark variants`
   )
+  if (requireBuiltTheme) {
+    assert(
+      item.css['[data-applique-component][data-slot=\'button\']'] &&
+        item.css[
+          "input[data-applique-component][data-slot='input']"
+        ],
+      `${label} must include the scoped legacy-host compatibility rules`
+    )
+  } else {
+    assert(
+      item.meta?.build?.cssFrom === 'src/host-compat.json',
+      `${label} must generate scoped legacy-host compatibility rules`
+    )
+  }
 
   for (const variableName of APPLIQUE_SEMANTIC_COLOR_VARS) {
+    const canonicalVariable = canonicalSemanticColorVariable(variableName)
     if (requireBuiltTheme) {
-      const lightValue = item.cssVars.light[variableName]
+      const lightValue = item.cssVars.light[canonicalVariable]
       assert(
         /^#[0-9a-f]{6}$/i.test(lightValue || ''),
-        `${label}.cssVars.light.${variableName} must be an exact hex color`
+        `${label}.cssVars.light.${canonicalVariable} must be an exact hex color`
       )
+      if (canonicalVariable !== variableName) {
+        assert(
+          item.cssVars.light[variableName] === undefined,
+          `${label}.cssVars.light must not publish collision-prone --${variableName}`
+        )
+      }
     }
     assert(
-      item.cssVars.theme[`color-${variableName}`] === `var(--${variableName})`,
-      `${label}.cssVars.theme.color-${variableName} must map to var(--${variableName})`
+      item.cssVars.theme[`color-${variableName}`] ===
+        `var(--${canonicalVariable})`,
+      `${label}.cssVars.theme.color-${variableName} must map to var(--${canonicalVariable})`
     )
   }
 
   if (requireBuiltTheme) {
     assert(
-      item.cssVars.light.primary.toLowerCase() === '#5232d0',
-      `${label}.cssVars.light.primary must match the Applique Figma token #5232d0`
+      item.cssVars.light['applique-primary'].toLowerCase() === '#5232d0',
+      `${label}.cssVars.light.applique-primary must match the Applique Figma token #5232d0`
     )
 
     for (const [variableName, lightValue] of Object.entries(
       item.cssVars.light
     )) {
-      if (APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName)) continue
+      if (
+        APPLIQUE_SEMANTIC_COLOR_VARS.includes(variableName) ||
+        APPLIQUE_SEMANTIC_COLOR_VARS.some(
+          (semanticVariable) =>
+            canonicalSemanticColorVariable(semanticVariable) === variableName
+        )
+      ) {
+        continue
+      }
 
       assert(
         item.cssVars.theme[variableName] === lightValue,

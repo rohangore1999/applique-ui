@@ -12,36 +12,52 @@
   color-scheme: light;
 
   /* ── Page background & default text (from Figma tokens) ──── */
-  --background: #ffffff;          /* background-light */
-  --foreground: #111827;          /* foreground-light / gray/900 */
+  --applique-background: #ffffff;          /* background-light */
+  --applique-foreground: #111827;          /* foreground-light / gray/900 */
+  --background: var(--applique-background);
+  --foreground: var(--applique-foreground);
 
   /* ── Card surface (from Figma tokens) ────────────────────── */
-  --card: #ffffff;                /* card-light */
-  --card-foreground: #111827;     /* card-foreground-light / gray/900 */
+  --applique-card: #ffffff;                /* card-light */
+  --applique-card-foreground: #111827;     /* card-foreground-light / gray/900 */
+  --card: var(--applique-card);
+  --card-foreground: var(--applique-card-foreground);
 
   /* ── Popover / Dropdown / Tooltip (from Figma tokens) ────── */
-  --popover: #ffffff;             /* popover-light */
-  --popover-foreground: #111827;  /* popover-foreground-light / gray/900 */
+  --applique-popover: #ffffff;             /* popover-light */
+  --applique-popover-foreground: #111827;  /* popover-foreground-light / gray/900 */
+  --popover: var(--applique-popover);
+  --popover-foreground: var(--applique-popover-foreground);
 
   /* ── Brand primary — indigo/700 (from Figma: primary-light) ─ */
-  --primary: #5232d0;             /* indigo/700 */
-  --primary-foreground: #ffffff;  /* primary-foreground-light */
+  --applique-primary: #5232d0;             /* indigo/700 */
+  --applique-primary-foreground: #ffffff;  /* primary-foreground-light */
+  --primary: var(--applique-primary);
+  --primary-foreground: var(--applique-primary-foreground);
 
   /* ── Secondary — indigo/50 (from Figma: secondary-light) ─── */
-  --secondary: #f0eeff;           /* indigo/50 */
-  --secondary-foreground: #5232d0; /* secondary-foreground-light = indigo/700 */
+  --applique-secondary: #f0eeff;           /* indigo/50 */
+  --applique-secondary-foreground: #5232d0; /* secondary-foreground-light = indigo/700 */
+  --secondary: var(--applique-secondary);
+  --secondary-foreground: var(--applique-secondary-foreground);
 
   /* ── Muted — gray/100 (from Figma: muted-light) ──────────── */
-  --muted: #f3f4f6;              /* gray/100 */
-  --muted-foreground: #6b7280;   /* muted-foreground-light = gray/500 */
+  --applique-muted: #f3f4f6;              /* gray/100 */
+  --applique-muted-foreground: #6b7280;   /* muted-foreground-light = gray/500 */
+  --muted: var(--applique-muted);
+  --muted-foreground: var(--applique-muted-foreground);
 
   /* ── Accent — indigo/50 (from Figma: accent-light) ───────── */
-  --accent: #f0eeff;              /* indigo/50 */
-  --accent-foreground: #111827;   /* accent-foreground-light = gray/900 */
+  --applique-accent: #f0eeff;              /* indigo/50 */
+  --applique-accent-foreground: #111827;   /* accent-foreground-light = gray/900 */
+  --accent: var(--applique-accent);
+  --accent-foreground: var(--applique-accent-foreground);
 
   /* ── Destructive — Cherry/700 (from Figma: destructive-light) ── */
-  --destructive: #bf3823;         /* Cherry/700 */
-  --destructive-foreground: #fef3f2; /* destructive-foreground-light = Cherry/50 */
+  --applique-destructive: #bf3823;         /* Cherry/700 */
+  --applique-destructive-foreground: #fef3f2; /* destructive-foreground-light = Cherry/50 */
+  --destructive: var(--applique-destructive);
+  --destructive-foreground: var(--applique-destructive-foreground);
 
   /* ── Legacy semantic status surfaces (Applique Badge) ────── */
   --applique-info-background: #e5eefb;
@@ -54,32 +70,50 @@
   --applique-error-foreground: #b63a2a;
 
   /* ── Borders & inputs — gray/200 (from Figma: border-light) ─ */
-  --border: #e5e7eb;              /* gray/200 */
-  --input: #e5e7eb;               /* input-light = gray/200 */
+  --applique-border: #e5e7eb;              /* gray/200 */
+  --applique-input: #e5e7eb;               /* input-light = gray/200 */
+  --border: var(--applique-border);
+  --input: var(--applique-input);
 
   /* ── Outline button (from Figma: A-button-outline tokens) ── */
-  --outline-border: #5232d0;       /* A-button-outline-border-light = indigo/700 */
-  --outline-foreground: #5232d0;   /* A-button-outline-foreground-light = indigo/700 */
+  --applique-outline-border: #5232d0;       /* A-button-outline-border-light = indigo/700 */
+  --applique-outline-foreground: #5232d0;   /* A-button-outline-foreground-light = indigo/700 */
+  --outline-border: var(--applique-outline-border);
+  --outline-foreground: var(--applique-outline-foreground);
 
   /* ── Focus ring — indigo/700 (from Figma: ring-light) ────── */
-  --ring: #5232d0;                /* indigo/700 */
+  --applique-ring: #5232d0;                /* indigo/700 */
+  --ring: var(--applique-ring);
 
   /* ── Sidebar (from Figma: sidebar-light tokens) ───────────── */
-  --sidebar: #fafafa;
-  --sidebar-foreground: #0a0a0a;
-  --sidebar-primary: #171717;
-  --sidebar-primary-foreground: #fafafa;
-  --sidebar-accent: #f5f5f5;
-  --sidebar-accent-foreground: #171717;
-  --sidebar-border: #e5e5e5;
-  --sidebar-ring: #a3a3a3;
+  --applique-sidebar: #fafafa;
+  --applique-sidebar-foreground: #0a0a0a;
+  --applique-sidebar-primary: #171717;
+  --applique-sidebar-primary-foreground: #fafafa;
+  --applique-sidebar-accent: #f5f5f5;
+  --applique-sidebar-accent-foreground: #171717;
+  --applique-sidebar-border: #e5e5e5;
+  --applique-sidebar-ring: #a3a3a3;
+  --sidebar: var(--applique-sidebar);
+  --sidebar-foreground: var(--applique-sidebar-foreground);
+  --sidebar-primary: var(--applique-sidebar-primary);
+  --sidebar-primary-foreground: var(--applique-sidebar-primary-foreground);
+  --sidebar-accent: var(--applique-sidebar-accent);
+  --sidebar-accent-foreground: var(--applique-sidebar-accent-foreground);
+  --sidebar-border: var(--applique-sidebar-border);
+  --sidebar-ring: var(--applique-sidebar-ring);
 
   /* ── Chart (from Figma: chart-*-light tokens) ─────────────── */
-  --chart-1: #ea580c;
-  --chart-2: #0d9488;
-  --chart-3: #164e63;
-  --chart-4: #fbbf24;
-  --chart-5: #f59e0b;
+  --applique-chart-1: #ea580c;
+  --applique-chart-2: #0d9488;
+  --applique-chart-3: #164e63;
+  --applique-chart-4: #fbbf24;
+  --applique-chart-5: #f59e0b;
+  --chart-1: var(--applique-chart-1);
+  --chart-2: var(--applique-chart-2);
+  --chart-3: var(--applique-chart-3);
+  --chart-4: var(--applique-chart-4);
+  --chart-5: var(--applique-chart-5);
 
   /* ── Border radius (from Figma: radius scale) ─────────────── */
   /* NOTE: px (not rem) so radii are immune to consumer apps that alter the
@@ -111,20 +145,36 @@
   --font-weight-extrabold: 800;
   --font-weight-black: 900;
 
-  /* ── Spacing tokens (from Figma: spacing scale) ──────────── */
-  --spacing-1: 0.25rem;             /* 4px */
-  --spacing-1-5: 0.375rem;          /* 6px */
-  --spacing-2: 0.5rem;              /* 8px */
-  --spacing-2-5: 0.625rem;          /* 10px */
-  --spacing-3: 0.75rem;             /* 12px */
-  --spacing-4: 1rem;                /* 16px */
-  --spacing-5: 1.25rem;             /* 20px */
-  --spacing-6: 1.5rem;              /* 24px */
-  --spacing-8: 2rem;                /* 32px */
-  --spacing-10: 2.5rem;             /* 40px */
-  --spacing-12: 3rem;               /* 48px */
-  --spacing-16: 4rem;               /* 64px */
-  --spacing-32: 8rem;               /* 128px */
+  /* ── Root-font-independent type and spacing ──────────────── */
+  /* Legacy dashboards may set `html { font-size: 10px }`. Keep the visual
+     scale in px so copied registry components retain their reviewed size. */
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+
+  --spacing: 4px;
+  --spacing-1: 4px;
+  --spacing-1-5: 6px;
+  --spacing-2: 8px;
+  --spacing-2-5: 10px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-32: 128px;
 
   /* ── Shadow tokens (from Figma: shadow collection) ────────── */
   --shadow-2xs: 0px 1px 0px 0px rgba(0, 0, 0, 0.05);
