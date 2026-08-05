@@ -17,7 +17,7 @@
   "files": [
     {
       "path": "ui/skeleton.tsx",
-      "content": "import { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nfunction SkeletonImpl({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"skeleton\"\n      className={cn(\"animate-pulse rounded-md bg-muted\", className)}\n      {...props}\n    />\n  )\n}\n\nconst Skeleton = withReact18Ref(SkeletonImpl)\n\nexport { Skeleton }\n",
+      "content": "import * as React from \"react\"\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\n\nfunction SkeletonImpl({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-applique-component=\"\" data-slot=\"skeleton\"\n      className={cn(\"animate-pulse rounded-md bg-muted\", className)}\n      {...props}\n    />\n  )\n}\n\nconst Skeleton = withReact18Ref(SkeletonImpl)\n\nexport { Skeleton }\n",
       "type": "registry:ui",
       "target": "@ui/skeleton.tsx"
     }

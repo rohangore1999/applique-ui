@@ -19,7 +19,7 @@
   "files": [
     {
       "path": "ui/spinner.tsx",
-      "content": "import { Loader2Icon } from \"lucide-react\"\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\nfunction SpinnerImpl({ className, ...props }: React.ComponentProps<\"svg\">) {\n  return (\n    <Loader2Icon\n      data-slot=\"spinner\"\n      role=\"status\"\n      aria-label=\"Loading\"\n      className={cn(\"size-4 animate-spin\", className)}\n      {...props}\n     />\n  )\n}\n\nconst Spinner = withReact18Ref(SpinnerImpl)\n\nexport { Spinner }\n",
+      "content": "import * as React from \"react\"\nimport { Loader2Icon } from \"lucide-react\"\nimport { cn } from \"@/lib/utils\"\nimport { withReact18Ref } from \"@/lib/applique-react18-compat\"\nfunction SpinnerImpl({ className, ...props }: React.ComponentProps<\"svg\">) {\n  return (\n    <Loader2Icon\n      data-applique-component=\"\" data-slot=\"spinner\"\n      role=\"status\"\n      aria-label=\"Loading\"\n      className={cn(\"size-4 animate-spin\", className)}\n      {...props}\n     />\n  )\n}\n\nconst Spinner = withReact18Ref(SpinnerImpl)\n\nexport { Spinner }\n",
       "type": "registry:ui",
       "target": "@ui/spinner.tsx"
     }

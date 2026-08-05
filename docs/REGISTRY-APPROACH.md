@@ -307,19 +307,27 @@ Two rules make it predictable:
 
 In practice, **every audited prop is sorted into one of five buckets.** This is the
 whole of "props migration" — nothing is left to chance, and nothing is dropped
-silently:
+silently. Three buckets keep the client's prop working automatically; two flag it
+for a decision (and are always documented, never silent).
+
+**Kept working — the client changes nothing:**
 
 | Bucket | Client writes | What the facade does |
 |---|---|---|
-| **Forward** | `className`, `aria-label`, `autoFocus` | Passes it to shadcn unchanged — the client's markup just works |
-| **Map** | Badge `variant="solid"`; InputNumber `type` | Renames or converts a value; InputNumber always resolves the native type to `number` |
-| **Compose** | `<BreadCrumb>` items, Button `loading` | Builds the extra structure/behavior the single prop implies (separators, a Spinner) |
-| **Unsupported** | An obsolete styling escape hatch | Explicitly excluded with a documented client migration requirement |
-| **Needs-review** | Dropdown target | Parked for a human decision on the right shadcn target |
+| **Forward** | `<Badge className="ml-2" id="x" />` | Passes native/`aria-*`/`data-*` props straight through, untouched |
+| **Map** | `<Badge variant="solid" />` | Renames or re-values: sends shadcn `variant="default"`. *(Includes **Constant** — e.g. InputNumber always forces `type="number"`, which the client never passes.)* |
+| **Compose** | `<Button loading notifications={3} />` | Builds the structure/behaviour a single prop implies — a Spinner, a count Badge, breadcrumb separators |
 
-The first two are the common, cheap cases. The last two are the honest escape
-hatches: a migrating client gets an explicit, short list of "change these," rather
-than mystery breakage.
+**Flagged for a decision — a short, documented "tweak this" list:**
+
+| Bucket | Example | What it means |
+|---|---|---|
+| **Unsupported** | Button `state` (arbitrary CSS escape hatch) | Deliberately excluded; a client using it gets a documented migration note |
+| **Needs-review** | Tabs `type`, Tooltip `triggerOn` | The right shadcn target/behaviour is still an open question, parked for a human |
+
+The full, live list of every flagged prop lives in a separate tracker:
+[PENDING-PROPS-REVIEW.md](./PENDING-PROPS-REVIEW.md). It is auto-derived from the
+contract data, so it never drifts from the code.
 
 For example, the client can write:
 
