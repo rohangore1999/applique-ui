@@ -104,8 +104,10 @@ try {
     CalendarDayButton,
     Input,
     InputCheckbox,
+    InputDate,
     InputNumber,
     InputRadio,
+    InputSelect,
     InputText,
     InputTextArea,
     Section,
@@ -121,11 +123,13 @@ try {
   const appliqueButtonGroupRef = React.createRef()
   const sectionRef = React.createRef()
   const inputCheckboxRef = React.createRef()
+  const inputDateRef = React.createRef()
   const buttonRef = React.createRef()
   const calendarDayRef = React.createRef()
   const inputRef = React.createRef()
   const inputNumberRef = React.createRef()
   const inputRadioRef = React.createRef()
+  const inputSelectRef = React.createRef()
   const inputTextRef = React.createRef()
   const inputTextAreaRef = React.createRef()
   const tabsRef = React.createRef()
@@ -192,6 +196,12 @@ try {
           title: 'Accept terms',
           value: true,
         }),
+        React.createElement(InputDate, {
+          format: 'yyyy-MM-dd',
+          label: 'Last Updated On',
+          ref: inputDateRef,
+          value: '2026-08-05',
+        }),
         React.createElement(Input, { ref: inputRef, 'aria-label': 'Name' }),
         React.createElement(InputNumber, {
           ref: inputNumberRef,
@@ -206,6 +216,12 @@ try {
           options: [{ label: 'Standard', value: 'standard' }],
           ref: inputRadioRef,
           value: 'standard',
+        }),
+        React.createElement(InputSelect, {
+          'aria-label': 'Source',
+          options: [{ label: 'DIY', value: 'DIY' }],
+          ref: inputSelectRef,
+          value: 'DIY',
         }),
         React.createElement(InputText, {
           onChange: (value) => {
@@ -310,8 +326,16 @@ try {
     'InputCheckbox did not forward its ref under React 18.'
   )
   assert(
+    inputDateRef.current instanceof HTMLElement,
+    'InputDate did not forward its Field ref under React 18.'
+  )
+  assert(
     inputRadioRef.current instanceof HTMLElement,
     'InputRadio did not forward its ref under React 18.'
+  )
+  assert(
+    inputSelectRef.current instanceof HTMLInputElement,
+    'InputSelect did not forward its input ref under React 18.'
   )
   assert(
     inputTextRef.current instanceof HTMLInputElement,

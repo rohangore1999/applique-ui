@@ -92,9 +92,12 @@ const PUBLIC_FACADE_NAMES = new Set([
   'bread-crumb',
   'button',
   'button-group',
+  'field',
   'input-checkbox',
+  'input-date',
   'input-number',
   'input-radio',
+  'input-select',
   'input-text',
   'input-text-area',
   'section',
@@ -107,6 +110,7 @@ const INTERNALIZED_PRIMITIVE_NAMES = new Set([
   'badge',
   'button',
   'button-group',
+  'field',
   'tabs',
   'tooltip',
 ])
@@ -488,6 +492,18 @@ function transformSource(content, itemName) {
     transformed = transformed.replace(
       'const THEMES = { light: "", dark: ".dark" } as const',
       `const THEMES = { light: "", dark: '[data-applique-color-scheme="dark"]' } as const`
+    )
+  }
+
+  if (itemName === 'calendar') {
+    const localeCodeUses = (transformed.match(/locale\?\.code/g) || []).length
+    assert(
+      localeCodeUses === 2,
+      `Expected two Calendar locale.code reads, found ${localeCodeUses}`
+    )
+    transformed = transformed.replaceAll(
+      'locale?.code',
+      '(locale as { code?: string } | undefined)?.code'
     )
   }
 

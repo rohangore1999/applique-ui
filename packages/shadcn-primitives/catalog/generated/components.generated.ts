@@ -7113,12 +7113,34 @@ export const generatedCataloguePropDefinitions = [
   {"name":"className","type":"string","optional":true,"origin":"applique","description":"Class name forwarded to the shadcn ButtonGroup root."},
   {"name":"orientation","type":"\"horizontal\" | \"vertical\"","optional":true,"origin":"applique","description":"Optional shadcn layout extension."},
   {"name":"structure","type":"\"primary-group\" | \"secondary-group\" | \"link-group\"","optional":true,"origin":"applique","description":"Keeps the matching first action visible and moves every later action into the overflow menu. A non-matching structure retains the normal sequencing behavior, matching the legacy runtime."},
+  {"name":"description","type":"React.ReactNode","optional":true,"origin":"applique","description":"Supporting text rendered when neither error nor success is present."},
+  {"name":"disabled","type":"boolean","optional":true,"origin":"applique","description":"Applies disabled styling and passes disabled context to compatible children."},
+  {"name":"error","type":"React.ReactNode","optional":true,"origin":"applique","description":"Invalid state or error content. Arrays retain the legacy joined output."},
+  {"name":"fieldInfo","type":"React.ReactNode","optional":true,"origin":"applique","description":"Optional element rendered beside the title."},
+  {"name":"htmlFor","type":"string","optional":true,"origin":"applique","description":"Associates the generated label and metadata with a child control."},
+  {"name":"info","type":"boolean","optional":true,"origin":"applique","description":"Legacy no-op retained while its intended UI is reviewed."},
+  {"name":"required","type":"boolean","optional":true,"origin":"applique","description":"Adds the legacy required marker beside the title."},
+  {"name":"success","type":"React.ReactNode","optional":true,"origin":"applique","description":"Success content rendered when no error is present."},
+  {"name":"title","type":"React.ReactNode","optional":true,"origin":"applique","description":"The visible label for the wrapped control."},
   {"name":"boxtype","type":"string","optional":true,"origin":"applique","description":"Renders a dash instead of a tick for the checked visual state."},
   {"name":"className","type":"string","optional":true,"origin":"applique","description":"Preserves the legacy class target on the outer label."},
   {"name":"htmlValue","type":"string","optional":true,"origin":"applique","description":"Maps to the hidden checkbox input's form value."},
   {"name":"onChange","type":"(value: boolean) => void","optional":true,"origin":"applique","description":"Preserves the Applique boolean-only callback."},
   {"name":"title","type":"React.ReactNode","optional":true,"origin":"applique","description":"Content rendered beside the checkbox."},
   {"name":"value","type":"boolean","optional":true,"origin":"applique","description":"Applique controlled checked state. It takes precedence over checked."},
+  {"name":"description","type":"React.ReactNode","optional":true,"origin":"applique","description":"Supporting field text, hidden while an error is present."},
+  {"name":"disabled","type":"boolean","optional":true,"origin":"applique","description":"Disables the trigger and prevents the popover from opening."},
+  {"name":"displayFormat","type":"string","optional":true,"origin":"applique","description":"Formats the value shown in the trigger without changing callback output."},
+  {"name":"error","type":"React.ReactNode","optional":true,"origin":"applique","description":"Invalid state or error content."},
+  {"name":"format","type":"string","optional":true,"origin":"applique","description":"Parses string values and serializes callback values."},
+  {"name":"label","type":"React.ReactNode","optional":true,"origin":"applique","description":"Field label associated with the date trigger."},
+  {"name":"monthsToDisplay","type":"number","optional":true,"origin":"applique","description":"Number of Calendar month panels. Defaults to one, or two for ranges."},
+  {"name":"name","type":"string","optional":true,"origin":"applique","description":"Identifies the trigger for legacy integrations. Date values remain controlled through value/onChange and are not added to native FormData."},
+  {"name":"onChange","type":"(value: InputDateValue | InputDateRange | null) => void","optional":true,"origin":"applique","description":"Receives a single date immediately or a completed, ordered date range."},
+  {"name":"range","type":"boolean","optional":true,"origin":"applique","description":"Enables two-step date-range selection."},
+  {"name":"required","type":"boolean","optional":true,"origin":"applique","description":"Marks the field as required for styling and accessibility."},
+  {"name":"value","type":"InputDateValue | InputDateRange","optional":true,"origin":"applique","description":"Current single date or date range. String values are parsed with format."},
+  {"name":"wrapperClassName","type":"string","optional":true,"origin":"applique","description":"Class applied to Popover content."},
   {"name":"onChange","type":"(value: number) => void","optional":true,"origin":"applique","description":"Receives the parsed number instead of the browser change event."},
   {"name":"type","type":"\"number\"","optional":true,"origin":"applique","description":"Keeps the existing Applique numeric-input contract."},
   {"name":"value","type":"string | number","optional":true,"origin":"applique","description":"Current value. Invalid numeric strings are displayed as an empty value."},
@@ -7128,6 +7150,26 @@ export const generatedCataloguePropDefinitions = [
   {"name":"options","type":"readonly InputRadioOption[]","optional":false,"origin":"applique","description":"Options rendered as shadcn radio items."},
   {"name":"renderOption","type":"(option: InputRadioOption) => React.ReactNode","optional":true,"origin":"applique","description":"Customizes the content beside each radio control."},
   {"name":"value","type":"string","optional":true,"origin":"applique","description":"Selected option value."},
+  {"name":"className","type":"string","optional":true,"origin":"applique","description":"Applies to the composed field root."},
+  {"name":"description","type":"React.ReactNode","optional":true,"origin":"applique","description":"Optional help text, hidden while an error is displayed."},
+  {"name":"error","type":"React.ReactNode","optional":true,"origin":"applique","description":"Applies invalid styling and optionally renders the error message."},
+  {"name":"id","type":"string","optional":true,"origin":"applique"},
+  {"name":"isLoading","type":"boolean","optional":true,"origin":"applique","description":"Replaces the trigger affordance with an accessible loading indicator."},
+  {"name":"label","type":"React.ReactNode","optional":true,"origin":"applique","description":"Optional visible field label. Use aria-label when the design hides labels."},
+  {"name":"labelKey","type":"string","optional":true,"origin":"applique","description":"Property containing the text or number used to render and search an option."},
+  {"name":"multiple","type":"boolean","optional":true,"origin":"applique","description":"Enables multiple selection."},
+  {"name":"name","type":"string","optional":true,"origin":"applique"},
+  {"name":"onChange","type":"(value: InputSelectValue | InputSelectValue[] | null) => void","optional":true,"origin":"applique","description":"Preserves the Applique value-only callback instead of exposing option objects."},
+  {"name":"onSearch","type":"(text: string) => void","optional":true,"origin":"applique","description":"Receives the current search text."},
+  {"name":"options","type":"readonly InputSelectOption[]","optional":true,"origin":"applique","description":"Options use label/value by default; labelKey and valueKey customize them."},
+  {"name":"placeholder","type":"string","optional":true,"origin":"applique","description":"Empty-state text shown in the input."},
+  {"name":"readOnly","type":"boolean","optional":true,"origin":"applique"},
+  {"name":"required","type":"boolean","optional":true,"origin":"applique"},
+  {"name":"searchable","type":"boolean","optional":true,"origin":"applique","description":"Enables local text filtering."},
+  {"name":"value","type":"InputSelectValue | readonly InputSelectValue[]","optional":true,"origin":"applique","description":"A primitive selected value, or an array of primitive values for multiple."},
+  {"name":"valueKey","type":"string","optional":true,"origin":"applique","description":"Property used for controlled values and callbacks."},
+  {"name":"__fieldContext","type":"{ disabled?: boolean; error?: boolean; }","optional":true,"origin":"applique","description":"Legacy Field state injected into compatible child controls."},
+  {"name":"error","type":"React.ReactNode","optional":true,"origin":"applique","description":"Invalid state supplied directly or by the public Field facade."},
   {"name":"onChange","type":"(value: string) => void","optional":true,"origin":"applique","description":"Receives the string value instead of the browser change event."},
   {"name":"type","type":"\"search\" | \"text\" | \"tel\" | \"url\" | \"email\" | \"password\"","optional":true,"origin":"applique","description":"Sets the text format for the field."},
   {"name":"value","type":"string","optional":true,"origin":"applique","description":"Current value of the text field. Non-string values render as empty."},
@@ -9459,153 +9501,6 @@ export const generatedCatalogueComponents = [
       "importPath": "@/components/ui/empty",
       "note": null,
       "registryTarget": "@ui/empty.tsx",
-      "replacement": null,
-      "unavailableReason": null
-    }
-  },
-  {
-    "api": {
-      "exports": [
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 3765, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "Field",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<\"div\">",
-            "VariantProps<typeof fieldVariants>"
-          ],
-          "signature": "function Field(props: React.ComponentProps<\"div\"> & VariantProps<typeof fieldVariants>)"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldContent",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<\"div\">"
-          ],
-          "signature": "function FieldContent(props: React.ComponentProps<\"div\">)"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 3606, 3607, 3608, 3609, 3610, 3611, 3612, 3613, 3614, 3615, 3616, 3617, 3618, 3619, 3620, 3621, 3622, 3623, 3624, 3625, 3626, 3627, 3628, 3629, 3630, 3631, 3632, 3633, 3634, 3635, 3636, 3637, 3638, 3639, 3640, 3641, 3642, 3643, 3644, 3645, 3646, 3647, 3648, 3649, 3650, 3651, 3652, 3653, 3654, 3655, 3656, 3657, 3658, 3659, 3660, 3661, 3662, 3663, 3664, 3665, 3666, 3667, 3668, 3669, 3670, 3671, 3672, 3673, 3674, 3675, 3676, 3677, 3678, 3679, 3680, 3681, 3682, 3683, 3684, 3685, 3686, 3687, 3688, 3689, 3690, 3691, 3692, 3693, 3694, 3695, 3696, 3697, 3698, 3699, 3700, 3701, 3702, 3703, 3704, 3705, 3706, 3707, 3708, 3709, 3710, 3711, 3712, 3713, 3714, 3715, 3716, 3717, 3718, 3719, 3720, 3721, 3722, 3723, 3724, 3725, 3726, 3727, 3728, 3729, 3730, 3731, 3732, 3733, 3734, 3735, 3736, 3737, 3738, 3739, 3740, 3741, 3742, 3743, 3744, 3745, 3746, 3747, 3748, 3749, 3750, 3751, 3752, 3753, 3754, 3755, 3756, 3757, 3758, 3759, 3760, 3761, 3762, 3763, 249, 250, 251, 252, 802, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldDescription",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<\"p\">"
-          ],
-          "signature": "function FieldDescription(props: React.ComponentProps<\"p\">)"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 3926, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldError",
-          "ownedProps": [
-            {
-              "name": "errors",
-              "optional": true,
-              "type": "Array<{ message?: string } | undefined>"
-            }
-          ],
-          "propSources": [
-            "React.ComponentProps<\"div\">"
-          ],
-          "signature": "function FieldError(props: React.ComponentProps<\"div\"> & { errors?: Array<{ message?: string } | undefined> })"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldGroup",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<\"div\">"
-          ],
-          "signature": "function FieldGroup(props: React.ComponentProps<\"div\">)"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 280, 72, 3766, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 3767, 3768, 3769, 3770, 3771, 3772, 3773, 3774, 3775, 3776, 3777, 3778, 3779, 3780, 3781, 3782, 3783, 3784, 3785, 3786, 3787, 3788, 3789, 3790, 3791, 3792, 3793, 3794, 3795, 3796, 3797, 3798, 3799, 3800, 3801, 3802, 3803, 3804, 3805, 3806, 3807, 3808, 3809, 3810, 3811, 3812, 3813, 3814, 3815, 3816, 3817, 3818, 3819, 3820, 3821, 3822, 3823, 3824, 3825, 3826, 3827, 3828, 3829, 3830, 3831, 3832, 3833, 3834, 3835, 3836, 3837, 3838, 3839, 3840, 3841, 3842, 3843, 3844, 3845, 3846, 3847, 3848, 3849, 3850, 3851, 3852, 3853, 3854, 3855, 3856, 3857, 3858, 3859, 3860, 3861, 3862, 3863, 3864, 3865, 3866, 3867, 3868, 3869, 3870, 3871, 3872, 3873, 3874, 3875, 3876, 3877, 3878, 3879, 3880, 3881, 3882, 3883, 3884, 3885, 3886, 3887, 3888, 3889, 3890, 3891, 3892, 3893, 3894, 3895, 3896, 3897, 3898, 3899, 3900, 3901, 3902, 3903, 3904, 3905, 3906, 3907, 3908, 3909, 3910, 3911, 3912, 3913, 3914, 3915, 3916, 3917, 3918, 3919, 3920, 3921, 3922, 3923, 3924, 249, 250, 251, 252, 3925, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldLabel",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<typeof Label>"
-          ],
-          "signature": "function FieldLabel(props: React.ComponentProps<typeof Label>)"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 3927, 3928, 3929, 3930, 3931, 3932, 3933, 3934, 3935, 3936, 3937, 3938, 3939, 3940, 3941, 3942, 3943, 3944, 3945, 3946, 3947, 3948, 3949, 3950, 3951, 3952, 3953, 3954, 3955, 3956, 3957, 3958, 3959, 3960, 3961, 3962, 3963, 3964, 3965, 3966, 3967, 3968, 3969, 3970, 3971, 3972, 3973, 3974, 3975, 3976, 3977, 3978, 3979, 3980, 3981, 3982, 3983, 3984, 3985, 3986, 3987, 3988, 3989, 3990, 3991, 3992, 3993, 3994, 3995, 3996, 3997, 3998, 3999, 4000, 4001, 4002, 4003, 4004, 4005, 4006, 4007, 4008, 4009, 4010, 4011, 4012, 4013, 4014, 4015, 4016, 4017, 4018, 4019, 4020, 4021, 4022, 4023, 4024, 4025, 4026, 4027, 4028, 4029, 4030, 4031, 4032, 4033, 4034, 4035, 4036, 4037, 4038, 4039, 4040, 4041, 4042, 4043, 4044, 4045, 4046, 4047, 4048, 4049, 4050, 4051, 4052, 4053, 4054, 4055, 4056, 4057, 4058, 4059, 4060, 4061, 4062, 4063, 4064, 4065, 4066, 4067, 4068, 4069, 4070, 4071, 4072, 4073, 4074, 4075, 4076, 4077, 4078, 4079, 4080, 4081, 4082, 4083, 4084, 249, 250, 251, 252, 4085, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 4086, 272],
-          "kind": "component",
-          "name": "FieldLegend",
-          "ownedProps": [
-            {
-              "name": "variant",
-              "optional": true,
-              "type": "\"legend\" | \"label\""
-            }
-          ],
-          "propSources": [
-            "React.ComponentProps<\"legend\">"
-          ],
-          "signature": "function FieldLegend(props: React.ComponentProps<\"legend\"> & { variant?: \"legend\" | \"label\" })"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 2376, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldSeparator",
-          "ownedProps": [
-            {
-              "name": "children",
-              "optional": true,
-              "type": "React.ReactNode"
-            }
-          ],
-          "propSources": [
-            "React.ComponentProps<\"div\">"
-          ],
-          "signature": "function FieldSeparator(props: React.ComponentProps<\"div\"> & { children?: React.ReactNode })"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 279, 69, 70, 71, 280, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 286, 88, 4087, 4088, 4089, 4090, 4091, 4092, 4093, 4094, 4095, 4096, 4097, 4098, 4099, 4100, 4101, 4102, 4103, 4104, 4105, 4106, 4107, 4108, 4109, 4110, 4111, 4112, 4113, 4114, 4115, 4116, 4117, 4118, 4119, 4120, 4121, 4122, 4123, 4124, 4125, 4126, 4127, 4128, 4129, 4130, 4131, 4132, 4133, 4134, 4135, 4136, 4137, 4138, 4139, 4140, 4141, 4142, 4143, 4144, 4145, 4146, 4147, 4148, 4149, 4150, 4151, 4152, 4153, 4154, 4155, 4156, 4157, 4158, 4159, 4160, 4161, 4162, 4163, 4164, 4165, 4166, 4167, 4168, 4169, 4170, 4171, 4172, 4173, 4174, 4175, 4176, 4177, 4178, 4179, 4180, 4181, 4182, 4183, 4184, 4185, 4186, 4187, 4188, 4189, 4190, 4191, 4192, 4193, 4194, 4195, 4196, 4197, 4198, 4199, 4200, 4201, 4202, 4203, 4204, 4205, 4206, 4207, 4208, 4209, 4210, 4211, 4212, 4213, 4214, 4215, 4216, 4217, 4218, 4219, 4220, 4221, 4222, 4223, 4224, 4225, 4226, 4227, 4228, 4229, 4230, 4231, 4232, 4233, 4234, 4235, 4236, 4237, 4238, 4239, 4240, 4241, 4242, 4243, 4244, 249, 250, 251, 252, 4245, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldSet",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<\"fieldset\">"
-          ],
-          "signature": "function FieldSet(props: React.ComponentProps<\"fieldset\">)"
-        },
-        {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
-          "kind": "component",
-          "name": "FieldTitle",
-          "ownedProps": [],
-          "propSources": [
-            "React.ComponentProps<\"div\">"
-          ],
-          "signature": "function FieldTitle(props: React.ComponentProps<\"div\">)"
-        }
-      ]
-    },
-    "availability": "registry",
-    "category": "Inputs",
-    "description": "Field from the pinned shadcn Base catalogue, styled through Applique semantic tokens.",
-    "name": "Field",
-    "previewProvenance": "Pinned official Base example",
-    "registryStatus": "ready",
-    "slug": "field",
-    "sourceAvailable": true,
-    "sourcePath": "src/field.tsx",
-    "upstream": {
-      "base": "base",
-      "commit": "705ce5961080264830471ddd885c01b907706068",
-      "style": "nova"
-    },
-    "clientContract": {
-      "basicUsage": "import { Field, FieldDescription, FieldLabel } from \"@/components/ui/field\"\n\nexport function BasicExample() {\n  return (\n    <Field>\n      <FieldLabel htmlFor=\"email\">Email</FieldLabel>\n      <input id=\"email\" name=\"email\" type=\"email\" />\n      <FieldDescription>We will send the receipt here.</FieldDescription>\n    </Field>\n  )\n}",
-      "importPath": "@/components/ui/field",
-      "note": null,
-      "registryTarget": "@ui/field.tsx",
       "replacement": null,
       "unavailableReason": null
     }
@@ -13441,7 +13336,287 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7112, 3006, 7113, 61, 62, 63, 64, 65, 3008, 67, 68, 69, 70, 71, 3009, 72, 7114, 3010, 3011, 75, 76, 3012, 77, 78, 79, 80, 81, 82, 84, 85, 3013, 3014, 88, 1306, 1307, 1308, 1309, 1310, 1311, 1312, 1313, 1314, 1315, 1316, 1317, 1318, 1319, 1320, 1321, 1322, 1323, 7115, 1325, 3015, 1326, 1327, 1328, 1329, 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, 1339, 1340, 1341, 1342, 1343, 1344, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1360, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1370, 1371, 1372, 1373, 1374, 1375, 1376, 1377, 1378, 1379, 1380, 1381, 1382, 1383, 1384, 1385, 1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410, 1411, 1412, 1413, 1414, 1415, 1416, 1417, 1418, 1419, 1420, 1421, 1422, 1423, 1424, 1425, 1426, 1427, 1428, 1429, 1430, 1431, 1432, 1433, 1434, 1435, 1436, 1437, 1438, 1439, 1440, 1441, 1442, 1443, 1444, 1445, 1446, 1447, 1448, 1449, 1450, 1451, 1452, 1453, 1454, 1455, 1456, 1457, 1458, 1459, 1460, 1461, 1462, 1463, 3016, 249, 250, 251, 252, 3017, 1805, 254, 3018, 3019, 256, 257, 258, 259, 260, 261, 262, 3020, 264, 265, 266, 7116, 268, 269, 3021, 270, 7117, 272],
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 454, 455, 61, 62, 63, 64, 65, 456, 457, 7112, 67, 7113, 69, 70, 7114, 71, 7115, 72, 7116, 74, 7117, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 3765, 249, 250, 251, 252, 616, 254, 7118, 256, 257, 258, 259, 260, 261, 262, 617, 7119, 264, 265, 266, 7120, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "Field",
+          "ownedProps": [
+            {
+              "name": "title",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "required",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "disabled",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "fieldInfo",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "success",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "info",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "htmlFor",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "children",
+              "optional": true,
+              "type": "React.ReactNode"
+            }
+          ],
+          "propSources": [
+            "Omit<InternalFieldProps, 'children' | 'title'>"
+          ],
+          "signature": "const Field = React.forwardRef(…)"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldContent",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldContent"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 3606, 3607, 3608, 3609, 3610, 3611, 3612, 3613, 3614, 3615, 3616, 3617, 3618, 3619, 3620, 3621, 3622, 3623, 3624, 3625, 3626, 3627, 3628, 3629, 3630, 3631, 3632, 3633, 3634, 3635, 3636, 3637, 3638, 3639, 3640, 3641, 3642, 3643, 3644, 3645, 3646, 3647, 3648, 3649, 3650, 3651, 3652, 3653, 3654, 3655, 3656, 3657, 3658, 3659, 3660, 3661, 3662, 3663, 3664, 3665, 3666, 3667, 3668, 3669, 3670, 3671, 3672, 3673, 3674, 3675, 3676, 3677, 3678, 3679, 3680, 3681, 3682, 3683, 3684, 3685, 3686, 3687, 3688, 3689, 3690, 3691, 3692, 3693, 3694, 3695, 3696, 3697, 3698, 3699, 3700, 3701, 3702, 3703, 3704, 3705, 3706, 3707, 3708, 3709, 3710, 3711, 3712, 3713, 3714, 3715, 3716, 3717, 3718, 3719, 3720, 3721, 3722, 3723, 3724, 3725, 3726, 3727, 3728, 3729, 3730, 3731, 3732, 3733, 3734, 3735, 3736, 3737, 3738, 3739, 3740, 3741, 3742, 3743, 3744, 3745, 3746, 3747, 3748, 3749, 3750, 3751, 3752, 3753, 3754, 3755, 3756, 3757, 3758, 3759, 3760, 3761, 3762, 3763, 249, 250, 251, 252, 802, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldDescription",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldDescription"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 3926, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldError",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldError"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldGroup",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldGroup"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 280, 72, 3766, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 3767, 3768, 3769, 3770, 3771, 3772, 3773, 3774, 3775, 3776, 3777, 3778, 3779, 3780, 3781, 3782, 3783, 3784, 3785, 3786, 3787, 3788, 3789, 3790, 3791, 3792, 3793, 3794, 3795, 3796, 3797, 3798, 3799, 3800, 3801, 3802, 3803, 3804, 3805, 3806, 3807, 3808, 3809, 3810, 3811, 3812, 3813, 3814, 3815, 3816, 3817, 3818, 3819, 3820, 3821, 3822, 3823, 3824, 3825, 3826, 3827, 3828, 3829, 3830, 3831, 3832, 3833, 3834, 3835, 3836, 3837, 3838, 3839, 3840, 3841, 3842, 3843, 3844, 3845, 3846, 3847, 3848, 3849, 3850, 3851, 3852, 3853, 3854, 3855, 3856, 3857, 3858, 3859, 3860, 3861, 3862, 3863, 3864, 3865, 3866, 3867, 3868, 3869, 3870, 3871, 3872, 3873, 3874, 3875, 3876, 3877, 3878, 3879, 3880, 3881, 3882, 3883, 3884, 3885, 3886, 3887, 3888, 3889, 3890, 3891, 3892, 3893, 3894, 3895, 3896, 3897, 3898, 3899, 3900, 3901, 3902, 3903, 3904, 3905, 3906, 3907, 3908, 3909, 3910, 3911, 3912, 3913, 3914, 3915, 3916, 3917, 3918, 3919, 3920, 3921, 3922, 3923, 3924, 249, 250, 251, 252, 3925, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldLabel",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldLabel"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 3927, 3928, 3929, 3930, 3931, 3932, 3933, 3934, 3935, 3936, 3937, 3938, 3939, 3940, 3941, 3942, 3943, 3944, 3945, 3946, 3947, 3948, 3949, 3950, 3951, 3952, 3953, 3954, 3955, 3956, 3957, 3958, 3959, 3960, 3961, 3962, 3963, 3964, 3965, 3966, 3967, 3968, 3969, 3970, 3971, 3972, 3973, 3974, 3975, 3976, 3977, 3978, 3979, 3980, 3981, 3982, 3983, 3984, 3985, 3986, 3987, 3988, 3989, 3990, 3991, 3992, 3993, 3994, 3995, 3996, 3997, 3998, 3999, 4000, 4001, 4002, 4003, 4004, 4005, 4006, 4007, 4008, 4009, 4010, 4011, 4012, 4013, 4014, 4015, 4016, 4017, 4018, 4019, 4020, 4021, 4022, 4023, 4024, 4025, 4026, 4027, 4028, 4029, 4030, 4031, 4032, 4033, 4034, 4035, 4036, 4037, 4038, 4039, 4040, 4041, 4042, 4043, 4044, 4045, 4046, 4047, 4048, 4049, 4050, 4051, 4052, 4053, 4054, 4055, 4056, 4057, 4058, 4059, 4060, 4061, 4062, 4063, 4064, 4065, 4066, 4067, 4068, 4069, 4070, 4071, 4072, 4073, 4074, 4075, 4076, 4077, 4078, 4079, 4080, 4081, 4082, 4083, 4084, 249, 250, 251, 252, 4085, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 4086, 272],
+          "kind": "component",
+          "name": "FieldLegend",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldLegend"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 2376, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldSeparator",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldSeparator"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 279, 69, 70, 71, 280, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 286, 88, 4087, 4088, 4089, 4090, 4091, 4092, 4093, 4094, 4095, 4096, 4097, 4098, 4099, 4100, 4101, 4102, 4103, 4104, 4105, 4106, 4107, 4108, 4109, 4110, 4111, 4112, 4113, 4114, 4115, 4116, 4117, 4118, 4119, 4120, 4121, 4122, 4123, 4124, 4125, 4126, 4127, 4128, 4129, 4130, 4131, 4132, 4133, 4134, 4135, 4136, 4137, 4138, 4139, 4140, 4141, 4142, 4143, 4144, 4145, 4146, 4147, 4148, 4149, 4150, 4151, 4152, 4153, 4154, 4155, 4156, 4157, 4158, 4159, 4160, 4161, 4162, 4163, 4164, 4165, 4166, 4167, 4168, 4169, 4170, 4171, 4172, 4173, 4174, 4175, 4176, 4177, 4178, 4179, 4180, 4181, 4182, 4183, 4184, 4185, 4186, 4187, 4188, 4189, 4190, 4191, 4192, 4193, 4194, 4195, 4196, 4197, 4198, 4199, 4200, 4201, 4202, 4203, 4204, 4205, 4206, 4207, 4208, 4209, 4210, 4211, 4212, 4213, 4214, 4215, 4216, 4217, 4218, 4219, 4220, 4221, 4222, 4223, 4224, 4225, 4226, 4227, 4228, 4229, 4230, 4231, 4232, 4233, 4234, 4235, 4236, 4237, 4238, 4239, 4240, 4241, 4242, 4243, 4244, 249, 250, 251, 252, 4245, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldSet",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldSet"
+        },
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 616, 254, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 272],
+          "kind": "component",
+          "name": "FieldTitle",
+          "ownedProps": [],
+          "propSources": [],
+          "signature": "export FieldTitle"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "utility",
+          "name": "withField",
+          "ownedProps": [],
+          "propSources": [
+            "React.ComponentType<P>"
+          ],
+          "signature": "function withField<P extends object>(BaseComponent: React.ComponentType<P>)"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "FieldContext",
+          "ownedProps": [
+            {
+              "name": "error",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "disabled",
+              "optional": true,
+              "type": "boolean"
+            }
+          ],
+          "propSources": [],
+          "signature": "interface FieldContext"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "FieldProps",
+          "ownedProps": [
+            {
+              "name": "title",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "required",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "disabled",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "fieldInfo",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "success",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "info",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "htmlFor",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "children",
+              "optional": true,
+              "type": "React.ReactNode"
+            }
+          ],
+          "propSources": [
+            "Omit<InternalFieldProps, 'children' | 'title'>"
+          ],
+          "signature": "interface FieldProps"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "WithFieldProps",
+          "ownedProps": [
+            {
+              "name": "label",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "required",
+              "optional": true,
+              "type": "boolean"
+            }
+          ],
+          "propSources": [],
+          "signature": "interface WithFieldProps"
+        }
+      ]
+    },
+    "availability": "registry",
+    "category": "Applique facade",
+    "description": "Testing Applique-compatible Field composition backed by the shadcn Field compound primitives.",
+    "name": "Field",
+    "previewProvenance": "Applique-owned facade example",
+    "registryStatus": "testing",
+    "slug": "field",
+    "sourceAvailable": true,
+    "sourcePath": "src/facades/field.tsx",
+    "upstream": {
+      "base": "applique",
+      "commit": "705ce5961080264830471ddd885c01b907706068",
+      "style": "facade"
+    },
+    "clientContract": {
+      "basicUsage": "import { Field, FieldDescription, FieldLabel } from \"@/components/applique/field\"\n\nexport function BasicExample() {\n  return (\n    <Field>\n      <FieldLabel htmlFor=\"email\">Email</FieldLabel>\n      <input id=\"email\" name=\"email\" type=\"email\" />\n      <FieldDescription>We will send the receipt here.</FieldDescription>\n    </Field>\n  )\n}",
+      "importPath": "@/components/applique/field",
+      "note": null,
+      "registryTarget": "@components/applique/field.tsx",
+      "replacement": null,
+      "unavailableReason": null
+    }
+  },
+  {
+    "api": {
+      "exports": [
+        {
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7121, 3006, 7122, 61, 62, 63, 64, 65, 3008, 67, 68, 69, 70, 71, 3009, 72, 7123, 3010, 3011, 75, 76, 3012, 77, 78, 79, 80, 81, 82, 84, 85, 3013, 3014, 88, 1306, 1307, 1308, 1309, 1310, 1311, 1312, 1313, 1314, 1315, 1316, 1317, 1318, 1319, 1320, 1321, 1322, 1323, 7124, 1325, 3015, 1326, 1327, 1328, 1329, 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, 1339, 1340, 1341, 1342, 1343, 1344, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1360, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1370, 1371, 1372, 1373, 1374, 1375, 1376, 1377, 1378, 1379, 1380, 1381, 1382, 1383, 1384, 1385, 1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410, 1411, 1412, 1413, 1414, 1415, 1416, 1417, 1418, 1419, 1420, 1421, 1422, 1423, 1424, 1425, 1426, 1427, 1428, 1429, 1430, 1431, 1432, 1433, 1434, 1435, 1436, 1437, 1438, 1439, 1440, 1441, 1442, 1443, 1444, 1445, 1446, 1447, 1448, 1449, 1450, 1451, 1452, 1453, 1454, 1455, 1456, 1457, 1458, 1459, 1460, 1461, 1462, 1463, 3016, 249, 250, 251, 252, 3017, 1805, 254, 3018, 3019, 256, 257, 258, 259, 260, 261, 262, 3020, 264, 265, 266, 7125, 268, 269, 3021, 270, 7126, 272],
           "kind": "component",
           "name": "InputCheckbox",
           "ownedProps": [
@@ -13551,7 +13726,217 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 3072, 1, 1468, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 3073, 56, 57, 58, 3074, 3075, 454, 455, 61, 62, 63, 64, 65, 456, 67, 279, 69, 70, 71, 280, 281, 282, 283, 284, 285, 1473, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 3077, 2546, 3078, 2548, 3079, 3080, 286, 88, 3314, 3315, 3316, 3317, 3318, 3319, 3320, 3321, 3322, 3323, 3324, 3325, 3326, 3327, 3328, 3329, 3330, 3331, 7118, 3332, 3333, 3334, 3335, 3336, 3337, 3338, 3339, 3340, 3341, 3342, 3343, 3344, 3345, 3346, 3347, 3348, 3349, 3350, 3351, 3352, 3353, 3354, 3355, 3356, 3357, 3358, 3359, 3360, 3361, 3362, 3363, 3364, 3365, 3366, 3367, 3368, 3369, 3370, 3371, 3372, 3373, 3374, 3375, 3376, 3377, 3378, 3379, 3380, 3381, 3382, 3383, 3384, 3385, 3386, 3387, 3388, 3389, 3390, 3391, 3392, 3393, 3394, 3395, 3396, 3397, 3398, 3399, 3400, 3401, 3402, 3403, 3404, 3405, 3406, 3407, 3408, 3409, 3410, 3411, 3412, 3413, 3414, 3415, 3416, 3417, 3418, 3419, 3420, 3421, 3422, 3423, 3424, 3425, 3426, 3427, 3428, 3429, 3430, 3431, 3432, 3433, 3434, 3435, 3436, 3437, 3438, 3439, 3440, 3441, 3442, 3443, 3444, 3445, 3446, 3447, 3448, 3449, 3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459, 3460, 3461, 3462, 3463, 3464, 3466, 3467, 3468, 3469, 3470, 3471, 249, 3239, 3240, 250, 251, 252, 3241, 3472, 254, 3244, 256, 257, 258, 259, 260, 3247, 261, 262, 1638, 3248, 617, 264, 265, 266, 267, 268, 7119, 269, 270, 7120, 272, 1642],
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 454, 455, 61, 62, 63, 64, 65, 456, 7127, 67, 7128, 7129, 69, 70, 7130, 71, 7131, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 7132, 85, 7133, 7134, 88, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 7135, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 249, 250, 251, 252, 7136, 616, 254, 7137, 256, 257, 258, 259, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 7138, 272, 7139],
+          "kind": "component",
+          "name": "InputDate",
+          "ownedProps": [
+            {
+              "name": "value",
+              "optional": true,
+              "type": "InputDateValue | InputDateRange | null"
+            },
+            {
+              "name": "onChange",
+              "optional": true,
+              "type": "(value: InputDateValue | InputDateRange | null) => void"
+            },
+            {
+              "name": "range",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "format",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "displayFormat",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "label",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "name",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "required",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "disabled",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "monthsToDisplay",
+              "optional": true,
+              "type": "number"
+            },
+            {
+              "name": "wrapperClassName",
+              "optional": true,
+              "type": "string"
+            }
+          ],
+          "propSources": [
+            "Omit< React.HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange' >"
+          ],
+          "signature": "const InputDate = React.forwardRef(…)"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "InputDateProps",
+          "ownedProps": [
+            {
+              "name": "value",
+              "optional": true,
+              "type": "InputDateValue | InputDateRange | null"
+            },
+            {
+              "name": "onChange",
+              "optional": true,
+              "type": "(value: InputDateValue | InputDateRange | null) => void"
+            },
+            {
+              "name": "range",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "format",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "displayFormat",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "label",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "name",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "required",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "disabled",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "monthsToDisplay",
+              "optional": true,
+              "type": "number"
+            },
+            {
+              "name": "wrapperClassName",
+              "optional": true,
+              "type": "string"
+            }
+          ],
+          "propSources": [
+            "Omit< React.HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange' >"
+          ],
+          "signature": "interface InputDateProps"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "InputDateRange",
+          "ownedProps": [
+            {
+              "name": "from",
+              "optional": true,
+              "type": "InputDateValue"
+            },
+            {
+              "name": "to",
+              "optional": true,
+              "type": "InputDateValue"
+            }
+          ],
+          "propSources": [],
+          "signature": "interface InputDateRange"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "InputDateValue",
+          "ownedProps": [],
+          "propSources": [
+            "Date",
+            "string"
+          ],
+          "signature": "type InputDateValue = Date | string"
+        }
+      ]
+    },
+    "availability": "registry",
+    "category": "Applique facade",
+    "description": "Testing Applique-compatible single and range date picker composed from shadcn Field, Popover, Calendar, and Button primitives.",
+    "name": "Input Date",
+    "previewProvenance": "Applique-owned facade example",
+    "registryStatus": "testing",
+    "slug": "input-date",
+    "sourceAvailable": true,
+    "sourcePath": "src/facades/input-date.tsx",
+    "upstream": {
+      "base": "applique",
+      "commit": "705ce5961080264830471ddd885c01b907706068",
+      "style": "facade"
+    },
+    "clientContract": {
+      "basicUsage": "import * as React from \"react\"\n\nimport { InputDate } from \"@/components/applique/input-date\"\n\nexport function BasicExample() {\n  const [lastUpdatedOn, setLastUpdatedOn] = React.useState(\"2026-08-05\")\n\n  return (\n    <InputDate\n      label=\"Last Updated On\"\n      description=\"Select last updated date\"\n      format=\"yyyy-MM-dd\"\n      value={lastUpdatedOn}\n      onChange={setLastUpdatedOn}\n    />\n  )\n}",
+      "importPath": "@/components/applique/input-date",
+      "note": "Single dates emit immediately. In range mode the first click stays inside the facade and onChange receives only a completed range.",
+      "registryTarget": "@components/applique/input-date.tsx",
+      "replacement": null,
+      "unavailableReason": null
+    }
+  },
+  {
+    "api": {
+      "exports": [
+        {
+          "acceptedPropIds": [0, 3072, 1, 1468, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 3073, 56, 57, 58, 3074, 3075, 454, 455, 61, 62, 63, 64, 65, 456, 67, 279, 69, 70, 71, 280, 281, 282, 283, 284, 285, 1473, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 3077, 2546, 3078, 2548, 3079, 3080, 286, 88, 3314, 3315, 3316, 3317, 3318, 3319, 3320, 3321, 3322, 3323, 3324, 3325, 3326, 3327, 3328, 3329, 3330, 3331, 7140, 3332, 3333, 3334, 3335, 3336, 3337, 3338, 3339, 3340, 3341, 3342, 3343, 3344, 3345, 3346, 3347, 3348, 3349, 3350, 3351, 3352, 3353, 3354, 3355, 3356, 3357, 3358, 3359, 3360, 3361, 3362, 3363, 3364, 3365, 3366, 3367, 3368, 3369, 3370, 3371, 3372, 3373, 3374, 3375, 3376, 3377, 3378, 3379, 3380, 3381, 3382, 3383, 3384, 3385, 3386, 3387, 3388, 3389, 3390, 3391, 3392, 3393, 3394, 3395, 3396, 3397, 3398, 3399, 3400, 3401, 3402, 3403, 3404, 3405, 3406, 3407, 3408, 3409, 3410, 3411, 3412, 3413, 3414, 3415, 3416, 3417, 3418, 3419, 3420, 3421, 3422, 3423, 3424, 3425, 3426, 3427, 3428, 3429, 3430, 3431, 3432, 3433, 3434, 3435, 3436, 3437, 3438, 3439, 3440, 3441, 3442, 3443, 3444, 3445, 3446, 3447, 3448, 3449, 3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459, 3460, 3461, 3462, 3463, 3464, 3466, 3467, 3468, 3469, 3470, 3471, 249, 3239, 3240, 250, 251, 252, 3241, 3472, 254, 3244, 256, 257, 258, 259, 260, 3247, 261, 262, 1638, 3248, 617, 264, 265, 266, 267, 268, 7141, 269, 270, 7142, 272, 1642],
           "kind": "component",
           "name": "InputNumber",
           "ownedProps": [
@@ -13631,7 +14016,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 5824, 61, 62, 63, 64, 65, 7121, 67, 68, 69, 70, 71, 5826, 72, 74, 75, 76, 5827, 77, 78, 79, 80, 81, 82, 84, 85, 3013, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 7122, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 7123, 242, 243, 244, 245, 246, 247, 7124, 249, 250, 251, 252, 5829, 616, 254, 5830, 7125, 3069, 256, 257, 258, 259, 260, 261, 262, 5831, 264, 265, 266, 267, 268, 269, 270, 7126, 272],
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 5824, 61, 62, 63, 64, 65, 7143, 67, 68, 69, 70, 71, 5826, 72, 74, 75, 76, 5827, 77, 78, 79, 80, 81, 82, 84, 85, 3013, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 7144, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 7145, 242, 243, 244, 245, 246, 247, 7146, 249, 250, 251, 252, 5829, 616, 254, 5830, 7147, 3069, 256, 257, 258, 259, 260, 261, 262, 5831, 264, 265, 266, 267, 268, 269, 270, 7148, 272],
           "kind": "component",
           "name": "InputRadio",
           "ownedProps": [
@@ -13765,7 +14150,277 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 3072, 1, 1468, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 3073, 56, 57, 58, 3074, 3075, 454, 455, 61, 62, 63, 64, 65, 456, 67, 279, 69, 70, 71, 280, 281, 282, 283, 284, 285, 1473, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 3077, 2546, 3078, 2548, 3079, 3080, 286, 88, 3314, 3315, 3316, 3317, 3318, 3319, 3320, 3321, 3322, 3323, 3324, 3325, 3326, 3327, 3328, 3329, 3330, 3331, 7127, 3332, 3333, 3334, 3335, 3336, 3337, 3338, 3339, 3340, 3341, 3342, 3343, 3344, 3345, 3346, 3347, 3348, 3349, 3350, 3351, 3352, 3353, 3354, 3355, 3356, 3357, 3358, 3359, 3360, 3361, 3362, 3363, 3364, 3365, 3366, 3367, 3368, 3369, 3370, 3371, 3372, 3373, 3374, 3375, 3376, 3377, 3378, 3379, 3380, 3381, 3382, 3383, 3384, 3385, 3386, 3387, 3388, 3389, 3390, 3391, 3392, 3393, 3394, 3395, 3396, 3397, 3398, 3399, 3400, 3401, 3402, 3403, 3404, 3405, 3406, 3407, 3408, 3409, 3410, 3411, 3412, 3413, 3414, 3415, 3416, 3417, 3418, 3419, 3420, 3421, 3422, 3423, 3424, 3425, 3426, 3427, 3428, 3429, 3430, 3431, 3432, 3433, 3434, 3435, 3436, 3437, 3438, 3439, 3440, 3441, 3442, 3443, 3444, 3445, 3446, 3447, 3448, 3449, 3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459, 3460, 3461, 3462, 3463, 3464, 3466, 3467, 3468, 3469, 3470, 3471, 249, 3239, 3240, 250, 251, 252, 3241, 3472, 254, 3244, 256, 257, 258, 259, 260, 3247, 261, 262, 1638, 3248, 617, 264, 265, 266, 267, 268, 7128, 269, 270, 7129, 272, 1642],
+          "acceptedPropIds": [0, 3072, 1, 1468, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 3073, 56, 57, 58, 3074, 3075, 7149, 455, 61, 62, 63, 64, 65, 456, 7150, 67, 7089, 69, 70, 7151, 71, 280, 281, 282, 283, 284, 285, 1473, 72, 7152, 75, 76, 77, 7153, 78, 79, 80, 81, 82, 84, 7154, 7155, 85, 3077, 2546, 3078, 2548, 3079, 7156, 7157, 88, 3314, 3315, 3316, 3317, 3318, 3319, 3320, 3321, 3322, 3323, 3324, 3325, 3326, 3327, 3328, 3329, 3330, 3331, 7158, 3332, 3333, 3334, 3335, 3336, 3337, 3338, 3339, 3340, 3341, 3342, 3343, 3344, 3345, 3346, 3347, 3348, 3349, 3350, 3351, 3352, 3353, 3354, 3355, 3356, 3357, 3358, 3359, 3360, 3361, 3362, 3363, 3364, 3365, 3366, 3367, 3368, 3369, 3370, 3371, 3372, 3373, 3374, 3375, 3376, 3377, 3378, 3379, 3380, 3381, 3382, 3383, 3384, 3385, 3386, 3387, 3388, 3389, 3390, 3391, 3392, 3393, 3394, 3395, 3396, 3397, 3398, 3399, 3400, 3401, 3402, 3403, 3404, 3405, 3406, 3407, 3408, 3409, 3410, 3411, 3412, 3413, 3414, 3415, 3416, 3417, 3418, 3419, 3420, 3421, 3422, 3423, 3424, 3425, 3426, 3427, 3428, 3429, 3430, 3431, 3432, 3433, 3434, 3435, 3436, 3437, 3438, 3439, 3440, 7159, 3441, 3442, 3443, 3444, 3445, 3446, 3447, 3448, 3449, 3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459, 3460, 3461, 3462, 3463, 3464, 3466, 3467, 3468, 3469, 3470, 3471, 7160, 249, 3239, 7161, 250, 251, 252, 7162, 3472, 254, 7163, 256, 257, 258, 259, 7164, 260, 3247, 261, 262, 1638, 3248, 617, 264, 265, 266, 267, 268, 3250, 269, 270, 7165, 7166, 272, 1642],
+          "kind": "component",
+          "name": "InputSelect",
+          "ownedProps": [
+            {
+              "name": "options",
+              "optional": true,
+              "type": "readonly InputSelectOption[]"
+            },
+            {
+              "name": "value",
+              "optional": true,
+              "type": "InputSelectValue | readonly InputSelectValue[] | null"
+            },
+            {
+              "name": "onChange",
+              "optional": true,
+              "type": "(value: InputSelectValue | InputSelectValue[] | null) => void"
+            },
+            {
+              "name": "multiple",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "placeholder",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "searchable",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "onSearch",
+              "optional": true,
+              "type": "(text: string) => void"
+            },
+            {
+              "name": "isLoading",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "label",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "disabled",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "readOnly",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "required",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "name",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "id",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "className",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "labelKey",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "valueKey",
+              "optional": true,
+              "type": "string"
+            }
+          ],
+          "propSources": [
+            "NativeInputProps"
+          ],
+          "signature": "const InputSelect = React.forwardRef(…)"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "InputSelectOption",
+          "ownedProps": [
+            {
+              "name": "label",
+              "optional": true,
+              "type": "string | number"
+            },
+            {
+              "name": "value",
+              "optional": true,
+              "type": "InputSelectValue"
+            }
+          ],
+          "propSources": [],
+          "signature": "interface InputSelectOption"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "InputSelectProps",
+          "ownedProps": [
+            {
+              "name": "options",
+              "optional": true,
+              "type": "readonly InputSelectOption[]"
+            },
+            {
+              "name": "value",
+              "optional": true,
+              "type": "InputSelectValue | readonly InputSelectValue[] | null"
+            },
+            {
+              "name": "onChange",
+              "optional": true,
+              "type": "(value: InputSelectValue | InputSelectValue[] | null) => void"
+            },
+            {
+              "name": "multiple",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "placeholder",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "searchable",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "onSearch",
+              "optional": true,
+              "type": "(text: string) => void"
+            },
+            {
+              "name": "isLoading",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "label",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": "React.ReactNode"
+            },
+            {
+              "name": "disabled",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "readOnly",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "required",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "name",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "id",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "className",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "labelKey",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "valueKey",
+              "optional": true,
+              "type": "string"
+            }
+          ],
+          "propSources": [
+            "NativeInputProps"
+          ],
+          "signature": "interface InputSelectProps"
+        },
+        {
+          "acceptedPropIds": [],
+          "kind": "type",
+          "name": "InputSelectValue",
+          "ownedProps": [],
+          "propSources": [
+            "string",
+            "number"
+          ],
+          "signature": "type InputSelectValue = string | number"
+        }
+      ]
+    },
+    "availability": "registry",
+    "category": "Applique facade",
+    "description": "Testing Applique-compatible primitive-value select composed from the shadcn Combobox, Field, and Spinner primitives.",
+    "name": "Input Select",
+    "previewProvenance": "Applique-owned facade example",
+    "registryStatus": "testing",
+    "slug": "input-select",
+    "sourceAvailable": true,
+    "sourcePath": "src/facades/input-select.tsx",
+    "upstream": {
+      "base": "applique",
+      "commit": "705ce5961080264830471ddd885c01b907706068",
+      "style": "facade"
+    },
+    "clientContract": {
+      "basicUsage": "import * as React from \"react\"\n\nimport { InputSelect } from \"@/components/applique/input-select\"\n\nexport function BasicExample() {\n  const sourceOptions = [{ label: \"DIY\", value: \"DIY\" }, { label: \"OI\", value: \"OI_VENDOR\" }]\n  const [source, setSource] = React.useState(\"DIY\")\n\n  return (\n    <InputSelect\n      aria-label=\"Source\"\n      options={sourceOptions}\n      placeholder=\"Source\"\n      value={source}\n      onChange={setSource}\n    />\n  )\n}",
+      "importPath": "@/components/applique/input-select",
+      "note": "The facade resolves primitive client values to internal option objects and returns only primitive values from onChange.",
+      "registryTarget": "@components/applique/input-select.tsx",
+      "replacement": null,
+      "unavailableReason": null
+    }
+  },
+  {
+    "api": {
+      "exports": [
+        {
+          "acceptedPropIds": [7167, 0, 3072, 1, 1468, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 3073, 56, 57, 58, 3074, 3075, 454, 455, 61, 62, 63, 64, 65, 456, 67, 279, 69, 70, 7168, 71, 280, 281, 282, 283, 284, 285, 1473, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 3077, 2546, 3078, 2548, 3079, 3080, 286, 88, 3314, 3315, 3316, 3317, 3318, 3319, 3320, 3321, 3322, 3323, 3324, 3325, 3326, 3327, 3328, 3329, 3330, 3331, 7169, 3332, 3333, 3334, 3335, 3336, 3337, 3338, 3339, 3340, 3341, 3342, 3343, 3344, 3345, 3346, 3347, 3348, 3349, 3350, 3351, 3352, 3353, 3354, 3355, 3356, 3357, 3358, 3359, 3360, 3361, 3362, 3363, 3364, 3365, 3366, 3367, 3368, 3369, 3370, 3371, 3372, 3373, 3374, 3375, 3376, 3377, 3378, 3379, 3380, 3381, 3382, 3383, 3384, 3385, 3386, 3387, 3388, 3389, 3390, 3391, 3392, 3393, 3394, 3395, 3396, 3397, 3398, 3399, 3400, 3401, 3402, 3403, 3404, 3405, 3406, 3407, 3408, 3409, 3410, 3411, 3412, 3413, 3414, 3415, 3416, 3417, 3418, 3419, 3420, 3421, 3422, 3423, 3424, 3425, 3426, 3427, 3428, 3429, 3430, 3431, 3432, 3433, 3434, 3435, 3436, 3437, 3438, 3439, 3440, 3441, 3442, 3443, 3444, 3445, 3446, 3447, 3448, 3449, 3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459, 3460, 3461, 3462, 3463, 3464, 3466, 3467, 3468, 3469, 3470, 3471, 249, 3239, 3240, 250, 251, 252, 3241, 3472, 254, 3244, 256, 257, 258, 259, 260, 3247, 261, 262, 1638, 3248, 617, 264, 265, 266, 267, 268, 7170, 269, 270, 7171, 272, 1642],
           "kind": "component",
           "name": "InputText",
           "ownedProps": [
@@ -13783,6 +14438,16 @@ export const generatedCatalogueComponents = [
               "name": "onChange",
               "optional": true,
               "type": "(value: string) => void"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "__fieldContext",
+              "optional": true,
+              "type": "{ disabled?: boolean error?: boolean }"
             }
           ],
           "propSources": [
@@ -13809,6 +14474,16 @@ export const generatedCatalogueComponents = [
               "name": "onChange",
               "optional": true,
               "type": "(value: string) => void"
+            },
+            {
+              "name": "error",
+              "optional": true,
+              "type": "React.ReactNode | boolean"
+            },
+            {
+              "name": "__fieldContext",
+              "optional": true,
+              "type": "{ disabled?: boolean error?: boolean }"
             }
           ],
           "propSources": [
@@ -13845,7 +14520,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [7130, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 4427, 56, 57, 58, 7131, 455, 4428, 61, 62, 63, 64, 65, 456, 457, 67, 4429, 279, 69, 70, 7132, 71, 280, 72, 7068, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 3078, 3079, 286, 88, 7133, 4430, 4431, 4432, 4433, 4434, 4435, 4436, 4437, 4438, 4439, 4440, 4441, 4442, 4443, 4444, 4445, 4446, 4447, 7127, 4449, 4450, 4451, 4452, 4453, 4454, 4455, 4456, 4457, 4458, 4459, 4460, 4461, 4462, 4463, 4464, 4465, 4466, 4467, 4468, 4469, 4470, 4471, 4472, 4473, 4474, 4475, 4476, 4477, 4478, 4479, 4480, 4481, 4482, 4483, 4484, 4485, 4486, 4487, 4488, 4489, 4490, 4491, 4492, 4493, 4494, 4495, 4496, 4497, 4498, 4499, 4500, 4501, 4502, 4503, 4504, 4505, 4506, 4507, 4508, 4509, 4510, 4511, 4512, 4513, 4514, 4515, 4516, 4517, 4518, 4519, 4520, 4521, 4522, 4523, 4524, 4525, 4526, 4527, 4528, 4529, 4530, 4531, 4532, 4533, 4534, 4535, 4536, 4537, 4538, 4539, 4540, 4541, 4542, 4543, 4544, 4545, 4546, 4547, 4548, 4549, 4550, 4551, 4552, 4553, 4554, 4555, 4556, 4557, 4558, 4559, 4560, 4561, 4562, 4563, 4564, 4565, 4566, 4567, 4568, 4569, 4570, 4571, 4572, 4573, 4574, 4575, 4576, 4577, 4578, 4579, 4580, 4581, 4582, 4583, 4584, 4585, 4586, 4587, 249, 3240, 250, 251, 252, 3241, 4588, 254, 3244, 256, 257, 258, 259, 4589, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 7134, 7135, 272, 4590],
+          "acceptedPropIds": [7172, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 4427, 56, 57, 58, 7173, 455, 4428, 61, 62, 63, 64, 65, 456, 457, 67, 4429, 279, 69, 70, 7174, 71, 280, 72, 7068, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 3078, 3079, 286, 88, 7175, 4430, 4431, 4432, 4433, 4434, 4435, 4436, 4437, 4438, 4439, 4440, 4441, 4442, 4443, 4444, 4445, 4446, 4447, 7169, 4449, 4450, 4451, 4452, 4453, 4454, 4455, 4456, 4457, 4458, 4459, 4460, 4461, 4462, 4463, 4464, 4465, 4466, 4467, 4468, 4469, 4470, 4471, 4472, 4473, 4474, 4475, 4476, 4477, 4478, 4479, 4480, 4481, 4482, 4483, 4484, 4485, 4486, 4487, 4488, 4489, 4490, 4491, 4492, 4493, 4494, 4495, 4496, 4497, 4498, 4499, 4500, 4501, 4502, 4503, 4504, 4505, 4506, 4507, 4508, 4509, 4510, 4511, 4512, 4513, 4514, 4515, 4516, 4517, 4518, 4519, 4520, 4521, 4522, 4523, 4524, 4525, 4526, 4527, 4528, 4529, 4530, 4531, 4532, 4533, 4534, 4535, 4536, 4537, 4538, 4539, 4540, 4541, 4542, 4543, 4544, 4545, 4546, 4547, 4548, 4549, 4550, 4551, 4552, 4553, 4554, 4555, 4556, 4557, 4558, 4559, 4560, 4561, 4562, 4563, 4564, 4565, 4566, 4567, 4568, 4569, 4570, 4571, 4572, 4573, 4574, 4575, 4576, 4577, 4578, 4579, 4580, 4581, 4582, 4583, 4584, 4585, 4586, 4587, 249, 3240, 250, 251, 252, 3241, 4588, 254, 3244, 256, 257, 258, 259, 4589, 260, 261, 262, 617, 264, 265, 266, 267, 268, 269, 270, 7176, 7177, 272, 4590],
           "kind": "component",
           "name": "InputTextArea",
           "ownedProps": [
@@ -13994,7 +14669,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 7136, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7137, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 7138, 1647, 1648, 1649, 1650, 1651, 1652, 1653, 1654, 1655, 1656, 1657, 1658, 1659, 1660, 1661, 1662, 1663, 1664, 1665, 1666, 1667, 1668, 1669, 1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677, 1678, 1679, 1680, 1681, 1682, 1683, 1684, 1685, 1686, 1687, 1688, 1689, 1690, 1691, 1692, 1693, 1694, 1695, 1696, 1697, 1698, 1699, 1700, 1701, 1702, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1711, 1712, 1713, 1714, 1715, 1716, 1717, 1718, 1719, 1720, 1721, 1722, 1723, 1724, 1725, 1726, 1727, 1728, 1729, 1730, 1731, 1732, 1733, 1734, 1735, 1736, 1737, 1738, 1739, 1740, 1741, 1742, 1743, 1744, 1745, 1746, 1747, 1748, 1749, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1758, 1759, 1760, 1761, 1762, 1763, 1764, 1765, 1766, 1767, 1768, 1769, 1770, 1771, 1772, 1773, 1774, 1775, 1776, 1777, 1778, 1779, 1780, 1781, 1782, 1783, 1784, 1785, 1786, 1787, 1788, 1789, 1790, 1791, 1792, 1793, 1794, 1795, 1796, 1797, 1798, 1799, 1800, 1801, 1802, 1803, 1804, 249, 250, 251, 252, 1805, 254, 256, 257, 258, 259, 260, 7139, 261, 262, 617, 264, 265, 266, 7140, 268, 269, 270, 272],
+          "acceptedPropIds": [0, 1, 7178, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7179, 454, 455, 61, 62, 63, 64, 65, 456, 457, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 7180, 1647, 1648, 1649, 1650, 1651, 1652, 1653, 1654, 1655, 1656, 1657, 1658, 1659, 1660, 1661, 1662, 1663, 1664, 1665, 1666, 1667, 1668, 1669, 1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677, 1678, 1679, 1680, 1681, 1682, 1683, 1684, 1685, 1686, 1687, 1688, 1689, 1690, 1691, 1692, 1693, 1694, 1695, 1696, 1697, 1698, 1699, 1700, 1701, 1702, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1711, 1712, 1713, 1714, 1715, 1716, 1717, 1718, 1719, 1720, 1721, 1722, 1723, 1724, 1725, 1726, 1727, 1728, 1729, 1730, 1731, 1732, 1733, 1734, 1735, 1736, 1737, 1738, 1739, 1740, 1741, 1742, 1743, 1744, 1745, 1746, 1747, 1748, 1749, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1758, 1759, 1760, 1761, 1762, 1763, 1764, 1765, 1766, 1767, 1768, 1769, 1770, 1771, 1772, 1773, 1774, 1775, 1776, 1777, 1778, 1779, 1780, 1781, 1782, 1783, 1784, 1785, 1786, 1787, 1788, 1789, 1790, 1791, 1792, 1793, 1794, 1795, 1796, 1797, 1798, 1799, 1800, 1801, 1802, 1803, 1804, 249, 250, 251, 252, 1805, 254, 256, 257, 258, 259, 260, 7181, 261, 262, 617, 264, 265, 266, 7182, 268, 269, 270, 272],
           "kind": "component",
           "name": "Section",
           "ownedProps": [
@@ -14094,7 +14769,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6973, 61, 62, 63, 64, 65, 67, 7141, 69, 70, 71, 280, 281, 282, 283, 284, 285, 72, 74, 75, 76, 77, 7142, 78, 79, 80, 81, 82, 84, 85, 286, 287, 88, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 249, 250, 251, 252, 254, 6975, 256, 257, 258, 259, 260, 261, 262, 6976, 264, 265, 266, 7143, 268, 449, 269, 270, 272],
+          "acceptedPropIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6973, 61, 62, 63, 64, 65, 67, 7183, 69, 70, 71, 280, 281, 282, 283, 284, 285, 72, 74, 75, 76, 77, 7184, 78, 79, 80, 81, 82, 84, 85, 286, 287, 88, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 249, 250, 251, 252, 254, 6975, 256, 257, 258, 259, 260, 261, 262, 6976, 264, 265, 266, 7185, 268, 449, 269, 270, 272],
           "kind": "component",
           "name": "Tab",
           "ownedProps": [
@@ -14125,7 +14800,7 @@ export const generatedCatalogueComponents = [
           "signature": "function Tab(_props: TabProps): React.ReactElement | null"
         },
         {
-          "acceptedPropIds": [0, 1, 7144, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6961, 61, 62, 63, 64, 65, 7145, 6962, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 7146, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 7147, 242, 243, 244, 245, 246, 247, 6964, 249, 250, 251, 252, 616, 254, 6965, 256, 257, 258, 259, 260, 261, 262, 6966, 264, 265, 266, 267, 268, 7148, 269, 270, 6967, 7149, 272],
+          "acceptedPropIds": [0, 1, 7186, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7056, 6961, 61, 62, 63, 64, 65, 7187, 6962, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 7188, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 7189, 242, 243, 244, 245, 246, 247, 6964, 249, 250, 251, 252, 616, 254, 6965, 256, 257, 258, 259, 260, 261, 262, 6966, 264, 265, 266, 267, 268, 7190, 269, 270, 6967, 7191, 272],
           "kind": "component",
           "name": "Tabs",
           "ownedProps": [],
@@ -14233,7 +14908,7 @@ export const generatedCatalogueComponents = [
     "api": {
       "exports": [
         {
-          "acceptedPropIds": [0, 1, 3251, 3252, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7150, 7151, 7152, 61, 62, 63, 64, 7153, 65, 7030, 7154, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 7155, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 242, 243, 244, 245, 246, 247, 7037, 249, 7156, 250, 251, 252, 616, 254, 7050, 7157, 256, 257, 258, 259, 260, 3258, 3259, 261, 262, 7051, 264, 265, 266, 267, 268, 7158, 269, 270, 272],
+          "acceptedPropIds": [0, 1, 3251, 3252, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 7192, 7193, 7194, 61, 62, 63, 64, 7195, 65, 7030, 7196, 67, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 7197, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 242, 243, 244, 245, 246, 247, 7037, 249, 7198, 250, 251, 252, 616, 254, 7050, 7199, 256, 257, 258, 259, 260, 3258, 3259, 261, 262, 7051, 264, 265, 266, 267, 268, 7200, 269, 270, 272],
           "kind": "component",
           "name": "Tooltip",
           "ownedProps": [
@@ -15499,19 +16174,36 @@ export const generatedCatalogueMappings = [
         "summary": "Forward attributes such as autoFocus, readOnly, maxLength, pattern, inputMode, autoComplete, aria/data attributes, and DOM handlers."
       },
       {
+        "id": "field-context",
+        "kind": "composition-owned",
+        "from": [
+          "error",
+          "__fieldContext"
+        ],
+        "targets": [
+          {
+            "component": "input",
+            "prop": "disabled"
+          },
+          {
+            "component": "input",
+            "prop": "aria-invalid"
+          }
+        ],
+        "summary": "Combine direct and Field-provided disabled and error state, then expose it through native disabled and aria-invalid attributes."
+      },
+      {
         "id": "advanced-input-features",
         "kind": "unsupported",
         "from": [
           "icon",
           "adornment",
           "adornmentPosition",
-          "error",
           "active",
-          "variant",
-          "__fieldContext"
+          "variant"
         ],
         "targets": [],
-        "summary": "The Basic InputText pilot intentionally defers composition, validation context, and legacy wrapper styling."
+        "summary": "The Basic InputText pilot intentionally defers icon composition and legacy wrapper styling."
       }
     ],
     "review": "proposed",
@@ -18048,10 +18740,14 @@ export const generatedCatalogueMappings = [
     "shadcn": [
       "calendar",
       "popover",
-      "input",
-      "button"
+      "button",
+      "field"
     ],
-    "summary": "Compose the field, trigger, overlay, and calendar; range, time, presets, and formatting remain Applique-owned.",
+    "summary": "The testing facade composes Field, a button-like trigger, Popover, and Calendar. It implements single and completed-range selection while advanced legacy date behavior remains under review.",
+    "legacyDocumentationIgnoredExports": [
+      "InputDatePicker",
+      "InputDateValue"
+    ],
     "propMappings": [
       {
         "id": "value",
@@ -18065,8 +18761,8 @@ export const generatedCatalogueMappings = [
             "prop": "selected"
           },
           {
-            "component": "input",
-            "prop": "value"
+            "component": "button",
+            "prop": "children"
           }
         ],
         "summary": "Parse Date, string, DateRange, or StringDateRange into Calendar selection state and formatted trigger text."
@@ -18081,10 +18777,6 @@ export const generatedCatalogueMappings = [
           {
             "component": "calendar",
             "prop": "onSelect"
-          },
-          {
-            "component": "input",
-            "prop": "onChange"
           }
         ],
         "summary": "Normalize the selection, preserve range ordering, and serialize back to the caller's Date or formatted-string contract."
@@ -18123,7 +18815,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "disabled-ranges",
-        "kind": "mapped",
+        "kind": "needs-review",
         "from": [
           "disabledRanges"
         ],
@@ -18137,7 +18829,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "year-month-change",
-        "kind": "mapped",
+        "kind": "needs-review",
         "from": [
           "onYearMonthChange"
         ],
@@ -18151,7 +18843,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "render-date",
-        "kind": "mapped",
+        "kind": "needs-review",
         "from": [
           "renderDate"
         ],
@@ -18173,17 +18865,9 @@ export const generatedCatalogueMappings = [
           {
             "component": "button",
             "prop": "disabled"
-          },
-          {
-            "component": "input",
-            "prop": "disabled"
-          },
-          {
-            "component": "calendar",
-            "prop": "disabled"
           }
         ],
-        "summary": "Fan the effective disabled state across the trigger, editable input, and calendar interaction."
+        "summary": "Disable the trigger and guard the facade's open and selection handlers so the calendar cannot be used."
       },
       {
         "id": "format",
@@ -18193,14 +18877,11 @@ export const generatedCatalogueMappings = [
         ],
         "targets": [
           {
-            "component": "calendar"
-          },
-          {
-            "component": "input",
-            "prop": "value"
+            "component": "button",
+            "prop": "children"
           }
         ],
-        "summary": "Own parsing and output serialization around Calendar; this is not a primitive presentation prop."
+        "summary": "Own parsing and output serialization around Calendar, then render the formatted value in the Button trigger."
       },
       {
         "id": "display-format",
@@ -18210,15 +18891,15 @@ export const generatedCatalogueMappings = [
         ],
         "targets": [
           {
-            "component": "input",
-            "prop": "value"
+            "component": "button",
+            "prop": "children"
           }
         ],
         "summary": "Format trigger text independently from the value serialization format."
       },
       {
         "id": "presets",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "presets"
         ],
@@ -18231,14 +18912,11 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "include-time",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "includeTime"
         ],
         "targets": [
-          {
-            "component": "input"
-          },
           {
             "component": "button"
           }
@@ -18261,12 +18939,17 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "class-name",
-        "kind": "needs-review",
+        "kind": "composition-owned",
         "from": [
           "className"
         ],
-        "targets": [],
-        "summary": "Keep this on an Applique facade wrapper; approve its DOM target before clients depend on selector placement."
+        "targets": [
+          {
+            "component": "field",
+            "prop": "className"
+          }
+        ],
+        "summary": "Apply className to the stable facade Field root."
       },
       {
         "id": "disabled-time",
@@ -20895,24 +21578,15 @@ export const generatedCatalogueMappings = [
     "shadcn": [
       "select",
       "combobox",
-      "native-select"
+      "native-select",
+      "field",
+      "spinner"
     ],
-    "mainShadcnProps": [
-      "items",
-      "value",
-      "onValueChange",
-      "multiple",
-      "disabled",
-      "readOnly",
-      "required",
-      "inputValue",
-      "onInputValueChange",
-      "filter",
-      "virtualized",
-      "placeholder",
-      "side"
+    "summary": "The testing facade uses Combobox for the audited single and multiple Partner Portal controls, composes Field and Spinner, and preserves primitive value-only callbacks. Other target strategies remain deferred.",
+    "legacyDocumentationIgnoredExports": [
+      "InputSelectControl",
+      "InputSelectValue"
     ],
-    "summary": "Use Select for a simple non-searchable field, Combobox for searchable or multiple behavior, and NativeSelect only when native DOM semantics are explicitly wanted; the facade must preserve the legacy option model and value-only callbacks.",
     "propMappings": [
       {
         "id": "options",
@@ -21005,7 +21679,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "render-empty-state",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "renderEmptyState"
         ],
@@ -21099,12 +21773,17 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "required",
-        "kind": "needs-review",
+        "kind": "composition-owned",
         "from": [
           "required"
         ],
-        "targets": [],
-        "summary": "Legacy required suppresses the reset control but is not forwarded to the input; decide whether the facade preserves that behavior or restores the documented native required constraint."
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "required"
+          }
+        ],
+        "summary": "Apply required semantics to the Combobox and suppress the single-value clear control."
       },
       {
         "id": "is-loading",
@@ -21122,16 +21801,21 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "searchable",
-        "kind": "needs-review",
+        "kind": "composition-owned",
         "from": [
           "searchable"
         ],
-        "targets": [],
-        "summary": "The runtime toggles an editable search input; for migration it also decides whether Select or Combobox is the appropriate target."
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "filter/input readOnly"
+          }
+        ],
+        "summary": "Keep Combobox as the pilot target; searchable controls local filtering while false makes the input read-only but leaves selection available."
       },
       {
         "id": "searchable-keys",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "searchableKeys"
         ],
@@ -21177,7 +21861,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "filter-options",
-        "kind": "mapped",
+        "kind": "needs-review",
         "from": [
           "filterOptions"
         ],
@@ -21191,7 +21875,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "no-results-placeholder",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "noResultsPlaceholder"
         ],
@@ -21205,7 +21889,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "icon",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "icon"
         ],
@@ -21219,7 +21903,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "up",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "up"
         ],
@@ -21237,7 +21921,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "field-context",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "__fieldContext"
         ],
@@ -21278,7 +21962,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "adornment",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "adornment"
         ],
@@ -21292,7 +21976,7 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "adornment-position",
-        "kind": "composition-owned",
+        "kind": "needs-review",
         "from": [
           "adornmentPosition"
         ],
@@ -21306,12 +21990,17 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "class-name",
-        "kind": "needs-review",
+        "kind": "composition-owned",
         "from": [
           "className"
         ],
-        "targets": [],
-        "summary": "BaseProps permits className, but the current InputSelect implementation does not forward it; choose an intentional facade class target."
+        "targets": [
+          {
+            "component": "field",
+            "prop": "className"
+          }
+        ],
+        "summary": "Apply className to the stable facade Field root."
       },
       {
         "id": "style",
@@ -21324,12 +22013,17 @@ export const generatedCatalogueMappings = [
       },
       {
         "id": "id",
-        "kind": "needs-review",
+        "kind": "mapped",
         "from": [
           "id"
         ],
-        "targets": [],
-        "summary": "The current InputSelect drops a client id and generates internal ids; define whether the facade id belongs on the input, trigger, or composed field root."
+        "targets": [
+          {
+            "component": "combobox",
+            "prop": "input id"
+          }
+        ],
+        "summary": "Apply the caller id to the Combobox input and use it to connect label, description, and error content."
       }
     ],
     "review": "proposed",
@@ -21483,7 +22177,8 @@ export const generatedCatalogueMappings = [
           }
         ]
       }
-    ]
+    ],
+    "mainShadcnProps": []
   },
   {
     "id": "list",

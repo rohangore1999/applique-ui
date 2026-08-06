@@ -268,6 +268,13 @@
     "setup": "const [accepted, setAccepted] = React.useState(true)",
     "note": "onChange receives the next boolean value, not a browser event."
   },
+  "input-date": {
+    "exports": ["InputDate", "InputDateProps", "InputDateRange", "InputDateValue"],
+    "jsx": "<InputDate\n  label=\"Last Updated On\"\n  description=\"Select last updated date\"\n  format=\"yyyy-MM-dd\"\n  value={lastUpdatedOn}\n  onChange={setLastUpdatedOn}\n/>",
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const [lastUpdatedOn, setLastUpdatedOn] = React.useState(\"2026-08-05\")",
+    "note": "Single dates emit immediately. In range mode the first click stays inside the facade and onChange receives only a completed range."
+  },
   "input-number": {
     "exports": ["InputNumber", "InputNumberProps"],
     "jsx": "<InputNumber min={1} max={100} value={quantity} onChange={setQuantity} />",
@@ -281,6 +288,13 @@
     "externalImports": ["import * as React from \"react\""],
     "setup": "const deliveryOptions = [{ label: \"Standard\", value: \"standard\" }, { label: \"Express\", value: \"express\" }]\nconst [delivery, setDelivery] = React.useState(\"standard\")",
     "note": "onChange receives the selected option value."
+  },
+  "input-select": {
+    "exports": ["InputSelect", "InputSelectProps", "InputSelectOption", "InputSelectValue"],
+    "jsx": "<InputSelect\n  aria-label=\"Source\"\n  options={sourceOptions}\n  placeholder=\"Source\"\n  value={source}\n  onChange={setSource}\n/>",
+    "externalImports": ["import * as React from \"react\""],
+    "setup": "const sourceOptions = [{ label: \"DIY\", value: \"DIY\" }, { label: \"OI\", value: \"OI_VENDOR\" }]\nconst [source, setSource] = React.useState(\"DIY\")",
+    "note": "The facade resolves primitive client values to internal option objects and returns only primitive values from onChange."
   },
   "input-text": {
     "exports": ["InputText", "InputTextProps"],

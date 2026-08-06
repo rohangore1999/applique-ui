@@ -1,47 +1,74 @@
 # Pending props & components — review / discussion queue
 
-> **Auto-derived** from [`component-mappings.json`](../packages/shadcn-primitives/catalog/component-mappings.json).
+> **The tables are auto-derived** from [`component-mappings.json`](../packages/shadcn-primitives/catalog/component-mappings.json).
 > These are the props the facade layer has **not** finalized: either deliberately
 > `unsupported` (a documented "tweak this" for migrating clients) or `needs-review`
 > (the right shadcn target/behaviour is still an open decision). Everything here is
 > surfaced on purpose — nothing is dropped silently. See buckets 4-5 in
-> [REGISTRY-APPROACH.md §8](./REGISTRY-APPROACH.md).
+> [REGISTRY-APPROACH.md §9](./REGISTRY-APPROACH.md).
 >
-> Regenerate rather than hand-edit. Last generated: 2026-08-05.
+> Regenerate the tables rather than hand-editing their rows. Last generated: 2026-08-05.
 
 **Totals:** 67 items — 63 `needs-review`, 4 `unsupported`, across 24 components (7 already have a facade built).
 
-## Components with pending items (overview)
 
-One row per component, most-migrated first. Use this to see *where* the open
-questions cluster; the prop-level detail is in sections A and B below.
+## How to read a pending item
 
-| Component | Facade built? | needs-review | unsupported | Total |
-|---|:---:|---:|---:|---:|
-| `button` | ✅ yes | 2 | 1 | **3** |
-| `banner` | ✅ yes | 2 |  | **2** |
-| `input-text` | ✅ yes | 1 | 1 | **2** |
-| `tabs` | ✅ yes | 2 |  | **2** |
-| `accordion` | ✅ yes | 1 |  | **1** |
-| `input-number` | ✅ yes |  | 1 | **1** |
-| `tooltip` | ✅ yes | 1 |  | **1** |
-| `input-select` | — | 7 |  | **7** |
-| `list` | — | 7 |  | **7** |
-| `loader` | — | 6 | 1 | **7** |
-| `fab` | — | 5 |  | **5** |
-| `nav-bar` | — | 5 |  | **5** |
-| `dropdown` | — | 3 |  | **3** |
-| `image` | — | 3 |  | **3** |
-| `progress` | — | 3 |  | **3** |
-| `table` | — | 3 |  | **3** |
-| `top-nav` | — | 3 |  | **3** |
-| `input-date` | — | 2 |  | **2** |
-| `input-file` | — | 2 |  | **2** |
-| `field` | — | 1 |  | **1** |
-| `input` | — | 1 |  | **1** |
-| `input-month` | — | 1 |  | **1** |
-| `page` | — | 1 |  | **1** |
-| `pagination` | — | 1 |  | **1** |
+### Example 1: a prop on an existing facade
+
+The queue lists Button `color` as `needs-review`. Existing client code may contain:
+
+```tsx
+<Button color="red">Delete</Button>
+```
+
+shadcn Button does not accept an arbitrary `color`; it exposes semantic variants:
+
+```tsx
+<InternalButton variant="destructive">Delete</InternalButton>
+```
+
+The facade should not automatically assume that every `color="red"` means a
+destructive action. It may instead be a brand colour or a client customization.
+The pending decision is therefore whether UX approves a rule such as
+`color="red"` → `variant="destructive"`, which legacy colours are supported, and
+what happens for every other string. Until that decision is made, the facade does
+not claim that `color` is compatible.
+
+By contrast, Button `state` is marked `unsupported`. That means the escape hatch
+is deliberately excluded rather than waiting for an automatic mapping. A client
+still using it must replace it with an explicit `className` or a client-owned
+wrapper during migration.
+
+### Example 2: a component whose target depends on usage
+
+The queue lists Dropdown `children` as `needs-review` because the name
+`Dropdown` does not identify one interaction:
+
+```tsx
+// A stored form value should become Select.
+<Dropdown trigger={source} isOpen={isSourceOpen}>
+  {sources.map((option) => (
+    <button key={option} type="button" onClick={() => setSource(option)}>
+      {option}
+    </button>
+  ))}
+</Dropdown>
+
+// A list of commands should become DropdownMenu.
+<Dropdown trigger="Actions" isOpen={isActionsOpen}>
+  <button type="button" onClick={archive}>Archive</button>
+</Dropdown>
+
+// Arbitrary interactive content should become Popover.
+<Dropdown trigger="Filters" isOpen={isFilterOpen}>
+  <AdvancedFilters />
+</Dropdown>
+```
+
+Choosing one shadcn target globally would break at least two of these usages.
+The action is to inspect real call sites first, then select or compose the correct
+facade behavior.
 
 
 ## A. On already-migrated facades (actionable now)
@@ -126,4 +153,3 @@ Open questions captured during the prop audit; resolved as each component is bui
 | `top-nav` | `class-name` | needs-review | BaseProps permits className, but TopNav currently drops it; decide whether the facade preserves that no-op or adds an… |
 | `top-nav` | `id` | needs-review | BaseProps permits id, but TopNav currently drops it; decide whether the facade applies it to the outer shell. |
 | `top-nav` | `style` | needs-review | BaseProps permits style, but TopNav currently drops it; decide whether the facade preserves that no-op or applies it … |
-

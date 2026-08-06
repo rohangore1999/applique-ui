@@ -228,7 +228,7 @@
         "applique-internal-button"
       ],
       "sourcePath": "src/calendar.tsx",
-      "sourceSha256": "7db7252f20df02f3513daaf7f1e9a874714ac5922a8e36c8f6e287c21e51541d",
+      "sourceSha256": "342d5d28aa11790da36a66af3ffeb3c9b8553bc6e470ba96d45ec4ac03782e9a",
       "status": "installable",
       "type": "registry:ui",
       "upstreamPath": "upstream/base-nova/calendar.json",

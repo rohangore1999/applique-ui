@@ -225,9 +225,17 @@ function main() {
     }
 
     const documentedComponents = []
+    const ignoredDocumentedExports = new Set(
+      mapping.legacyDocumentationIgnoredExports || []
+    )
     for (const componentSlug of mapping.applique || []) {
       try {
-        documentedComponents.push(...loadDocumentedProps(componentSlug))
+        documentedComponents.push(
+          ...loadDocumentedProps(componentSlug).filter(
+            (component) =>
+              !ignoredDocumentedExports.has(component.exportName)
+          )
+        )
       } catch (error) {
         failures.push(`${item.name}: ${error.message}`)
       }

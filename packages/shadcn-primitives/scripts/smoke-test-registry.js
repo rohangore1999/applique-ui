@@ -32,25 +32,43 @@ const OWNED_FACADE_SMOKE_CONTRACTS = [
     target: '@components/applique/avatar.tsx',
   },
   {
-    importPath: '@/components/ui/checkbox',
+    importPath: '@/components/applique/internal/field',
+    name: 'field',
+    primitiveTarget: '@components/applique/internal/field.tsx',
+    target: '@components/applique/field.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/checkbox',
     name: 'input-checkbox',
     primitiveTarget: '@ui/checkbox.tsx',
     target: '@components/applique/input-checkbox.tsx',
   },
   {
-    importPath: '@/components/ui/input',
+    importPath: '@/components/applique/internal/calendar',
+    name: 'input-date',
+    primitiveTarget: '@ui/calendar.tsx',
+    target: '@components/applique/input-date.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/input',
     name: 'input-number',
     primitiveTarget: '@ui/input.tsx',
     target: '@components/applique/input-number.tsx',
   },
   {
-    importPath: '@/components/ui/radio-group',
+    importPath: '@/components/applique/internal/radio-group',
     name: 'input-radio',
     primitiveTarget: '@ui/radio-group.tsx',
     target: '@components/applique/input-radio.tsx',
   },
   {
-    importPath: '@/components/ui/input',
+    importPath: '@/components/applique/internal/combobox',
+    name: 'input-select',
+    primitiveTarget: '@ui/combobox.tsx',
+    target: '@components/applique/input-select.tsx',
+  },
+  {
+    importPath: '@/components/applique/internal/input',
     name: 'input-text',
     primitiveTarget: '@ui/input.tsx',
     target: '@components/applique/input-text.tsx',
@@ -68,13 +86,13 @@ const OWNED_FACADE_SMOKE_CONTRACTS = [
     target: '@components/applique/badge.tsx',
   },
   {
-    importPath: '@/components/ui/alert',
+    importPath: '@/components/applique/internal/alert',
     name: 'banner',
     primitiveTarget: '@ui/alert.tsx',
     target: '@components/applique/banner.tsx',
   },
   {
-    importPath: '@/components/ui/breadcrumb',
+    importPath: '@/components/applique/internal/breadcrumb',
     name: 'bread-crumb',
     primitiveTarget: '@ui/breadcrumb.tsx',
     target: '@components/applique/bread-crumb.tsx',
@@ -92,13 +110,13 @@ const OWNED_FACADE_SMOKE_CONTRACTS = [
     target: '@components/applique/button-group.tsx',
   },
   {
-    importPath: '@/components/ui/textarea',
+    importPath: '@/components/applique/internal/textarea',
     name: 'input-text-area',
     primitiveTarget: '@ui/textarea.tsx',
     target: '@components/applique/input-text-area.tsx',
   },
   {
-    importPath: '@/components/ui/card',
+    importPath: '@/components/applique/internal/card',
     name: 'section',
     primitiveTarget: '@ui/card.tsx',
     target: '@components/applique/section.tsx',
@@ -319,7 +337,7 @@ function consumerPathForTarget(target, mode) {
     '@components/': 'src/components/',
     '@hooks/': 'src/hooks/',
     '@lib/': 'src/lib/',
-    '@ui/': 'src/components/ui/',
+    '@ui/': 'src/components/applique/internal/',
   }
 
   const resolvedTarget = outputTarget(target, mode)
@@ -340,7 +358,7 @@ function importPathForTarget(target) {
       .replace(/\.[jt]sx?$/, '')}`
   }
   if (target.startsWith('@ui/')) {
-    return `@/components/ui/${target
+    return `@/components/applique/internal/${target
       .slice('@ui/'.length)
       .replace(/\.[jt]sx?$/, '')}`
   }
@@ -396,7 +414,7 @@ function createConsumer(consumerDirectory, manifest, mode, options = {}) {
     aliases: {
       components: '@/components',
       utils: '@/lib/utils',
-      ui: '@/components/ui',
+      ui: '@/components/applique/internal',
       lib: '@/lib',
       hooks: '@/hooks',
     },
@@ -469,8 +487,8 @@ const inputRef = createRef()`
     `import * as React from 'react'
 import { createRef } from 'react'
 import { Button as RefButton } from '@/components/applique/button'
-import { CalendarDayButton as RefCalendarDayButton } from '@/components/ui/calendar'
-import { Input as RefInput } from '@/components/ui/input'
+import { CalendarDayButton as RefCalendarDayButton } from '@/components/applique/internal/calendar'
+import { Input as RefInput } from '@/components/applique/internal/input'
 import { InputNumber as AppliqueInputNumber } from '@/components/applique/input-number'
 ${imports.join('\n')}
 
@@ -514,9 +532,12 @@ import { Accordion } from '@/components/applique/accordion'
 import { Avatar } from '@/components/applique/avatar'
 import { Badge } from '@/components/applique/badge'
 import { BreadCrumb } from '@/components/applique/bread-crumb'
+import { Field } from '@/components/applique/field'
 import { InputCheckbox } from '@/components/applique/input-checkbox'
+import { InputDate } from '@/components/applique/input-date'
 import { InputNumber } from '@/components/applique/input-number'
 import { InputRadio } from '@/components/applique/input-radio'
+import { InputSelect } from '@/components/applique/input-select'
 import { InputText } from '@/components/applique/input-text'
 import { InputTextArea } from '@/components/applique/input-text-area'
 import { Tabs } from '@/components/applique/tabs'
@@ -535,10 +556,19 @@ export const appliqueFacadeSmoke = (
       <BreadCrumb.Item>Home</BreadCrumb.Item>
       <BreadCrumb.Item>Registry</BreadCrumb.Item>
     </BreadCrumb>
+    <Field description="Field help" title="Field label">
+      <input aria-label="Field control" />
+    </Field>
     <InputCheckbox
       onChange={(value) => Boolean(value)}
       title="Accept terms"
       value
+    />
+    <InputDate
+      format="yyyy-MM-dd"
+      label="Last Updated On"
+      onChange={(value) => String(value)}
+      value="2026-08-05"
     />
     <InputNumber
       aria-label="Quantity"
@@ -551,6 +581,12 @@ export const appliqueFacadeSmoke = (
       onChange={(value) => value.toUpperCase()}
       options={[{ label: 'Standard', value: 'standard' }]}
       value="standard"
+    />
+    <InputSelect
+      aria-label="Source"
+      onChange={(value) => String(value)}
+      options={[{ label: 'DIY', value: 'DIY' }]}
+      value="DIY"
     />
     <InputText onChange={(value) => value.trim()} value="Jane" />
     <InputTextArea onChange={(value) => value.trim()} value="Notes" />
@@ -699,6 +735,10 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
       `${relativePath} contains an unscoped dark: utility`
     )
     assert(
+      !source.includes('@/components/ui/'),
+      `${relativePath} contains a public components/ui import instead of the Applique internal boundary`
+    )
+    assert(
       !source.includes('dark: ".dark"') && !source.includes("dark: '.dark'"),
       `${relativePath} contains an unscoped .dark selector`
     )
@@ -716,10 +756,7 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
       )
     }
 
-    if (
-      relativePath.startsWith('src/components/ui/') ||
-      relativePath.startsWith('src/components/applique/internal/')
-    ) {
+    if (relativePath.startsWith('src/components/applique/internal/')) {
       for (const match of source.matchAll(
         /^function\s+([A-Z][A-Za-z0-9_]*)Impl\b/gm
       )) {
@@ -741,6 +778,10 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
       utilsPath
     )} file without --overwrite`
   )
+  assert(
+    !fs.existsSync(path.join(consumerDirectory, 'src/components/ui')),
+    'Registry installation created the deprecated public components/ui directory'
+  )
 
   const inputNumberPath = consumerPathForTarget(
     '@components/applique/input-number.tsx',
@@ -751,7 +792,7 @@ function assertInstalledConsumer(consumerDirectory, manifest, mode) {
     'utf8'
   )
   assert(
-    installedInputNumber.includes('@/components/ui/input') &&
+    installedInputNumber.includes('@/components/applique/internal/input') &&
       !installedInputNumber.includes('../input'),
     'Applique InputNumber did not resolve its internal primitive import'
   )
@@ -992,6 +1033,19 @@ function assertFacadeOnlyConsumer(consumerDirectory, mode) {
       installedFacade.includes(contract.importPath) &&
         !installedFacade.includes('../'),
       `${contract.name} did not resolve its primitive import`
+    )
+
+    for (const match of installedFacade.matchAll(
+      /from\s+["'](@\/components\/[^"']+)["']/g
+    )) {
+      assert(
+        match[1].startsWith('@/components/applique/'),
+        `${contract.name} imports outside the public/internal Applique component boundary: ${match[1]}`
+      )
+    }
+    assert(
+      !installedFacade.includes('@/components/ui/'),
+      `${contract.name} still imports the public components/ui namespace`
     )
   }
 

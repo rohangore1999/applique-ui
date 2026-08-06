@@ -46,6 +46,7 @@ const INTERNAL_UPSTREAM_ITEM_NAMES = new Map([
   ['badge', 'applique-internal-badge'],
   ['button', 'applique-internal-button'],
   ['button-group', 'applique-internal-button-group'],
+  ['field', 'applique-internal-field'],
   ['tabs', 'applique-internal-tabs'],
   ['tooltip', 'applique-internal-tooltip'],
 ])
@@ -72,11 +73,55 @@ const OWNED_FACADE_CONTRACTS = new Map([
     },
   ],
   [
+    'field',
+    {
+      publicExports: [
+        { name: 'Field' },
+        { name: 'FieldContent' },
+        { name: 'FieldDescription' },
+        { name: 'FieldError' },
+        { name: 'FieldGroup' },
+        { name: 'FieldLabel' },
+        { name: 'FieldLegend' },
+        { name: 'FieldSeparator' },
+        { name: 'FieldSet' },
+        { name: 'FieldTitle' },
+        { name: 'withField' },
+        { name: 'FieldContext', type: true },
+        { name: 'FieldProps', type: true },
+        { name: 'WithFieldProps', type: true },
+      ],
+      registryDependencies: ['applique-internal-field'],
+      sourcePath: 'src/facades/field.tsx',
+      target: '@components/applique/field.tsx',
+    },
+  ],
+  [
     'input-checkbox',
     {
       registryDependencies: ['checkbox'],
       sourcePath: 'src/facades/input-checkbox.tsx',
       target: '@components/applique/input-checkbox.tsx',
+    },
+  ],
+  [
+    'input-date',
+    {
+      dependencies: ['date-fns@4.4.0', 'lucide-react@1.28.0'],
+      publicExports: [
+        { name: 'InputDate' },
+        { name: 'InputDateProps', type: true },
+        { name: 'InputDateRange', type: true },
+        { name: 'InputDateValue', type: true },
+      ],
+      registryDependencies: [
+        'applique-internal-button',
+        'applique-internal-field',
+        'calendar',
+        'popover',
+      ],
+      sourcePath: 'src/facades/input-date.tsx',
+      target: '@components/applique/input-date.tsx',
     },
   ],
   [
@@ -93,6 +138,24 @@ const OWNED_FACADE_CONTRACTS = new Map([
       registryDependencies: ['radio-group'],
       sourcePath: 'src/facades/input-radio.tsx',
       target: '@components/applique/input-radio.tsx',
+    },
+  ],
+  [
+    'input-select',
+    {
+      publicExports: [
+        { name: 'InputSelect' },
+        { name: 'InputSelectProps', type: true },
+        { name: 'InputSelectOption', type: true },
+        { name: 'InputSelectValue', type: true },
+      ],
+      registryDependencies: [
+        'applique-internal-field',
+        'combobox',
+        'spinner',
+      ],
+      sourcePath: 'src/facades/input-select.tsx',
+      target: '@components/applique/input-select.tsx',
     },
   ],
   [

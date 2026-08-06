@@ -37,3 +37,14 @@ it('forwards its ref and supported input type', () => {
   expect(ref.current?.tagName).toBe('INPUT')
   expect(ref.current?.type).toBe('email')
 })
+
+it('consumes legacy Field context without forwarding it to the DOM', () => {
+  const wrapper = mount(
+    <InputText __fieldContext={{ disabled: true, error: true }} />
+  )
+  const input = wrapper.find('input')
+
+  expect(input.prop('disabled')).toBe(true)
+  expect(input.prop('aria-invalid')).toBe(true)
+  expect(input.prop('__fieldContext')).toBeUndefined()
+})

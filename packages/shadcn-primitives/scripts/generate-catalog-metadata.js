@@ -121,6 +121,7 @@ const internalPrimitiveSlugs = new Set([
   'badge',
   'button',
   'button-group',
+  'field',
   'tabs',
   'tooltip',
 ])
@@ -2037,6 +2038,15 @@ function validateResolvedPropMetadata(
     'checked',
     'primitive'
   )
+  requireProp(facadeComponents, 'input-date', 'InputDate', 'value', 'applique')
+  requireProp(
+    facadeComponents,
+    'input-date',
+    'InputDate',
+    'onChange',
+    'applique'
+  )
+  requireProp(facadeComponents, 'input-date', 'InputDate', 'range', 'applique')
   requireProp(facadeComponents, 'input-number', 'InputNumber', 'type', 'applique')
   requireProp(
     facadeComponents,
@@ -2058,6 +2068,27 @@ function validateResolvedPropMetadata(
     'input-radio',
     'InputRadio',
     'defaultValue',
+    'applique'
+  )
+  requireProp(
+    facadeComponents,
+    'input-select',
+    'InputSelect',
+    'options',
+    'applique'
+  )
+  requireProp(
+    facadeComponents,
+    'input-select',
+    'InputSelect',
+    'onChange',
+    'applique'
+  )
+  requireProp(
+    facadeComponents,
+    'input-select',
+    'InputSelect',
+    'multiple',
     'applique'
   )
   requireProp(facadeComponents, 'input-text', 'InputText', 'type', 'applique')

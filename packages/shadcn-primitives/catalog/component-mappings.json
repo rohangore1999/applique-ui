@@ -783,19 +783,33 @@
           "summary": "Forward attributes such as autoFocus, readOnly, maxLength, pattern, inputMode, autoComplete, aria/data attributes, and DOM handlers."
         },
         {
+          "id": "field-context",
+          "kind": "composition-owned",
+          "from": ["error", "__fieldContext"],
+          "targets": [
+            {
+              "component": "input",
+              "prop": "disabled"
+            },
+            {
+              "component": "input",
+              "prop": "aria-invalid"
+            }
+          ],
+          "summary": "Combine direct and Field-provided disabled and error state, then expose it through native disabled and aria-invalid attributes."
+        },
+        {
           "id": "advanced-input-features",
           "kind": "unsupported",
           "from": [
             "icon",
             "adornment",
             "adornmentPosition",
-            "error",
             "active",
-            "variant",
-            "__fieldContext"
+            "variant"
           ],
           "targets": [],
-          "summary": "The Basic InputText pilot intentionally defers composition, validation context, and legacy wrapper styling."
+          "summary": "The Basic InputText pilot intentionally defers icon composition and legacy wrapper styling."
         }
       ],
       "review": "proposed"
@@ -2443,8 +2457,12 @@
       "id": "input-date",
       "kind": "composition",
       "applique": ["input-date"],
-      "shadcn": ["calendar", "popover", "input", "button"],
-      "summary": "Compose the field, trigger, overlay, and calendar; range, time, presets, and formatting remain Applique-owned.",
+      "shadcn": ["calendar", "popover", "button", "field"],
+      "summary": "The testing facade composes Field, a button-like trigger, Popover, and Calendar. It implements single and completed-range selection while advanced legacy date behavior remains under review.",
+      "legacyDocumentationIgnoredExports": [
+        "InputDatePicker",
+        "InputDateValue"
+      ],
       "propMappings": [
         {
           "id": "value",
@@ -2456,8 +2474,8 @@
               "prop": "selected"
             },
             {
-              "component": "input",
-              "prop": "value"
+              "component": "button",
+              "prop": "children"
             }
           ],
           "summary": "Parse Date, string, DateRange, or StringDateRange into Calendar selection state and formatted trigger text."
@@ -2470,10 +2488,6 @@
             {
               "component": "calendar",
               "prop": "onSelect"
-            },
-            {
-              "component": "input",
-              "prop": "onChange"
             }
           ],
           "summary": "Normalize the selection, preserve range ordering, and serialize back to the caller's Date or formatted-string contract."
@@ -2508,7 +2522,7 @@
         },
         {
           "id": "disabled-ranges",
-          "kind": "mapped",
+          "kind": "needs-review",
           "from": ["disabledRanges"],
           "targets": [
             {
@@ -2520,7 +2534,7 @@
         },
         {
           "id": "year-month-change",
-          "kind": "mapped",
+          "kind": "needs-review",
           "from": ["onYearMonthChange"],
           "targets": [
             {
@@ -2532,7 +2546,7 @@
         },
         {
           "id": "render-date",
-          "kind": "mapped",
+          "kind": "needs-review",
           "from": ["renderDate"],
           "targets": [
             {
@@ -2550,17 +2564,9 @@
             {
               "component": "button",
               "prop": "disabled"
-            },
-            {
-              "component": "input",
-              "prop": "disabled"
-            },
-            {
-              "component": "calendar",
-              "prop": "disabled"
             }
           ],
-          "summary": "Fan the effective disabled state across the trigger, editable input, and calendar interaction."
+          "summary": "Disable the trigger and guard the facade's open and selection handlers so the calendar cannot be used."
         },
         {
           "id": "format",
@@ -2568,14 +2574,11 @@
           "from": ["format"],
           "targets": [
             {
-              "component": "calendar"
-            },
-            {
-              "component": "input",
-              "prop": "value"
+              "component": "button",
+              "prop": "children"
             }
           ],
-          "summary": "Own parsing and output serialization around Calendar; this is not a primitive presentation prop."
+          "summary": "Own parsing and output serialization around Calendar, then render the formatted value in the Button trigger."
         },
         {
           "id": "display-format",
@@ -2583,15 +2586,15 @@
           "from": ["displayFormat"],
           "targets": [
             {
-              "component": "input",
-              "prop": "value"
+              "component": "button",
+              "prop": "children"
             }
           ],
           "summary": "Format trigger text independently from the value serialization format."
         },
         {
           "id": "presets",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["presets"],
           "targets": [
             {
@@ -2602,12 +2605,9 @@
         },
         {
           "id": "include-time",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["includeTime"],
           "targets": [
-            {
-              "component": "input"
-            },
             {
               "component": "button"
             }
@@ -2628,10 +2628,15 @@
         },
         {
           "id": "class-name",
-          "kind": "needs-review",
+          "kind": "composition-owned",
           "from": ["className"],
-          "targets": [],
-          "summary": "Keep this on an Applique facade wrapper; approve its DOM target before clients depend on selector placement."
+          "targets": [
+            {
+              "component": "field",
+              "prop": "className"
+            }
+          ],
+          "summary": "Apply className to the stable facade Field root."
         },
         {
           "id": "disabled-time",
@@ -4317,23 +4322,18 @@
       "id": "input-select",
       "kind": "ambiguous",
       "applique": ["input-select"],
-      "shadcn": ["select", "combobox", "native-select"],
-      "mainShadcnProps": [
-        "items",
-        "value",
-        "onValueChange",
-        "multiple",
-        "disabled",
-        "readOnly",
-        "required",
-        "inputValue",
-        "onInputValueChange",
-        "filter",
-        "virtualized",
-        "placeholder",
-        "side"
+      "shadcn": [
+        "select",
+        "combobox",
+        "native-select",
+        "field",
+        "spinner"
       ],
-      "summary": "Use Select for a simple non-searchable field, Combobox for searchable or multiple behavior, and NativeSelect only when native DOM semantics are explicitly wanted; the facade must preserve the legacy option model and value-only callbacks.",
+      "summary": "The testing facade uses Combobox for the audited single and multiple Partner Portal controls, composes Field and Spinner, and preserves primitive value-only callbacks. Other target strategies remain deferred.",
+      "legacyDocumentationIgnoredExports": [
+        "InputSelectControl",
+        "InputSelectValue"
+      ],
       "propMappings": [
         {
           "id": "options",
@@ -4416,7 +4416,7 @@
         },
         {
           "id": "render-empty-state",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["renderEmptyState"],
           "targets": [
             {
@@ -4500,10 +4500,15 @@
         },
         {
           "id": "required",
-          "kind": "needs-review",
+          "kind": "composition-owned",
           "from": ["required"],
-          "targets": [],
-          "summary": "Legacy required suppresses the reset control but is not forwarded to the input; decide whether the facade preserves that behavior or restores the documented native required constraint."
+          "targets": [
+            {
+              "component": "combobox",
+              "prop": "required"
+            }
+          ],
+          "summary": "Apply required semantics to the Combobox and suppress the single-value clear control."
         },
         {
           "id": "is-loading",
@@ -4519,14 +4524,19 @@
         },
         {
           "id": "searchable",
-          "kind": "needs-review",
+          "kind": "composition-owned",
           "from": ["searchable"],
-          "targets": [],
-          "summary": "The runtime toggles an editable search input; for migration it also decides whether Select or Combobox is the appropriate target."
+          "targets": [
+            {
+              "component": "combobox",
+              "prop": "filter/input readOnly"
+            }
+          ],
+          "summary": "Keep Combobox as the pilot target; searchable controls local filtering while false makes the input read-only but leaves selection available."
         },
         {
           "id": "searchable-keys",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["searchableKeys"],
           "targets": [
             {
@@ -4566,7 +4576,7 @@
         },
         {
           "id": "filter-options",
-          "kind": "mapped",
+          "kind": "needs-review",
           "from": ["filterOptions"],
           "targets": [
             {
@@ -4578,7 +4588,7 @@
         },
         {
           "id": "no-results-placeholder",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["noResultsPlaceholder"],
           "targets": [
             {
@@ -4590,7 +4600,7 @@
         },
         {
           "id": "icon",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["icon"],
           "targets": [
             {
@@ -4602,7 +4612,7 @@
         },
         {
           "id": "up",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["up"],
           "targets": [
             {
@@ -4618,7 +4628,7 @@
         },
         {
           "id": "field-context",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["__fieldContext"],
           "targets": [
             {
@@ -4653,7 +4663,7 @@
         },
         {
           "id": "adornment",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["adornment"],
           "targets": [
             {
@@ -4665,7 +4675,7 @@
         },
         {
           "id": "adornment-position",
-          "kind": "composition-owned",
+          "kind": "needs-review",
           "from": ["adornmentPosition"],
           "targets": [
             {
@@ -4677,10 +4687,15 @@
         },
         {
           "id": "class-name",
-          "kind": "needs-review",
+          "kind": "composition-owned",
           "from": ["className"],
-          "targets": [],
-          "summary": "BaseProps permits className, but the current InputSelect implementation does not forward it; choose an intentional facade class target."
+          "targets": [
+            {
+              "component": "field",
+              "prop": "className"
+            }
+          ],
+          "summary": "Apply className to the stable facade Field root."
         },
         {
           "id": "style",
@@ -4691,10 +4706,15 @@
         },
         {
           "id": "id",
-          "kind": "needs-review",
+          "kind": "mapped",
           "from": ["id"],
-          "targets": [],
-          "summary": "The current InputSelect drops a client id and generates internal ids; define whether the facade id belongs on the input, trigger, or composed field root."
+          "targets": [
+            {
+              "component": "combobox",
+              "prop": "input id"
+            }
+          ],
+          "summary": "Apply the caller id to the Combobox input and use it to connect label, description, and error content."
         }
       ],
       "review": "proposed"

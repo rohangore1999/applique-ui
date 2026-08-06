@@ -708,7 +708,7 @@
         "status": "experimental",
         "upstream": {
           "cliVersion": "4.16.0",
-          "sourceSha256": "7db7252f20df02f3513daaf7f1e9a874714ac5922a8e36c8f6e287c21e51541d",
+          "sourceSha256": "342d5d28aa11790da36a66af3ffeb3c9b8553bc6e470ba96d45ec4ac03782e9a",
           "style": "base-nova",
           "upstreamSha256": "7a15cdad39c24993ef6e810b3f5b20d588ae5b13c35ce8798b9aba11149c4a99"
         },
@@ -1251,11 +1251,12 @@
       }
     },
     {
-      "name": "field",
+      "name": "applique-internal-field",
       "type": "registry:ui",
-      "title": "Field",
-      "description": "Official shadcn base-nova component with Applique theme tokens.",
+      "title": "Internal Field Primitive",
+      "description": "Internal pinned shadcn base-nova primitive used by the public Applique facade.",
       "categories": [
+        "internal",
         "primitive",
         "base-ui"
       ],
@@ -1273,11 +1274,11 @@
         {
           "path": "src/field.tsx",
           "type": "registry:ui",
-          "target": "@ui/field.tsx"
+          "target": "@components/applique/internal/field.tsx"
         }
       ],
       "meta": {
-        "status": "experimental",
+        "status": "internal",
         "upstream": {
           "cliVersion": "4.16.0",
           "sourceSha256": "3ffbf11361ee33a6d4de4561d00877c39340956d94a0cfa39b70928715f19b6c",
@@ -3098,6 +3099,92 @@
       }
     },
     {
+      "name": "field",
+      "type": "registry:component",
+      "title": "Applique Field",
+      "description": "Testing Applique-compatible Field composition backed by the shadcn Field compound primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-field"
+      ],
+      "files": [
+        {
+          "path": "src/facades/field.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/field.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "Field",
+          "legacyPackage": "@applique-ui/field",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "info"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../field": "@/components/applique/internal/field",
+            "../utils": "@/lib/utils"
+          },
+          "publicExports": [
+            {
+              "name": "Field"
+            },
+            {
+              "name": "FieldContent"
+            },
+            {
+              "name": "FieldDescription"
+            },
+            {
+              "name": "FieldError"
+            },
+            {
+              "name": "FieldGroup"
+            },
+            {
+              "name": "FieldLabel"
+            },
+            {
+              "name": "FieldLegend"
+            },
+            {
+              "name": "FieldSeparator"
+            },
+            {
+              "name": "FieldSet"
+            },
+            {
+              "name": "FieldTitle"
+            },
+            {
+              "name": "withField"
+            },
+            {
+              "name": "FieldContext",
+              "type": true
+            },
+            {
+              "name": "FieldProps",
+              "type": true
+            },
+            {
+              "name": "WithFieldProps",
+              "type": true
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "input-checkbox",
       "type": "registry:component",
       "title": "Applique Input Checkbox",
@@ -3128,6 +3215,77 @@
           "importMap": {
             "../checkbox": "@/components/ui/checkbox"
           }
+        }
+      }
+    },
+    {
+      "name": "input-date",
+      "type": "registry:component",
+      "title": "Applique Input Date",
+      "description": "Testing Applique-compatible single and range date picker composed from shadcn Field, Popover, Calendar, and Button primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [
+        "date-fns@4.4.0",
+        "lucide-react@1.28.0"
+      ],
+      "registryDependencies": [
+        "applique-internal-button",
+        "applique-internal-field",
+        "calendar",
+        "popover"
+      ],
+      "files": [
+        {
+          "path": "src/facades/input-date.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/input-date.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "InputDate",
+          "legacyPackage": "@applique-ui/input-date",
+          "scope": "partner-portal-filter-pilot",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "disabled-ranges",
+            "year-month-change",
+            "render-date",
+            "presets",
+            "include-time",
+            "disabled-time"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../button": "@/components/applique/internal/button",
+            "../calendar": "@/components/ui/calendar",
+            "../field": "@/components/applique/internal/field",
+            "../popover": "@/components/ui/popover",
+            "../utils": "@/lib/utils"
+          },
+          "publicExports": [
+            {
+              "name": "InputDate"
+            },
+            {
+              "name": "InputDateProps",
+              "type": true
+            },
+            {
+              "name": "InputDateRange",
+              "type": true
+            },
+            {
+              "name": "InputDateValue",
+              "type": true
+            }
+          ]
         }
       }
     },
@@ -3196,6 +3354,77 @@
           "importMap": {
             "../radio-group": "@/components/ui/radio-group"
           }
+        }
+      }
+    },
+    {
+      "name": "input-select",
+      "type": "registry:component",
+      "title": "Applique Input Select",
+      "description": "Testing Applique-compatible primitive-value select composed from the shadcn Combobox, Field, and Spinner primitives.",
+      "categories": [
+        "applique",
+        "facade",
+        "input"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "applique-internal-field",
+        "combobox",
+        "spinner"
+      ],
+      "files": [
+        {
+          "path": "src/facades/input-select.tsx",
+          "type": "registry:component",
+          "target": "@components/applique/input-select.tsx"
+        }
+      ],
+      "meta": {
+        "status": "facade",
+        "compatibility": {
+          "legacyComponent": "InputSelect",
+          "legacyPackage": "@applique-ui/input-select",
+          "scope": "partner-portal-filter-pilot",
+          "migrationStatus": "testing",
+          "unresolvedProps": [
+            "render-option",
+            "render-empty-state",
+            "searchable-keys",
+            "filter-options",
+            "no-results-placeholder",
+            "icon",
+            "up",
+            "field-context",
+            "variant",
+            "adornment",
+            "adornment-position",
+            "style"
+          ]
+        },
+        "build": {
+          "importMap": {
+            "../combobox": "@/components/ui/combobox",
+            "../field": "@/components/applique/internal/field",
+            "../spinner": "@/components/ui/spinner"
+          },
+          "publicExports": [
+            {
+              "name": "InputSelect"
+            },
+            {
+              "name": "InputSelectProps",
+              "type": true
+            },
+            {
+              "name": "InputSelectOption",
+              "type": true
+            },
+            {
+              "name": "InputSelectValue",
+              "type": true
+            }
+          ]
         }
       }
     },

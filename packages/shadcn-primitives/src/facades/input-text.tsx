@@ -17,22 +17,46 @@ export interface InputTextProps
   value?: string
   /** Receives the string value instead of the browser change event. */
   onChange?(value: string): void
+  /** Invalid state supplied directly or by the public Field facade. */
+  error?: React.ReactNode | boolean
+  /** Legacy Field state injected into compatible child controls. */
+  __fieldContext?: {
+    disabled?: boolean
+    error?: boolean
+  }
 }
 
 const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
   (
-    { onChange, placeholder = ' ', type = 'text', value, ...nativeProps },
+    {
+      __fieldContext = {},
+      'aria-invalid': ariaInvalid,
+      disabled = false,
+      error = false,
+      onChange,
+      placeholder = ' ',
+      type = 'text',
+      value,
+      ...nativeProps
+    },
     ref
-  ) => (
-    <InternalInput
-      {...nativeProps}
-      ref={ref}
-      onChange={(event) => onChange?.(event.currentTarget.value)}
-      placeholder={placeholder}
-      type={type}
-      value={typeof value === 'string' ? value : ''}
-    />
-  )
+  ) => {
+    const resolvedDisabled = Boolean(disabled || __fieldContext.disabled)
+    const resolvedError = Boolean(error || __fieldContext.error)
+
+    return (
+      <InternalInput
+        {...nativeProps}
+        ref={ref}
+        aria-invalid={resolvedError || ariaInvalid || undefined}
+        disabled={resolvedDisabled}
+        onChange={(event) => onChange?.(event.currentTarget.value)}
+        placeholder={placeholder}
+        type={type}
+        value={typeof value === 'string' ? value : ''}
+      />
+    )
+  }
 )
 
 InputText.displayName = 'InputText'
